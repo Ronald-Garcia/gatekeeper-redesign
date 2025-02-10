@@ -24,11 +24,11 @@
 - On each following offense the minimum and maximum will increase by $15
 - Skipping 2 meetings without proper notice means you must write a note of apology to Madooei and read it out loud to him with the members present (optional for the non-offending members). Also, talking with team advisors to make plans for not missing more meetings.
 - Skipping 3 meetings will lead to contemplation of expulsion from the team and an apology reading to the class in the middle of class with Madooei’s permission
+- Team Meeting Saturday from 6PM - 9PM or 1PM-4PM
 
 ## Time Commitment
 
-- 3 hours of meeting time per week.
-- 3 hours of class time per week.
+- 3 hours of meeting time per week
 - Minimum 3 hours of independent work per week.
 - If a team member feels as if their time commitment does not follow the aforementioned time expectations (too little or too much), then they should voice their concerns on the Slack channel (either rethinking the scope of the iteration or ask for help). 
 - Remember this is a (really good, Madooei taught) 3-credit class.
