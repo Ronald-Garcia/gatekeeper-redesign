@@ -2,7 +2,7 @@
 
 ## Iteration 1
 
-**Dates:** ()\
+**Dates:** 2/17 - 3/2\
 **Goal:** Establish a centralized system for managing students, machines, budget codes, and transactions while ensuring machine access is restricted to trained and authorized users.
 
 ### Must-Have Features:
@@ -22,7 +22,7 @@
 
 ## Iteration 2
 
-**Dates:** ()\
+**Dates:** 3/3 - 3/16\
 **Goal:** Implement financial tracking and reporting to enable accurate billing and financial transparency for administrators and organization leaders.
 
 ### Must-Have Features:
@@ -43,7 +43,7 @@
 
 ## Iteration 3
 
-**Dates:** ()\
+**Dates:** 3/17 - 4/6\
 **Goal:** Enhance authentication and access control, ensuring administrators can enforce restrictions on users, clubs, and machines.
 
 ### Must-Have Features:
@@ -63,7 +63,7 @@
 
 ## Iteration 4
 
-**Dates:** ()\
+**Dates:** 4/7 - 4/22\
 **Goal:** Improve usability and maintenance tracking, ensuring students can access real-time shop availability and report issues, while maintaining administrator security controls.
 
 ### Must-Have Features:
