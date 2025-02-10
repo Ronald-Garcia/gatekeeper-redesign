@@ -29,7 +29,6 @@ This system can be used as a security measure for not just machining but for any
 - As an administrator, I would like the card scanners to restrict access based on a student's current trainings to ensure that the machines would only activate for students that are trained on the machine.
 - As a student, I would like to be able to select my budget code for the club/class I am doing work for.
 - As an administrator, I would like to add budget codes to student accounts, so that they can be associated with an account that can be billed.
-- As a machine owner, I want the software to have safeguards against turning off the machine mid-use, as otherwise sudden shut offs will damage the machine.
 
 ## Nice-to-Have
 - As an administrator, I want student accounts to be automatically flagged when their expected graduation year passes so I know to remove them.
@@ -43,6 +42,7 @@ This system can be used as a security measure for not just machining but for any
 - As a student, I would like to report any maintenance issues in the shop or of the machines so that administrators are aware of issues happening in the shop.
 - As an administrator, I would like for the financial statement to be automated for ease of use.
 - As an administrator, I would like to have a password and the ability to reset my password to prevent non-admins from using the administrator dashboard.
+- As a machine owner, I want the software to have safeguards against turning off the machine mid-use, as otherwise sudden shut offs will damage the machine.
 
 # Similar Existing Apps
 
@@ -64,6 +64,7 @@ This project consists of three main components:
      - View machine runtime.
 2. **Machine Interface App**
    - Runs on a Raspberry Pi at each machine.
+      - Uses the GPIO library in Python to send and read voltages from the Raspberry PI
    - Enables users to scan their JCard to activate a machine after verifying:
      - Budget code
      - JCard ID
