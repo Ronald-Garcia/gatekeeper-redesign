@@ -80,6 +80,6 @@ This project consists of three main components:
    - Either the admin dashboard or the server will send financial statement emails monthly.
 
 ### Technology Stack
-- **Frontend:** React + TypeScript with Vite, Tailwind CSS for styling.
-- **Backend:** Hono web framework, TypeScript, Drizzle ORM, SQLite database.
+- **Frontend:** React + TypeScript with Vite, Tailwind CSS for styling. Vercel for online hosting, or possibly JHU server.
+- **Backend:** Hono web framework, TypeScript, Drizzle ORM, SQLite database. Subabase for online hosting backend (works with hono), or possibly JHU server.
 - **Machine Interface:** Python to run the server on Raspberry Pis.
