@@ -2,16 +2,19 @@
   "name": "api",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "tsx watch src/server.ts",
     "prettier": "prettier --write \"src/**/*.ts\" --config \".prettierrc.json\""
   },
   "dependencies": {
     "@hono/node-server": "^1.13.8",
+    "drizzle-orm": "^0.39.3",
     "hono": "^4.7.1",
+    "pg": "^8.13.3",
     "pnpm": "^10.4.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.17",
+    "@types/pg": "^8.11.11",
     "prettier": "3.5.1",
     "tsx": "^4.7.1"
   }
