@@ -81,5 +81,5 @@ This project consists of three main components:
 
 ### Technology Stack
 - **Frontend:** React + TypeScript with Vite, Tailwind CSS for styling. Vercel for online hosting, or possibly JHU server.
-- **Backend:** Hono web framework, TypeScript, Drizzle ORM, SQLite database. Subabase for online hosting backend (works with hono), or possibly JHU server.
+- **Backend:** Hono web framework, TypeScript, Drizzle ORM, PostgreSQL database. Subabase for online hosting backend (works with hono), or possibly JHU server.
 - **Machine Interface:** Python to run the server on Raspberry Pis.
