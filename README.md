@@ -1,6 +1,6 @@
 # OOSE Team Project
 
-Name of the application goes here -- followed by a brief description (elevator pitch) of the application.
+WSE interlock -- Are you struggling to find an intuitive system for users and admin in your university machine shop? Have no fear WSE Interlock is here! With a centralized kiosk for the admin command post of your dreams and an easy, user-friendly experience with interlock devices using the machine shop will be as easy as arrive, swipe, and build! Have questions on usage and analytics? With built in financial and authorization tools you'll have no worries on trust between users and the system!
 
 - [Team Information & Agreement](./docs/team-agreement.md)
 - [Requirements Specification](./docs/requirements-specification.md)
