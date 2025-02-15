@@ -1,4 +1,4 @@
-# OOSE Team Project
+ OOSE Team Project
 
 WSE interlock -- Are you struggling to find an intuitive system for users and admin in your university machine shop? Have no fear WSE Interlock is here! With a centralized kiosk for the admin command post of your dreams and an easy, user-friendly experience with interlock devices using the machine shop will be as easy as arrive, swipe, and build! Have questions on usage and analytics? With built in financial and authorization tools you'll have no worries on trust between users and the system!
 
@@ -17,10 +17,32 @@ commands here
 
 ## Developing
 
-Detailed and step-by-step documentation for setting up local development. For example, a new team member will use these instructions to start developing the project further. 
+### We will outline the dependencies utilized on during development along with resources containing documentation for them.
+
+#### Front End dev dependencies: 
+
+ [Eslint][https://eslint.org/docs/latest/] - 9.19.0
+ [Node][https://nodejs.org/en/learn/getting-started/introduction-to-nodejs] - 22.13.4
+ [React][https://react.dev/learn] - 19.0.3
+ [Prettier][https://prettier.io/docs/install] - 3.5.1
+ [TailwindCSS][https://tailwindcss.com/docs/installation/using-vite] - 5.7.2
+ [Typescript][https://www.typescriptlang.org/docs/] - 5.7.2
+ [vite][https://vite.dev/guide/] - 6.1.0
+
+#### Back End API Dependencies: 
+[PostgresSQL][https://www.postgresql.org/download/] - 17.3
+[Drizzle-orm][https://orm.drizzle.team/docs/overview]  - 0.39.3
+[Hono][https://hono.dev/docs/] - 4.7.1
+[Arctic][https://arcticjs.dev/] - 
+
+
+#### Machine API Dependencies: 
+[Conda][https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html] - 
+
+To setup the machine api, start up anaconda_prompt and run the following command after navigating to the api-machine folder: 
 
 ```shell
-commands here
+conda env create -f [env-yml-name].yml
 ```
 
 You should include what is needed (e.g. all of the configurations) to set up the dev environment. For instance, global dependencies or any other tools (include download links), explaining what database (and version) has been used, etc. If there is any virtual environment, local server, ..., explain here. 
