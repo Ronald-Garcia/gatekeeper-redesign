@@ -33,7 +33,7 @@ commands here
 [PostgresSQL][https://www.postgresql.org/download/] - 17.3
 [Drizzle-orm][https://orm.drizzle.team/docs/overview]  - 0.39.3
 [Hono][https://hono.dev/docs/] - 4.7.1
-[Arctic][https://arcticjs.dev/] - 
+[Arctic][https://arcticjs.dev/] - 3.3.0
 
 
 #### Machine API Dependencies: 
@@ -45,6 +45,23 @@ To setup the machine api, start up anaconda_prompt and run the following command
 conda env create -f [env-yml-name].yml
 ```
 
+
+#### Setup the database locally: 
+
+Go to environment variables, once there you have to edit envornment varibles and select the PATH varibles and edit it. Once there you select the add option and add the following path: 
+
+C:\Program Files\PostgreSQL\17\bin
+
+After adding the path variable, restart VSCODE and run the following command on the home folder of the project: 
+
+```shell
+psql -U postgres -f setup_database.sql
+psql -U postgres -d team10_db -c "SELECT * FROM users;"
+```
+
+For your password, ensure you setup a simple password you will remember as it is for local development. 
+
+
 You should include what is needed (e.g. all of the configurations) to set up the dev environment. For instance, global dependencies or any other tools (include download links), explaining what database (and version) has been used, etc. If there is any virtual environment, local server, ..., explain here. 
 
 Additionally, describe and show how to run the tests, explain your code style and show how to check it.
@@ -52,9 +69,8 @@ Additionally, describe and show how to run the tests, explain your code style an
 If your project needs some additional steps for the developer to build the project after some code changes, state them here. Moreover, give instructions on how to build and release a new version. In case there's some step you have to take that publishes this project to a server, it must be stated here. 
 
 ## Contributing
-
 Refer to the [Contributing Guidelines](./CONTRIBUTING.md) for information on how to contribute to the project.
 
 ## Licensing
 
-Refer to the [Project Repository License](./LICENSE.md) for information on how the project is licensed.
+Refer to the [Project Repository License](./LICENSE.md) for information on how the project is licensed./
