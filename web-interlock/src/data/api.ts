@@ -24,6 +24,7 @@ export const sendToMachine = async (message: string, data: UserType[]) => {
         {
             credentials: "include",
             method: "POST",
+            headers: {'Content-type': 'application/json'},
             body: JSON.stringify({
                 message: message,
                 data: data
@@ -31,7 +32,7 @@ export const sendToMachine = async (message: string, data: UserType[]) => {
         }
     );
 
-    const { m }: { m: string} = await response.json();
+    const { message: m }: { message: string} = await response.json();
     if (!response.ok) {
         throw new Error(m);
     }

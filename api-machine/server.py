@@ -21,6 +21,6 @@ def demo():
     print(req_data['data'])
 
     return {
-        "message": "The last user in the database is " + req_data["data"][-1]
+        "message": "The last user in the database is " + str(req_data["data"][-1])
     }
 
