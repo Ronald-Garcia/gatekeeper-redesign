@@ -20,7 +20,7 @@ app.use('*', cors({
 // A simple GET endpoint to verify the server is running
 app.get('/', (c) => c.text('Hono server running with Drizzle ORM'));
 
-
+// get users
 app.get("users", async (c) => {
   
   const users = await db
