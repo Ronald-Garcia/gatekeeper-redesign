@@ -2,7 +2,9 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { serve } from '@hono/node-server';
-import { db, usersTable } from './db.js';
+import { db } from './db/index.js';
+import { usersTable } from './db/schema.js';
+import "dotenv/config";
 
 const app = new Hono();
 
@@ -55,7 +57,7 @@ app.post('/api/users', async (c) => {
 // Start the server using @hono/node-server's serve() function
 
 
-const port = 3000;
+const port = Number(process.env.PORT) || 3000;
 console.log(`Server running on port ${port}`);
 serve({
   fetch: app.fetch,
