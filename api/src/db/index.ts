@@ -12,6 +12,8 @@ const pool =  new pg.Pool({
 });
 export const db = drizzle({ client: pool });
 
+console.log(await db.execute("show data_directory"));
+
 
 
 

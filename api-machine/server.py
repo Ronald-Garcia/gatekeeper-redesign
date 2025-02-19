@@ -6,6 +6,11 @@ app = Flask(__name__)
 
 cors = CORS(app, supports_credentials=True);
 
+@app.route("/", methods=['GET'])
+def test_route():
+    return {
+        "message": "Welcome to Flask!"
+    }
 
 @app.route("/turn-on", methods=['POST'])
 def hello_world():
@@ -24,3 +29,6 @@ def demo():
         "message": "The last user in the database is " + str(req_data["data"][-1])
     }
 
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000)

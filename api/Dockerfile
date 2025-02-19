@@ -23,8 +23,8 @@ RUN pnpm install
 COPY . .
 
 # Build the database
-ARG PASSWORD=IntelCorei7
-ARG SERVERPORT=5432
+ARG PASSWORD=password
+ARG SERVERPORT=5433
 ENV PASSWORD=${PASSWORD}
 ENV SERVERPORT=${SERVERPORT}
 RUN pnpm db:generate
