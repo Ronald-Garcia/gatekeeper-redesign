@@ -21,23 +21,23 @@ commands here
 
 #### Front End dev dependencies: 
 
- [Eslint][https://eslint.org/docs/latest/] - 9.19.0
- [Node][https://nodejs.org/en/learn/getting-started/introduction-to-nodejs] - 22.13.4
- [React][https://react.dev/learn] - 19.0.3
- [Prettier][https://prettier.io/docs/install] - 3.5.1
- [TailwindCSS][https://tailwindcss.com/docs/installation/using-vite] - 5.7.2
- [Typescript][https://www.typescriptlang.org/docs/] - 5.7.2
- [vite][https://vite.dev/guide/] - 6.1.0
+ [Eslint](https://eslint.org/docs/latest/) - 9.19.0
+ [Node](https://nodejs.org/en/learn/getting-started/introduction-to-nodejs) - 22.13.4
+ [React](https://react.dev/learn) - 19.0.3
+ [Prettier](https://prettier.io/docs/install) - 3.5.1
+ [TailwindCSS](https://tailwindcss.com/docs/installation/using-vite) - 5.7.2
+ [Typescript](https://www.typescriptlang.org/docs/) - 5.7.2
+ [vite](https://vite.dev/guide/) - 6.1.0
 
 #### Back End API Dependencies: 
-[PostgresSQL][https://www.postgresql.org/download/] - 17.3
-[Drizzle-orm][https://orm.drizzle.team/docs/overview]  - 0.39.3
-[Hono][https://hono.dev/docs/] - 4.7.1
-[Arctic][https://arcticjs.dev/] - 3.3.0
+[PostgresSQL](https://www.postgresql.org/download/) - 17.3
+[Drizzle-orm](https://orm.drizzle.team/docs/overview)  - 0.39.3
+[Hono](https://hono.dev/docs/) - 4.7.1
+[Arctic](https://arcticjs.dev/) - 3.3.0
 
 
 #### Machine API Dependencies: 
-[Conda][https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html] - 
+[Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html) - 
 
 To setup the machine api, start up anaconda_prompt and run the following command after navigating to the api-machine folder: 
 
