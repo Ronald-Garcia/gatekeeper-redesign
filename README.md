@@ -44,29 +44,6 @@ To setup the machine api, start up anaconda_prompt and run the following command
 conda env create -f [env-yml-name].yml
 ```
 
-
-#### Setup the database locally: 
-
-Go to environment variables, once there you have to edit envornment varibles and select the PATH varibles and edit it. Once there you select the add option and add the following path: 
-
-C:\Program Files\PostgreSQL\17\bin
-
-After adding the path variable, restart VSCODE and run the following command on the home folder of the project: 
-
-```shell
-psql -U postgres -f setup_database.sql
-psql -U postgres -d team10_db -c "SELECT * FROM users;"
-```
-
-For your password, ensure you setup a simple password you will remember as it is for local development. 
-
-
-You should include what is needed (e.g. all of the configurations) to set up the dev environment. For instance, global dependencies or any other tools (include download links), explaining what database (and version) has been used, etc. If there is any virtual environment, local server, ..., explain here. 
-
-Additionally, describe and show how to run the tests, explain your code style and show how to check it.
-
-If your project needs some additional steps for the developer to build the project after some code changes, state them here. Moreover, give instructions on how to build and release a new version. In case there's some step you have to take that publishes this project to a server, it must be stated here. 
-
 ## Running Hello World
 
 To run this project's Hello World, you first need to install docker if you do not have it here: https://docs.docker.com/get-started/get-docker/
