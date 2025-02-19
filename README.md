@@ -68,6 +68,25 @@ Additionally, describe and show how to run the tests, explain your code style an
 
 If your project needs some additional steps for the developer to build the project after some code changes, state them here. Moreover, give instructions on how to build and release a new version. In case there's some step you have to take that publishes this project to a server, it must be stated here. 
 
+## Running Hello World
+
+To run this project's Hello World, you first need to install docker if you do not have it here: https://docs.docker.com/get-started/get-docker/
+
+Next, make sure you have a github personal acess token. Make a standard token and give it all permissions. For more information, look here: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
+
+To make sure you are signed with your credentials, you can run the following commands in a terminal:
+
+```shell
+docker logout ghcr.io
+docker login ghcr.io -u YOUR_GITHUB_USERNAME -p YOUR_PERSONAL_ACCESS_TOKEN
+```
+
+At this point, find the "Packages" tab in the repository. They have the names "team-10-web", "team-10-api-machine", and "team-10-api". These packages correspond to the components they are named after. To run any one of them on your machine, click on the package, and run the "install from command line" command at the top of page in your terminal.
+
+After you download the image, go to the docker web app, and click on the "Images" tab, then click the "run" button on the image you want to run.
+Then, click the "optional settings" button in the popup menu, and set a host port number.
+Finally, open a web browser and naviagte to "http://localhost:PORT_NUMBER_YOU_PUT/", or if it is an API package, ping http://localhost:PORT_NUMBER_YOU_PUT/ with a GET request.
+
 ## Contributing
 Refer to the [Contributing Guidelines](./CONTRIBUTING.md) for information on how to contribute to the project.
 
