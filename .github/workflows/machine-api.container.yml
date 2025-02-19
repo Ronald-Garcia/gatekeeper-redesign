@@ -1,4 +1,4 @@
-name: Build and push the API container image
+name: Build and push the Machine API container image
 
 on:
   push:
