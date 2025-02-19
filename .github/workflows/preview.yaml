@@ -1,7 +1,7 @@
 name: Vercel Preview Deployment
 env:
-  VERCEL_ORG_ID: ${{ team_TlW7mxJD7vqFVVWOICENgz4H }}
-  VERCEL_PROJECT_ID: ${{ prj_WrmMKEzNldHeYaRFHy6DnYpW0fZs }}
+  VERCEL_ORG_ID:  team_TlW7mxJD7vqFVVWOICENgz4H 
+  VERCEL_PROJECT_ID: prj_WrmMKEzNldHeYaRFHy6DnYpW0fZs
 on:
   push:
     branches-ignore:
