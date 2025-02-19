@@ -81,7 +81,7 @@ docker logout ghcr.io
 docker login ghcr.io -u YOUR_GITHUB_USERNAME -p YOUR_PERSONAL_ACCESS_TOKEN
 ```
 
-At this point, find the "Packages" tab in the repository. They have the names "team-10-web", "team-10-api-machine", and "team-10-api". These packages correspond to the components they are named after. To run any one of them on your machine, click on the package, and run the "install from command line" command at the top of page in your terminal.
+At this point, find the "Packages" tab in the repository. They have the names "team-10-web", and "team-10-api-machine". These packages correspond to the components they are named after. To run any one of them on your machine, click on the package, and run the "install from command line" command at the top of page in your terminal.
 
 After you download the image, go to the docker web app, and click on the "Images" tab, then click the "run" button on the image you want to run.
 Then, click the "optional settings" button in the popup menu, and set a host port number.
