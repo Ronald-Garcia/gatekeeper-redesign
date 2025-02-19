@@ -44,6 +44,12 @@ To setup the machine api, start up anaconda_prompt and run the following command
 conda env create -f [env-yml-name].yml
 ```
 
+To activate the created environment use the following command:
+
+```shell
+conda activate [env-yml-name]
+```
+
 ## Running Hello World
 
 To run this project's Hello World, you first need to install docker if you do not have it here: https://docs.docker.com/get-started/get-docker/
