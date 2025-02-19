@@ -1,19 +1,8 @@
-// api/src/db.ts
-import { drizzle } from 'drizzle-orm/node-postgres';
-import pg from 'pg'
-import "dotenv/config";
+import { config } from 'dotenv';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
 
-//Make sure to make a env file for these variables.
-const PASSWORD = process.env.PASSWORD;
-const SERVERPORT = process.env.SERVERPORT;
+config({ path: '.env' }); // or .env.local
 
-const pool =  new pg.Pool({
-  connectionString: `postgres://postgres:${PASSWORD}@127.0.0.1:${SERVERPORT}/team10_db`,
-});
-export const db = drizzle({ client: pool });
-
-console.log(await db.execute("show data_directory"));
-
-
-
-
+const client = postgres(process.env.DATABASE_URL!);
+export const db = drizzle({ client });

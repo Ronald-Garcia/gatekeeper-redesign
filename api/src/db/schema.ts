@@ -1,26 +1,27 @@
-import { pgTable, serial, varchar, text, integer } from 'drizzle-orm/pg-core';
+import { integer, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
 
+export const usersTable = pgTable('users_table', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull(),
+  age: integer('age').notNull(),
+  email: text('email').notNull().unique(),
+});
 
-// Define the users table schema using Drizzle's pg-core helpers
-export const usersTable = pgTable('users', {
-    id: serial('id').primaryKey(),
-    name: varchar('name', { length: 100 }).notNull(),
-    email: varchar('email', { length: 100 }).notNull()
-  });
+export const postsTable = pgTable('posts_table', {
+  id: serial('id').primaryKey(),
+  title: text('title').notNull(),
+  content: text('content').notNull(),
+  userId: integer('user_id')
+    .notNull()
+    .references(() => usersTable.id, { onDelete: 'cascade' }),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at')
+    .notNull()
+    .$onUpdate(() => new Date()),
+});
 
-// Define the users table schema using Drizzle's pg-core helpers
-export const tasksTable = pgTable('tasks', {
-    id: serial('id').primaryKey(),
-    title: varchar('title', { length: 100 }).notNull(),
-    description: text('description').notNull(),
-    user_id: integer("user_id").references(() => usersTable.id)
-  });
+export type InsertUser = typeof usersTable.$inferInsert;
+export type SelectUser = typeof usersTable.$inferSelect;
 
-  // Define the users table schema using Drizzle's pg-core helpers
-export const test = pgTable('test', {
-    id: serial('id').primaryKey(),
-    title: varchar('title', { length: 100 }).notNull(),
-    description: text('description').notNull(),
-    user_id: integer("user_id").references(() => usersTable.id)
-  });
-
+export type InsertPost = typeof postsTable.$inferInsert;
+export type SelectPost = typeof postsTable.$inferSelect;

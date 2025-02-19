@@ -1,10 +1,13 @@
-import { defineConfig } from "drizzle-kit";
-import "dotenv/config";
+import { config } from 'dotenv';
+import { defineConfig } from 'drizzle-kit';
+
+config({ path: '.env' });
 
 export default defineConfig({
-  dialect: 'postgresql', // 'mysql' | 'sqlite' | 'turso'
   schema: './src/db/schema.ts',
+  out: './supabase/migrations',
+  dialect: 'postgresql',
   dbCredentials: {
-    url: `postgres://postgres:${process.env.PASSWORD}@localhost:${process.env.SERVERPORT}/team10_db`,
+    url: process.env.DATABASE_URL!,
   },
-})
+});

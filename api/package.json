@@ -18,7 +18,8 @@
     "drizzle-orm": "^0.39.3",
     "hono": "^4.7.1",
     "pg": "^8.13.3",
-    "pnpm": "^10.4.0"
+    "pnpm": "^10.4.0",
+    "postgres": "^3.4.5"
   },
   "devDependencies": {
     "@types/node": "^20.11.17",
