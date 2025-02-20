@@ -20,7 +20,7 @@ This system can be used as a security measure for not just machining but for any
 # Functional Requirements
 
 ## Must-Have
-- As an administrator, I would like there to be a central dashboard that serves as a center of operations on students, machines, budget codes, and transaction reports.
+- As an administrator, I would like there to be a central dashboard that serves as a center of operations on students, machines, budget codes, and transaction reports so that I can take administrator actions all one place.
 - As an administrator, I want user's time to be tracked, so that I know how much to bill them.
 - As an administrator, I would like financial statements to be sent on a day of my choosing every month that summarizes the details of transactions that occur every month. A transaction includes the student/staff that used the machine, the budget code associated with the machining operation, the machine used, and the time spent.
 - As an administrator, I would like to be able to ban / remove users from using machines if they are not using the machines correctly.
