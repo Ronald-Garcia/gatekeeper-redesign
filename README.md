@@ -52,6 +52,9 @@ conda activate [env-yml-name]
 
 ## Running Hello World
 
+[Here](https://interlock-database-dk0isso1q-cameron-koliskos-projects.vercel.app) is the deployed database API: 
+[Here](https://oose-deploy-ij91crgi6-cameron-koliskos-projects.vercel.app/) is the deployed web app.
+ 
 To run this project's Hello World, you first need to install docker if you do not have it here: https://docs.docker.com/get-started/get-docker/
 
 Next, make sure you have a github personal acess token. Make a standard token and give it all permissions. For more information, look here: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
