@@ -52,10 +52,15 @@ conda activate [env-yml-name]
 
 ## Running Hello World
 
-[Here](https://interlock-database-dk0isso1q-cameron-koliskos-projects.vercel.app) is the deployed database API: 
+[Here](https://interlock-database-dk0isso1q-cameron-koliskos-projects.vercel.app) is the deployed database API.
+
 [Here](https://oose-deploy-ij91crgi6-cameron-koliskos-projects.vercel.app/) is the deployed web app.
- 
-To run this project's Hello World, you first need to install docker if you do not have it here: https://docs.docker.com/get-started/get-docker/
+
+We also have a dockerized version of the machine API, which you can find [HERE](https://github.com/cs421sp25-homework/team-10/pkgs/container/team-10-api-machine)
+
+If you are unfamiliar with docker, read on to det it setup to run locally.
+
+First install docker if you do not have it here: https://docs.docker.com/get-started/get-docker/
 
 Next, make sure you have a github personal acess token. Make a standard token and give it all permissions. For more information, look here: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
 
@@ -66,7 +71,10 @@ docker logout ghcr.io
 docker login ghcr.io -u YOUR_GITHUB_USERNAME -p YOUR_PERSONAL_ACCESS_TOKEN
 ```
 
-At this point, find the "Packages" tab in the repository. They have the names "team-10-web", and "team-10-api-machine". These packages correspond to the components they are named after. To run any one of them on your machine, click on the package, and run the "install from command line" command at the top of page in your terminal.
+At this point, find "team-10-api-machine" in the "Packages" tab in the repository or by clicking [HERE](https://github.com/cs421sp25-homework/team-10/pkgs/container/team-10-api-machine) . To run on your machine, run the "install from command line" command at the top of page in your terminal, which is 
+```shell
+docker pull ghcr.io/cs421sp25-homework/team-10-api-machine:latest
+```
 
 After you download the image, go to the docker web app, and click on the "Images" tab, then click the "run" button on the image you want to run.
 Then, click the "optional settings" button in the popup menu, and set a host port number.
