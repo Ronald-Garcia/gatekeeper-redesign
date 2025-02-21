@@ -35,6 +35,8 @@ commands here
 - [Arctic](https://arcticjs.dev/) - 3.3.0
 
 #### Machine API Dependencies:
+Below is the information on setup for the Machine API development but first what does this section do? The Machine API is meant to facillitate the connection between the Interlock Application and the actual machine in the WSE Machine Shop. This allow for the use of Python scripts on the Rasberry PIs in the machine shop to send signals powering the machine based on met criteria or blocking usage if specifications aren't met.
+
 - [Conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html)
  
 
