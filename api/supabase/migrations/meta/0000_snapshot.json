@@ -1,11 +1,11 @@
 {
-  "id": "b03a74de-59af-403c-9636-7954fde855b5",
+  "id": "ceddac56-f4f9-45dd-a288-6c41ec0158a7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.posts_table": {
-      "name": "posts_table",
+    "public.machine_type": {
+      "name": "machine_type",
       "schema": "",
       "columns": {
         "id": {
@@ -14,16 +14,80 @@
           "primaryKey": true,
           "notNull": true
         },
-        "title": {
-          "name": "title",
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.machines_table": {
+      "name": "machines_table",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "hourly_rate": {
+          "name": "hourly_rate",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "content": {
-          "name": "content",
-          "type": "text",
+        "machine_type_id": {
+          "name": "machine_type_id",
+          "type": "serial",
           "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "machines_table_machine_type_id_machine_type_id_fk": {
+          "name": "machines_table_machine_type_id_machine_type_id_fk",
+          "tableFrom": "machines_table",
+          "tableTo": "machine_type",
+          "columnsFrom": [
+            "machine_type_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.user_machine_table": {
+      "name": "user_machine_table",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
           "notNull": true
         },
         "user_id": {
@@ -32,28 +96,34 @@
           "primaryKey": false,
           "notNull": true
         },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
+        "machine_id": {
+          "name": "machine_id",
+          "type": "serial",
           "primaryKey": false,
           "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "posts_table_user_id_users_table_id_fk": {
-          "name": "posts_table_user_id_users_table_id_fk",
-          "tableFrom": "posts_table",
+        "user_machine_table_user_id_users_table_id_fk": {
+          "name": "user_machine_table_user_id_users_table_id_fk",
+          "tableFrom": "user_machine_table",
           "tableTo": "users_table",
           "columnsFrom": [
             "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "user_machine_table_machine_id_machines_table_id_fk": {
+          "name": "user_machine_table_machine_id_machines_table_id_fk",
+          "tableFrom": "user_machine_table",
+          "tableTo": "machines_table",
+          "columnsFrom": [
+            "machine_id"
           ],
           "columnsTo": [
             "id"
@@ -84,28 +154,40 @@
           "primaryKey": false,
           "notNull": true
         },
-        "age": {
-          "name": "age",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "email": {
-          "name": "email",
+        "card_number": {
+          "name": "card_number",
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "JHED": {
+          "name": "JHED",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "graduation_year": {
+          "name": "graduation_year",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_admin": {
+          "name": "is_admin",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "users_table_email_unique": {
-          "name": "users_table_email_unique",
+        "users_table_card_number_unique": {
+          "name": "users_table_card_number_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "email"
+            "card_number"
           ]
         }
       },
