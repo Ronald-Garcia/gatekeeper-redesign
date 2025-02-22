@@ -1,7 +1,13 @@
-import Start from "../pages/start";
+import StartPage from "../pages/start-page";
 
 const Body = () => {
-  return <Start></Start>;
+  return (
+    <>
+
+      <StartPage></StartPage>
+
+    </>
+  )
 };
 
 export default Body;

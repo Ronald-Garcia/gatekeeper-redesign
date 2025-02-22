@@ -1,3 +1,1 @@
-class MachineType {
-    
-}
+class MachineType {}
