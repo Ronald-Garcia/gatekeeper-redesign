@@ -1,3 +1,6 @@
+import { Training } from "./training";
+import { budgetCode } from "../budgetCode";
+
 export class User {
     private name: string;
     private email:string;
@@ -18,8 +21,8 @@ export class User {
         name: string,
         email: string,
         cardNum: number, 
-        //trainingList: Training[],
-        //budgetCodes: budgetCode[],
+        trainingList: Training[],
+        budgetCodes: budgetCode[],
         admin: boolean,
         year: number
 
@@ -27,8 +30,8 @@ export class User {
         this.name = name;
         this.email = email;
         this.cardNum = cardNum;
-       // this.trainingList = trainingList;
-       // this.budgetCodes = budgetCodes;
+        this.trainingList = trainingList;
+        this.budgetCodes = budgetCodes;
         this.admin = admin;
         this.year = year;
     }
@@ -49,4 +52,19 @@ export class User {
     getYear():number {
         return this.year;
     }
+
+    getTraining():Training[] {
+        return this.trainingList;
+    }
+    
+    getBudgetCodes():budgetCode[] {
+        return this.budgetCodes;
+    }
+
+    isAdmin():boolean{
+        return this.admin;
+    }
+
+
 }
+

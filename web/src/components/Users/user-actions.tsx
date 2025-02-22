@@ -12,6 +12,10 @@ export default function user-actions{
      isActive : (active: boolean) => void;
     };
 
+    handleAddTraining() => {
+        
+    }
+
 
     return (
         <>
@@ -27,6 +31,7 @@ export default function user-actions{
         <DropdownMenuContent>
           <DropdownMenuItem onClick={handleAddTraining}>Add Training</DropdownMenuItem>
           <DropdownMenuItem onClick={handleDelete} className="delete-text-red">Delete</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleBan} className="delete-text-red">Ban</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
         </>

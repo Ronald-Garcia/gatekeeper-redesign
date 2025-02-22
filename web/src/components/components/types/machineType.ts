@@ -1,1 +1,5 @@
-export class MachineType {}
+export class MachineType {
+
+
+    
+}
