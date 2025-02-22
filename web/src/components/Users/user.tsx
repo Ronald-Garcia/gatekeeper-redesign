@@ -7,6 +7,7 @@ export default function UserComponent({user}: {user:User}) {
         <>
         <div>
             <p>{user.getName()} </p>
+            <p>{user.getYear()} </p>
         </div>
         </>
     )

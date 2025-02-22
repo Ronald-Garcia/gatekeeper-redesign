@@ -3,7 +3,7 @@ export class User {
     private email:string;
     private cardNum: number; 
     private trainingList: Training[];
-    //private budgetCodes: budgetCode[];
+    private budgetCodes: budgetCode[];
     private admin: boolean;
     private year: number;
 

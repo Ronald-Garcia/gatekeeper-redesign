@@ -1,4 +1,4 @@
-class Training {
+export class Training {
     private machineTypes: MachineType;
 
     constructor(
