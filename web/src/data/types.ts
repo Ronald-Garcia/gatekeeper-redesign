@@ -1,12 +1,11 @@
 
-// FOR HELLO WORLD
 export type UserType = {
-    name: string;
-    email: string;
-}
+  name: string;
+  email: string;
+};
 
 export type TaskType = {
-    title: string;
-    description: string;
-    user_id: number;
-}
+  title: string;
+  description: string;
+  user_id: number;
+};
