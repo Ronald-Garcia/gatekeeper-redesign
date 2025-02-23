@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+
 export const queryUsersParamsSchema = z.object({
     sort: z.enum(["name_asc", "name_desc", "year_asc", "year_desc","jhed_asc", "jhed_desc"]).optional(),
     search: z.string().optional(),
@@ -32,7 +33,7 @@ export const createUser = z.object({
     admin: z.coerce
     .number()
     .min(0,"Admin tag 0 or 1")
-    .max(1,"Admin tag 0 or 1")
+    .max(1,"Admin tag 0 or 1"),
 
     
   });

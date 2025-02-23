@@ -14,15 +14,27 @@ export const usersTable = pgTable('users_table', {
 //Table that acts as the "trainings" for a user
 export const userMachineRelation = pgTable('user_machine_table',{
   id: serial('id').primaryKey(),
-  userId: integer('user_id').notNull().references(() => usersTable.id, {onDelete: 'cascade'}),
-  machineId: serial('machine_id').notNull().references(()=> machinesTable.id, {onDelete:'cascade'})
+  userId: integer('user_id')
+    .notNull()
+    .references(
+      () => usersTable.id,
+      {onDelete: 'cascade'}),
+  machineId: serial('machine_id')
+    .notNull()
+    .references(
+      ()=> machinesTable.id,
+      {onDelete:'cascade'})
 });
 
 export const machinesTable = pgTable('machines_table', {
   id: serial('id').primaryKey(),
   hourlyRate: integer('hourly_rate').notNull(),
   name: text("name").notNull(),
-  machineType: serial("machine_type_id").notNull().references(() => machineTypes.id, {onDelete:'cascade'})
+  machineType: serial("machine_type_id")
+    .notNull()
+    .references(
+      () => machineTypes.id,
+      {onDelete:'cascade'})
 })
 
 export const machineTypes = pgTable('machine_type' , {
