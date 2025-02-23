@@ -35,7 +35,14 @@ export const createUser = z.object({
     .max(1,"Admin tag 0 or 1")
 
     
-  });
+});
+
+export const deleteUser = z.object({
+    JHED: z.string()
+      .min(1, "JHED required")
+      .max(8, "JHED less than 8 characters")
+
+});
 
 export const queryBudgetCodesParamsSchema = z.object({
     sort: z.enum(["name_asc", "name_desc"]).optional(),
@@ -51,9 +58,16 @@ export const createBudgetCode = z.object({
     .min(1, "Name is required")
     .max(100, "Name must be 100 characters or less"),
   budgetCode: z.string()
-    .min(8, "Needs a 8 Character J-Card Number")
-    .max(8, "Needs a 8 Character J-Card Number"),
+    .min(8, "Needs a 8 Character Budget Code")
+    .max(8, "Needs a 8 Character Budget Code"),
 
   
+});
+
+export const deleteBudgetCode = z.object({
+  budgetCode: z.string()
+    .min(8, "Needs a 8 Character Budget Code")
+    .max(8, "Needs a 8 Character Budget Code"),
+
 });
   
