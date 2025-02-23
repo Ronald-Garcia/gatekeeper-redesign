@@ -1,16 +1,16 @@
 //import { createDeck, deleteDeck, editDeck } from "@/data/api";
 import { addUser, 
-    deleteBudgetCode,
-    addTraining,
-    setUsers,
-    deleteUserById
+    banUserFlag, 
+    deleteUserById,
+    updateUserById,
  } from "@/data/store";
 import { toast } from "sonner";
-import { useStore } from "@nanostores/react";
-import useQueryUsers from "@/hooks/use-query-users";
 import { User } from "@/components/components/types/user";
-import { Training } from "@/components/components/types/training";
-import { createUser } from "@/data/api";
+import { createUser, 
+    createUserMachineRelation, 
+    removeUser, 
+    editUser, 
+    banUser } from "@/data/api";
 
 
 
@@ -19,7 +19,7 @@ function useMutationUsers() {
  
   const deleteUser = async (id: number) => {
     try {
-    //  await removeUser(jhed); 
+      await removeUser(id); 
       deleteUserById(id); 
 
     } catch (e) {
@@ -48,29 +48,61 @@ function useMutationUsers() {
         });
       }
     };
-  };
+
 
   //function that handles state of deck
   const giveTraining = async (user_id: number, machine_id: number) => {
     try {
-      const traiining = await 
-      addTraining(updatedUser.get, updatedUser.); //using store functions to handle state of app
+       await createUserMachineRelation(user_id, machine_id);
+
     } catch (e) {
-      //get message from api response, put it on a toast
-      const errorMessage = (e as Error).message;
-      toast.error("Sorry! There was an error adding a training 🙁", {
+        //get message from api response, put it on a toast
+        const errorMessage = (e as Error).message;
+        toast.error("Sorry! There was an error creating machine relation 🙁", {
+          description: errorMessage  
+        });
+      }
+    };
 
-        description: errorMessage
+   const updateUser = async (user_id: number) => {
+    try {
+    
+      const newUser = updateUserById(user_id); //using store functions to handle state of app
+     // await editUser(newUser); //edit deck on api
+      
+    }   catch (e) {
+        //get message from api response, put it on a toast
+        const errorMessage = (e as Error).message;
+        toast.error("Sorry! There was an error updating a user 🙁", {
+          description: errorMessage  
+        });
+      }
+    };
 
-      })
-    }
-  };
 
+    const banUserById = async (user_id: number, ban: number) => {
+        try {
+        
+          const bannedUser = await banUser(user_id, ban); //using store functions to handle state of app
+         banUserFlag(bannedUser.data.getId()); //edit user on front end
+          
+        }   catch (e) {
+            //get message from api response, put it on a toast
+            const errorMessage = (e as Error).message;
+            toast.error("Sorry! There was an error banning a user 🙁", {
+              description: errorMessage  
+            });
+          }
+        };
+      
   return {
-    deleteUserById,
+    deleteUser,
     addNewUser,
-    updateDeck,
-  };
+    giveTraining,
+    updateUser,
+    banUserById
+  }
 }
 
-export default useMutationDecks;
+
+export default useMutationUsers;
