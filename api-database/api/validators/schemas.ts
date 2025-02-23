@@ -51,8 +51,8 @@ export const createBudgetCode = z.object({
     .min(1, "Name is required")
     .max(100, "Name must be 100 characters or less"),
   budgetCode: z.string()
-    .min(8, "Needs a 16 Digit J-Card Number")
-    .max(8, "Needs a 16 Digit J-Card Number"),
+    .min(8, "Needs a 8 Character J-Card Number")
+    .max(8, "Needs a 8 Character J-Card Number"),
 
   
 });
