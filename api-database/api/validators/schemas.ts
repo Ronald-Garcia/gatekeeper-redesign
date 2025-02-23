@@ -13,6 +13,12 @@ export const createUser = z.object({
     name: z.string()
       .min(1, "Name is required")
       .max(100, "Name must be 100 characters or less"),
+    lastDigit: z.coerce
+      .number()
+      .int()
+      .positive()
+      .max(9),
+    
     cardnum: z
       .string()
       .min(16, "Needs a 16 Digit J-Card Number")
@@ -23,7 +29,7 @@ export const createUser = z.object({
       .number()
       .int()
       .max(3000)
-      .max(1850)
+      .min(1850)
       .optional(),
 
     JHED: z.string()
