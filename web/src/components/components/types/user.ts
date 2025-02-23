@@ -1,13 +1,8 @@
-import { Training } from "./training";
-import { budgetCode } from "./budgetCode";
-
 export class User {
   private id: number;
   private name: string;
   private email: string;
   private cardNum: number;
-  private trainingList: Training[];
-  private budgetCodes: budgetCode[];
   private admin: boolean;
   private year: number;
   private jhed: string;
@@ -23,8 +18,6 @@ export class User {
     name: string,
     email: string,
     cardNum: number,
-    trainingList: Training[],
-    budgetCodes: budgetCode[],
     admin: boolean,
     year: number,
     jhed: string,
@@ -33,8 +26,6 @@ export class User {
     this.name = name;
     this.email = email;
     this.cardNum = cardNum;
-    this.trainingList = trainingList;
-    this.budgetCodes = budgetCodes;
     this.admin = admin;
     this.year = year;
     this.jhed = jhed;
@@ -55,14 +46,6 @@ export class User {
 
   getYear(): number {
     return this.year;
-  }
-
-  getCurrentTraining(): Training[] {
-    return this.trainingList;
-  }
-
-  getBudgetCodes(): budgetCode[] {
-    return this.budgetCodes;
   }
 
   isAdmin(): boolean {

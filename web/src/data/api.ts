@@ -1,7 +1,7 @@
 import { API_DB_URL, API_MACHINE_URL } from "@/env";
-import { UserType } from "./types";
 import { User } from "@/components/components/types/user";
 import { Training } from "@/components/components/types/training";
+import { BudgetCode } from "@/components/components/types/budgetCode";
 
 export const turnOnMachine = async (): Promise<boolean> => {
   const response = await fetch(`${API_MACHINE_URL}/turn-on`, {
@@ -19,7 +19,7 @@ export const turnOnMachine = async (): Promise<boolean> => {
 
 export const getAllUsers = async (): Promise<{
   message: string;
-  data: UserType[];
+  data: User[];
 }> => {
   const response = await fetch(`${API_DB_URL}/users`, {
     credentials: "include",
@@ -31,7 +31,7 @@ export const getAllUsers = async (): Promise<{
     throw new Error(message);
   }
 
-  const { message, data }: { message: string; data: UserType[] } =
+  const { message, data }: { message: string; data: User[] } =
     await response.json();
 
   return { message, data };
@@ -108,6 +108,45 @@ export const createUser = async (user: User): Promise<{
   return { message, data };
 }
 
+export const validateTraining = async (user_id: number, machine_id: number): Promise<{
+  message: string,
+  data: boolean
+}> => {
+  
+  const response = await fetch(`${API_DB_URL}/validate-trainings`,{
+    credentials: "include"
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+    throw new Error(message);
+  }
+
+  const { message }: { message: string } = await response.json();
+
+  return { message, data: true };
+}
+
+export const getAllTrainingsOfUser = async (user_id: number): Promise<{
+  message: string,
+  data: Training[]
+}> => {
+  const response = await fetch(`${API_DB_URL}/trainings/${user_id}`, {
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string; data: Training[] } =
+    await response.json();
+
+  return { message, data };
+}
+
 export const createUserMachineRelation = async (user_id: number, machine_id: number): Promise<{
   message: string;
   data: Training;
@@ -133,6 +172,115 @@ export const createUserMachineRelation = async (user_id: number, machine_id: num
 
 }
 
+
+
+export const getAllBudgets = async (): Promise<{
+  message: string;
+  data: BudgetCode[];
+}> => {
+  const response = await fetch(`${API_DB_URL}/budget-codes`, {
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string; data: BudgetCode[] } =
+    await response.json();
+
+  return { message, data };
+};
+
+export const getAllBudgetsOfUser = async (user_id: number): Promise<{
+  message: string;
+  data: BudgetCode[];
+}> => {
+  const response = await fetch(`${API_DB_URL}/budget-codes/${user_id}`, {
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string; data: BudgetCode[] } =
+    await response.json();
+
+  return { message, data };
+};
+
+export const createBudgetCode = async (budget: BudgetCode): Promise<{
+  message: string,
+  data: BudgetCode
+}> => {
+  const response = await fetch(`${API_DB_URL}/budget-codes`,{
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      budget
+    }),
+    credentials: "include"
+  })
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+    throw new Error(message);
+  }
+
+  const  { message, data }: { message: string, data: BudgetCode } = await response.json();
+  return { message, data};
+}
+
+export const deleteBudgetCode = async (id: number): Promise<{
+  message: string,
+  data: BudgetCode
+}> => {
+  
+  const response = await fetch(`${API_DB_URL}/budget-codes/${id}`, {
+    method: "DELETE",
+    credentials: "include"
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+    throw new Error(message);
+  }
+
+  const  { message, data }: { message: string, data: BudgetCode } = await response.json();
+  return { message, data};
+}
+
+export const editBudgetCode = async (budgetCode: BudgetCode): Promise<{
+  message: string,
+  data: BudgetCode
+}> => {
+
+  const response = await fetch(`${API_DB_URL}/users/${budgetCode.getId()}`, 
+  {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      budgetCode
+    }),
+    credentials: 'include'
+  })
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string, data: BudgetCode } = await response.json();
+  
+  return { message, data };
+
+}
+
 export const deleteUserMachineRelation = async (training_id: number): Promise<{
   message: string,
   data: Training
@@ -153,7 +301,7 @@ export const deleteUserMachineRelation = async (training_id: number): Promise<{
   return { message, data};
 }
 
-export const banUser = async (id: number, action: string): Promise<{
+export const banUser = async (id: number, ban: number): Promise<{
   message: string;
   data: User
 }> => {
@@ -162,7 +310,7 @@ export const banUser = async (id: number, action: string): Promise<{
     method: "PATCH",
     credentials: "include",
     body: JSON.stringify({
-      action
+      ban
     })
   });
 
@@ -174,5 +322,7 @@ export const banUser = async (id: number, action: string): Promise<{
   const  { message, data }: { message: string, data: User } = await response.json();
   return { message, data};
 }
+
+
 
 

@@ -1,24 +1,29 @@
-export class budgetCode {
+export class BudgetCode {
 
-    private code;
-    private amountOwed;
+    private id: number;
+    private code: number
+    private alias: string;
 
     constructor(
-        code:string, 
-        amountOwed:number
+        code: number, 
+        id: number,
+        alias: string
     ){
         this.code = code;
-        this.amountOwed = amountOwed;
-
+        this.id = id;
+        this.alias = alias;
     }
 
-    getCode(): string {
+    getCode(): number {
         return this.code;
-      }
-
-    getAmountOwed(): number {
-        return this.amountOwed;
     }
 
+    getId(): number {
+        return this.id;
+    }
+
+    getAlias(): string {
+        return this.alias;
+    }
 
 }
