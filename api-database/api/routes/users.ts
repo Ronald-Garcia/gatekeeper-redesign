@@ -1,6 +1,6 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { queryUsersParamsSchema } from "../validators/schemas";
+import { queryUsersParamsSchema, createUser, deleteUser } from "../validators/schemas";
 import { like, SQL, or, desc, asc } from "drizzle-orm";
 import { usersTable } from "../db/schema";
 
@@ -44,3 +44,5 @@ userRoutes.get("./users", zValidator("param", queryUsersParamsSchema), async (c)
     }
 
 })
+
+
