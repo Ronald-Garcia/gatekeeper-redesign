@@ -39,6 +39,7 @@ export const createUser = z.object({
     .number()
     .min(0,"Admin tag 0 or 1")
     .max(1,"Admin tag 0 or 1")
+    .optional()
 
     
 });

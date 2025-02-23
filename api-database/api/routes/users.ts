@@ -52,14 +52,7 @@ userRoutes.post("/user", zValidator("json", createUser), async (c)=>{
 
     const newUser = await db
         .insert(usersTable)
-        .values({
-            name,
-            lastDigit,
-            cardnum,
-            JHED,
-            gradYear,
-            admin
-        })
+        .values({name:name, lastDigitOfCardNum:lastDigit, cardNum:cardnum, JHED, graduationYear:gradYear, isAdmin:admin})
         .returning();
 
     return c.json(newUser, 201);
