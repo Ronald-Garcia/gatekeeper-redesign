@@ -38,9 +38,7 @@ export const createUser = z.object({
 });
 
 export const deleteUser = z.object({
-    JHED: z.string()
-      .min(1, "JHED required")
-      .max(8, "JHED less than 8 characters")
+    id: z.coerce.number().int().positive()
 
 });
 
@@ -65,9 +63,7 @@ export const createBudgetCode = z.object({
 });
 
 export const deleteBudgetCode = z.object({
-  budgetCode: z.string()
-    .min(8, "Needs a 8 Character Budget Code")
-    .max(8, "Needs a 8 Character Budget Code"),
+  id: z.coerce.number().int().positive()
 
 });
   
