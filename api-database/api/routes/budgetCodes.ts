@@ -3,6 +3,7 @@ import { Hono } from "hono";
 import { queryBudgetCodesParamsSchema, createBudgetCode, deleteBudgetCode } from "../validators/schemas";
 import { like, SQL, or, desc, asc } from "drizzle-orm";
 import { budgetCodes } from "../db/schema";
+import { db } from "../db/index";
 
 
 export const budgetCodesRoutes = new Hono();
@@ -12,6 +13,19 @@ budgetCodesRoutes.get("/budgetCodes", zValidator("param", queryBudgetCodesParams
 })
 
 budgetCodesRoutes.post("/budgetCodes", zValidator("json", createBudgetCode), async (c)=>{
+
+    const {name, budgetCode } = c.req.valid("json");
+
+    //Insertion of new Budget Code
+    const newBudgetCode = await db
+        .insert(budgetCodes)
+        .values({
+            name,
+            budgetCode
+        })
+        .returning()
+
+    return c.json(newBudgetCode, 201);
 
 })
 
