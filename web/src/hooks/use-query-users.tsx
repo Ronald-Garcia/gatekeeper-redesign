@@ -1,5 +1,5 @@
+import { $users } from "@/data/store";
 import { useStore } from "@nanostores/react";
-import {user}
 
 function useQueryUsers() {
   const decks = useStore($users);

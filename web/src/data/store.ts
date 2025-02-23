@@ -3,33 +3,33 @@ import { atom } from "nanostores";
 import { budgetCode } from "@/components/components/types/budgetCode";
 
 
-export const users = atom<User[]> ([]);
-export const codes = atom<budgetCode[]> ([]);
+export const $users = atom<User[]> ([]);
+export const $codes = atom<budgetCode[]> ([]);
 
 export function addUser(user:User) {
-    users.set([...users.get(), user]);
+    $users.set([...$users.get(), user]);
 }
 
-export function deleteUser(cardNum:number) {
-    users.set(users.get().filter((user:User) => user.getCardNumber() !== cardNum));
-}
+export function deleteUserById(id :number) {
+    $users.set($users.get().filter((user:User) => user.getId() !== id));
 
-export function addTraining(cardNum:number) {
-    users.set(users.get().filter((user:User) => user.getCardNumber() !== cardNum));
+
+export function addTraining(id :number) {
+    $users.set($users.get().filter((user:User) => user.getId() !== id));
 }
 
 export function setUsers(userList: User[]) {
-    users.set(userList);
+    $users.set(userList);
 }
 
 export function setBudgetCodes(codeList:budgetCode[]){
-    codes.set(codeList);
+    $codes.set(codeList);
 }
 
 export function addBudgetCode(code:budgetCode) {
-    codes.set([...codes.get(), code]);
+    codes.set([...$codes.get(), code]);
 }
 
 export function deleteBudgetCode(codeNum:string) {
-    codes.set(codes.get().filter((code:budgetCode) => code.getCode() !== codeNum));
+    $codes.set($codes.get().filter((code:budgetCode) => code.getCode() !== codeNum));
 }
