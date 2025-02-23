@@ -10,7 +10,7 @@ export const userRoutes = new Hono();
 
 
 
-userRoutes.get("./users", zValidator("param", queryUsersParamsSchema), async (c) => {
+userRoutes.get("/users", zValidator("param", queryUsersParamsSchema), async (c) => {
     const { page = 1, limit = 20, sort, search } = c.req.valid("param");
 
     const whereClause: (SQL | undefined)[] = [];
@@ -45,10 +45,10 @@ userRoutes.get("./users", zValidator("param", queryUsersParamsSchema), async (c)
 
 })
 
-userRoutes.post("./user", zValidator("json", createUser), async (c)=>{
+userRoutes.post("/user", zValidator("json", createUser), async (c)=>{
 
 })
 
-userRoutes.delete("./user", zValidator("json", deleteUser), async (c)=>{
+userRoutes.delete("/user", zValidator("json", deleteUser), async (c)=>{
     
 })
