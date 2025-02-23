@@ -1,7 +1,8 @@
 import { useStore } from "@nanostores/react";
+import {user}
 
 function useQueryUsers() {
-  const decks = useStore($decks);
+  const decks = useStore($users);
 
   const loadDecks = async (page: number = 1) => {
     try {
@@ -10,7 +11,7 @@ function useQueryUsers() {
         totalDecks,
         totalPages,
       } = await fetchDecks(page);
-      setDecks(fetchedDecks);
+      setUsers(fetchedDecks);
       setPage(page);
       setTotalDecks(totalDecks);
       setTotalPages(totalPages);

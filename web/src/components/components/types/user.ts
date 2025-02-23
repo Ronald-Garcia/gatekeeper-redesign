@@ -1,70 +1,65 @@
 import { Training } from "./training";
-import { budgetCode } from "../budgetCode";
+import { budgetCode } from "./budgetCode";
 
 export class User {
-    private name: string;
-    private email:string;
-    private cardNum: number; 
-    private trainingList: Training[];
-    private budgetCodes: budgetCode[];
-    private admin: boolean;
-    private year: number;
+  private name: string;
+  private email: string;
+  private cardNum: number;
+  private trainingList: Training[];
+  private budgetCodes: budgetCode[];
+  private admin: boolean;
+  private year: number;
 
-    /* constructor for a user
+  /* constructor for a user
      name - student's name
      email - student's
      cardNum - 
      trainingList -
      budgetCodes - 
     */
-    constructor(
-        name: string,
-        email: string,
-        cardNum: number, 
-        trainingList: Training[],
-        budgetCodes: budgetCode[],
-        admin: boolean,
-        year: number
+  constructor(
+    name: string,
+    email: string,
+    cardNum: number,
+    trainingList: Training[],
+    budgetCodes: budgetCode[],
+    admin: boolean,
+    year: number,
+  ) {
+    this.name = name;
+    this.email = email;
+    this.cardNum = cardNum;
+    this.trainingList = trainingList;
+    this.budgetCodes = budgetCodes;
+    this.admin = admin;
+    this.year = year;
+  }
 
-    ) {
-        this.name = name;
-        this.email = email;
-        this.cardNum = cardNum;
-        this.trainingList = trainingList;
-        this.budgetCodes = budgetCodes;
-        this.admin = admin;
-        this.year = year;
-    }
+  getName(): string {
+    return this.name;
+  }
 
+  getEmail(): string {
+    return this.email;
+  }
 
-    getName():string {
-        return this.name;
-    }
+  getCardNumber(): number {
+    return this.cardNum;
+  }
 
-    getEmail():string {
-        return this.email;
-    }
+  getYear(): number {
+    return this.year;
+  }
 
-    getCardNumber():number {
-        return this.cardNum;
-    }
+  getCurrentTraining(): Training[] {
+    return this.trainingList;
+  }
 
-    getYear():number {
-        return this.year;
-    }
+  getBudgetCodes(): budgetCode[] {
+    return this.budgetCodes;
+  }
 
-    getTraining():Training[] {
-        return this.trainingList;
-    }
-    
-    getBudgetCodes():budgetCode[] {
-        return this.budgetCodes;
-    }
-
-    isAdmin():boolean{
-        return this.admin;
-    }
-
-
+  isAdmin(): boolean {
+    return this.admin;
+  }
 }
-
