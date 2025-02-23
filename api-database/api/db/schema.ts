@@ -56,7 +56,7 @@ export type InsertUserMachineRelation = typeof userMachineRelation.$inferInsert;
 export type SelectUserMachineRelation = typeof userMachineRelation.$inferSelect;
 
 export type InsertBudgetCode = typeof budgetCodes.$inferInsert;
-export type SelectBudgetCode = typeof budgetCodes.$inferSelect;
+export type SelectBudgetCode = typeof budgetCodes.$inferSelect
 
 
 
