@@ -36,4 +36,24 @@ export const createUser = z.object({
 
     
   });
+
+export const queryBudgetCodesParamsSchema = z.object({
+    sort: z.enum(["name_asc", "name_desc"]).optional(),
+    search: z.string().optional(),
+    page: z.coerce.number().int().positive().optional(),
+    limit: z.coerce.number().int().positive().optional(),
+    budgetCode: z.coerce.number().int().positive().optional(),
+    name: z.string().optional(),
+});
+
+export const createBudgetCode = z.object({
+  name: z.string()
+    .min(1, "Name is required")
+    .max(100, "Name must be 100 characters or less"),
+  budgetCode: z.string()
+    .min(8, "Needs a 8 Character J-Card Number")
+    .max(8, "Needs a 8 Character J-Card Number"),
+
+  
+});
   
