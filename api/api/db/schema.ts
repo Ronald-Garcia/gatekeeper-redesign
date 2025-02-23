@@ -14,7 +14,7 @@ export const usersTable = pgTable('users_table', {
 //Table that acts as the "trainings" for a user
 export const userMachineRelation = pgTable('user_machine_table',{
   id: serial('id').primaryKey(),
-  userId: integer('user_id').notNull().references(() => usersTable.id, {onDelete: 'cascade'}),
+  userId: serial('user_id').notNull().references(() => usersTable.id, {onDelete: 'cascade'}),
   machineId: serial('machine_id').notNull().references(()=> machinesTable.id, {onDelete:'cascade'})
 });
 
@@ -30,6 +30,17 @@ export const machineTypes = pgTable('machine_type' , {
   type: text('type').notNull()
 })
 
+export const budgetCodes = pgTable('budgetCodes' , {
+  id: serial('id').primaryKey(),
+  budgetCode: text("budgetCode").notNull(),
+  name: text("name").notNull(),
+})
+
+export const userBudgetCodeRelation = pgTable('user_budget_code_table',{
+  id: serial('id').primaryKey(),
+  userId: serial('user_id').notNull().references(() => usersTable.id, {onDelete: 'cascade'}),
+  budgetCodeId: serial('budget_code_id').notNull().references(()=> machinesTable.id, {onDelete:'cascade'})
+});
 
 export type InsertUser = typeof usersTable.$inferInsert;
 export type SelectUser = typeof usersTable.$inferSelect;
