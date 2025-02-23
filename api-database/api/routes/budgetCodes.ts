@@ -16,7 +16,7 @@ budgetCodesRoutes.get("/budgetCodes", zValidator("param", queryBudgetCodesParams
 
 budgetCodesRoutes.post("/budgetCodes", zValidator("json", createBudgetCode), async (c)=>{
 
-    const {name, budgetCode } = c.req.valid("json");
+    const { name, budgetCode } = c.req.valid("json");
 
     //Insertion of new Budget Code
     const newBudgetCode = await db

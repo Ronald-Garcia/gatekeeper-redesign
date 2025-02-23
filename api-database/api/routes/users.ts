@@ -1,9 +1,10 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { queryUsersParamsSchema, createUser, deleteUser } from "../validators/schemas";
-import { like, SQL, or, desc, asc } from "drizzle-orm";
+import { like, SQL, or, desc, asc, eq } from "drizzle-orm";
 import { usersTable } from "../db/schema";
-
+import { db } from "../db/index";
+import { HTTPException} from "hono/http-exception";
 
 
 export const userRoutes = new Hono();
@@ -47,7 +48,23 @@ userRoutes.get("/users", zValidator("param", queryUsersParamsSchema), async (c) 
 
 userRoutes.post("/user", zValidator("json", createUser), async (c)=>{
 
-})
+    const { name, lastDigit, cardnum, JHED, gradYear, admin } = c.req.valid("json");
+
+    const newUser = await db
+        .insert(usersTable)
+        .values({
+            name,
+            lastDigit,
+            cardnum,
+            JHED,
+            gradYear,
+            admin
+        })
+        .returning();
+
+    return c.json(newUser, 201);
+
+})  
 
 userRoutes.delete("/user", zValidator("json", deleteUser), async (c)=>{
     
