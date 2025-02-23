@@ -7,3 +7,14 @@ import { budgetCodes } from "../db/schema";
 
 export const budgetCodesRoutes = new Hono();
 
+budgetCodesRoutes.get("./budgetCodes", zValidator("param", queryBudgetCodesParamsSchema), async (c)=>{
+    
+})
+
+budgetCodesRoutes.post("./budgetCodes", zValidator("json", createBudgetCode), async (c)=>{
+
+})
+
+budgetCodesRoutes.delete("./budgetCodes", zValidator("json", deleteBudgetCode), async (c)=>{
+    
+})

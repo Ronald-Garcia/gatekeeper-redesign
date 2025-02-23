@@ -45,4 +45,10 @@ userRoutes.get("./users", zValidator("param", queryUsersParamsSchema), async (c)
 
 })
 
+userRoutes.post("./user", zValidator("json", createUser), async (c)=>{
 
+})
+
+userRoutes.delete("./user", zValidator("json", deleteUser), async (c)=>{
+    
+})
