@@ -5,50 +5,71 @@ import StartPage from "../pages/start-page";
 import { $router } from "@/data/router";
 import { openPage, redirectPage } from "@nanostores/router";
 import { useStore } from "@nanostores/react";
-import { $user } from "@/data/store";
 import useMutationUsers from "@/hooks/user-mutation-hooks";
 
 
 const Body = () => {
 
   
-
-  const [userValidated, setUserValidated] =  useState(false);
-  const user = useStore($user);
-  const { fetchUser} = useMutationUsers();
+  const router = useStore($router);
+  // const [userValidated, setUserValidated] =  useState(false);
+  // const user = useStore($user);
+  // const { fetchUser} = useMutationUsers();
   
-  const [keyboard, setKeyboard] =  useState("");
+  // const [keyboard, setKeyboard] =  useState("");
+
+  if (!router) {
+    return (
+      <>
+        <div>
+        </div>
+      </>
+    )
+  }
+
+  return (
+
+    <>
+    
+      {router.route === "machine_login" && <MachineLogin></MachineLogin>}
+
+      {router.route === "dashboard" && <AdminDashboard></AdminDashboard>}
+
+      {router.route === "start_page" && <StartPage></StartPage>}
+
+    </>
+  )  
 
 
  // const user = useStore($user)
-  useEffect(() =>  {
+  // useEffect(() =>  {
 
-    if (keyboard !=== "") {
+  //   if (keyboard !=== "") {
 
-      fetchUser(keyboard);
+  //     fetchUser(keyboard);
 
-      //validateUser(user);
+  //     //validateUser(user);
 
 
-    }
+  //   }
 
      
   
     
-  },[]);
+  // },[]);
     
     
-      if (!userValidated) {
-          return <MachineLogin />;
-        }
+  //     if (!userValidated) {
+  //         return <MachineLogin />;
+  //       }
 
        
-        if (user.isAdmin) {
+  //       if (user.isAdmin) {
         
-          return <MachineSelection />;
-        } else {
-          return <StartPage />;
-        }
+  //         return <MachineSelection />;
+  //       } else {
+  //         return <StartPage />;
+  //       }
       
           
     

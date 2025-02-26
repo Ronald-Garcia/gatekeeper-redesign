@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { handle } from "@hono/node-server/vercel";
+import { db } from "./db";
 
 const app = new Hono();
 

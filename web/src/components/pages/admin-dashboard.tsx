@@ -19,8 +19,8 @@ const AdminDashboard = () => {
 
 
         <div>
-          {currRouter === "users" && <UsersComponent></UsersComponent>}
-          {currRouter === "budgets" && <BudgetComponent></BudgetComponent>}
+          {/* {currRouter === "users" && <UsersComponent></UsersComponent>}
+          {currRouter === "budgets" && <BudgetComponent></BudgetComponent>} */}
         </div>
         
         

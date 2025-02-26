@@ -1,7 +1,45 @@
 import { turnOnMachine } from "@/data/api";
 import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { useEffect, useRef, useState } from "react";
+import useQueryUsers from "@/hooks/use-query-users";
+import { redirectPage } from "@nanostores/router";
+import { $router } from "@/data/router";
 
 const StartPage = () => {
+
+  
+  const [cardNum, setCardNum] = useState("");
+
+  const { validateUser } = useQueryUsers(false);
+
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCardNum(e.target.value);
+  }
+
+  const handleSubmitOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+
+    if (e.key === "Enter" && cardNum) {
+      e.preventDefault();
+
+      const newCardNum = cardNum.substring(1, cardNum.length - 1);
+      
+      validateUser(Number.parseInt(newCardNum)).then(s => {
+        if (s === "ready") {
+          
+        } else if (s === "setup") {
+          redirectPage($router, "machine_login");
+        }
+      });
+
+    }
+
+    
+    
+  }
+
+  
+
   return (
     <>
       <div className="flex flex-col justify-center items-center h-[100vp] w-[100vp]">
@@ -20,6 +58,13 @@ const StartPage = () => {
         >
           JHUOAuth
         </Button>
+
+        <Input
+          onChange={handleOnChange}
+          placeholder="Swipe your card!"
+          onKeyDown={handleSubmitOnEnter}
+        >
+        </Input>
       </div>
     </>
   );
