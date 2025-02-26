@@ -2,7 +2,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { queryUsersParamsSchema, createUser, deleteUser } from "../validators/schemas";
 import { like, SQL, or, desc, asc, eq } from "drizzle-orm";
-import { usersTable } from "../db/schema";
+import { budgetCodes, machineTypes, usersTable } from "../db/schema";
 import { db } from "../db/index";
 import { HTTPException} from "hono/http-exception";
 
@@ -66,6 +66,23 @@ userRoutes.post("/sign-up", zValidator("json", createUser), async (c)=>{
         .returning();
 
     return c.json(newUser);
+})
+
+userRoutes.post("/54321", zValidator("param", queryUsersParamsSchema), async (c) => {
+    
+try{
+    const newCodeInfo =  await db.insert(machineTypes).values(
+    {
+        type:"test"
+    }
+    ).returning();
+    return c.json(newCodeInfo);
+}
+catch (error:unknown){
+    console.log("pain");
+    console.log(error);
+}
+    
 })
   
 
