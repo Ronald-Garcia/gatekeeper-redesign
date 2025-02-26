@@ -1,8 +1,8 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { queryUsersParamsSchema, createUser, deleteUser } from "../validators/schemas";
+import { queryUsersParamsSchema, deleteUser, createUserSchema, validateUserSchema } from "../validators/schemas";
 import { like, SQL, or, desc, asc, eq } from "drizzle-orm";
-import { budgetCodes, machineTypes, usersTable } from "../db/schema";
+import { budgetCodes, machinesTable, machineTypes, userMachineTable, usersTable } from "../db/schema";
 import { db } from "../db/index";
 import { HTTPException} from "hono/http-exception";
 
@@ -48,7 +48,7 @@ userRoutes.get("/users", zValidator("param", queryUsersParamsSchema), async (c) 
 })
 
 //Sign up a user
-userRoutes.post("/sign-up", zValidator("json", createUser), async (c)=>{
+userRoutes.post("/sign-up", zValidator("json", createUserSchema), async (c)=>{
 
     const { name, lastDigitOfCardNum, cardNum, JHED, graduationYear, isAdmin } = c.req.valid("json");
     
@@ -68,24 +68,59 @@ userRoutes.post("/sign-up", zValidator("json", createUser), async (c)=>{
     return c.json(newUser);
 })
 
-userRoutes.post("/54321", zValidator("param", queryUsersParamsSchema), async (c) => {
+// Check if a user is valid for a machine.
+// TODO: Create and give them a session token when we do authentication.
+userRoutes.post("/validate-user", zValidator("json",validateUserSchema), async(c) => {
+    //Given you have a well formed card number, check if that card num exists in user table.
+    const {cardNum, lastDigitOfCardNum, machineId} = c.req.valid("json");
+    var [user] = await db
+        .select()
+        .from(usersTable)
+        .where(eq(usersTable.cardNum, cardNum));
     
-try{
-    const newCodeInfo =  await db.insert(machineTypes).values(
-    {
-        type:"test"
+    // Check if exists. If not, throw error.
+    if (!user) {    
+        throw new HTTPException(404, { message: "User not found" });
     }
-    ).returning();
-    return c.json(newCodeInfo);
-}
-catch (error:unknown){
-    console.log("pain");
-    console.log(error);
-}
-    
-})
-  
+    // Also, do a check to see if this is an old jcard scan attempt. If yes, deny.
+    // We should make this happen at same time as other check to avoid distinguishing time of response.
+    if (user.lastDigitOfCardNum > lastDigitOfCardNum) {
+        throw new HTTPException(404, { message: "User not found" });
+    }
 
+    // Check for a more recent jcard num. In this case, we will update the last digit with the new digit
+    if (user.lastDigitOfCardNum > lastDigitOfCardNum) {
+        [user] = await db
+            .update(usersTable)
+            .set({lastDigitOfCardNum})
+            .where(eq(usersTable.id, user.id))
+            .returning();
+    }
+
+    //Check if the machine they are requesting exists.
+    const[machine] = await db
+        .select()
+        .from(machinesTable)
+        .where(eq(machinesTable.id, machineId));
+    if (!machine) {
+        throw new HTTPException(404, { message: "Machine not found" });
+    }
+
+    //Once we have our user and updated card if needed, check their credentials for the machine in user-machine table.
+    const [relation] = await db
+        .select()
+        .from(userMachineTable)
+        .where(eq(userMachineTable.userId, user.id) && eq(userMachineTable.machineId, machineId));
+
+    if (!relation) {
+        throw new HTTPException(403, { message: "User does not have access to given machine" });
+    }
+
+    //TODO: Create a session token and return it.
+    //For now, we will throw unimplemented.
+    throw new HTTPException(501, { message: "Have not implemented sessions for users yet." });
+
+})
 
 userRoutes.delete("/user", zValidator("json", deleteUser), async (c)=>{
     

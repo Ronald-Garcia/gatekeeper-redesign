@@ -9,7 +9,7 @@ export const queryUsersParamsSchema = z.object({
     JHED: z.string().optional(),
 });
 
-export const createUser = z.object({
+export const createUserSchema = z.object({
     name: z.string()
       .min(1, "Name is required")
       .max(100, "Name must be 100 characters or less"),
@@ -41,6 +41,26 @@ export const createUser = z.object({
     .max(1,"Admin tag 0 or 1")
 
 });
+
+//This guy just checks if you have a well formed card number and a machine id.
+export const validateUserSchema = z.object({
+  cardNum: z
+  .string()
+  .min(15, "Needs a 15 Digit J-Card Number")
+  .max(15, "Needs a 15 Digit J-Card Number"),
+
+  lastDigitOfCardNum: z.coerce
+  .number()
+  .int()
+  .positive()
+  .max(9),
+
+  machineId: z.coerce
+  .number()
+  .int()
+  .positive()
+
+})
 
 export const deleteUser = z.object({
     id: z.coerce.number().int().positive()
