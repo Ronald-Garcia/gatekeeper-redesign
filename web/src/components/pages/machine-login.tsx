@@ -4,7 +4,9 @@ const MachineLogin = () => {
 
     return (
         <>
-        
+            <div>
+                Hello
+            </div>
         </>
     );
 

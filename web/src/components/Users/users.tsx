@@ -1,10 +1,10 @@
 import { useStore } from "@nanostores/react";
-import { users } from "@/data/store";
+import { $users } from "@/data/store";
 import { Button } from "../ui/button";
 import UserComponent from "./user";
 
 export default function UsersComponent() {
-  const userList = useStore(users);
+  const userList = useStore($users);
 
   return (
     <div>
