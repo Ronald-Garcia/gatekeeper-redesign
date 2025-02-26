@@ -1,8 +1,22 @@
 import { BudgetCode } from "@/data/types/budgetCode";
 import { Button } from "../ui/button";
 import UsersComponent from "../Users/users";
+import { $router } from "@/data/router";
+import { useStore } from "@nanostores/react";
 
 const AdminDashboard = () => {
+
+  const router = useStore($router);
+  if (!router) {
+    return (
+      <>
+        <div>
+        </div>
+      </>
+    )
+  }
+
+
   return (
     <>
       <div>
@@ -16,16 +30,12 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-
-
         <div>
-          {/* {currRouter === "users" && <UsersComponent></UsersComponent>}
-          {currRouter === "budgets" && <BudgetComponent></BudgetComponent>} */}
+          {router.route === "users" && <UsersComponent></UsersComponent>}
+          {router.route === "budgetCodes" && <BudgetComponent></BudgetComponent>} 
         </div>
         
-        
-        
-
+      
       </div>
 
     </>

@@ -29,7 +29,7 @@ export class User {
     this.admin = admin;
     this.year = year;
     this.jhed = jhed;
-    this.id = id;
+    this.id = -1;
   }
 
   getName(): string {

@@ -33,7 +33,7 @@ const Body = () => {
     
       {router.route === "machine_login" && <MachineLogin></MachineLogin>}
 
-      {router.route === "dashboard" && <AdminDashboard></AdminDashboard>}
+      {(router.route === "users" ||router.route === "budgetCodes")  && <AdminDashboard></AdminDashboard>}
 
       {router.route === "start_page" && <StartPage></StartPage>}
 
@@ -41,37 +41,6 @@ const Body = () => {
   )  
 
 
- // const user = useStore($user)
-  // useEffect(() =>  {
-
-  //   if (keyboard !=== "") {
-
-  //     fetchUser(keyboard);
-
-  //     //validateUser(user);
-
-
-  //   }
-
-     
-  
-    
-  // },[]);
-    
-    
-  //     if (!userValidated) {
-  //         return <MachineLogin />;
-  //       }
-
-       
-  //       if (user.isAdmin) {
-        
-  //         return <MachineSelection />;
-  //       } else {
-  //         return <StartPage />;
-  //       }
-      
-          
     
 };
 
