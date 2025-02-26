@@ -1,15 +1,43 @@
+import { useEffect, useState } from "react";
 import AdminDashboard from "../pages/admin-dashboard";
 import MachineLogin from "../pages/machine-login";
 import StartPage from "../pages/start-page";
+import { $router } from "@/data/router";
+import { openPage, redirectPage } from "@nanostores/router";
+import { useStore } from "@nanostores/react";
+import { $user } from "@/data/store";
+
 
 const Body = () => {
+
+  const [userValidated, setUserValidated] =  useState(false);
+  const user = useStore($user);
+
+ // const user = useStore($user)
+  useEffect(() =>  {
+
+    await fetchUser();
+
+    
+  },[]);
+
+
   return (
     <>
-      {/* <StartPage></StartPage> */}
+    
+      if (!userValidated) {
+          return <MachineLogin />;
+        }
 
-      <MachineLogin></MachineLogin>
-
-      {/* <AdminDashboard></AdminDashboard> */}
+       
+        if (user.isAdmin) {
+        
+          return <MachineSelection />;
+        } else {
+          return <StartPage />;
+        }
+      
+          
     </>
   );
 };

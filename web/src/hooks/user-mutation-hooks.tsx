@@ -1,16 +1,17 @@
 //import { createDeck, deleteDeck, editDeck } from "@/data/api";
-import { addUser, 
+import { $user, addUser, 
     banUserFlag, 
     deleteUserById,
     updateUserById,
  } from "@/data/store";
 import { toast } from "sonner";
-import { User } from "@/components/components/types/user";
+import { User } from "@/data/types/user";
 import { createUser, 
     createUserMachineRelation, 
     removeUser, 
     editUser, 
-    banUser } from "@/data/api";
+    banUser, 
+    getUser} from "@/data/api";
 
 
 
@@ -94,13 +95,33 @@ function useMutationUsers() {
             });
           }
         };
+
+
+      const fetchUser = async (card: number) => {
+          try {
+          const currUser = await getUser(card); 
+           $user.set(currUser);
+      
+          } catch (e) {
+            //get message from api response, put it on a toast
+            const errorMessage = (e as Error).message;
+            toast.error("Sorry! There was an error removing a user 🙁", {
+      
+              description: errorMessage
+      
+            })
+          }
+        };
+
+
       
   return {
     deleteUser,
     addNewUser,
     giveTraining,
     updateUser,
-    banUserById
+    banUserById,
+    fetchUser
   }
 }
 

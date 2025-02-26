@@ -1,3 +1,4 @@
+import { BudgetCode } from "@/data/types/budgetCode";
 import { Button } from "../ui/button";
 import UsersComponent from "../Users/users";
 
@@ -14,8 +15,15 @@ const AdminDashboard = () => {
             />
           </div>
         </div>
+
+
+
+        <div>
+          {currRouter === "users" && <UsersComponent></UsersComponent>}
+          {currRouter === "budgets" && <BudgetComponent></BudgetComponent>}
+        </div>
         
-        <UsersComponent></UsersComponent>
+        
         
 
       </div>
