@@ -4,8 +4,11 @@ import Header from "./components/layout/header";
 function App() {
   return (
     <>
-      <Header />
-      <Body></Body>
+      <div className="h-[100vh]">
+        <Header />
+        <Body></Body>
+
+      </div>
     </>
   );
 }
