@@ -62,9 +62,9 @@ export const validateUserSchema = z.object({
 
 })
 
-export const deleteUser = z.object({
-    id: z.coerce.number().int().positive()
-
+//Just checks if the id number is int and positive.
+export const getUserSchema = z.object({
+    userId: z.coerce.number().int().positive()
 });
 
 export const queryBudgetCodesParamsSchema = z.object({
