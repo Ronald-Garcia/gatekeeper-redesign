@@ -1,7 +1,7 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { queryUsersParamsSchema, createUserSchema, validateUserSchema, getUserSchema } from "../validators/schemas";
-import { like, SQL, or, desc, asc, eq } from "drizzle-orm";
+import { like, SQL, or, desc, asc, eq, and } from "drizzle-orm";
 import { budgetCodes, machines, machineTypes, userMachineType, users } from "../db/schema";
 import { db } from "../db/index";
 import { HTTPException} from "hono/http-exception";
@@ -112,7 +112,7 @@ userRoutes.post("/validate-user", zValidator("json",validateUserSchema), async(c
     const [relation] = await db
         .select()
         .from(userMachineType)
-        .where(eq(userMachineType.userId, user.id) && eq(userMachineType.machineType, machineId));
+        .where(and(eq(userMachineType.userId, user.id), eq(userMachineType.machineType, machine.machineType)));
 
     if (!relation) {
         throw new HTTPException(403, { message: "User does not have access to given machine" });
