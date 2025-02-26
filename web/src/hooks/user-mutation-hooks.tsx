@@ -53,7 +53,7 @@ function useMutationUsers() {
   //function that handles state of deck
   const giveTraining = async (user_id: number, machine_id: number) => {
     try {
-       await createUserMachineRelation(user_id, machine_id);
+      await createUserMachineRelation(user_id, machine_id);
 
     } catch (e) {
         //get message from api response, put it on a toast

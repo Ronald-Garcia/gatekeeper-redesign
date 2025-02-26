@@ -83,6 +83,25 @@ export const removeUser = async (id: number): Promise<{
   return { message, data };
 }
 
+export const getUser = async (cardNum: number): Promise<{
+  message: string;
+  data: User
+}> => {
+
+  const response = await fetch(`${API_DB_URL}/users`, {
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string, data: User } = await response.json();
+  
+  return { message, data };
+}
+
 export const createUser = async (user: User): Promise<{
   message: string;
   data: User;

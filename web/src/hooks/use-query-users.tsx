@@ -1,4 +1,4 @@
-import { getAllUsers } from "@/data/api";
+import { getAllUsers, getUser } from "@/data/api";
 import { $users, 
   setUsers,
  } from "@/data/store";
@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 
 function useQueryUsers() {
-  const decks = useStore($users);
+  const users = useStore($users);
 
   const loadUsers = async () => {
     try {
@@ -28,7 +28,7 @@ function useQueryUsers() {
     loadUsers();
   }, []);
 
-  return { decks, loadUsers };
+  return { users, loadUsers };
 }
 
 export default useQueryUsers;
