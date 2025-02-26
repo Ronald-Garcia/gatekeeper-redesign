@@ -1,5 +1,4 @@
 export class MachineType {
-    
     private id: number;
     private name: string;
 
@@ -19,7 +18,4 @@ export class MachineType {
         return this.name;
     }
 
-
-
-    
 }
