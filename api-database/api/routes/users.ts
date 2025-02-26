@@ -122,7 +122,7 @@ userRoutes.post("/validate-user", zValidator("json",validateUserSchema), async(c
 
 })
 
-userRoutes.delete("/user/:id", 
+userRoutes.delete("/users/:id", 
     //authGuard,
     zValidator("param", getUserSchema), async (c)=>{
     const {userId} = c.req.valid("param");
