@@ -1,6 +1,6 @@
 const Header = () => {
   return (
-    <div className="h-2/5 bg-[#002D72] flex">
+    <div className="h-2/5 max-h-[100px] bg-[#002D72] flex">
       <div>
         <object
           type="image/svg+xml"

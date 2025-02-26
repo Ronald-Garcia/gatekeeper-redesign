@@ -1,9 +1,11 @@
 import { User } from "@/components/components/types/user";
 import { atom } from "nanostores";
 import { BudgetCode } from "@/components/components/types/budgetCode";
+import { MachineType } from "@/components/components/types/machineType";
 
 export const $users = atom<User[]>([]);
 export const $codes = atom<BudgetCode[]>([]);
+export const $machines = atom<MachineType[]>([]);
 
 export function addUser(user: User) {
   $users.set([...$users.get(), user]);
@@ -41,3 +43,42 @@ export function deleteBudgetCodeByNum(codeNum: number) {
     $codes.get().filter((code: BudgetCode) => code.getCode() !== codeNum),
   );
 }
+
+export function addMachine(machine: MachineType) {
+  $machines.set(
+    [...$machines.get(), machine]
+  )
+}
+
+const machine1 = new MachineType("Mill 1", 1);
+const machine2 = new MachineType("Mill 2", 2);
+
+export function removeMachine(machine: MachineType) {
+  $machines.set(
+    $machines.get().filter(m => m.getId() !== machine.getId())
+  );
+}
+
+export function setMachines(machines: MachineType[]) {
+  $machines.set(machines);
+}
+
+export function clearMachines() {
+  $machines.set([]);
+}
+addMachine(machine1);
+addMachine(machine2);
+addMachine(machine2);
+addMachine(machine2);
+addMachine(machine2);
+addMachine(machine2);
+addMachine(machine2);
+addMachine(machine2);
+addMachine(machine2);
+addMachine(machine2);
+addMachine(machine2);
+addMachine(machine2);
+addMachine(machine2);
+addMachine(machine2);
+addMachine(machine2);
+addMachine(machine2);
