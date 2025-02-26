@@ -1,12 +1,15 @@
 import AdminDashboard from "../pages/admin-dashboard";
+import MachineLogin from "../pages/machine-login";
 import StartPage from "../pages/start-page";
 
 const Body = () => {
   return (
     <>
-      <StartPage></StartPage>
+      {/* <StartPage></StartPage> */}
 
-      <AdminDashboard></AdminDashboard>
+      <MachineLogin></MachineLogin>
+
+      {/* <AdminDashboard></AdminDashboard> */}
     </>
   );
 };
