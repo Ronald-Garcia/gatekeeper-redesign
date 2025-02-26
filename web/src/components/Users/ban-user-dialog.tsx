@@ -12,34 +12,34 @@ import {
 
 
 //prop for handling state of the dialog
-type DeleteUserDialogProp = {
+type BanUserDialogProp = {
   userId: number;
-  setShowDeleteUser:  React.Dispatch<React.SetStateAction<boolean>>;
+  setShowBanUser:  React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 //function that handles state of the dialog
-const DeleteUserDialog = ({
+const BanUserDialog = ({
   userId,
-  setShowDeleteUser,
-}: DeleteUserDialogProp) => {
-  const { deleteUser } = useMutationUsers();
+  setShowBanUser,
+}: BanUserDialogProp) => {
+  const { banUserById } = useMutationUsers();
 
   //async function that handles deletion logic
-  const handleDeleteUser = async (e: React.MouseEvent) => {
+  const handleBanUser = async (e: React.MouseEvent) => {
     e.stopPropagation();
-     await deleteUser(userId);
-    setShowDeleteUser(false); //make the dialog disappear
+     await banUserById(userId,1);
+    setShowBanUser(false); //make the dialog disappear
   };
 
   const handleCancel = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setShowDeleteUser(false);
+    setShowBanUser(false);
   };
 
   // Handle dialog close event
   const handleDialogClose = (open: boolean) => {
     if (!open) {
-      setShowDeleteUser(false);
+      setShowBanUser(false);
     }
   };
 
@@ -49,13 +49,13 @@ const DeleteUserDialog = ({
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will delete the user from using the machines. 
+            This will ban the user from using the machines. 
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={handleCancel}>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDeleteUser}>
-            Delete
+          <AlertDialogAction onClick={handleBanUser}>
+            Ban
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -63,4 +63,4 @@ const DeleteUserDialog = ({
   );
 };
 
-export default DeleteUserDialog;
+export default BanUserDialog;
