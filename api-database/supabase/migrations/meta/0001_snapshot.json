@@ -1,6 +1,6 @@
 {
-  "id": "7ae75550-2f2c-4c43-94e9-d4dbf3b93f3c",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "f14a9fc4-eed8-48fb-8b1e-76284c37dd83",
+  "prevId": "7ae75550-2f2c-4c43-94e9-d4dbf3b93f3c",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -49,15 +49,7 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "machine_type_type_unique": {
-          "name": "machine_type_type_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "type"
-          ]
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false

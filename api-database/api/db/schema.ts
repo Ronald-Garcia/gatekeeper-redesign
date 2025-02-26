@@ -1,7 +1,7 @@
 
-import { integer, pgTable, serial, text, date } from "drizzle-orm/pg-core";
+import { integer, pgTable, serial, text } from "drizzle-orm/pg-core";
 
-export const usersTable = pgTable("users_table", {
+export const users = pgTable("users_table", {
   id: serial().primaryKey(),
   name: text().notNull(),
   cardNum: text().notNull().unique(),
@@ -12,22 +12,21 @@ export const usersTable = pgTable("users_table", {
 });
 
 export const machineTypes = pgTable("machine_type" , {
-  id: serial().primaryKey(),
-  type: text().notNull()
+  type: text().primaryKey().notNull()
 })
 
-export const machinesTable = pgTable("machines_table", {
+export const machines = pgTable("machines_table", {
   id: serial().primaryKey(),
   hourlyRate: integer().notNull(),
   name: text().notNull(),
-  machineType: serial().notNull().references(() => machineTypes.id, {onDelete:"cascade"})
+  machineType: text().notNull().references(() => machineTypes.type, {onDelete:"cascade"})
 })
 
-//Table that acts as the "trainings" for a user
-export const userMachineTable = pgTable("user_machine_table",{
+//Table that acts as the "trainings" completed for a user
+export const userMachineType = pgTable("user_machine_type",{
   id: serial().primaryKey(),
-  userId: serial().notNull().references(() => usersTable.id, {onDelete: "cascade"}),
-  machineId: serial().notNull().references(()=> machinesTable.id, {onDelete:"cascade"})
+  userId: serial().notNull().references(() => users.id, {onDelete: "cascade"}),
+  machineType: text().notNull().references(()=> machineTypes.type, {onDelete:"cascade"})
 });
 
 export const budgetCodes = pgTable("budgetCodes" , {
@@ -38,22 +37,22 @@ export const budgetCodes = pgTable("budgetCodes" , {
 
 export const userBudgetCodeTable = pgTable("user_budget_code_table",{
   id: serial().primaryKey(),
-  userId: serial().notNull().references(() => usersTable.id, {onDelete: "cascade"}),
-  budgetCodeId: serial().notNull().references(()=> machinesTable.id, {onDelete:"cascade"})
+  userId: serial().notNull().references(() => users.id, {onDelete: "cascade"}),
+  budgetCodeId: serial().notNull().references(()=> machines.id, {onDelete:"cascade"})
 });
 
-export type InsertUser = typeof usersTable.$inferInsert;
-export type SelectUser = typeof usersTable.$inferSelect;
+export type InsertUser = typeof users.$inferInsert;
+export type SelectUser = typeof users.$inferSelect;
 
 
-export type InsertMachine = typeof machinesTable.$inferInsert;
-export type SelectMachine = typeof machinesTable.$inferSelect;
+export type InsertMachine = typeof machines.$inferInsert;
+export type SelectMachine = typeof machines.$inferSelect;
 
 export type InsertMachineType = typeof machineTypes.$inferInsert;
 export type SelectMachineType = typeof machineTypes.$inferSelect;
 
-export type InsertUserMachineRelation = typeof userMachineTable.$inferInsert;
-export type SelectUserMachineRelation = typeof userMachineTable.$inferSelect;
+export type InsertUserMachineRelation = typeof userMachineType.$inferInsert;
+export type SelectUserMachineRelation = typeof userMachineType.$inferSelect;
 
 export type InsertBudgetCode = typeof budgetCodes.$inferInsert;
 export type SelectBudgetCode = typeof budgetCodes.$inferSelect
