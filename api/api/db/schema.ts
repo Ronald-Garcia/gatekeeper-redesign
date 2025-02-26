@@ -8,7 +8,7 @@ export const usersTable = pgTable('users_table', {
   lastDigitOfCardNum: integer('last_digit_of_card_num').notNull(),
   JHED: text('JHED').notNull(),
   graduationYear: date('graduation_year'),
-  isAdmin: boolean('is_admin')
+  isAdmin: boolean('is_admin').notNull()
 });
 
 //Table that acts as the "trainings" for a user
