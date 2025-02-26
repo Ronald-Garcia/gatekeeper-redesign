@@ -1,6 +1,6 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { queryUsersParamsSchema, deleteUser, createUserSchema, validateUserSchema } from "../validators/schemas";
+import { queryUsersParamsSchema, createUserSchema, validateUserSchema, getUserSchema } from "../validators/schemas";
 import { like, SQL, or, desc, asc, eq } from "drizzle-orm";
 import { budgetCodes, machinesTable, machineTypes, userMachineTable, usersTable } from "../db/schema";
 import { db } from "../db/index";
@@ -48,7 +48,7 @@ userRoutes.get("/users", zValidator("param", queryUsersParamsSchema), async (c) 
 })
 
 //Sign up a user
-userRoutes.post("/sign-up", zValidator("json", createUserSchema), async (c)=>{
+userRoutes.post("/users", zValidator("json", createUserSchema), async (c)=>{
 
     const { name, lastDigitOfCardNum, cardNum, JHED, graduationYear, isAdmin } = c.req.valid("json");
     
@@ -122,6 +122,27 @@ userRoutes.post("/validate-user", zValidator("json",validateUserSchema), async(c
 
 })
 
-userRoutes.delete("/user", zValidator("json", deleteUser), async (c)=>{
+userRoutes.delete("/user/:id", 
+    //authGuard,
+    zValidator("param", getUserSchema), async (c)=>{
+    const {userId} = c.req.valid("param");
+    const [user] = await db
+        .select()
+        .from(usersTable)
+        .where(eq(usersTable.id, userId))
     
+    
+    if (!user) {
+        throw new HTTPException(404, { message: "User not found" });
+    }
+
+    // if (no session) throw another error.
+    // For now, no auth, just replace.
+    const deletedUser = await db
+    .delete(usersTable)
+    .where(eq(usersTable.id, userId))
+    .returning()
+
+  return c.json(deletedUser);
+
 })
