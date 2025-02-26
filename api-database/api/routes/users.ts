@@ -43,21 +43,32 @@ userRoutes.get("/users", zValidator("param", queryUsersParamsSchema), async (c) 
             break;
 
     }
+    return c.json( {"f":"f"} ,200);
 
 })
 
-userRoutes.post("/user", zValidator("json", createUser), async (c)=>{
+//Sign up a user
+userRoutes.post("/sign-up", zValidator("json", createUser), async (c)=>{
 
-    const { name, lastDigit, cardnum, JHED, gradYear, admin } = c.req.valid("json");
+    const { name, lastDigitOfCardNum, cardNum, JHED, graduationYear, isAdmin } = c.req.valid("json");
+    
 
     const newUser = await db
         .insert(usersTable)
-        .values({name:name, lastDigitOfCardNum:lastDigit, cardNum:cardnum, JHED, graduationYear:gradYear, isAdmin:admin})
+        .values({
+            name:name,
+            lastDigitOfCardNum,
+            cardNum,
+            JHED,
+            isAdmin,
+            graduationYear
+        })
         .returning();
 
-    return c.json(newUser, 201);
+    return c.json(newUser);
+})
+  
 
-})  
 
 userRoutes.delete("/user", zValidator("json", deleteUser), async (c)=>{
     

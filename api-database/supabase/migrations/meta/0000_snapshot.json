@@ -1,9 +1,40 @@
 {
-  "id": "ceddac56-f4f9-45dd-a288-6c41ec0158a7",
+  "id": "b020c8a1-27d0-46af-8a89-2f3a4da41540",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.budgetCodes": {
+      "name": "budgetCodes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "budgetCode": {
+          "name": "budgetCode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.machine_type": {
       "name": "machine_type",
       "schema": "",
@@ -39,8 +70,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "hourly_rate": {
-          "name": "hourly_rate",
+        "hourlyRate": {
+          "name": "hourlyRate",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
@@ -51,8 +82,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "machine_type_id": {
-          "name": "machine_type_id",
+        "machineType": {
+          "name": "machineType",
           "type": "serial",
           "primaryKey": false,
           "notNull": true
@@ -60,12 +91,70 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "machines_table_machine_type_id_machine_type_id_fk": {
-          "name": "machines_table_machine_type_id_machine_type_id_fk",
+        "machines_table_machineType_machine_type_id_fk": {
+          "name": "machines_table_machineType_machine_type_id_fk",
           "tableFrom": "machines_table",
           "tableTo": "machine_type",
           "columnsFrom": [
-            "machine_type_id"
+            "machineType"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.user_budget_code_table": {
+      "name": "user_budget_code_table",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "budgetCodeId": {
+          "name": "budgetCodeId",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "user_budget_code_table_userId_users_table_id_fk": {
+          "name": "user_budget_code_table_userId_users_table_id_fk",
+          "tableFrom": "user_budget_code_table",
+          "tableTo": "users_table",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "user_budget_code_table_budgetCodeId_machines_table_id_fk": {
+          "name": "user_budget_code_table_budgetCodeId_machines_table_id_fk",
+          "tableFrom": "user_budget_code_table",
+          "tableTo": "machines_table",
+          "columnsFrom": [
+            "budgetCodeId"
           ],
           "columnsTo": [
             "id"
@@ -90,14 +179,14 @@
           "primaryKey": true,
           "notNull": true
         },
-        "user_id": {
-          "name": "user_id",
-          "type": "integer",
+        "userId": {
+          "name": "userId",
+          "type": "serial",
           "primaryKey": false,
           "notNull": true
         },
-        "machine_id": {
-          "name": "machine_id",
+        "machineId": {
+          "name": "machineId",
           "type": "serial",
           "primaryKey": false,
           "notNull": true
@@ -105,12 +194,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "user_machine_table_user_id_users_table_id_fk": {
-          "name": "user_machine_table_user_id_users_table_id_fk",
+        "user_machine_table_userId_users_table_id_fk": {
+          "name": "user_machine_table_userId_users_table_id_fk",
           "tableFrom": "user_machine_table",
           "tableTo": "users_table",
           "columnsFrom": [
-            "user_id"
+            "userId"
           ],
           "columnsTo": [
             "id"
@@ -118,12 +207,12 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "user_machine_table_machine_id_machines_table_id_fk": {
-          "name": "user_machine_table_machine_id_machines_table_id_fk",
+        "user_machine_table_machineId_machines_table_id_fk": {
+          "name": "user_machine_table_machineId_machines_table_id_fk",
           "tableFrom": "user_machine_table",
           "tableTo": "machines_table",
           "columnsFrom": [
-            "machine_id"
+            "machineId"
           ],
           "columnsTo": [
             "id"
@@ -154,9 +243,15 @@
           "primaryKey": false,
           "notNull": true
         },
-        "card_number": {
-          "name": "card_number",
+        "cardNum": {
+          "name": "cardNum",
           "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lastDigitOfCardNum": {
+          "name": "lastDigitOfCardNum",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
@@ -166,15 +261,15 @@
           "primaryKey": false,
           "notNull": true
         },
-        "graduation_year": {
-          "name": "graduation_year",
-          "type": "date",
+        "isAdmin": {
+          "name": "isAdmin",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "is_admin": {
-          "name": "is_admin",
-          "type": "boolean",
+        "graduationYear": {
+          "name": "graduationYear",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false
         }
@@ -183,11 +278,11 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "users_table_card_number_unique": {
-          "name": "users_table_card_number_unique",
+        "users_table_cardNum_unique": {
+          "name": "users_table_cardNum_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "card_number"
+            "cardNum"
           ]
         }
       },

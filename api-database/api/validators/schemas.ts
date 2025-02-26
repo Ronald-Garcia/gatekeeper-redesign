@@ -13,35 +13,33 @@ export const createUser = z.object({
     name: z.string()
       .min(1, "Name is required")
       .max(100, "Name must be 100 characters or less"),
-    lastDigit: z.coerce
+    lastDigitOfCardNum: z.coerce
       .number()
       .int()
       .positive()
       .max(9),
     
-    cardnum: z
+    cardNum: z
       .string()
-      .min(16, "Needs a 16 Digit J-Card Number")
-      .max(16, "Needs a 16 Digit J-Card Number"),
+      .min(15, "Needs a 15 Digit J-Card Number")
+      .max(15, "Needs a 15 Digit J-Card Number"),
 
-    gradYear: z
+    graduationYear: z
       .coerce
       .number()
       .int()
       .max(3000)
-      .min(1850)
-      .optional(),
+      .min(1850).optional(),
 
     JHED: z.string()
         .min(1, "JHED required")
         .max(8, "JHED less then 8 characters"),
-    admin: z.coerce
+
+    isAdmin: z.coerce
     .number()
     .min(0,"Admin tag 0 or 1")
     .max(1,"Admin tag 0 or 1")
-    .optional()
 
-    
 });
 
 export const deleteUser = z.object({
