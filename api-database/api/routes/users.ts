@@ -17,7 +17,7 @@ userRoutes.get("/users", zValidator("param", queryUsersParamsSchema), async (c) 
     const whereClause: (SQL | undefined)[] = [];
 
     if (search) {
-        whereClause.push(or(like(usersTable.name, search), like(usersTable.JHED, search)));
+        whereClause.push(or(like(usersTable.name, `%${search}%`), like(usersTable.JHED, search)));
     }
 
     const orderByClause: SQL[] = [];
@@ -67,6 +67,8 @@ userRoutes.post("/users", zValidator("json", createUserSchema), async (c)=>{
 
     return c.json(newUser);
 })
+
+// userRoutes.patch
 
 // Check if a user is valid for a machine.
 // TODO: Create and give them a session token when we do authentication.
