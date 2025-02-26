@@ -2,21 +2,24 @@ import { useStore } from "@nanostores/react";
 import { $users } from "@/data/store";
 import { Button } from "../ui/button";
 import UserComponent from "./user";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
 
 export default function UsersComponent() {
   const userList = useStore($users);
 
   return (
-    <div>
-      <h1>Users:</h1>
-      <Button>Add User</Button>
-      {userList.length === 0 ? (
-        <p> No users</p>
+    <ScrollArea>
+
+        <div className="max-h-[20vh]">
+        {userList.length === 0 ? (
+        <p> No machines found. Please add some!  </p>
       ) : (
         userList.map((user) => (
-          <UserComponent key={user.getCardNumber()} user={user} />
+          <UserComponent key={user.getId()} user={user} />
         ))
       )}
-    </div>
+
+        </div>
+    </ScrollArea>
   );
 }

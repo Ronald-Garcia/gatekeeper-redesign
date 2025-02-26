@@ -2,6 +2,7 @@ import { User } from "./types/user";
 import { atom, map } from "nanostores";
 import { BudgetCode } from "./types/budgetCode"; 
 import { MachineType } from "./types/machineType"; 
+import { logger } from "@nanostores/logger";
 
 export const $users = atom<User[]>([]);
 export const $codes = atom<BudgetCode[]>([]);
@@ -125,3 +126,20 @@ addMachine(machine2);
 addMachine(machine2);
 addMachine(machine2);
 addMachine(machine2);
+
+addUser(defaultUser);
+addUser(defaultUser);
+addUser(defaultUser);
+addUser(defaultUser);
+addUser(defaultUser);
+addUser(defaultUser);
+addUser(defaultUser);
+addUser(defaultUser);
+addUser(defaultUser);
+addUser(defaultUser);
+addUser(defaultUser);
+addUser(defaultUser);
+addUser(defaultUser);
+addUser(defaultUser);
+
+logger({ $users });

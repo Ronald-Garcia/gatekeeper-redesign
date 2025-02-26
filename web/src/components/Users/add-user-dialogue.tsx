@@ -30,13 +30,13 @@ const AddUserDialog = ({ userId, setShowAddUser }: AddUserDialogProp) => {
   const handleAddUser = async () => {
 
     
-    await addNewUser(userId); //use hooks to handle state of training
+    // await addNewUser(userId); //use hooks to handle state of training
     setShowAddUser(false); //make the dialogue disappear
   };
 
 
    const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setNewUser(e.target.value);
+      // setNewUser(e.target.value);
     }
   
   

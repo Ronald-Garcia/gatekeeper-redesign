@@ -3,6 +3,7 @@ import MachineLogin from "../pages/machine-login";
 import StartPage from "../pages/start-page";
 import { $router } from "@/data/router";
 import { useStore } from "@nanostores/react";
+import UsersComponent from "../Users/users";
 
 
 const Body = () => {
@@ -30,7 +31,7 @@ const Body = () => {
     
       {router.route === "machine_login" && <MachineLogin></MachineLogin>}
 
-      {(router.route === "users" ||router.route === "budgetCodes")  && <AdminDashboard></AdminDashboard>}
+      {router.route === "users" && <UsersComponent></UsersComponent>}
 
       {router.route === "start_page" && <StartPage></StartPage>}
 

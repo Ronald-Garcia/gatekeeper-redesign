@@ -66,7 +66,7 @@ function useMutationUsers() {
    const updateUser = async (user_id: number) => {
     try {
     
-      const newUser = updateUserById(user_id); //using store functions to handle state of app
+      // const newUser = updateUserById(user_id); //using store functions to handle state of app
      // await editUser(newUser); //edit deck on api
       
     }   catch (e) {
@@ -82,8 +82,8 @@ function useMutationUsers() {
     const banUserById = async (user_id: number, ban: number) => {
         try {
         
-          const bannedUser = await banUser(user_id, ban); //using store functions to handle state of app
-         banUserFlag(bannedUser.data.getId()); //edit user on front end
+          // const bannedUser = await banUser(user_id, ban); //using store functions to handle state of app
+        //  banUserFlag(bannedUser.data.getId()); //edit user on front end
           
         }   catch (e) {
             //get message from api response, put it on a toast
@@ -98,7 +98,6 @@ function useMutationUsers() {
       const fetchUser = async (card: number) => {
           try {
           const currUser = await getUser(card); 
-           $user.set(currUser);
       
           } catch (e) {
             //get message from api response, put it on a toast

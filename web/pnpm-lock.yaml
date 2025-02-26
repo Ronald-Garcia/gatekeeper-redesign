@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@nanostores/logger':
+        specifier: ^0.4.0
+        version: 0.4.0(nanostores@0.11.4)
       '@nanostores/react':
         specifier: ^0.8.4
         version: 0.8.4(nanostores@0.11.4)(react@19.0.0)
@@ -448,6 +451,12 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
+
+  '@nanostores/logger@0.4.0':
+    resolution: {integrity: sha512-8ipUQgX9udy3Uc9X9b7CFDZQR7DAKa+ZbZlIOcs3F0F1nDEYejffV2UoTQ1oYQ1F+DTXrNZIyZWhw+IWuSqvRQ==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+    peerDependencies:
+      nanostores: '>=0.10.2'
 
   '@nanostores/react@0.8.4':
     resolution: {integrity: sha512-EciHSzDXg7GmGODjegGG1VldPEinbAK+12/Uz5+MAdHmxf082Rl6eXqKFxAAu4pZAcr5dNTpv6wMfEe7XacjkQ==}
@@ -2176,6 +2185,10 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
+
+  '@nanostores/logger@0.4.0(nanostores@0.11.4)':
+    dependencies:
+      nanostores: 0.11.4
 
   '@nanostores/react@0.8.4(nanostores@0.11.4)(react@19.0.0)':
     dependencies:
