@@ -1,8 +1,6 @@
 //import { createDeck, deleteDeck, editDeck } from "@/data/api";
-import { $user, addUser, 
-    banUserFlag, 
+import { $users, addUser, 
     deleteUserById,
-    updateUserById,
  } from "@/data/store";
 import { toast } from "sonner";
 import { User } from "@/data/types/user";
@@ -36,8 +34,8 @@ function useMutationUsers() {
 
   const addNewUser = async (user: User) => {
     try {    
-      const { data } : { data: User } = await createUser(user);
-      addUser(user);
+      const { data } : { message: string, data: User } = await createUser(user);
+      addUser(data);
       return data;
     }
       //get message from api response, put it on a toast

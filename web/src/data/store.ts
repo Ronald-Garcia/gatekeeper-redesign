@@ -1,7 +1,7 @@
-import { User } from "@/components/components/types/user";
+import { User } from "./types/user";
 import { atom, map } from "nanostores";
-import { BudgetCode } from "@/components/components/types/budgetCode";
-import { MachineType } from "@/components/components/types/machineType";
+import { BudgetCode } from "./types/budgetCode"; 
+import { MachineType } from "./types/machineType"; 
 
 export const $users = atom<User[]>([]);
 export const $codes = atom<BudgetCode[]>([]);
@@ -18,8 +18,8 @@ const defaultUser = new User(
 )
 
 const defaultMachine = new MachineType(
-  "invalid",
-  -1
+  -1,
+  "invalid"
 )
 
 export const $currentUser = map<User>(defaultUser);
@@ -92,8 +92,8 @@ export function addMachine(machine: MachineType) {
   )
 }
 
-const machine1 = new MachineType("Mill 1", 1);
-const machine2 = new MachineType("Mill 2", 2);
+const machine1 = new MachineType(1, "Mill 1");
+const machine2 = new MachineType(2, "Mill 2");
 
 export function removeMachine(machine: MachineType) {
   $machines.set(

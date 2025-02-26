@@ -1,11 +1,8 @@
-import { useEffect, useState } from "react";
 import AdminDashboard from "../pages/admin-dashboard";
 import MachineLogin from "../pages/machine-login";
 import StartPage from "../pages/start-page";
 import { $router } from "@/data/router";
-import { openPage, redirectPage } from "@nanostores/router";
 import { useStore } from "@nanostores/react";
-import useMutationUsers from "@/hooks/user-mutation-hooks";
 
 
 const Body = () => {

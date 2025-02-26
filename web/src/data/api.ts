@@ -1,7 +1,8 @@
 import { API_DB_URL, API_MACHINE_URL } from "@/env";
-import { User } from "@/components/components/types/user";
-import { Training } from "@/components/components/types/training";
-import { BudgetCode } from "@/components/components/types/budgetCode";
+import { User } from "./types/user";
+import { Training } from "./types/training"; 
+import { BudgetCode } from "./types/budgetCode"; 
+import { SortType } from "./types";
 
 export const turnOnMachine = async (): Promise<boolean> => {
   const response = await fetch(`${API_MACHINE_URL}/turn-on`, {
@@ -17,11 +18,19 @@ export const turnOnMachine = async (): Promise<boolean> => {
   return message.startsWith("s");
 };
 
-export const getAllUsers = async (): Promise<{
+
+
+export const getAllUsers = async (
+  sort: SortType = "name_asc",
+  page: number = 1,
+  limit: number = 10,
+  search: string = ""
+
+): Promise<{
   message: string;
   data: User[];
 }> => {
-  const response = await fetch(`${API_DB_URL}/users`, {
+  const response = await fetch(`${API_DB_URL}/users?search=${search}&limit=${limit}&page=${page}&sort=${sort}`, {
     credentials: "include",
   });
 
@@ -48,7 +57,10 @@ export const editUser = async (user: User): Promise<{
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      user
+      name: user.getName(),
+      lastDigitOfCardNum: user.getLastCardNumber(),
+      graduationYear: user.getYear(),
+      isAdmin: user.isAdmin()
     }),
     credentials: 'include'
   })
@@ -88,7 +100,7 @@ export const getUser = async (cardNum: number): Promise<{
   data: User
 }> => {
 
-  const response = await fetch(`${API_DB_URL}/users`, {
+  const response = await fetch(`${API_DB_URL}/users/${cardNum}`, {
     credentials: "include",
   });
 

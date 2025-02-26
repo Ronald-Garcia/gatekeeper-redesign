@@ -3,6 +3,7 @@ export class User {
   private name: string;
   private email: string;
   private cardNum: number;
+
   private admin: boolean;
   private year: number;
   private jhed: string;
@@ -21,7 +22,7 @@ export class User {
     admin: boolean,
     year: number,
     jhed: string,
-    id: number
+    id: number,
   ) {
     this.name = name;
     this.email = email;
@@ -44,6 +45,9 @@ export class User {
     return this.cardNum;
   }
 
+  getLastCardNumber(): number {
+    return this.getCardNumber() % 10;
+  }
   getYear(): number {
     return this.year;
   }

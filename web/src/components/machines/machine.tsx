@@ -1,6 +1,4 @@
-import { useState } from "react";
-import { User } from "../components/types/user";
-import { MachineType } from "../components/types/machineType";
+import { MachineType } from "@/data/types/machineType";
 import MachineSelectDialog from "./machine-select";
 
 

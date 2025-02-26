@@ -1,6 +1,5 @@
 import { useStore } from "@nanostores/react";
 import { $machines } from "@/data/store";
-import { Button } from "../ui/button";
 import MachineSelect from "./machine";
 import { ScrollArea } from "../ui/scroll-area";
 

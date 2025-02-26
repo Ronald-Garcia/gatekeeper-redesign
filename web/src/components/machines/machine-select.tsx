@@ -1,4 +1,4 @@
-import { MachineType } from "../components/types/machineType";
+import { MachineType } from "@/data/types/machineType";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
 import { Button } from "../ui/button";
 
