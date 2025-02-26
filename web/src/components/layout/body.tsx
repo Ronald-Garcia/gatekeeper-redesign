@@ -6,24 +6,37 @@ import { $router } from "@/data/router";
 import { openPage, redirectPage } from "@nanostores/router";
 import { useStore } from "@nanostores/react";
 import { $user } from "@/data/store";
+import useMutationUsers from "@/hooks/user-mutation-hooks";
 
 
 const Body = () => {
 
+  
+
   const [userValidated, setUserValidated] =  useState(false);
   const user = useStore($user);
+  const { fetchUser} = useMutationUsers();
+  
+  const [keyboard, setKeyboard] =  useState("");
+
 
  // const user = useStore($user)
   useEffect(() =>  {
 
-    await fetchUser();
+    if (keyboard !=== "") {
 
+      fetchUser(keyboard);
+
+      //validateUser(user);
+
+
+    }
+
+     
+  
     
   },[]);
-
-
-  return (
-    <>
+    
     
       if (!userValidated) {
           return <MachineLogin />;
@@ -38,8 +51,7 @@ const Body = () => {
         }
       
           
-    </>
-  );
+    
 };
 
 export default Body;
