@@ -4,13 +4,13 @@
 	"scripts": {
 		"start": "vercel dev",
 		"deploy": "vercel",
-		"dev": "tsx watch src/server.ts",
-		"prettier": "prettier --write \"src/**/*.ts\" --config \".prettierrc.json\"",
+		"dev": "tsx watch api/server.ts",
+		"prettier": "prettier --write \"api/**/*.ts\" --config \".prettierrc.json\"",
 		"db:generate": "drizzle-kit generate",
 		"db:push": "drizzle-kit push",
 		"db:migrate": "drizzle-kit migrate",
 		"db:studio": "drizzle-kit studio",
-		"db:seed": "tsx src/db/seed.ts"
+		"db:seed": "tsx api/db/seed.ts"
 	},
 	"dependencies": {
 		"@hono/node-server": "^1.13.8",
