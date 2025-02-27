@@ -1,5 +1,4 @@
 import { toast } from "sonner";
-import { BudgetCode } from "../components/components/types/budgetCode";
 import { createBudgetCode, 
     deleteBudgetCode,
      editBudgetCode } from "../data/api";

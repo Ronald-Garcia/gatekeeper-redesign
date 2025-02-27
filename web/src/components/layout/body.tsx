@@ -4,6 +4,10 @@ import StartPage from "../pages/start-page";
 import { $router } from "@/data/router";
 import { useStore } from "@nanostores/react";
 import UsersComponent from "../Users/users";
+import { adminCurrentUser, validCurrentMachine, validCurrentUser } from "@/data/store";
+import { useEffect } from "react";
+import { redirectPage } from "@nanostores/router";
+import Interlock from "../pages/interlock";
 
 
 const Body = () => {
@@ -25,6 +29,15 @@ const Body = () => {
     )
   }
 
+  useEffect(() => {
+    // if (!validCurrentMachine() && !validCurrentUser()) {
+    //   redirectPage($router, "start_page");
+    // } else if (adminCurrentUser() && !validCurrentMachine()) {
+    //   redirectPage($router, "machine_login");
+    // } 
+  }, []);
+  
+
   return (
 
     <>
@@ -34,6 +47,8 @@ const Body = () => {
       {router.route === "users" && <UsersComponent></UsersComponent>}
 
       {router.route === "start_page" && <StartPage></StartPage>}
+
+      {router.route === "interlock" && <Interlock></Interlock>}
 
     </>
   )  

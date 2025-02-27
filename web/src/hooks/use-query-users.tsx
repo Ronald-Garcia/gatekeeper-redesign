@@ -28,7 +28,7 @@ function useQueryUsers(reload: boolean) {
       }
     };
 
-  const validateUser = async (cardNum: number): Promise<"setup" | "ready" | "error">  => {
+  const validateUser = async (cardNum: number): Promise<"machine_login" | "admin_dashboard" | "start_page" | "interlock">  => {
     try {
       const {
         data
@@ -39,19 +39,21 @@ function useQueryUsers(reload: boolean) {
       }
 
       if (data.isAdmin() && !validCurrentMachine()) {
-        return "setup";
+        return "machine_login";
       } else if(!data.isAdmin()) {
         clearCurrentUser();
         throw new Error("This interlock is not set-up! Please contact an admin to set-up this interlock.");
       }
 
-      return "ready";
+      setCurrentUser(data);
+
+      return data.isAdmin() ? "admin_dashboard" : "interlock";
     } catch (e) {
       const errorMessage = (e as Error).message;
         toast.error("Sorry! There was an error 🙁", {
           description: errorMessage  
         });
-      return "error";
+      return "start_page";
     }
   }
 

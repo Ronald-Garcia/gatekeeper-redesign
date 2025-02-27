@@ -1,7 +1,7 @@
 import { turnOnMachine } from "@/data/api";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import useQueryUsers from "@/hooks/use-query-users";
 import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
@@ -24,12 +24,8 @@ const StartPage = () => {
 
       const newCardNum = cardNum.substring(1, cardNum.length - 1);
       
-      validateUser(Number.parseInt(newCardNum)).then(s => {
-        if (s === "ready") {
-          
-        } else if (s === "setup") {
-          redirectPage($router, "machine_login");
-        }
+      validateUser(Number.parseInt(newCardNum)).then(s => {        
+        redirectPage($router, s);
       });
 
     }

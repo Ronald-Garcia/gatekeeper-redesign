@@ -1,20 +1,21 @@
-import { getAllBudgets } from "@/data/api";
+import { getAllBudgets, getAllBudgetsOfUser } from "@/data/api";
 import { $codes, 
   setBudgetCodes,
  } from "@/data/store";
+import { BudgetCode } from "@/data/types/budgetCode";
 import { useStore } from "@nanostores/react";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
-function useQueryUsers() {
+function useQueryBudgets(reload: boolean) {
   const decks = useStore($codes);
 
   const loadBudgets = async () => {
     try {
       const {
-        data: fetchedUsers
+        data: fetchedBudgetCodes
       } = await getAllBudgets();
-      setBudgetCodes(fetchedUsers);
+      setBudgetCodes(fetchedBudgetCodes);
     }  catch (e) {
         //get message from api response, put it on a toast
         const errorMessage = (e as Error).message;
@@ -24,11 +25,30 @@ function useQueryUsers() {
       }
     };
 
+    const getBudgetsOfUser = async (userId: number, setBudgets: React.Dispatch<React.SetStateAction<BudgetCode[]>>) => {
+      try {
+        const {
+          data: budgets
+        } = await getAllBudgetsOfUser(userId);
+
+        setBudgets(budgets);
+        
+      } catch (e) {
+        const errorMessage = (e as Error).message;
+        toast.error("Sorry! There was an error fetching Budget Codes  🙁", {
+          description: errorMessage  
+        });
+      }
+    }
+
   useEffect(() => {
-    loadBudgets();
+
+    if (reload) {
+      loadBudgets();
+    }
   }, []);
 
-  return { decks, loadBudgets };
+  return { decks, loadBudgets, getBudgetsOfUser };
 }
 
-export default useQueryUsers;
+export default useQueryBudgets;

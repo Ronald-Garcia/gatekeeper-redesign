@@ -1,4 +1,3 @@
-import { useState } from "react";
 import useMutationBudgetCodes from "@/hooks/budgetCodes-mutation-hook";
 import {
   Dialog,
@@ -24,20 +23,14 @@ type EditBudgetCodeDialogProp = {
 // function that handles state of the dialogue, error handling from api
 const EditBudgetCodeDialog = ({ budgetcodeId, setShowUpdateBudgetCode }: EditBudgetCodeDialogProp) => {
   const { addNewBudgetCode } = useMutationBudgetCodes();
-  const [cardNum, setCardNum] = useState("");
 
   //async function with editing logic, including error handling
   const handleEditBudgetCode = async () => {
 
     
-    await addNewBudgetCode(budgetcodeId); //use hooks to handle state of training
-    setShowUpdateBudgetCode(false); //make the dialogue disappear
   };
 
 
-   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setShowUpdateBudgetCode(e.target.value);
-    }
   
   
 
@@ -53,7 +46,6 @@ const EditBudgetCodeDialog = ({ budgetcodeId, setShowUpdateBudgetCode }: EditBud
         </Label>
         <div className="space-y-4">
         <Input
-          onChange={handleOnChange}
           placeholder="Enter Student Name"
         >
         </Input>
@@ -62,7 +54,6 @@ const EditBudgetCodeDialog = ({ budgetcodeId, setShowUpdateBudgetCode }: EditBud
        
         <div className="space-y-4">
         <Input
-          onChange={handleOnChange}
           placeholder="Email"
         >
         </Input>
@@ -72,7 +63,6 @@ const EditBudgetCodeDialog = ({ budgetcodeId, setShowUpdateBudgetCode }: EditBud
        
         <div className="Swipe Card to Fill JCard ID">
         <Input
-          onChange={handleOnChange}
           placeholder="Card Number"
         >
         </Input>
@@ -80,7 +70,6 @@ const EditBudgetCodeDialog = ({ budgetcodeId, setShowUpdateBudgetCode }: EditBud
         </div>
         <div className="Swipe Card to Fill JCard ID">
         <Input
-          onChange={handleOnChange}
           placeholder="Admin"
         >
         </Input>
@@ -89,7 +78,6 @@ const EditBudgetCodeDialog = ({ budgetcodeId, setShowUpdateBudgetCode }: EditBud
 
         <div className="Swipe Card to Fill JCard ID">
         <Input
-          onChange={handleOnChange}
           placeholder="jhed"
         >
         </Input>

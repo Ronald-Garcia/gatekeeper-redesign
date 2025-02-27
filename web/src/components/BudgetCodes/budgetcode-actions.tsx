@@ -10,38 +10,31 @@ import {
   import EditBudgetCodeDialog from "./edit-budgetCode-dialog.tsx";
   
   type BudgetCodeActionsProps = {
-    budgetcodeId: number;
-    isActive: (active: boolean) => void;
-  
+    budgetcodeId: number;  
   };
   
-  export default function BudgetCodeActions({ budgetcodeId, isActive }: BudgetCodeActionsProps) {
+  export default function BudgetCodeActions({ budgetcodeId }: BudgetCodeActionsProps) {
      const [ShowUpdateBudgetCode, setShowUpdateBudgetCode] = useState(false);
      const [ShowDeleteBudgetCode, setShowDeleteBudgetCode] = useState(false);
 
   
     const handleAddTraining = (e: React.MouseEvent) => {
       e.stopPropagation();
-      setShowUpdateBudgetCode(true);
-      isActive(true);
-      
+      setShowUpdateBudgetCode(true);      
     };
   
     const handleDelete = (e: React.MouseEvent) => {
       e.stopPropagation();
       setShowDeleteBudgetCode(true);
-      isActive(true); 
     };
   
   
     const handleCloseDelete = () => {
       setShowDeleteBudgetCode(false);
-      isActive(false); 
     };
 
     const handleCloseEdit = () => {
         setShowUpdateBudgetCode(false);
-        isActive(false); 
       };
   
   

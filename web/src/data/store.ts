@@ -24,11 +24,16 @@ const defaultMachine = new MachineType(
 )
 
 export const $currentUser = map<User>(defaultUser);
-export const $currentMachine = map<MachineType>();
+export const $currentMachine = map<MachineType>(defaultMachine);
 
 export function validCurrentUser() {
   return $currentUser.get() !== defaultUser;
 }
+
+export function adminCurrentUser() {
+  return $currentUser.get().isAdmin();
+}
+
 
 export function validCurrentMachine() {
   return $currentMachine.get() !== defaultMachine;
