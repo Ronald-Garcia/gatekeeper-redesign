@@ -1,1 +1,0 @@
-ALTER TABLE "machine_type" DROP CONSTRAINT "machine_type_type_unique";
