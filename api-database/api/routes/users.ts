@@ -1,9 +1,9 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { queryUsersParamsSchema, createUserSchema, validateUserSchema, getUserSchema } from "../validators/schemas";
+import { queryUsersParamsSchema, createUserSchema, validateUserSchema, getUserSchema, testSchema } from "../validators/schemas.js";
 import { like, SQL, or, desc, asc, eq, and } from "drizzle-orm";
-import { budgetCodes, machines, machineTypes, userMachineType, users } from "../db/schema";
-import { db } from "../db/index";
+import { budgetCodes, machines, machineTypes, userMachineType, users } from "../db/schema.js";
+import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
 
 
@@ -47,11 +47,29 @@ userRoutes.get("/users", zValidator("param", queryUsersParamsSchema), async (c) 
 
 })
 
+//Test route
+userRoutes.post("/testing", zValidator("json", testSchema), async (c)=>{
+    const { id } = c.req.valid("json");
+
+    throw new HTTPException(404, { message: "User not found" });
+
+})
+
 //Sign up a user
 userRoutes.post("/users", zValidator("json", createUserSchema), async (c)=>{
 
     const { name, lastDigitOfCardNum, cardNum, JHED, graduationYear, isAdmin } = c.req.valid("json");
-    
+
+    //First, check if a user with that card number exists. If they do, send back an error.
+    const [userCheck] = await db
+    .select()
+    .from(users)
+    .where(eq(users.cardNum, cardNum))
+
+    //If there is a user with that card number.
+    if(userCheck){
+        throw new HTTPException(409, { message: "User with this card number already exists." });
+    }
 
     const newUser = await db
         .insert(users)

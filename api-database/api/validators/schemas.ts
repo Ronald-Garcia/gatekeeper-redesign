@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+export const testSchema = z.object({
+  id: z.coerce.number().int().positive(),
+})
+
 export const queryUsersParamsSchema = z.object({
     sort: z.enum(["name_asc", "name_desc", "year_asc", "year_desc","jhed_asc", "jhed_desc"]).optional(),
     search: z.string().optional(),
