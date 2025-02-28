@@ -17,5 +17,12 @@ export const queryMachinesByTypeSchema = z.object({
 export const createMachineSchema = z.object({
     name: z.string(),
     machineType: z.string(),
-    hourlyRate: z.coerce.number().positive().int().max(10000)
+    hourlyRate: z.coerce.number().positive().int().max(1000)
 });
+
+export const updateMachineSchema = createMachineSchema.partial();
+
+
+export const validateMachineIdSchema = z.object({
+    id: z.coerce.number().int().positive()
+})

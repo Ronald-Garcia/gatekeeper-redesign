@@ -3,7 +3,7 @@ import { Hono } from "hono";
 import { like, SQL, or, desc, asc, eq, and, count, ilike } from "drizzle-orm";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
-import { createMachineSchema, queryMachinesByNameSchema, queryMachinesByTypeSchema } from "../validators/machineSchema.js";
+import { createMachineSchema, queryMachinesByNameSchema, queryMachinesByTypeSchema, validateMachineIdSchema } from "../validators/machineSchema.js";
 import { machines } from "../db/schema.js";
 
 
@@ -107,42 +107,71 @@ machineRoutes.get("/machines/searchByType", zValidator("query", queryMachinesByT
 //Create a new machine given a machine type
 machineRoutes.post("/machines", zValidator("json", createMachineSchema), async (c)=>{
 
-    const { name, machineType } = c.req.valid("json");
+    const { name, machineType, hourlyRate } = c.req.valid("json");
 
-    //Insertion of new Budget Code
-    const newBudgetCode = await db
+    //Insertion of new machine
+    const newMachine = await db
         .insert(machines)
         .values({
             name,
-            machineType
+            machineType,
+            hourlyRate
         })
         .returning();
 
-    return c.json(newBudgetCode, 201);
+    return c.json(newMachine, 201);
+})
 
+//Create a new machine given a machine type by id.
+machineRoutes.patch("/machines/:id",
+zValidator("param", validateMachineIdSchema),
+zValidator("json", createMachineSchema),
+async (c)=>{
+
+    const { id } = c.req.valid("param")
+    const { name, machineType, hourlyRate } = c.req.valid("json");
+    // Check if machine exists first, throw 404 if not.
+    const  [machine_ent]  = await db
+    .select()
+    .from(machines)
+    .where(eq(machines.id, id));
+
+    if (!machine_ent) {
+        throw new HTTPException(404, { message: "Machine not found" });
+    }
+
+    //Updating of machine
+
+    const updatedMachine = await db
+        .update(machines)
+        .set({name,machineType,hourlyRate })
+        .where(eq(machines.id, id))
+        .returning();
+
+    return c.json(updatedMachine, 201);
 })
 
 //Delete a machine by id.
-machineRoutes.delete("/trainings",
-    zValidator("json", validateTrainingSchema),
+machineRoutes.delete("/machines/:id",
+    zValidator("param", validateMachineIdSchema),
      async (c)=>{
 
-    const { userId, machineType } = c.req.valid("json");
+    const { id } = c.req.valid("param");
 
-    // Check if a valid user first, throw 404 if not.
-    const  [user_ent]  = await db
+    // Check if machine exists first, throw 404 if not.
+    const  [machine_ent]  = await db
     .select()
-    .from(users)
-    .where(eq(users.id, userId));
+    .from(machines)
+    .where(eq(machines.id, id));
 
-    if (!user_ent) {
-        throw new HTTPException(404, { message: "User not found" });
+    if (!machine_ent) {
+        throw new HTTPException(404, { message: "Machine not found" });
     }
 
-    const deletedTraining = await db
-        .delete(userMachineType)
-        .where(and(eq(userMachineType.userId, userId),eq(userMachineType.machineType, machineType)))
+    const deletedMachine = await db
+        .delete(machines)
+        .where(eq(machines.id, id))
         .returning();
 
-    return c.json(deletedTraining, 200);
+    return c.json(deletedMachine, 200);
 })
