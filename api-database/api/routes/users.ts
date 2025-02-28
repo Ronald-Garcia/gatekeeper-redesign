@@ -17,35 +17,45 @@ userRoutes.get("/users", zValidator("param", queryUsersParamsSchema), async (c) 
     const whereClause: (SQL | undefined)[] = [];
 
     if (search) {
-        whereClause.push(or(like(users.name, `%${search}%`), like(users.JHED, search)));
+        whereClause.push(
+            or(like(users.name, `%${search}%`), like(users.JHED, `%${search}%`))
+        );
     }
 
     const orderByClause: SQL[] = [];
 
-    switch (sort){
-        case "name_desc" :
+    switch (sort) {
+        case "name_desc":
             orderByClause.push(desc(users.name));
             break;
-        case "name_asc" :
+        case "name_asc":
             orderByClause.push(asc(users.name));
             break;
-        case "year_asc" :
+        case "year_desc":
             orderByClause.push(desc(users.graduationYear));
             break;
-        case "year_desc" :
+        case "year_asc":
             orderByClause.push(asc(users.graduationYear));
             break;
-        case "jhed_asc" :
+        case "jhed_desc":
             orderByClause.push(desc(users.JHED));
             break;
-        case "jhed_desc" :
+        case "jhed_asc":
             orderByClause.push(asc(users.JHED));
             break;
-
     }
-    return c.json( {"f":"f"} ,200);
 
-})
+    const results = await db
+        .select()
+        .from(users)
+        .where(whereClause.length ? or(...whereClause) : undefined)
+        .orderBy(...orderByClause)
+        .limit(limit)
+        .offset((page - 1) * limit);
+
+    return c.json(results, 200);
+});
+
 
 //Test route
 userRoutes.post("/testing", zValidator("json", testSchema), async (c)=>{

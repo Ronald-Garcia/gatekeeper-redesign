@@ -10,29 +10,24 @@ import { HTTPException} from "hono/http-exception";
 
 export const budgetCodesRoutes = new Hono();
 
-budgetCodesRoutes.get("/budgetCodes", zValidator("param", queryBudgetCodesParamsSchema), async (c)=>{
-    const { page = 1, limit = 20, sort, search } = c.req.valid("param");
-    
+budgetCodesRoutes.get("/budgetCodes", zValidator("param", queryBudgetCodesParamsSchema), async (c) => {
+    const { page = 1, limit = 20, search } = c.req.valid("param");
+
     const whereClause: (SQL | undefined)[] = [];
-    
+
     if (search) {
-        whereClause.push(or(like(budgetCodes.name, search)));
+        whereClause.push(like(budgetCodes.name, `%${search}%`));
     }
-    
-    const orderByClause: SQL[] = [];
-    
-    switch (sort){
-        case "name_desc" :
-            orderByClause.push(desc(budgetCodes.name));
-            break;
-        case "name_asc" :
-            orderByClause.push(asc(budgetCodes.name));
-            break;
-            
-    
-    }
-    return c.json( {"f":"f"} ,200);
-})
+
+    const results = await db
+        .select()
+        .from(budgetCodes)
+        .where(whereClause.length ? or(...whereClause) : undefined)
+        .limit(limit)
+        .offset((page - 1) * limit);
+
+    return c.json(results, 200);
+});
 
 budgetCodesRoutes.post("/budgetCodes", zValidator("json", createBudgetCode), async (c)=>{
 
