@@ -84,8 +84,8 @@ budgetCodesRoutes.post("/budgetCodes", zValidator("json", createBudgetCode), asy
 
 })
 
-budgetCodesRoutes.delete("/budgetCodes", zValidator("json", deleteBudgetCode), async (c)=>{
-    const { id } = c.req.valid("json");
+budgetCodesRoutes.delete("/budgetCodes/:id", zValidator("param", deleteBudgetCode), async (c)=>{
+    const { id } = c.req.valid("param");
 
     const budgetCode = await db.select().from(budgetCodes).where(eq(budgetCodes.id, id))
 
