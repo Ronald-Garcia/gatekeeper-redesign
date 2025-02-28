@@ -79,6 +79,7 @@ userRoutes.get("/users", zValidator("query", queryUsersParamsSchema), async (c) 
     });
 });
 
+//Get user by id route as well.
 
 //Test route
 userRoutes.post("/testing", zValidator("json", testSchema), async (c)=>{
@@ -123,6 +124,7 @@ userRoutes.post("/users", zValidator("json", createUserSchema), async (c)=>{
 
 // Check if a user is valid for a machine.
 // TODO: Create and give them a session token when we do authentication.
+// TODO DELETE this ROUTE
 userRoutes.post("/validate-user", zValidator("json",validateUserSchema), async(c) => {
     //Given you have a well formed card number, check if that card num exists in user table.
     const {cardNum, lastDigitOfCardNum, machineId} = c.req.valid("json");
