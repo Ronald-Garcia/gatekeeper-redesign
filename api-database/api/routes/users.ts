@@ -175,27 +175,32 @@ userRoutes.post("/validate-user", zValidator("json",validateUserSchema), async(c
 
 })
 
-userRoutes.delete("/users/:id", 
+userRoutes.delete(
+    "/users/:userId", 
     //authGuard,
-    zValidator("param", getUserSchema), async (c)=>{
-    const {userId} = c.req.valid("param");
-    const [user] = await db
-        .select()
-        .from(users)
+    zValidator("param", getUserSchema),
+    async (c)=>{
+        
+        console.log(c);
+        
+        const {userId} = c.req.valid("param");
+        const [user] = await db
+            .select()
+            .from(users)
+            .where(eq(users.id, userId))
+        
+        
+        if (!user) {
+            throw new HTTPException(404, { message: "User not found" });
+        }
+
+        // if (no session) throw another error.
+        // For now, no auth, just replace.
+        const deletedUser = await db
+        .delete(users)
         .where(eq(users.id, userId))
-    
-    
-    if (!user) {
-        throw new HTTPException(404, { message: "User not found" });
-    }
+        .returning()
 
-    // if (no session) throw another error.
-    // For now, no auth, just replace.
-    const deletedUser = await db
-    .delete(users)
-    .where(eq(users.id, userId))
-    .returning()
-
-  return c.json(deletedUser);
+          return c.json(deletedUser);
 
 })
