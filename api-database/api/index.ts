@@ -6,6 +6,7 @@ import { userRoutes } from "./routes/users.js";
 import { handle } from "hono/vercel";
 import { budgetCodes } from "./db/schema.js";
 import { budgetCodesRoutes } from "./routes/budgetCodes.js";
+import { trainingRoutes } from "./routes/trainingValidation.js";
 
 
 const app = new Hono();
@@ -33,7 +34,7 @@ app.get("/hello/:name", (c) => {
 
 app.route("/", userRoutes);
 app.route("/", budgetCodesRoutes);
-
+app.route("/", trainingRoutes);
 
 
 app.onError((err, c) => {
