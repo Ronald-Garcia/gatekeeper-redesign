@@ -18,6 +18,5 @@ export const queryTypesParamsSchema = z.object({
 });
 
 export const updateTypeSchema = z.object({
-    machineType: z.string(),
     updateType: z.string()
 });
