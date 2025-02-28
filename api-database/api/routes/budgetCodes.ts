@@ -10,7 +10,7 @@ import { HTTPException} from "hono/http-exception";
 
 export const budgetCodesRoutes = new Hono();
 
-budgetCodesRoutes.get("/budgetCodes", zValidator("query", queryBudgetCodesParamsSchema), async (c) => {
+budgetCodesRoutes.get("/budget-codes", zValidator("query", queryBudgetCodesParamsSchema), async (c) => {
     const { page = 1, limit = 20, search, sort } = c.req.valid("query");
 
     const whereClause: (SQL | undefined)[] = [];
@@ -67,7 +67,7 @@ budgetCodesRoutes.get("/budgetCodes", zValidator("query", queryBudgetCodesParams
     
 });
 
-budgetCodesRoutes.post("/budgetCodes", zValidator("json", createBudgetCode), async (c)=>{
+budgetCodesRoutes.post("/budget-codes", zValidator("json", createBudgetCode), async (c)=>{
 
     const { name, budgetCode } = c.req.valid("json");
 
@@ -84,7 +84,7 @@ budgetCodesRoutes.post("/budgetCodes", zValidator("json", createBudgetCode), asy
 
 })
 
-budgetCodesRoutes.delete("/budgetCodes", zValidator("json", deleteBudgetCode), async (c)=>{
+budgetCodesRoutes.delete("/budget-codes", zValidator("json", deleteBudgetCode), async (c)=>{
     const { id } = c.req.valid("json");
 
     const budgetCode = await db.select().from(budgetCodes).where(eq(budgetCodes.id, id))
