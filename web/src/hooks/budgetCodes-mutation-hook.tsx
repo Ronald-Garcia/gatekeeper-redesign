@@ -3,6 +3,7 @@ import { createBudgetCode,
     deleteBudgetCode,
      editBudgetCode } from "../data/api";
 import { addBudgetCode, deleteBudgetCodeByNum, $codes } from "../data/store";
+import { BudgetCode } from "@/data/types/budgetCode";
 
 function useMutationBudgetCodes() {
 
