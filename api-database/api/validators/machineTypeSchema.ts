@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+export const validateTypeSchema = z.object({
+    machineType: z.string()
+});
+
 export const validateTypeParamSchema = z.object({
     machineType: z.string()
 });
@@ -11,4 +15,9 @@ export const queryTypesParamsSchema = z.object({
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().optional(),
 
+});
+
+export const updateTypeSchema = z.object({
+    machineType: z.string(),
+    updateType: z.string()
 });

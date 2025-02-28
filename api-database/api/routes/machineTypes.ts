@@ -4,7 +4,7 @@ import { and, asc, count, desc, eq, ilike, like, or, SQL } from "drizzle-orm";
 import { machineTypes } from "../db/schema";
 import { db } from "../db";
 import { HTTPException } from "hono/http-exception"
-import { queryTypesParamsSchema, validateTypeParamSchema } from "../validators/machineTypeSchema";
+import { queryTypesParamsSchema, updateTypeSchema, validateTypeParamSchema, validateTypeSchema } from "../validators/machineTypeSchema";
 
 
 export const machineTypeRoutes = new Hono();
@@ -13,22 +13,10 @@ export const machineTypeRoutes = new Hono();
 // Getting list of all machine types
 machineTypeRoutes.get(
     "/machine-types",
-    zValidator("param", validateTypeParamSchema),
     zValidator("query", queryTypesParamsSchema),
     async (c) => {
-    const { machineType } = c.req.valid("param")
     const { page = 1, limit = 20, sort, search } = c.req.valid("query");
         const whereClause: (SQL | undefined)[] = [];
-
-        // Check if a valid machine type first, throw 404 if not.
-        const  [type]  = await db
-        .select()
-        .from(machineTypes)
-        .where(eq(machineTypes.type, machineType));
-
-        if (!type) {
-            throw new HTTPException(404, { message: "Machine Type not found" });
-        }
 
         // Get into searching
         if (search) {
@@ -77,7 +65,7 @@ machineTypeRoutes.get(
 
 // Add a machine type
 machineTypeRoutes.post("/machine-types",
-    zValidator("json", validateTypeParamSchema),
+    zValidator("json", validateTypeSchema),
      async (c)=>{
 
     const { machineType } = c.req.valid("json");
@@ -104,11 +92,11 @@ machineTypeRoutes.post("/machine-types",
 
 
 // Remove a type of machine
-machineTypeRoutes.delete("/machine-types",
-    zValidator("json", validateTypeParamSchema),
+machineTypeRoutes.delete("/machine-types/:machineType",
+    zValidator("param", validateTypeParamSchema),
      async (c)=>{
 
-    const { machineType } = c.req.valid("json");
+    const { machineType } = c.req.valid("param");
 
     // Check if a valid type first, throw 404 if not.
     const  [type]  = await db
@@ -126,4 +114,37 @@ machineTypeRoutes.delete("/machine-types",
         .returning();
 
     return c.json(deletedTraining, 200);
+})
+
+// Update a type of machine
+machineTypeRoutes.patch("/machine-types/:machineType",
+    zValidator("param", validateTypeParamSchema),
+    zValidator("json", updateTypeSchema),
+     async (c)=>{
+
+    const { machineType } = c.req.valid("param");
+    const { updateType } = c.req.valid("json");
+
+    // Check if a valid type first, throw 404 if not.
+    const  [type]  = await db
+    .select()
+    .from(machineTypes)
+    .where(eq(machineTypes.type, machineType));
+
+    if (!type) {
+        throw new HTTPException(404, { message: "Machine Type not found" });
+    }
+
+    const updatedMachineType = await db
+    .update(machineTypes)
+    .set({ title })
+    .where(eq(decks.id, id))
+    .returning()
+    .get();
+
+  return c.json({
+    success: true,
+    message: "Deck updated successfully",
+    data: updatedDeck,
+  });
 })
