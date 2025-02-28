@@ -137,14 +137,13 @@ machineTypeRoutes.patch("/machine-types/:machineType",
 
     const updatedMachineType = await db
     .update(machineTypes)
-    .set({ title })
-    .where(eq(decks.id, id))
+    .set({ type: updateType })
+    .where(eq(machineTypes.type, machineType))
     .returning()
-    .get();
 
-  return c.json({
-    success: true,
-    message: "Deck updated successfully",
-    data: updatedDeck,
-  });
+    return c.json({
+        success: true,
+        message: "Deck updated successfully",
+        data: updatedMachineType,
+    });
 })
