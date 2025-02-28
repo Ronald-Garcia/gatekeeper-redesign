@@ -1,7 +1,7 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { and, eq } from "drizzle-orm";
-import { userMachineRelation, usersTable } from "../db/schema";
+import { machinesTable, userMachineRelation, usersTable } from "../db/schema";
 import { db } from "../db";
 import { HTTPException } from "hono/http-exception"
 import { validateTrainingSchema } from "../validators/trainingSchema";
@@ -26,6 +26,12 @@ trainingRoutes.get(
     }
 
     const id = user_ent.id
+    const type = await db
+        .select()
+        .from(machinesTable)
+        .where(eq(machinesTable.id, machineId))
+    
+
     
     const machineRelation = await db
         .select()
