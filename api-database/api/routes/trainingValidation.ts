@@ -10,7 +10,7 @@ import { queryTrainingsParamsSchema, validateTrainingSchema, validateUserParamSc
 export const trainingRoutes = new Hono();
 
 trainingRoutes.get(
-    "./trainings",
+    "/trainings",
     zValidator(
         "json",
         validateTrainingSchema),
@@ -53,9 +53,9 @@ trainingRoutes.get(
 })
 
 
-// Getting list of student's current trainings by id.
+// Getting list of a student's current trainings by id.
 trainingRoutes.get(
-    "./trainings/:id",
+    "/trainings/:id",
     zValidator("param", validateUserParamSchema),
     zValidator("query", queryTrainingsParamsSchema),
     async (c) => {
@@ -117,7 +117,6 @@ trainingRoutes.get(
         });
     });
 
-    
 
 // Add trainings
 trainingRoutes.post("/trainings",

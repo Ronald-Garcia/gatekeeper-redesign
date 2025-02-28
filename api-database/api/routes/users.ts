@@ -10,7 +10,6 @@ import { HTTPException} from "hono/http-exception";
 export const userRoutes = new Hono();
 
 
-
 userRoutes.get("/users", zValidator("query", queryUsersParamsSchema), async (c) => {
     const { page = 1, limit = 20, sort, search } = c.req.valid("query");
 
