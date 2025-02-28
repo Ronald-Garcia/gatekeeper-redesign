@@ -72,6 +72,7 @@ export const getUserSchema = z.object({
 });
 
 export const queryBudgetCodesParamsSchema = z.object({
+    sort: z.enum(["name_asc", "name_desc", "code_asc", "code_desc"]).optional(),
     search: z.string().optional(),
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().optional(),

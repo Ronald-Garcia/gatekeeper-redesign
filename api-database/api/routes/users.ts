@@ -1,7 +1,7 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { queryUsersParamsSchema, createUserSchema, validateUserSchema, getUserSchema, testSchema } from "../validators/schemas.js";
-import { like, SQL, or, desc, asc, eq, and } from "drizzle-orm";
+import { like, SQL, or, desc, asc, eq, and, count } from "drizzle-orm";
 import { budgetCodes, machines, machineTypes, userMachineType, users } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
@@ -11,8 +11,8 @@ export const userRoutes = new Hono();
 
 
 
-userRoutes.get("/users", zValidator("param", queryUsersParamsSchema), async (c) => {
-    const { page = 1, limit = 20, sort, search } = c.req.valid("param");
+userRoutes.get("/users", zValidator("query", queryUsersParamsSchema), async (c) => {
+    const { page = 1, limit = 20, sort, search } = c.req.valid("query");
 
     const whereClause: (SQL | undefined)[] = [];
 
@@ -45,15 +45,38 @@ userRoutes.get("/users", zValidator("param", queryUsersParamsSchema), async (c) 
             break;
     }
 
-    const results = await db
-        .select()
-        .from(users)
-        .where(whereClause.length ? or(...whereClause) : undefined)
-        .orderBy(...orderByClause)
-        .limit(limit)
-        .offset((page - 1) * limit);
+    const offset = (page - 1) * limit;
 
-    return c.json(results, 200);
+    const [allUsers, [{ totalCount }]] = await Promise.all([
+        db
+        .select({
+            id: users.id,
+            name: users.name,
+            cardNum: users.cardNum,
+            lastDigitOfCardNum: users.lastDigitOfCardNum,
+            JHED: users.JHED,
+            isAdmin: users.isAdmin,
+            graduationYear: users.graduationYear
+        })
+          .from(users)
+          .where(and(...whereClause))
+          .orderBy(...orderByClause)
+          .limit(limit)
+          .offset(offset),
+
+          //This gets user count from database.
+        db
+          .select({ totalCount: count() })
+          .from(users)
+          .where(and(...whereClause)),
+      ]);
+    
+    return c.json({
+        data: allUsers,
+        page,
+        limit,
+        total: totalCount,
+    });
 });
 
 
@@ -93,7 +116,7 @@ userRoutes.post("/users", zValidator("json", createUserSchema), async (c)=>{
         })
         .returning();
 
-    return c.json(newUser);
+    return c.json(newUser, 201);
 })
 
 // userRoutes.patch

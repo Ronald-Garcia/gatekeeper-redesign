@@ -1,7 +1,7 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { queryBudgetCodesParamsSchema, createBudgetCode, deleteBudgetCode } from "../validators/schemas.js";
-import { like, SQL, or, desc, asc, eq } from "drizzle-orm";
+import { like, SQL, or, desc, asc, eq, and, count } from "drizzle-orm";
 import { budgetCodes } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
@@ -10,8 +10,8 @@ import { HTTPException} from "hono/http-exception";
 
 export const budgetCodesRoutes = new Hono();
 
-budgetCodesRoutes.get("/budgetCodes", zValidator("param", queryBudgetCodesParamsSchema), async (c) => {
-    const { page = 1, limit = 20, search } = c.req.valid("param");
+budgetCodesRoutes.get("/budgetCodes", zValidator("query", queryBudgetCodesParamsSchema), async (c) => {
+    const { page = 1, limit = 20, search, sort } = c.req.valid("query");
 
     const whereClause: (SQL | undefined)[] = [];
 
@@ -19,14 +19,52 @@ budgetCodesRoutes.get("/budgetCodes", zValidator("param", queryBudgetCodesParams
         whereClause.push(like(budgetCodes.name, `%${search}%`));
     }
 
-    const results = await db
-        .select()
-        .from(budgetCodes)
-        .where(whereClause.length ? or(...whereClause) : undefined)
-        .limit(limit)
-        .offset((page - 1) * limit);
+        const orderByClause: SQL[] = [];
+    
+        switch (sort) {
+            case "name_desc":
+                orderByClause.push(desc(budgetCodes.name));
+                break;
+            case "name_asc":
+                orderByClause.push(asc(budgetCodes.name));
+                break;
+            case "code_desc":
+                orderByClause.push(desc(budgetCodes.budgetCode));
+                break;
+            case "code_desc":
+                orderByClause.push(asc(budgetCodes.budgetCode));
+                break;
+        }
 
-    return c.json(results, 200);
+    const offset = (page - 1) * limit;
+
+    const [allBudgetCodes, [{ totalCount }]] = await Promise.all([
+        db
+        .select({
+            id: budgetCodes.id,
+            name: budgetCodes.name,
+            budgetCode: budgetCodes.budgetCode
+        })
+          .from(budgetCodes)
+          .where(and(...whereClause))
+          .orderBy(...orderByClause)
+          .limit(limit)
+          .offset(offset),
+
+          //This gets user count from database.
+        db
+          .select({ totalCount: count() })
+          .from(budgetCodes)
+          .where(and(...whereClause)),
+      ]);
+    
+    return c.json({
+        data: allBudgetCodes,
+        page,
+        limit,
+        total: totalCount,
+    });
+    
 });
 
 budgetCodesRoutes.post("/budgetCodes", zValidator("json", createBudgetCode), async (c)=>{
