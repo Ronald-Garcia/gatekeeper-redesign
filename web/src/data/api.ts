@@ -147,6 +147,7 @@ export const validateTraining = async (user_id: number, machine_id: number): Pro
 }> => {
   
   const response = await fetch(`${API_DB_URL}/trainings`,{
+    method: "POST",
     credentials: "include",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({

@@ -12,21 +12,22 @@ export const users = pgTable("users_table", {
 });
 
 export const machineTypes = pgTable("machine_type" , {
-  type: text().primaryKey().notNull()
+  id: serial().primaryKey(),
+  type: text().unique().notNull()
 })
 
 export const machines = pgTable("machines_table", {
   id: serial().primaryKey(),
   hourlyRate: integer().notNull(),
   name: text().notNull(),
-  machineType: text().notNull().references(() => machineTypes.type, {onDelete:"cascade"})
+  machineTypeId: serial().notNull().references(() => machineTypes.id, {onDelete:"cascade"})
 })
 
 //Table that acts as the "trainings" completed for a user
 export const userMachineType = pgTable("user_machine_type",{
   id: serial().primaryKey(),
   userId: serial().notNull().references(() => users.id, {onDelete: "cascade"}),
-  machineType: text().notNull().references(()=> machineTypes.type, {onDelete:"cascade"})
+  machineTypeId: serial().notNull().references(()=> machineTypes.id, {onDelete:"cascade"})
 });
 
 export const budgetCodes = pgTable("budgetCodes" , {
@@ -38,7 +39,7 @@ export const budgetCodes = pgTable("budgetCodes" , {
 export const userBudgetCodeTable = pgTable("user_budget_code_table",{
   id: serial().primaryKey(),
   userId: serial().notNull().references(() => users.id, {onDelete: "cascade"}),
-  budgetCodeId: serial().notNull().references(()=> machines.id, {onDelete:"cascade"})
+  budgetCodeId: serial().notNull().references(()=> budgetCodes.id, {onDelete:"cascade"})
 });
 
 export type InsertUser = typeof users.$inferInsert;

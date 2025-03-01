@@ -1,6 +1,6 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { like, SQL, or, desc, asc, eq, and, count, ilike } from "drizzle-orm";
+import { like, SQL, or, desc, asc, eq, and, count, ilike, exists } from "drizzle-orm";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
 import { createMachineSchema, getMachineSchema, queryMachinesByNameSchema, queryMachinesByTypeSchema, validateMachineIdSchema } from "../validators/machineSchema.js";
@@ -68,17 +68,17 @@ machineRoutes.get("/machines/searchByType", zValidator("query", queryMachinesByT
     const whereClause: (SQL | undefined)[] = [];
 
     if (search) {
-        whereClause.push(or(ilike(machines.machineType, `%${search}%`)));
+        whereClause.push(or(ilike(machineTypes.type, `%${search}%`)));
     }
 
         const orderByClause: SQL[] = [];
     
         switch (sort) {
             case "type_desc":
-                orderByClause.push(desc(machines.machineType));
+                orderByClause.push(desc(machineTypes.type));
                 break;
             case "type_asc":
-                orderByClause.push(asc(machines.machineType));
+                orderByClause.push(asc(machineTypes.type));
                 break;
         }
 
@@ -88,8 +88,8 @@ machineRoutes.get("/machines/searchByType", zValidator("query", queryMachinesByT
         db
         .select()
         .from(machines)
-        .where(and(...whereClause))
-        .orderBy(...orderByClause)
+        .where(
+            exists(db.select().from(machineTypes).where(and(...whereClause)).orderBy(...orderByClause)))
         .limit(limit)
         .offset(offset),
 
@@ -97,7 +97,7 @@ machineRoutes.get("/machines/searchByType", zValidator("query", queryMachinesByT
         db
           .select({ totalCount: count() })
           .from(machines)
-          .where(and(...whereClause)),
+          .where(exists(db.select().from(machineTypes).where(and(...whereClause)))),
       ]);
     
     return c.json({
@@ -135,12 +135,12 @@ machineRoutes.get("/machines/:id", zValidator("param", getMachineSchema), async 
 //Create a new machine given a machine type
 machineRoutes.post("/machines", zValidator("json", createMachineSchema), async (c)=>{
 
-    const { name, machineType, hourlyRate } = c.req.valid("json");
+    const { name, machineTypeId, hourlyRate } = c.req.valid("json");
     //Check if machine type actually exists exists
     const [machineTypeCheck] = await db
         .select()
         .from(machineTypes)
-        .where(eq(machineTypes.type, machineType))
+        .where(eq(machineTypes.id, machineTypeId))
     
     if (!machineTypeCheck) {
         throw new HTTPException(404, { message: "Invalid machine type" });
@@ -151,7 +151,7 @@ machineRoutes.post("/machines", zValidator("json", createMachineSchema), async (
         .insert(machines)
         .values({
             name,
-            machineType,
+            machineTypeId,
             hourlyRate
         })
         .returning();
@@ -170,7 +170,7 @@ zValidator("json", createMachineSchema),
 async (c)=>{
 
     const { id } = c.req.valid("param")
-    const { name, machineType, hourlyRate } = c.req.valid("json");
+    const { name, machineTypeId, hourlyRate } = c.req.valid("json");
     // Check if machine exists first, throw 404 if not.
     const  [machine_ent]  = await db
     .select()
@@ -181,12 +181,12 @@ async (c)=>{
         throw new HTTPException(404, { message: "Machine not found" });
     }
 
-    if (machineType) {
+    if (machineTypeId) {
         //Check if machine type actually exists, if provided.
         const [machineTypeCheck] = await db
             .select()
             .from(machineTypes)
-            .where(eq(machineTypes.type, machineType))
+            .where(eq(machineTypes.id, machineTypeId))
         
         if (!machineTypeCheck) {
             throw new HTTPException(404, { message: "Invalid machine type" });
@@ -197,7 +197,7 @@ async (c)=>{
 
     const updatedMachine = await db
         .update(machines)
-        .set({name,machineType,hourlyRate })
+        .set({name,machineTypeId,hourlyRate })
         .where(eq(machines.id, id))
         .returning();
 

@@ -4,19 +4,18 @@ import { and, asc, count, desc, eq, ilike, like, or, SQL } from "drizzle-orm";
 import { machines, machineTypes, userMachineType, users } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { HTTPException } from "hono/http-exception"
-import { queryTrainingsParamsSchema, validateTrainingSchema, validateUserParamSchema } from "../validators/trainingSchema.js";
+import { createTrainingSchema, getTrainingSchema, queryTrainingsParamsSchema, validateTrainingSchema, validateUserParamSchema } from "../validators/trainingSchema.js";
 
 
 export const trainingRoutes = new Hono();
 
 trainingRoutes.get(
-    "/trainings",
+    "/trainings/:userId/:machineId",
     zValidator(
-        "json",
+        "param",
         validateTrainingSchema),
     async (c) => {
-    const { userId } = c.req.valid("json")
-    const { machineType } = c.req.valid("json")
+    const { userId, machineId } = c.req.valid("param")
     const  [user_ent]  = await db
         .select()
         .from(users)
@@ -26,23 +25,25 @@ trainingRoutes.get(
         throw new HTTPException(404, { message: "User not found" });
     }
 
-    const id = user_ent.id
+    const [ machine ] = await db
+        .select()
+        .from(machines)
+        .where(eq(machines.id, machineId));
 
-        //Check if the machine they are requesting exists.
-    const[machineTypeCheck] = await db
+    if (!machine) {
+        throw new HTTPException(404, { message: "Machine not found." });
+    }
+
+    const [ machineType ] = await db
         .select()
         .from(machineTypes)
-        .where(eq(machineTypes.type, machineType));
-        
-    if (!machineTypeCheck) {
-        throw new HTTPException(404, { message: "Machine type not found" });
-    }
+        .where(eq(machineTypes.id, machine.machineTypeId))
 
     
     const machineRelation = await db
         .select()
         .from(userMachineType)
-        .where(and(eq(userMachineType.userId, id), eq(userMachineType.machineType, machineType)))
+        .where(and(eq(userMachineType.userId, userId), eq(userMachineType.id, machine.machineTypeId)))
     
     if (!machineRelation) {
         throw new HTTPException(401, { message: "User not authorized to use machine" });
@@ -74,22 +75,22 @@ trainingRoutes.get(
         }
 
         // Get into searching
-        if (search) {
-            whereClause.push(
-                and(ilike(userMachineType.machineType, `%${search}%`), eq(userMachineType.userId, id))
-            );
-        }
+        // if (search) {
+        //     whereClause.push(
+        //         and(ilike(userMachineType.machineType, `%${search}%`), eq(userMachineType.userId, id))
+        //     );
+        // }
     
         const orderByClause: SQL[] = [];
     
-        switch (sort) {
-            case "type_desc":
-                orderByClause.push(desc(userMachineType.machineType));
-                break;
-            case "type_asc":
-                orderByClause.push(asc(userMachineType.machineType));
-                break;
-        }
+        // switch (sort) {
+        //     case "type_desc":
+        //         orderByClause.push(desc(userMachineType.machineType));
+        //         break;
+        //     case "type_asc":
+        //         orderByClause.push(asc(userMachineType.machineType));
+        //         break;
+        // }
     
         const offset = (page - 1) * limit;
     
@@ -124,10 +125,10 @@ trainingRoutes.get(
 
 // Add trainings
 trainingRoutes.post("/trainings",
-    zValidator("json", validateTrainingSchema),
+    zValidator("json", createTrainingSchema),
      async (c)=>{
 
-    const { userId, machineType } = c.req.valid("json");
+    const { userId, machineTypeId } = c.req.valid("json");
 
     // Check if a valid user first, throw 404 if not.
     const  [user_ent]  = await db
@@ -142,8 +143,8 @@ trainingRoutes.post("/trainings",
     const newTraining = await db
         .insert(userMachineType)
         .values({
-            userId:userId,
-            machineType:machineType
+            userId,
+            machineTypeId
         })
         .returning();
 
@@ -158,10 +159,10 @@ trainingRoutes.post("/trainings",
 // Remove trainings
 //Sign up a user
 trainingRoutes.delete("/trainings",
-    zValidator("json", validateTrainingSchema),
+    zValidator("json", getTrainingSchema),
      async (c)=>{
 
-    const { userId, machineType } = c.req.valid("json");
+    const { userId, machineTypeId } = c.req.valid("json");
 
     // Check if a valid user first, throw 404 if not.
     const  [user_ent]  = await db
@@ -175,7 +176,7 @@ trainingRoutes.delete("/trainings",
 
     const deletedTraining = await db
         .delete(userMachineType)
-        .where(and(eq(userMachineType.userId, userId),eq(userMachineType.machineType, machineType)))
+        .where(and(eq(userMachineType.userId, userId),eq(userMachineType.id, machineTypeId)))
         .returning();
 
     return c.json({

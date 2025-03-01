@@ -3,8 +3,18 @@ import { z } from "zod";
 export const validateTrainingSchema = z.object({
     userId: z
     .coerce.number().int().positive(),
-    machineType: z.string(),
+    machineId: z
+    .coerce.number().int().positive(),
 });
+
+export const createTrainingSchema = z.object({
+    userId: z
+    .coerce.number().int().positive(),
+    machineTypeId: z
+    .coerce.number().int().positive(),
+});
+
+export const getTrainingSchema = createTrainingSchema;
 
 export const validateUserParamSchema = z.object({
     id: z
