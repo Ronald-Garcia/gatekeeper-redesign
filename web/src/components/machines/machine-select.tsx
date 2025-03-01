@@ -1,6 +1,9 @@
 import { MachineType } from "@/data/types/machineType";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
 import { Button } from "../ui/button";
+import { adminCurrentUser, setCurrentMachine } from "@/data/store";
+import { redirectPage } from "@nanostores/router";
+import { $router } from "@/data/router";
 
 
 type MachineSelectDialogProps = {
@@ -11,7 +14,8 @@ const MachineSelectDialog = ({ machine }: MachineSelectDialogProps) => {
 
 
     const handleOk = (e: React.MouseEvent<HTMLButtonElement>) => {
-        
+        setCurrentMachine(machine);
+        redirectPage($router, "admin_dashboard");
     }
 
 
@@ -37,7 +41,8 @@ const MachineSelectDialog = ({ machine }: MachineSelectDialogProps) => {
             <AlertDialogCancel>
                 No wait...
             </AlertDialogCancel>
-            <AlertDialogAction>
+            <AlertDialogAction
+                onClick={handleOk}>
                 Yes
             </AlertDialogAction>
 
