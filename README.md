@@ -60,7 +60,7 @@ conda activate [env-yml-name]
 
 We also have a dockerized version of the machine API, which you can find [HERE](https://github.com/cs421sp25-homework/team-10/pkgs/container/team-10-api-machine)
 
-If you are unfamiliar with docker, read on to det it setup to run locally.
+If you are unfamiliar with docker, read on to set it setup to run locally.
 
 First install docker if you do not have it here: https://docs.docker.com/get-started/get-docker/
 
@@ -81,6 +81,10 @@ docker pull ghcr.io/cs421sp25-homework/team-10-api-machine:latest
 After you download the image, go to the docker web app, and click on the "Images" tab, then click the "run" button on the image you want to run.
 Then, click the "optional settings" button in the popup menu, and set a host port number.
 Finally, open a web browser and naviagte to "http://localhost:PORT_NUMBER_YOU_PUT/", or if it is an API package, ping http://localhost:PORT_NUMBER_YOU_PUT/ with a GET request.
+
+### Local Testing Process
+
+For web enter pnpm install and then type pnpm dev and that will run web locally. 
 
 ## Contributing
 Refer to the [Contributing Guidelines](./CONTRIBUTING.md) for information on how to contribute to the project.
