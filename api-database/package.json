@@ -5,7 +5,7 @@
 		"start": "vercel dev",
 		"deploy": "vercel",
 
-		"dev": "tsx watch api/server.ts",
+		"dev": "tsx watch api-files/server.ts",
 		"prettier": "prettier --write \"src/**/*.ts\" --config \".prettierrc.json\"",
 	
 		"db:generate": "drizzle-kit generate",

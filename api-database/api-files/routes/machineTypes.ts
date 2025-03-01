@@ -1,10 +1,10 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { and, asc, count, desc, eq, ilike, like, or, SQL } from "drizzle-orm";
-import { machineTypes } from "../db/schema";
-import { db } from "../db";
+import { machineTypes } from "../db/schema.js";
+import { db } from "../db/index.js";
 import { HTTPException } from "hono/http-exception"
-import { queryTypesParamsSchema, updateTypeSchema, validateTypeParamSchema, validateTypeSchema } from "../validators/machineTypeSchema";
+import { queryTypesParamsSchema, updateTypeSchema, validateTypeParamSchema, validateTypeSchema } from "../validators/machineTypeSchema.js";
 
 
 export const machineTypeRoutes = new Hono();

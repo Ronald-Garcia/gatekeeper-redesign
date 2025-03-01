@@ -2,13 +2,13 @@ import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
-import { userRoutes } from "../api-files/routes/users.js";
+import { userRoutes } from "./routes/users.js";
 import { handle } from "hono/vercel";
-import { budgetCodes } from "../api-files/db/schema.js";
-import { budgetCodesRoutes } from "../api-files/routes/budgetCodes.js";
-import { machineRoutes } from "../api-files/routes/machines.js";
-import { trainingRoutes } from "../api-files/routes/trainingValidation.js";
-import { machineTypeRoutes } from "../api-files/routes/machineTypes.js";
+import { budgetCodes } from "./db/schema.js";
+import { budgetCodesRoutes } from "./routes/budgetCodes.js";
+import { machineRoutes } from "./routes/machines.js";
+import { trainingRoutes } from "./routes/trainingValidation.js";
+import { machineTypeRoutes } from "./routes/machineTypes.js";
 
 
 const app = new Hono();
