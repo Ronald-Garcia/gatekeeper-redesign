@@ -10,7 +10,7 @@ import { HTTPException} from "hono/http-exception";
 
 export const budgetCodesRoutes = new Hono();
 
-budgetCodesRoutes.get("/budgetCodes", zValidator("query", queryBudgetCodesParamsSchema), async (c) => {
+budgetCodesRoutes.get("/budget-codes", zValidator("query", queryBudgetCodesParamsSchema), async (c) => {
     const { page = 1, limit = 20, search, sort } = c.req.valid("query");
 
     const whereClause: (SQL | undefined)[] = [];
@@ -59,15 +59,20 @@ budgetCodesRoutes.get("/budgetCodes", zValidator("query", queryBudgetCodesParams
       ]);
     
     return c.json({
+        sucess:true,
         data: allBudgetCodes,
-        page,
-        limit,
-        total: totalCount,
-    });
+        meta: {
+            page,
+            limit,
+            total: totalCount,
+            },
+        message:"Fetched user routes"
+        }
+    );
     
 });
 
-budgetCodesRoutes.post("/budgetCodes", zValidator("json", createBudgetCode), async (c)=>{
+budgetCodesRoutes.post("/budget-codes", zValidator("json", createBudgetCode), async (c)=>{
 
     const { name, budgetCode } = c.req.valid("json");
 
@@ -80,11 +85,15 @@ budgetCodesRoutes.post("/budgetCodes", zValidator("json", createBudgetCode), asy
         })
         .returning();
 
-    return c.json(newBudgetCode, 201);
+    return c.json({
+        sucess:true,
+        message:"Created new budget code",
+        data:newBudgetCode
+    }, 201);
 
 })
 
-budgetCodesRoutes.delete("/budgetCodes", zValidator("json", deleteBudgetCode), async (c)=>{
+budgetCodesRoutes.delete("/budget-codes", zValidator("json", deleteBudgetCode), async (c)=>{
     const { id } = c.req.valid("json");
 
     const budgetCode = await db.select().from(budgetCodes).where(eq(budgetCodes.id, id))
@@ -98,6 +107,10 @@ budgetCodesRoutes.delete("/budgetCodes", zValidator("json", deleteBudgetCode), a
         .where(eq(budgetCodes.id, id))
         .returning();
 
-    return c.json(deletedBudgetCode, 200)
+    return c.json({
+        sucess:true,
+        message:"Created new budget code",
+        data:deleteBudgetCode
+    }, 200)
 
 })

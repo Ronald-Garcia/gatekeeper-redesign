@@ -110,11 +110,15 @@ trainingRoutes.get(
           ]);
         
         return c.json({
+            sucess:true,
             data: allTrainings,
-            page,
-            limit,
-            total: totalCount,
-        });
+            meta: {
+                page,
+                limit,
+                total: totalCount,
+                },
+            message:"Fetched user routes"
+            });
     });
 
 
@@ -143,7 +147,11 @@ trainingRoutes.post("/trainings",
         })
         .returning();
 
-    return c.json(newTraining, 201);
+    return c.json({
+        sucess:true,
+        data:newTraining,
+        message:"Deleted training"
+    }, 201)
 })
 
 
@@ -170,5 +178,9 @@ trainingRoutes.delete("/trainings",
         .where(and(eq(userMachineType.userId, userId),eq(userMachineType.machineType, machineType)))
         .returning();
 
-    return c.json(deletedTraining, 200);
+    return c.json({
+        sucess:true,
+        data:deletedTraining,
+        message:"Deleted training"
+    }, 200);
 })

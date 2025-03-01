@@ -41,13 +41,23 @@ app.route("/", machineTypeRoutes);
 app.route("/", machineRoutes);
 
 app.onError((err, c) => {
-  console.error(`${err}`);
-
   if (err instanceof HTTPException) {
-    return err.getResponse();
+    return c.json(
+      {
+        success: false,
+        message: err.message,
+      },
+      err.status,
+    );
   }
 
-  return c.json({ message: "An unexpected error occurred!" }, 500);
+  return c.json(
+    {
+      success: false,
+      message: "An unexpected error occurred!",
+    },
+    500,
+  );
 });
 
 

@@ -55,11 +55,16 @@ machineTypeRoutes.get(
           ]);
         
         return c.json({
+            sucess:true,
             data: allTypes,
-            page,
-            limit,
-            total: totalCount,
-        });
+            meta: {
+                page,
+                limit,
+                total: totalCount,
+                },
+            message:"Fetched all Types"
+            }
+        );
     });
 
 
@@ -87,7 +92,11 @@ machineTypeRoutes.post("/machine-types",
         })
         .returning();
 
-    return c.json(newMachineType, 201);
+    return c.json({
+        sucess:true,
+        message:"Created a new machine type",
+        data: newMachineType
+    }, 201);
 })
 
 
@@ -113,7 +122,11 @@ machineTypeRoutes.delete("/machine-types/:machineType",
         .where(eq(machineTypes.type, machineType))
         .returning();
 
-    return c.json(deletedTraining, 200);
+    return c.json({
+        sucess:true,
+        message:"Deleted a training",
+        data: deletedTraining
+    }, 200);
 })
 
 // Update a type of machine
