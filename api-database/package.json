@@ -5,8 +5,10 @@
 	"scripts": {
 		"start": "vercel dev",
 		"deploy": "vercel",
-		"dev": "tsx watch api/server.ts",
-		"prettier": "prettier --write \"api/**/*.ts\" --config \".prettierrc.json\"",
+
+		"dev": "tsx watch api/index.ts",
+		"prettier": "prettier --write \"src/**/*.ts\" --config \".prettierrc.json\"",
+	
 		"db:generate": "drizzle-kit generate",
 		"db:push": "drizzle-kit push",
 		"db:migrate": "drizzle-kit migrate",
