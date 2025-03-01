@@ -1,0 +1,299 @@
+{
+  "id": "374e3516-3eec-4d3a-965f-8212541895f6",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.budgetCodes": {
+      "name": "budgetCodes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "budgetCode": {
+          "name": "budgetCode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.machine_type": {
+      "name": "machine_type",
+      "schema": "",
+      "columns": {
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.machines_table": {
+      "name": "machines_table",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "hourlyRate": {
+          "name": "hourlyRate",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "machineType": {
+          "name": "machineType",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "machines_table_machineType_machine_type_type_fk": {
+          "name": "machines_table_machineType_machine_type_type_fk",
+          "tableFrom": "machines_table",
+          "tableTo": "machine_type",
+          "columnsFrom": [
+            "machineType"
+          ],
+          "columnsTo": [
+            "type"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.user_budget_code_table": {
+      "name": "user_budget_code_table",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "budgetCodeId": {
+          "name": "budgetCodeId",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "user_budget_code_table_userId_users_table_id_fk": {
+          "name": "user_budget_code_table_userId_users_table_id_fk",
+          "tableFrom": "user_budget_code_table",
+          "tableTo": "users_table",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "user_budget_code_table_budgetCodeId_machines_table_id_fk": {
+          "name": "user_budget_code_table_budgetCodeId_machines_table_id_fk",
+          "tableFrom": "user_budget_code_table",
+          "tableTo": "machines_table",
+          "columnsFrom": [
+            "budgetCodeId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.user_machine_type": {
+      "name": "user_machine_type",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "machineType": {
+          "name": "machineType",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "user_machine_type_userId_users_table_id_fk": {
+          "name": "user_machine_type_userId_users_table_id_fk",
+          "tableFrom": "user_machine_type",
+          "tableTo": "users_table",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "user_machine_type_machineType_machine_type_type_fk": {
+          "name": "user_machine_type_machineType_machine_type_type_fk",
+          "tableFrom": "user_machine_type",
+          "tableTo": "machine_type",
+          "columnsFrom": [
+            "machineType"
+          ],
+          "columnsTo": [
+            "type"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.users_table": {
+      "name": "users_table",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cardNum": {
+          "name": "cardNum",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lastDigitOfCardNum": {
+          "name": "lastDigitOfCardNum",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "JHED": {
+          "name": "JHED",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "isAdmin": {
+          "name": "isAdmin",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "graduationYear": {
+          "name": "graduationYear",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "users_table_cardNum_unique": {
+          "name": "users_table_cardNum_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "cardNum"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
