@@ -100,7 +100,7 @@ export const getUser = async (cardNum: number): Promise<{
   data: User
 }> => {
 
-  const response = await fetch(`${API_DB_URL}/users/${cardNum}`, {
+  const response = await fetch(`${API_DB_URL}/users/${Math.floor(cardNum / 10)}/${cardNum % 10}`, {
     credentials: "include",
   });
 

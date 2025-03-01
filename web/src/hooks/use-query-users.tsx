@@ -33,10 +33,11 @@ function useQueryUsers(reload: boolean) {
       const {
         data
       } = await getUser(cardNum);
-
+      console.log("1");
       if (!data) {
         throw new Error("Could not find user! Please contact an admin to get registered.");
       }
+
 
       if (data.isAdmin() && !validCurrentMachine()) {
         return "machine_login";
@@ -45,10 +46,13 @@ function useQueryUsers(reload: boolean) {
         throw new Error("This interlock is not set-up! Please contact an admin to set-up this interlock.");
       }
 
-      setCurrentUser(data);
 
-      return data.isAdmin() ? "admin_dashboard" : "interlock";
+      setCurrentUser(data);
+      const ret = data.isAdmin() ? "admin_dashboard" : "interlock";
+      console.log(ret);
+      return ret;
     } catch (e) {
+      console.log(e);
       const errorMessage = (e as Error).message;
         toast.error("Sorry! There was an error 🙁", {
           description: errorMessage  

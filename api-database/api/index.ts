@@ -18,7 +18,7 @@ app.use(
    "/*",
    cors({
      origin: (origin) => origin, // Allow any origin
-     // credentials: true, // Allow credentials
+     credentials: true, // Allow credentials
      allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
      allowHeaders: ["Content-Type", "Authorization"],
      exposeHeaders: ["Set-Cookie"],

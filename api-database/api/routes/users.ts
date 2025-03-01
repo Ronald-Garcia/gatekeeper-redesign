@@ -1,6 +1,6 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { queryUsersParamsSchema, createUserSchema, validateUserSchema, getUserSchema, testSchema } from "../validators/schemas.js";
+import { queryUsersParamsSchema, createUserSchema, getUserSchema, testSchema, getUserByCardNumSchema } from "../validators/schemas.js";
 import { like, SQL, or, desc, asc, eq, and, count } from "drizzle-orm";
 import { budgetCodes, machines, machineTypes, userMachineType, users } from "../db/schema.js";
 import { db } from "../db/index.js";
@@ -121,16 +121,13 @@ userRoutes.post("/users", zValidator("json", createUserSchema), async (c)=>{
 
 // userRoutes.patch
 
-// Check if a user is valid for a machine.
-// TODO: Create and give them a session token when we do authentication.
-// TODO DELETE this ROUTE
-userRoutes.post("/validate-user", zValidator("json",validateUserSchema), async(c) => {
+userRoutes.get("/users/:cardNum/:lastDigitOfCardNum", zValidator("param",getUserByCardNumSchema), async(c) => {
     //Given you have a well formed card number, check if that card num exists in user table.
-    const {cardNum, lastDigitOfCardNum, machineId} = c.req.valid("json");
+    const {cardNum, lastDigitOfCardNum} = c.req.valid("param");
     var [user] = await db
         .select()
         .from(users)
-        .where(eq(users.cardNum, cardNum));
+        .where(and(eq(users.cardNum, cardNum), eq(users.lastDigitOfCardNum, lastDigitOfCardNum)));
     
     // Check if exists. If not, throw error.
     if (!user) {    
@@ -151,29 +148,13 @@ userRoutes.post("/validate-user", zValidator("json",validateUserSchema), async(c
             .returning();
     }
 
-    //Check if the machine they are requesting exists.
-    const[machine] = await db
-        .select()
-        .from(machines)
-        .where(eq(machines.id, machineId));
-    if (!machine) {
-        throw new HTTPException(404, { message: "Machine not found" });
-    }
-
-    //Once we have our user and updated card if needed, check their credentials for the machine in user-machine table.
-    const [relation] = await db
-        .select()
-        .from(userMachineType)
-        .where(and(eq(userMachineType.userId, user.id), eq(userMachineType.machineType, machine.machineType)));
-
-    if (!relation) {
-        throw new HTTPException(403, { message: "User does not have access to given machine" });
-    }
-
     //TODO: Create a session token and return it.
     //For now, we will throw unimplemented.
-    throw new HTTPException(501, { message: "Have not implemented sessions for users yet." });
-
+    return c.json({
+        success: true,
+        message: "User has been validated in",
+        data: user
+    })
 })
 
 userRoutes.delete("/users/:id", 
