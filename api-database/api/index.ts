@@ -2,13 +2,13 @@ import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
-import { userRoutes } from "./routes/users.js";
+//import { userRoutes } from "./routes/users.js";
 import { handle } from "hono/vercel";
-import { budgetCodes } from "./db/schema.js";
-import { budgetCodesRoutes } from "./routes/budgetCodes.js";
-import { trainingRoutes } from "./routes/trainingValidation.js";
-import { machineTypeRoutes } from "./routes/machineTypes.js";
-import { machineRoutes } from "./routes/machines.js";
+//import { budgetCodes } from "./db/schema.js";
+//import { budgetCodesRoutes } from "./routes/budgetCodes.js";
+//import { trainingRoutes } from "./routes/trainingValidation.js";
+//import { machineTypeRoutes } from "./routes/machineTypes.js";
+//import { machineRoutes } from "./routes/machines.js";
 
 
 const app = new Hono();
@@ -30,15 +30,12 @@ app.use(
 	return c.text("Hello, Vercel!!!!");
 });
 
-app.get("/hello/:name", (c) => {
-	return c.text(`Hello, ${c.req.param("name")}!`);
-});
 
-app.route("/", userRoutes);
-app.route("/", budgetCodesRoutes);
-app.route("/", trainingRoutes);
-app.route("/", machineTypeRoutes);
-app.route("/", machineRoutes);
+//app.route("/", userRoutes);
+//app.route("/", budgetCodesRoutes);
+//app.route("/", trainingRoutes);
+//app.route("/", machineTypeRoutes);
+//app.route("/", machineRoutes);
 
 app.onError((err, c) => {
   if (err instanceof HTTPException) {
