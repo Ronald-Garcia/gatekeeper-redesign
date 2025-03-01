@@ -30,11 +30,11 @@ const Body = () => {
   }
 
   useEffect(() => {
-    // if (!validCurrentMachine() && !validCurrentUser()) {
-    //   redirectPage($router, "start_page");
-    // } else if (adminCurrentUser() && !validCurrentMachine()) {
-    //   redirectPage($router, "machine_login");
-    // } 
+    if (!validCurrentMachine() && !validCurrentUser()) {
+      redirectPage($router, "start_page");
+    } else if (adminCurrentUser() && !validCurrentMachine()) {
+      redirectPage($router, "machine_login");
+    } 
   }, []);
   
 

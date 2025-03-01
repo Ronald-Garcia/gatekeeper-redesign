@@ -15,7 +15,7 @@ const MachineSelectDialog = ({ machine }: MachineSelectDialogProps) => {
 
     const handleOk = (e: React.MouseEvent<HTMLButtonElement>) => {
         setCurrentMachine(machine);
-        redirectPage($router, "admin_dashboard");
+        redirectPage($router, "users");
     }
 
 
