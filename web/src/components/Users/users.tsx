@@ -14,7 +14,7 @@ export default function UsersComponent() {
         <p> No machines found. Please add some!  </p>
       ) : (
         userList.map((user) => (
-          <UserComponent key={user.getId()} user={user} />
+          <UserComponent key={user.id} user={user} />
         ))
       )}
 

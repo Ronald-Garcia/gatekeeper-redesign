@@ -13,7 +13,7 @@ export default function MachineSelect({ machine }: { machine: MachineType }) {
     >
       <div className="flex w-full justify-between px-2">
         <div className=" truncate">
-          {machine.getName()}
+          {machine.name}
         </div>
 
         <MachineSelectDialog machine={machine}></MachineSelectDialog>

@@ -22,7 +22,7 @@ const Interlock = () => {
     }
 
     useEffect(() => {
-        getBudgetsOfUser(curUser.getId(), setUserBudgets);
+        getBudgetsOfUser(curUser.id, setUserBudgets);
     }, [])
 
     return (
@@ -31,7 +31,7 @@ const Interlock = () => {
                 <Card>
                     <CardHeader>
                         <CardTitle className="text-2xl font-bold">
-                            Welcome, {curUser.getName()}.
+                            Welcome, {curUser.name}.
                         </CardTitle>
                         <CardDescription className="italic text-xl">
                             {"Select the budget code to be applied."}
@@ -42,11 +42,11 @@ const Interlock = () => {
                             {userBudgets.map((code) => {
                                 return (
                                     <ToggleGroupItem
-                                        key={"val" + code.getId()} 
-                                        value={"val" + code.getId()} 
+                                        key={"val" + code.id} 
+                                        value={"val" + code.id} 
                                         variant="outline"
                                         onClick={async () => {
-                                        }}> {code.getAlias()} </ToggleGroupItem>
+                                        }}> {code.alias} </ToggleGroupItem>
                                 );
                             })}
                         </ToggleGroup>

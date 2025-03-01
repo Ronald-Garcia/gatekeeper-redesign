@@ -8,9 +8,9 @@ export default function BudgetCodesComponent({ budgetcode }: { budgetcode: Budge
   return (
     <>
       <div>
-        <BudgetCodeActions budgetcodeId={budgetcode.getId()}></BudgetCodeActions>
-        <p>{budgetcode.getAlias()} </p>
-        <p>{budgetcode.getCode()} </p>
+        <BudgetCodeActions budgetcodeId={budgetcode.id}></BudgetCodeActions>
+        <p>{budgetcode.alias} </p>
+        <p>{budgetcode.code} </p>
       </div>
     </>
   );

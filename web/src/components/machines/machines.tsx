@@ -14,7 +14,7 @@ export default function Machines() {
         <p> No machines found. Please add some!  </p>
       ) : (
         machineList.map((machine) => (
-          <MachineSelect key={machine.getId()} machine={machine} />
+          <MachineSelect key={machine.id} machine={machine} />
         ))
       )}
 
