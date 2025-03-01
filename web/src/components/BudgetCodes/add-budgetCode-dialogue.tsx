@@ -19,25 +19,25 @@ import { BudgetCode } from "@/data/types/budgetCode";
 //prop for handling state of the dialogue
 type EditBudgetCodeDialogProp = {
   budgetcodeId: number;
-  setShowUpdateBudgetCode: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowAddBudgetCode: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
  
 // function that handles state of the dialogue, error handling from api
-const EditBudgetCodeDialog = ({ budgetcodeId, setShowUpdateBudgetCode }: EditBudgetCodeDialogProp) => {
-  const { updateBudgetCode } = useMutationBudgetCodes();
+const EditBudgetCodeDialog = ({ budgetcodeId, setShowAddBudgetCode }: EditBudgetCodeDialogProp) => {
+  const { addNewBudgetCode } = useMutationBudgetCodes();
   const [budgetCode, setbudgetCode] = useState("");
   const [name, setName] = useState("");
 
   //async function with editing logic, including error handling
-  const handleEditBudgetCode = async () => {
+  const handleAddBudgetCode = async () => {
     
-    const newCode = new BudgetCode(parseInt(budgetCode), budgetcodeId, name)
-    await updateBudgetCode(newCode);
-    setShowUpdateBudgetCode(false);
+    const newCode = new BudgetCode(parseInt(budgetCode), -1, name)
+    addNewBudgetCode(newCode);
+    setShowAddBudgetCode(false);
   };
 
-
+  
   const handleOnChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   }
@@ -46,8 +46,9 @@ const EditBudgetCodeDialog = ({ budgetcodeId, setShowUpdateBudgetCode }: EditBud
     setbudgetCode(e.target.value);
   }
 
+
   return (
-    <Dialog open={true} onOpenChange={setShowUpdateBudgetCode}>
+    <Dialog open={true} onOpenChange={setShowAddBudgetCode}>
       <DialogOverlay />
       <DialogContent>
         <DialogHeader>
@@ -75,8 +76,8 @@ const EditBudgetCodeDialog = ({ budgetcodeId, setShowUpdateBudgetCode }: EditBud
        
       
         <DialogFooter>
-          <Button onClick={() => setShowUpdateBudgetCode(false)}>Cancel</Button>
-          <Button onClick={handleEditBudgetCode}>Save Changes</Button>
+          <Button onClick={() => setShowAddBudgetCode(false)}>Cancel</Button>
+          <Button onClick={handleAddBudgetCode}>Save Changes</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -2,7 +2,7 @@ import { toast } from "sonner";
 import { createBudgetCode, 
     deleteBudgetCode,
      editBudgetCode } from "../data/api";
-import { addBudgetCode, deleteBudgetCodeByNum, $codes } from "../data/store";
+import { addBudgetCode, deleteBudgetCodeByNum, updateABudgetCode } from "../data/store";
 import { BudgetCode } from "@/data/types/budgetCode";
 
 function useMutationBudgetCodes() {
@@ -37,10 +37,7 @@ function useMutationBudgetCodes() {
   const updateBudgetCode = async (budget: BudgetCode) => {
     try {
       const { data } = await editBudgetCode(budget);
-      const updatedCodes = $codes.get().map((code: BudgetCode) =>
-        code.getCode() === data.getCode() ? data : code
-      );
-      $codes.set(updatedCodes);
+     updateABudgetCode(data);
       return data;
     } catch (e) {
       const errorMessage = (e as Error).message;

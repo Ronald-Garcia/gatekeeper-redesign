@@ -2,7 +2,7 @@ import { User } from "./types/user";
 import { atom, map } from "nanostores";
 import { BudgetCode } from "./types/budgetCode"; 
 import { MachineType } from "./types/machineType"; 
-import { logger } from "@nanostores/logger";
+
 
 export const $users = atom<User[]>([]);
 export const $codes = atom<BudgetCode[]>([]);
@@ -74,9 +74,13 @@ export function setUsers(userList: User[]) {
 // export function banUserFlag(userId: number) {}
 
 // //logic to update user
-// export function updateUserById(userId: number) {
-//   return User;
-// }
+ export function updateUserById(updatedUser: User) {
+  $users.set(
+    $users.get().map((user: User) =>
+      user.getId() === updatedUser.getId() ? updatedUser : user
+    )
+  );
+ }
 
 export function setBudgetCodes(codeList: BudgetCode[]) {
   $codes.set(codeList);
@@ -87,6 +91,12 @@ export function addBudgetCode(code: BudgetCode) {
 }
 
 export function deleteBudgetCodeByNum(codeNum: number) {
+  $codes.set(
+    $codes.get().filter((code: BudgetCode) => code.getCode() !== codeNum),
+  );
+}
+
+export function modifyBudgetCode(codeNum: number, alias:string) {
   $codes.set(
     $codes.get().filter((code: BudgetCode) => code.getCode() !== codeNum),
   );
@@ -113,6 +123,13 @@ export function setMachines(machines: MachineType[]) {
 
 export function clearMachines() {
   $machines.set([]);
+}
+
+export function updateABudgetCode(updatedCode:BudgetCode) {
+  $codes.set(
+    $codes.get().map((code: BudgetCode) => 
+    code.getId() === updatedCode.getId() ? updatedCode: code)
+  );
 }
 
 addMachine(machine1);
@@ -147,4 +164,3 @@ addUser(defaultUser);
 addUser(defaultUser);
 addUser(defaultUser);
 
-logger({ $users });

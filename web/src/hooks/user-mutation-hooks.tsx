@@ -1,6 +1,7 @@
 //import { createDeck, deleteDeck, editDeck } from "@/data/api";
 import { $users, addUser, 
     deleteUserById,
+    updateUserById,
  } from "@/data/store";
 import { toast } from "sonner";
 import { User } from "@/data/types/user";
@@ -63,11 +64,11 @@ function useMutationUsers() {
       }
     };
 
-   const updateUser = async (user_id: number) => {
+   const updateUser = async (newUser: User) => {
     try {
     
-      // const newUser = updateUserById(user_id); //using store functions to handle state of app
-     // await editUser(newUser); //edit deck on api
+      const { data } = editUser(newUser); //using store functions to handle state of app
+       updateUserById(data); //edit deck on api
       
     }   catch (e) {
         //get message from api response, put it on a toast
