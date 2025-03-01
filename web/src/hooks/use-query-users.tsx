@@ -1,4 +1,4 @@
-import { getAllUsers, getUser } from "@/data/api";
+import { getAllUsers, getUser, validateTraining } from "@/data/api";
 import { $users, 
   clearCurrentUser, 
   setCurrentUser, 
@@ -39,16 +39,24 @@ function useQueryUsers(reload: boolean) {
       }
 
       const curMachine = await getSavedMachine();
-      if (data.isAdmin && !curMachine) {
-        return "machine_login";
-      } else if(!data.isAdmin && !curMachine) {
+
+
+      if (!curMachine) {
+        if (data.isAdmin) {
+          return "machine_login"
+        }
+
         clearCurrentUser();
         throw new Error("This interlock is not set-up! Please contact an admin to set-up this interlock.");
       }
 
+      const { data: ableToUse } = await validateTraining(data.id, curMachine.id);
 
       setCurrentUser(data);
-      const ret = data.isAdmin ? "users" : "interlock";
+      if (!ableToUse) {
+        throw new Error("User does not have access to this machine!");
+      }
+      const ret = curMachine.type.name === "kiosk" ? "users" : "interlock";
       return ret;
     } catch (e) {
       console.log(e);
