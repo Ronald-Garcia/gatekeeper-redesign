@@ -74,7 +74,7 @@ machineTypeRoutes.post("/machine-types",
     const  [type]  = await db
     .select()
     .from(machineTypes)
-    .where(eq(machineTypes.type, machineType));
+    .where(ilike(machineTypes.type, machineType));
 
     if (type) {
         throw new HTTPException(409, { message: "Machine Type already exists" });
