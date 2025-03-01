@@ -1,6 +1,6 @@
 
 import { serve } from "@hono/node-server";
-import {GET,POST, PATCH, DELETE, OPTIONS} from "./index";
+import {GET,POST, PATCH, DELETE, OPTIONS} from "./index.js";
 
 const port = Number(process.env.PORT) || 3000;
 console.log(`Server is running on port ${port}`);
