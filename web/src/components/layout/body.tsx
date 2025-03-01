@@ -30,6 +30,8 @@ const Body = () => {
   }
 
   useEffect(() => {
+
+
     if (!validCurrentMachine() && !validCurrentUser()) {
       redirectPage($router, "start_page");
     } else if (adminCurrentUser() && !validCurrentMachine()) {
@@ -44,7 +46,7 @@ const Body = () => {
     
       {router.route === "machine_login" && <MachineLogin></MachineLogin>}
 
-      {router.route === "users" && <UsersComponent></UsersComponent>}
+      {(router.route === "users" || router.route === "budgetCodes") && <AdminDashboard></AdminDashboard>}
 
       {router.route === "start_page" && <StartPage></StartPage>}
 

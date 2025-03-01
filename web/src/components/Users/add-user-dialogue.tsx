@@ -29,14 +29,21 @@ const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
   const [email, setEmail] = useState("");
   const [jhed, setJhed] = useState("");
   const [cardNum, setCardNum ] = useState("");
-  const [admin, setAdmin] = useState(false);
+  const [admin, setAdmin] = useState(0);
   const [year, setYear] = useState("");
 
 
   //async function with editing logic, including error handling
   const handleAddUser = async () => {
 
-    const newUser = new User(name, email, parseInt(jhed),admin, parseInt(cardNum), year, -1)
+    const newUser: User = {
+      name,
+      JHED: jhed,
+      isAdmin: admin,
+      cardNum,
+      graduationYear: parseInt(year),
+      lastDigitOfCardNum: 0,
+      id: -1}
     
     await addNewUser(newUser); //use hooks to handle state of training
     setShowAddUser(false); //make the dialogue disappear
@@ -64,7 +71,7 @@ const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
     }
 
     const handleOnChangeAdmin = () => {
-      setAdmin(!admin);
+      setAdmin(admin ^ 1);
     }
   
   

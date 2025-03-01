@@ -3,16 +3,16 @@ import { $users,
   clearCurrentUser, 
   setCurrentUser, 
   setUsers,
-  validCurrentMachine,
  } from "@/data/store";
 import { User } from "@/data/types/user";
 import { useStore } from "@nanostores/react";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import useQueryMachines from "./use-query-machines";
 
 function useQueryUsers(reload: boolean) {
   const users = useStore($users);
-  
+  const { getSavedMachine } = useQueryMachines(false);
 
   const loadUsers = async () => {
     try {
@@ -29,7 +29,7 @@ function useQueryUsers(reload: boolean) {
       }
     };
 
-  const validateUser = async (cardNum: number): Promise<"machine_login" | "admin_dashboard" | "start_page" | "interlock">  => {
+  const validateUser = async (cardNum: number): Promise<"machine_login" | "users" | "start_page" | "interlock">  => {
     try {
       const {
         data
@@ -38,19 +38,17 @@ function useQueryUsers(reload: boolean) {
         throw new Error("Could not find user! Please contact an admin to get registered.");
       }
 
-      console.log(data);
-
-
-      if (data.isAdmin && !validCurrentMachine()) {
+      const curMachine = await getSavedMachine();
+      if (data.isAdmin && !curMachine) {
         return "machine_login";
-      } else if(!data.isAdmin) {
+      } else if(!data.isAdmin && !curMachine) {
         clearCurrentUser();
         throw new Error("This interlock is not set-up! Please contact an admin to set-up this interlock.");
       }
 
 
       setCurrentUser(data);
-      const ret = data.isAdmin ? "admin_dashboard" : "interlock";
+      const ret = data.isAdmin ? "users" : "interlock";
       return ret;
     } catch (e) {
       console.log(e);

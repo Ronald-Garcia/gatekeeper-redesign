@@ -1,10 +1,10 @@
-import { MachineType } from "@/data/types/machineType";
 import MachineSelectDialog from "./machine-select";
+import { Machine } from "@/data/types/machine";
 
 
 
 
-export default function MachineSelect({ machine }: { machine: MachineType }) {
+export default function MachineSelect({ machine }: { machine: Machine }) {
   return (
     <>
     

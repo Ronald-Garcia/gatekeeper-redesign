@@ -1,12 +1,12 @@
 import { User } from "./types/user";
 import { atom, map } from "nanostores";
 import { BudgetCode } from "./types/budgetCode"; 
-import { MachineType } from "./types/machineType"; 
+import { Machine } from "./types/machine";
 
 
 export const $users = atom<User[]>([]);
 export const $codes = atom<BudgetCode[]>([]);
-export const $machines = atom<MachineType[]>([]);
+export const $machines = atom<Machine[]>([]);
 
 const defaultUser: User = {
   name: "test",
@@ -18,13 +18,15 @@ const defaultUser: User = {
   id: -1
 }
 
-const defaultMachine: MachineType = {
+const defaultMachine: Machine = {
   id: -1,
-  name: "invalid"
+  name: "invalid",
+  type: { id: -1, name: "invalid"},
+  hourlyRate: 0
 }
 
 export const $currentUser = map<User>(defaultUser);
-export const $currentMachine = map<MachineType>(defaultMachine);
+export const $currentMachine = map<Machine>(defaultMachine);
 
 export function validCurrentUser() {
   return $currentUser.get() !== defaultUser;
@@ -43,7 +45,7 @@ export function setCurrentUser(user: User) {
   $currentUser.set(user);
 }
 
-export function setCurrentMachine(machine: MachineType) {
+export function setCurrentMachine(machine: Machine) {
   $currentMachine.set(machine);
 }
 
@@ -102,22 +104,19 @@ export function modifyBudgetCode(codeNum: number, alias:string) {
   );
 }
 
-export function addMachine(machine: MachineType) {
+export function addMachine(machine: Machine) {
   $machines.set(
     [...$machines.get(), machine]
   )
 }
 
-const machine1: MachineType = {id: 1, name: "Mill 1"};
-const machine2: MachineType = {id: 2, name: "Mill 2"};
-
-export function removeMachine(machine: MachineType) {
+export function removeMachine(machine: Machine) {
   $machines.set(
     $machines.get().filter(m => m.id !== machine.id)
   );
 }
 
-export function setMachines(machines: MachineType[]) {
+export function setMachines(machines: Machine[]) {
   $machines.set(machines);
 }
 
@@ -131,36 +130,3 @@ export function updateABudgetCode(updatedCode:BudgetCode) {
     code.id === updatedCode.id ? updatedCode: code)
   );
 }
-
-addMachine(machine1);
-addMachine(machine2);
-addMachine(machine2);
-addMachine(machine2);
-addMachine(machine2);
-addMachine(machine2);
-addMachine(machine2);
-addMachine(machine2);
-addMachine(machine2);
-addMachine(machine2);
-addMachine(machine2);
-addMachine(machine2);
-addMachine(machine2);
-addMachine(machine2);
-addMachine(machine2);
-addMachine(machine2);
-
-addUser(defaultUser);
-addUser(defaultUser);
-addUser(defaultUser);
-addUser(defaultUser);
-addUser(defaultUser);
-addUser(defaultUser);
-addUser(defaultUser);
-addUser(defaultUser);
-addUser(defaultUser);
-addUser(defaultUser);
-addUser(defaultUser);
-addUser(defaultUser);
-addUser(defaultUser);
-addUser(defaultUser);
-

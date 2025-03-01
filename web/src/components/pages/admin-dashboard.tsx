@@ -1,4 +1,3 @@
-import { BudgetCode } from "@/data/types/budgetCode";
 import { Button } from "../ui/button";
 import UsersComponent from "../Users/users";
 import { $router } from "@/data/router";

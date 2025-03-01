@@ -33,3 +33,14 @@ dist-ssr
 sqlite.db
 drizzle
 .vercel
+
+.yarn/
+!.yarn/releases
+.vscode/*
+!.vscode/launch.json
+!.vscode/*.code-snippets
+.idea/workspace.xml
+.idea/usage.statistics.xml
+.idea/shelf
+pnpm-lock.yaml
+package-lock.json

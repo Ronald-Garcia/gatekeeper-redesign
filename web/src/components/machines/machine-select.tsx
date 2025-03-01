@@ -1,21 +1,26 @@
-import { MachineType } from "@/data/types/machineType";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
 import { Button } from "../ui/button";
-import { adminCurrentUser, setCurrentMachine } from "@/data/store";
 import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
+import useMutationMachines from "@/hooks/use-mutation-machines";
+import { validCurrentMachine } from "@/data/store";
+import { Machine } from "@/data/types/machine";
 
 
 type MachineSelectDialogProps = {
-    machine: MachineType;
+    machine: Machine;
 }
 
 const MachineSelectDialog = ({ machine }: MachineSelectDialogProps) => {
 
+    const { saveMachine } = useMutationMachines();
 
     const handleOk = (e: React.MouseEvent<HTMLButtonElement>) => {
-        setCurrentMachine(machine);
-        redirectPage($router, "users");
+        saveMachine(machine).then(() => {
+            if (validCurrentMachine()) {
+                redirectPage($router, "users");
+            }
+        })
     }
 
 
