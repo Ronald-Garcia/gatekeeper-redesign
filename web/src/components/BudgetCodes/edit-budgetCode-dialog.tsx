@@ -1,4 +1,4 @@
-import useMutationBudgetCodes from "@/hooks/budgetCodes-mutation-hook";
+import useMutationBudgetCodes from "@/hooks/use-budgetCodes-mutation-hook";
 import {
   Dialog,
   DialogContent,
