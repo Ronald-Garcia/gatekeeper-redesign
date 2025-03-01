@@ -3,10 +3,12 @@ import { $codes } from "@/data/store";
 import BudgetCodeComponent from "./budgetCode";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { BudgetCode } from "@/data/types/budgetCode";
+import useQueryBudgets from "@/hooks/use-query-budgetCodes";
 
 export default function BudgetCodes() {
   const userList = useStore($codes);
 
+  useQueryBudgets(true);
   return (
     <ScrollArea>
 
@@ -15,7 +17,7 @@ export default function BudgetCodes() {
         <p> No machines found. Please add some!  </p>
       ) : (
         userList.map((budgetCode) => (
-          <BudgetCodeComponent key={budgetCode.getId()} budgetcode={budgetCode} />
+          <BudgetCodeComponent key={budgetCode.id} budgetcode={budgetCode} />
         ))
       )}
 

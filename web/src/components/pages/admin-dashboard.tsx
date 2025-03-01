@@ -4,6 +4,9 @@ import { $router } from "@/data/router";
 import { useStore } from "@nanostores/react";
 import BudgetCodes from "../BudgetCodes/budgetCodes";
 import { useState } from "react";
+import AddUserDialog from "../Users/add-user-dialogue";
+import AddBudgetCodeDialog from "../BudgetCodes/add-budgetCode-dialogue";
+import { redirectPage } from "@nanostores/router";
 
 const AdminDashboard = () => {
 
@@ -11,7 +14,13 @@ const AdminDashboard = () => {
   const [showAddBudgetCode, setShowAddBudgetCode] = useState(false);
   const [showAddUser, setShowAddUser] = useState(false);
 
-  
+  const handleCloseAddUser = () => {
+    setShowAddUser(false);
+  };
+
+  const handleCloseAddBudgetCode = () => {
+    setShowAddBudgetCode(false);
+  };
 
   const router = useStore($router);
   if (!router) {
@@ -26,7 +35,21 @@ const AdminDashboard = () => {
 
   return (
     <>
+
+
+    
+{showAddUser && (
+  <AddUserDialog  setShowAddUser={handleCloseAddUser} />
+)}
+
+{showAddBudgetCode && (
+  <AddBudgetCodeDialog  setShowAddBudgetCode={handleCloseAddBudgetCode} />
+)}
       <div>
+      <Button  className="size-"
+            onClick={() => redirectPage($router, "budgetCodes") }>
+              View BudgetCodes
+          </Button>
         <div className="flex items-center justify-center">
           <div className="relative w-full max-w-lg">
             <input

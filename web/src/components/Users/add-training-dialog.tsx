@@ -26,7 +26,7 @@ type EditTrainingDialogProp = {
 const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogProp) => {
   const [training, setTraining] = useState(-1);
   const { giveTraining } = useMutationUsers();
-  const machineList = useStore($machines);
+ const machineList = useStore($machines);
 
   //async function with editing logic, including error handling
   const handleEditTraining = async () => {
@@ -43,7 +43,7 @@ const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogP
           <DialogTitle>Edit Training</DialogTitle>
         </DialogHeader>
         <Label htmlFor="content" className="text-sm">
-          Please enter the title of your training
+          Please select the title of your training
         </Label>
         <div className="space-y-4">
             <ScrollArea>

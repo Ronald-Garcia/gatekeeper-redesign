@@ -17,7 +17,6 @@ import { User } from "@/data/types/user";
 
 //prop for handling state of the dialogue
 type AddUserDialogProp = {
-  userId: number;
   setShowAddUser: React.Dispatch<React.SetStateAction<boolean>>;
 };
 

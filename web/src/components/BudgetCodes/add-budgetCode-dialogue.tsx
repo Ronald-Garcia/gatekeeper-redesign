@@ -18,13 +18,12 @@ import { BudgetCode } from "@/data/types/budgetCode";
 
 //prop for handling state of the dialogue
 type EditBudgetCodeDialogProp = {
-  budgetcodeId: number;
   setShowAddBudgetCode: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
  
 // function that handles state of the dialogue, error handling from api
-const EditBudgetCodeDialog = ({ setShowAddBudgetCode }: EditBudgetCodeDialogProp) => {
+const AddBudgetCodeDialog = ({ setShowAddBudgetCode }: EditBudgetCodeDialogProp) => {
   const { addNewBudgetCode } = useMutationBudgetCodes();
   const [budgetCode, setbudgetCode] = useState("");
   const [name, setName] = useState("");
@@ -37,6 +36,7 @@ const EditBudgetCodeDialog = ({ setShowAddBudgetCode }: EditBudgetCodeDialogProp
       id: -1,
       alias: name
     }
+    
     addNewBudgetCode(newCode);
     setShowAddBudgetCode(false);
   };
@@ -88,4 +88,4 @@ const EditBudgetCodeDialog = ({ setShowAddBudgetCode }: EditBudgetCodeDialogProp
   );
 };
 
-export default EditBudgetCodeDialog;
+export default AddBudgetCodeDialog;
