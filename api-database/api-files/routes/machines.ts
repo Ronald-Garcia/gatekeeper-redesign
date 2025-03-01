@@ -3,7 +3,7 @@ import { Hono } from "hono";
 import { like, SQL, or, desc, asc, eq, and, count, ilike } from "drizzle-orm";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
-import { createMachineSchema, queryMachinesByNameSchema, queryMachinesByTypeSchema, validateMachineIdSchema } from "../validators/machineSchema.js";
+import { createMachineSchema, getMachineSchema, queryMachinesByNameSchema, queryMachinesByTypeSchema, validateMachineIdSchema } from "../validators/machineSchema.js";
 import { machines, machineTypes } from "../db/schema.js";
 
 
@@ -111,6 +111,26 @@ machineRoutes.get("/machines/searchByType", zValidator("query", queryMachinesByT
         message:"Fetched machines by type."
         });
 });
+
+machineRoutes.get("/machines/:id", zValidator("param", getMachineSchema), async (c) => {
+
+    const { id } = c.req.valid("param");
+
+    const [machine] = await db
+        .select()
+        .from(machines)
+        .where(eq(machines.id, id));
+
+    if (!machine) {
+        throw new HTTPException(404, { message: "Machine not found!"});
+    }
+
+    return c.json({
+        success: true,
+        message: "Machine found!",
+        data: machine
+    });
+})
 
 //Create a new machine given a machine type
 machineRoutes.post("/machines", zValidator("json", createMachineSchema), async (c)=>{

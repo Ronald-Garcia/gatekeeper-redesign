@@ -1,10 +1,10 @@
-import { MachineType } from "@/data/types/machineType";
 import MachineSelectDialog from "./machine-select";
+import { Machine } from "@/data/types/machine";
 
 
 
 
-export default function MachineSelect({ machine }: { machine: MachineType }) {
+export default function MachineSelect({ machine }: { machine: Machine }) {
   return (
     <>
     
@@ -13,7 +13,7 @@ export default function MachineSelect({ machine }: { machine: MachineType }) {
     >
       <div className="flex w-full justify-between px-2">
         <div className=" truncate">
-          {machine.getName()}
+          {machine.name}
         </div>
 
         <MachineSelectDialog machine={machine}></MachineSelectDialog>

@@ -1,8 +1,11 @@
+import useQueryMachines from "@/hooks/use-query-machines";
 import Machines from "../machines/machines";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 
 
 const MachineLogin = () => {
+
+    useQueryMachines(true);
 
     return (
         <>

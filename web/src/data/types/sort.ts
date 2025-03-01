@@ -1,0 +1,1 @@
+export type SortType = "name_desc" | "name_asc" | "year_asc" | "year_desc" | "jhed_asc" | "jhed_dsc"

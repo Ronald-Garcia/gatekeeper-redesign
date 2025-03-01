@@ -1,4 +1,4 @@
-import useMutationBudgetCodes from "@/hooks/budgetCodes-mutation-hook";
+import useMutationBudgetCodes from "@/hooks/use-budgetCodes-mutation-hook";
 import {
   Dialog,
   DialogContent,
@@ -32,7 +32,11 @@ const EditBudgetCodeDialog = ({ budgetcodeId, setShowUpdateBudgetCode }: EditBud
   //async function with editing logic, including error handling
   const handleEditBudgetCode = async () => {
     
-    const newCode = new BudgetCode(parseInt(budgetCode), budgetcodeId, name)
+    const newCode: BudgetCode = {
+      code: parseInt(budgetCode),
+      id: budgetcodeId,
+      alias: name,
+    }
     await updateBudgetCode(newCode);
     setShowUpdateBudgetCode(false);
   };

@@ -7,6 +7,10 @@ export const queryMachinesByNameSchema = z.object({
     limit: z.coerce.number().int().positive().optional(),
 });
 
+export const getMachineSchema = z.object({
+    id: z.coerce.number().positive()
+})
+
 export const queryMachinesByTypeSchema = z.object({
     sort: z.enum(["type_asc", "type_desc"]).optional(),
     search: z.string().optional(),

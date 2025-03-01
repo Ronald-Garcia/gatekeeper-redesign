@@ -1,5 +1,6 @@
 import Body from "./components/layout/body";
 import Header from "./components/layout/header";
+import { Toaster } from "./components/ui/sonner";
 
 function App() {
   return (
@@ -8,7 +9,8 @@ function App() {
         <Header />
         <Body></Body>
 
-      </div>
+      </div>  
+      <Toaster></Toaster>
     </>
   );
 }

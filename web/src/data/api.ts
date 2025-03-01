@@ -2,7 +2,9 @@ import { API_DB_URL, API_MACHINE_URL } from "@/env";
 import { User } from "./types/user";
 import { Training } from "./types/training"; 
 import { BudgetCode } from "./types/budgetCode"; 
-import { SortType } from "./types";
+import { Machine } from "./types/machine";
+import { MachineType } from "./types/machineType";
+import { SortType } from "./types/sort";
 
 export const turnOnMachine = async (): Promise<boolean> => {
   const response = await fetch(`${API_MACHINE_URL}/turn-on`, {
@@ -52,15 +54,15 @@ export const editUser = async (user: User): Promise<{
 }> => {
 
 
-  const response = await fetch(`${API_DB_URL}/users/${user.getId()}`, 
+  const response = await fetch(`${API_DB_URL}/users/${user.id}`, 
   {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      name: user.getName(),
-      lastDigitOfCardNum: user.getLastCardNumber(),
-      graduationYear: user.getYear(),
-      isAdmin: user.isAdmin()
+      name: user.name,
+      lastDigitOfCardNum: user.lastDigitOfCardNum,
+      graduationYear: user.graduationYear,
+      isAdmin: user.isAdmin
     }),
     credentials: 'include'
   })
@@ -296,7 +298,7 @@ export const editBudgetCode = async (budgetCode: BudgetCode): Promise<{
   data: BudgetCode
 }> => {
 
-  const response = await fetch(`${API_DB_URL}/users/${budgetCode.getId()}`, 
+  const response = await fetch(`${API_DB_URL}/users/${budgetCode.id}`, 
   {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
@@ -361,4 +363,143 @@ export const banUser = async (id: number, ban: number): Promise<{
 
 
 
+export const fetchCurrentMachine = async (): Promise<{
+    message: string,
+    data: number
+  }> => {
+
+  const response = await fetch(`${API_MACHINE_URL}/whoami`,{
+    credentials: "include"
+  })
+
+  if (!response.ok) {
+    const { message } = await response.json();
+    throw new Error(message);
+  }
+
+  const { message, data}: { message: string, data: number } = await response.json();
+
+  return { message, data };
+}
+
+export const saveCurrentMachine = async (machine_id: number): Promise<{
+  message: string;
+  data: boolean;
+}> => {
+
+  const response = await fetch(`${API_MACHINE_URL}/whoami`, {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      id: machine_id
+    })
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string} = await response.json();
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string, data: boolean } = await response.json();
+
+  return { message, data };
+}
+
+
+
+
+
+export const getAllMachines = async (
+  sort: SortType = "name_asc",
+  page: number = 1,
+  limit: number = 10,
+  search: string = ""
+
+): Promise<{
+  message: string;
+  data: Machine[];
+}> => {
+  const response = await fetch(`${API_DB_URL}/machines/searchByName?search=${search}&limit=${limit}&page=${page}&sort=${sort}`, {
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string; data: Machine[] } =
+    await response.json();
+
+  return { message, data };
+};
+export const getMachine = async (id: number): Promise<{
+  message: string;
+  data: Machine
+}> => {
+
+  const response = await fetch(`${API_DB_URL}/machines/${id}`, {
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string, data: Machine } = await response.json();
+  
+  return { message, data };
+}
+
+export const createMachineType = async (type: string): Promise<{
+  message: string;
+  data: MachineType
+}> => {
+  const response = await fetch(`${API_DB_URL}/machine-types`,{
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      machineType: type
+    }),
+    credentials: "include"
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string} = await response.json();
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string, data: MachineType } = await response.json();
+
+  return { message, data };
+}
+
+export const createMachine = async (name: string, type: MachineType, rate: number): Promise<{
+  message: string;
+  data: Machine
+}> => {
+  const response = await fetch(`${API_DB_URL}/machine-types`,{
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      name,
+      machineType: type,
+      hourlyRate: rate
+    }),
+    credentials: "include"
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string} = await response.json();
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string, data: Machine } = await response.json();
+
+  return { message, data };
+
+}
 

@@ -1,37 +1,39 @@
 import { User } from "./types/user";
 import { atom, map } from "nanostores";
 import { BudgetCode } from "./types/budgetCode"; 
-import { MachineType } from "./types/machineType"; 
+import { Machine } from "./types/machine";
 
 
 export const $users = atom<User[]>([]);
 export const $codes = atom<BudgetCode[]>([]);
-export const $machines = atom<MachineType[]>([]);
+export const $machines = atom<Machine[]>([]);
 
-const defaultUser = new User(
-  "test",
-  "test@gmail.com",
-  1,
-  true,
-  2020,
-  "ttest01",
-  -1
-)
+const defaultUser: User = {
+  name: "test",
+  cardNum: "-1",
+  lastDigitOfCardNum: -1,
+  isAdmin: 0,
+  graduationYear: 2020,
+  JHED: "ttest01",
+  id: -1
+}
 
-const defaultMachine = new MachineType(
-  -1,
-  "invalid"
-)
+const defaultMachine: Machine = {
+  id: -1,
+  name: "invalid",
+  type: { id: -1, name: "invalid"},
+  hourlyRate: 0
+}
 
 export const $currentUser = map<User>(defaultUser);
-export const $currentMachine = map<MachineType>(defaultMachine);
+export const $currentMachine = map<Machine>(defaultMachine);
 
 export function validCurrentUser() {
   return $currentUser.get() !== defaultUser;
 }
 
 export function adminCurrentUser() {
-  return $currentUser.get().isAdmin();
+  return $currentUser.get().isAdmin;
 }
 
 
@@ -43,7 +45,7 @@ export function setCurrentUser(user: User) {
   $currentUser.set(user);
 }
 
-export function setCurrentMachine(machine: MachineType) {
+export function setCurrentMachine(machine: Machine) {
   $currentMachine.set(machine);
 }
 
@@ -60,11 +62,11 @@ export function addUser(user: User) {
 }
 
 export function deleteUserById(id: number) {
-  $users.set($users.get().filter((user: User) => user.getId() !== id));
+  $users.set($users.get().filter((user: User) => user.id !== id));
 }
 
 export function addTraining(id: number) {
-  $users.set($users.get().filter((user: User) => user.getId() !== id));
+  $users.set($users.get().filter((user: User) => user.id !== id));
 }
 
 export function setUsers(userList: User[]) {
@@ -77,7 +79,7 @@ export function setUsers(userList: User[]) {
  export function updateUserById(updatedUser: User) {
   $users.set(
     $users.get().map((user: User) =>
-      user.getId() === updatedUser.getId() ? updatedUser : user
+      user.id === updatedUser.id ? updatedUser : user
     )
   );
  }
@@ -92,32 +94,29 @@ export function addBudgetCode(code: BudgetCode) {
 
 export function deleteBudgetCodeByNum(codeNum: number) {
   $codes.set(
-    $codes.get().filter((code: BudgetCode) => code.getCode() !== codeNum),
+    $codes.get().filter((code: BudgetCode) => code.code !== codeNum),
   );
 }
 
 export function modifyBudgetCode(codeNum: number, alias:string) {
   $codes.set(
-    $codes.get().filter((code: BudgetCode) => code.getCode() !== codeNum),
+    $codes.get().filter((code: BudgetCode) => code.code !== codeNum),
   );
 }
 
-export function addMachine(machine: MachineType) {
+export function addMachine(machine: Machine) {
   $machines.set(
     [...$machines.get(), machine]
   )
 }
 
-const machine1 = new MachineType(1, "Mill 1");
-const machine2 = new MachineType(2, "Mill 2");
-
-export function removeMachine(machine: MachineType) {
+export function removeMachine(machine: Machine) {
   $machines.set(
-    $machines.get().filter(m => m.getId() !== machine.getId())
+    $machines.get().filter(m => m.id !== machine.id)
   );
 }
 
-export function setMachines(machines: MachineType[]) {
+export function setMachines(machines: Machine[]) {
   $machines.set(machines);
 }
 
@@ -128,39 +127,6 @@ export function clearMachines() {
 export function updateABudgetCode(updatedCode:BudgetCode) {
   $codes.set(
     $codes.get().map((code: BudgetCode) => 
-    code.getId() === updatedCode.getId() ? updatedCode: code)
+    code.id === updatedCode.id ? updatedCode: code)
   );
 }
-
-addMachine(machine1);
-addMachine(machine2);
-addMachine(machine2);
-addMachine(machine2);
-addMachine(machine2);
-addMachine(machine2);
-addMachine(machine2);
-addMachine(machine2);
-addMachine(machine2);
-addMachine(machine2);
-addMachine(machine2);
-addMachine(machine2);
-addMachine(machine2);
-addMachine(machine2);
-addMachine(machine2);
-addMachine(machine2);
-
-addUser(defaultUser);
-addUser(defaultUser);
-addUser(defaultUser);
-addUser(defaultUser);
-addUser(defaultUser);
-addUser(defaultUser);
-addUser(defaultUser);
-addUser(defaultUser);
-addUser(defaultUser);
-addUser(defaultUser);
-addUser(defaultUser);
-addUser(defaultUser);
-addUser(defaultUser);
-addUser(defaultUser);
-

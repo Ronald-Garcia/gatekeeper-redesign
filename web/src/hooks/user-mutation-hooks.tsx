@@ -1,5 +1,4 @@
-//import { createDeck, deleteDeck, editDeck } from "@/data/api";
-import { $users, addUser, 
+import { addUser, 
     deleteUserById,
     updateUserById,
  } from "@/data/store";
@@ -9,7 +8,6 @@ import { createUser,
     createUserMachineRelation, 
     removeUser, 
     editUser, 
-    banUser, 
     getUser} from "@/data/api";
 
 
@@ -67,7 +65,7 @@ function useMutationUsers() {
    const updateUser = async (newUser: User) => {
     try {
     
-      const { data } = editUser(newUser); //using store functions to handle state of app
+      const { data } = await editUser(newUser); //using store functions to handle state of app
        updateUserById(data); //edit deck on api
       
     }   catch (e) {
