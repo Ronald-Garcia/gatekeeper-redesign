@@ -1,6 +1,6 @@
 
 import { serve } from "@hono/node-server";
-import {GET,POST, PATCH, DELETE} from "./index";
+import {GET,POST, PATCH, DELETE, OPTIONS} from "./index";
 
 const port = Number(process.env.PORT) || 3000;
 console.log(`Server is running on port ${port}`);
@@ -20,6 +20,8 @@ const fetchHandler = (req:Request) => {
         return PATCH(req);
       case 'DELETE':
         return DELETE(req);
+      case 'OPTIONS':
+        return OPTIONS(req)
       default:
         return new Response('Method Not Allowed', { status: 405 });
     }

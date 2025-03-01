@@ -4,6 +4,7 @@ import { Training } from "./types/training";
 import { BudgetCode } from "./types/budgetCode"; 
 import { Machine } from "./types/machine";
 import { MachineType } from "./types/machineType";
+import { SortType } from "./types/sort";
 
 export const turnOnMachine = async (): Promise<boolean> => {
   const response = await fetch(`${API_MACHINE_URL}/turn-on`, {
