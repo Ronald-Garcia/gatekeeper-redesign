@@ -52,15 +52,15 @@ export const editUser = async (user: User): Promise<{
 }> => {
 
 
-  const response = await fetch(`${API_DB_URL}/users/${user.getId()}`, 
+  const response = await fetch(`${API_DB_URL}/users/${user.id}`, 
   {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      name: user.getName(),
-      lastDigitOfCardNum: user.getLastCardNumber(),
-      graduationYear: user.getYear(),
-      isAdmin: user.isAdmin()
+      name: user.name,
+      lastDigitOfCardNum: user.lastDigitOfCardNum,
+      graduationYear: user.graduationYear,
+      isAdmin: user.isAdmin
     }),
     credentials: 'include'
   })
@@ -100,7 +100,7 @@ export const getUser = async (cardNum: number): Promise<{
   data: User
 }> => {
 
-  const response = await fetch(`${API_DB_URL}/users/${cardNum}`, {
+  const response = await fetch(`${API_DB_URL}/users/${Math.floor(cardNum / 10)}/${cardNum % 10}`, {
     credentials: "include",
   });
 
@@ -296,7 +296,7 @@ export const editBudgetCode = async (budgetCode: BudgetCode): Promise<{
   data: BudgetCode
 }> => {
 
-  const response = await fetch(`${API_DB_URL}/users/${budgetCode.getId()}`, 
+  const response = await fetch(`${API_DB_URL}/users/${budgetCode.id}`, 
   {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },

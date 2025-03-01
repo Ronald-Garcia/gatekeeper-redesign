@@ -5,6 +5,7 @@ import { $users,
   setUsers,
   validCurrentMachine,
  } from "@/data/store";
+import { User } from "@/data/types/user";
 import { useStore } from "@nanostores/react";
 import { useEffect } from "react";
 import { toast } from "sonner";
@@ -32,23 +33,27 @@ function useQueryUsers(reload: boolean) {
     try {
       const {
         data
-      } = await getUser(cardNum);
-
+      }: { message: string, data: User } = await getUser(cardNum);
       if (!data) {
         throw new Error("Could not find user! Please contact an admin to get registered.");
       }
 
-      if (data.isAdmin() && !validCurrentMachine()) {
+      console.log(data);
+
+
+      if (data.isAdmin && !validCurrentMachine()) {
         return "machine_login";
-      } else if(!data.isAdmin()) {
+      } else if(!data.isAdmin) {
         clearCurrentUser();
         throw new Error("This interlock is not set-up! Please contact an admin to set-up this interlock.");
       }
 
-      setCurrentUser(data);
 
-      return data.isAdmin() ? "admin_dashboard" : "interlock";
+      setCurrentUser(data);
+      const ret = data.isAdmin ? "admin_dashboard" : "interlock";
+      return ret;
     } catch (e) {
+      console.log(e);
       const errorMessage = (e as Error).message;
         toast.error("Sorry! There was an error 🙁", {
           description: errorMessage  

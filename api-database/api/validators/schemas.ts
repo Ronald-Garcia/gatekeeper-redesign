@@ -20,7 +20,7 @@ export const createUserSchema = z.object({
     lastDigitOfCardNum: z.coerce
       .number()
       .int()
-      .positive()
+      .min(0)
       .max(9),
     
     cardNum: z
@@ -47,7 +47,7 @@ export const createUserSchema = z.object({
 });
 
 //This guy just checks if you have a well formed card number and a machine id.
-export const validateUserSchema = z.object({
+export const getUserByCardNumSchema = z.object({
   cardNum: z
   .string()
   .min(15, "Needs a 15 Digit J-Card Number")
@@ -56,14 +56,8 @@ export const validateUserSchema = z.object({
   lastDigitOfCardNum: z.coerce
   .number()
   .int()
-  .positive()
+  .min(0)
   .max(9),
-
-  machineId: z.coerce
-  .number()
-  .int()
-  .positive()
-
 })
 
 //Just checks if the id number is int and positive.

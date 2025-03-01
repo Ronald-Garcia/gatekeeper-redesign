@@ -50,8 +50,8 @@ const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogP
 
         {
     machineList.map((machine) => (
-            <div key={machine.getId()} onClick={() => setTraining(machine.getId())}>
-                 {machine.getName()}
+            <div key={machine.id} onClick={() => setTraining(machine.id)}>
+                 {machine.name}
             </div>
          ))
            }

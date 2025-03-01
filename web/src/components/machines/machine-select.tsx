@@ -9,6 +9,12 @@ type MachineSelectDialogProps = {
 
 const MachineSelectDialog = ({ machine }: MachineSelectDialogProps) => {
 
+
+    const handleOk = (e: React.MouseEvent<HTMLButtonElement>) => {
+        
+    }
+
+
     
     return (
         <AlertDialog>
@@ -20,7 +26,7 @@ const MachineSelectDialog = ({ machine }: MachineSelectDialogProps) => {
             <AlertDialogContent>
             <AlertDialogHeader>
                 <AlertDialogTitle>
-                    Are you sure you this is {machine.getName()}? 
+                    Are you sure you this is {machine.name}? 
                 </AlertDialogTitle>
                 <AlertDialogDescription>
                     This action can be undone only by an admin.
