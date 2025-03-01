@@ -15,7 +15,7 @@ const MachineSelectDialog = ({ machine }: MachineSelectDialogProps) => {
 
     const { saveMachine } = useMutationMachines();
 
-    const handleOk = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handleOk = () => {
         saveMachine(machine).then(() => {
             if (validCurrentMachine()) {
                 redirectPage($router, "users");

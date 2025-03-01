@@ -2,7 +2,6 @@ import { API_DB_URL, API_MACHINE_URL } from "@/env";
 import { User } from "./types/user";
 import { Training } from "./types/training"; 
 import { BudgetCode } from "./types/budgetCode"; 
-import { SortType } from "./types";
 import { Machine } from "./types/machine";
 import { MachineType } from "./types/machineType";
 

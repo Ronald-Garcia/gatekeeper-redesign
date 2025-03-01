@@ -3,7 +3,6 @@ import MachineLogin from "../pages/machine-login";
 import StartPage from "../pages/start-page";
 import { $router } from "@/data/router";
 import { useStore } from "@nanostores/react";
-import UsersComponent from "../Users/users";
 import { adminCurrentUser, validCurrentMachine, validCurrentUser } from "@/data/store";
 import { useEffect } from "react";
 import { redirectPage } from "@nanostores/router";
