@@ -4,7 +4,7 @@ import { like, SQL, or, desc, asc, eq, and, count, ilike } from "drizzle-orm";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
 import { createMachineSchema, queryMachinesByNameSchema, queryMachinesByTypeSchema, validateMachineIdSchema } from "../validators/machineSchema.js";
-import { machines } from "../db/schema.js";
+import { machines, machineTypes } from "../db/schema.js";
 
 
 
@@ -108,9 +108,18 @@ machineRoutes.get("/machines/searchByType", zValidator("query", queryMachinesByT
 machineRoutes.post("/machines", zValidator("json", createMachineSchema), async (c)=>{
 
     const { name, machineType, hourlyRate } = c.req.valid("json");
+    //Check if machine type actually exists exists
+    const [machineTypeCheck] = await db
+        .select()
+        .from(machineTypes)
+        .where(eq(machineTypes.type, machineType))
+    
+    if (!machineTypeCheck) {
+        throw new HTTPException(404, { message: "Invalid machine type" });
+    }
 
     //Insertion of new machine
-    const newMachine = await db
+    const [newMachine] = await db
         .insert(machines)
         .values({
             name,
@@ -122,7 +131,7 @@ machineRoutes.post("/machines", zValidator("json", createMachineSchema), async (
     return c.json(newMachine, 201);
 })
 
-//Create a new machine given a machine type by id.
+//Update a machine given an id.
 machineRoutes.patch("/machines/:id",
 zValidator("param", validateMachineIdSchema),
 zValidator("json", createMachineSchema),
@@ -138,6 +147,18 @@ async (c)=>{
 
     if (!machine_ent) {
         throw new HTTPException(404, { message: "Machine not found" });
+    }
+
+    if (machineType) {
+        //Check if machine type actually exists, if provided.
+        const [machineTypeCheck] = await db
+            .select()
+            .from(machineTypes)
+            .where(eq(machineTypes.type, machineType))
+        
+        if (!machineTypeCheck) {
+            throw new HTTPException(404, { message: "Invalid machine type" });
+        }
     }
 
     //Updating of machine
