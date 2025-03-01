@@ -4,7 +4,7 @@ import BudgetCodeActions from "./budgetcode-actions";
 
 
 
-export default function BudgetCodesComponent({ budgetcode }: { budgetcode: BudgetCode }) {
+export default function BudgetCodeComponent({ budgetcode }: { budgetcode: BudgetCode }) {
   return (
     <>
       <div>

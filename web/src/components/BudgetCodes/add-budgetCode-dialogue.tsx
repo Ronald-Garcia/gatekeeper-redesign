@@ -1,4 +1,4 @@
-import useMutationBudgetCodes from "@/hooks/budgetCodes-mutation-hook";
+import useMutationBudgetCodes from "@/hooks/use-budgetCodes-mutation-hook";
 import {
   Dialog,
   DialogContent,
@@ -24,7 +24,7 @@ type EditBudgetCodeDialogProp = {
 
  
 // function that handles state of the dialogue, error handling from api
-const EditBudgetCodeDialog = ({ budgetcodeId, setShowAddBudgetCode }: EditBudgetCodeDialogProp) => {
+const EditBudgetCodeDialog = ({ setShowAddBudgetCode }: EditBudgetCodeDialogProp) => {
   const { addNewBudgetCode } = useMutationBudgetCodes();
   const [budgetCode, setbudgetCode] = useState("");
   const [name, setName] = useState("");
