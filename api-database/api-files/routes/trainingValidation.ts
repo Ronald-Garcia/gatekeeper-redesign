@@ -1,10 +1,10 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { and, asc, count, desc, eq, ilike, like, or, SQL } from "drizzle-orm";
-import { machines, machineTypes, userMachineType, users } from "../db/schema";
-import { db } from "../db";
+import { machines, machineTypes, userMachineType, users } from "../db/schema.js";
+import { db } from "../db/index.js";
 import { HTTPException } from "hono/http-exception"
-import { queryTrainingsParamsSchema, validateTrainingSchema, validateUserParamSchema } from "../validators/trainingSchema";
+import { queryTrainingsParamsSchema, validateTrainingSchema, validateUserParamSchema } from "../validators/trainingSchema.js";
 
 
 export const trainingRoutes = new Hono();
