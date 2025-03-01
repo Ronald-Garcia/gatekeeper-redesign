@@ -21,12 +21,12 @@ type EditTrainingDialogProp = {
   setShowEditTraining: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
- const machineList = useStore($machines);
  
 // function that handles state of the dialogue, error handling from api
 const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogProp) => {
   const [training, setTraining] = useState(-1);
   const { giveTraining } = useMutationUsers();
+  const machineList = useStore($machines);
 
   //async function with editing logic, including error handling
   const handleEditTraining = async () => {
