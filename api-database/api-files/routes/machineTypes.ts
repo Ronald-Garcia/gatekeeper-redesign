@@ -85,7 +85,7 @@ machineTypeRoutes.post("/machine-types",
         throw new HTTPException(409, { message: "Machine Type already exists" });
     }
 
-    const newMachineType = await db
+    const [newMachineType] = await db
         .insert(machineTypes)
         .values({
             type: machineType
