@@ -2,7 +2,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { queryUsersParamsSchema, createUserSchema, getUserSchema, testSchema, getUserByCardNumSchema } from "../validators/schemas.js";
 import { like, SQL, or, desc, asc, eq, and, count } from "drizzle-orm";
-import { budgetCodes, machines, machineTypes, userMachineType, users } from "../db/schema.js";
+import { users } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
 
@@ -70,23 +70,20 @@ userRoutes.get("/users", zValidator("query", queryUsersParamsSchema), async (c) 
           .where(and(...whereClause)),
       ]);
     
-    return c.json({
-        data: allUsers,
+    return c.json(
+    {
+    sucess:true,
+    data: allUsers,
+    meta: {
         page,
         limit,
         total: totalCount,
-    });
+        },
+    message:"Fetched user routes"
+    }
+);
 });
 
-//Get user by id route as well.
-
-//Test route
-userRoutes.post("/testing", zValidator("json", testSchema), async (c)=>{
-    const { id } = c.req.valid("json");
-
-    throw new HTTPException(404, { message: "User not found" });
-
-})
 
 //Sign up a user
 userRoutes.post("/users", zValidator("json", createUserSchema), async (c)=>{
@@ -116,11 +113,14 @@ userRoutes.post("/users", zValidator("json", createUserSchema), async (c)=>{
         })
         .returning();
 
-    return c.json(newUser, 201);
+    return c.json({
+        success: true,
+        message: "User has been deleted",
+        data: newUser
+    }, 201);
 })
 
-// userRoutes.patch
-
+// Get user by card num and last digit of card num
 userRoutes.get("/users/:cardNum/:lastDigitOfCardNum", zValidator("param",getUserByCardNumSchema), async(c) => {
     //Given you have a well formed card number, check if that card num exists in user table.
     const {cardNum, lastDigitOfCardNum} = c.req.valid("param");
@@ -148,8 +148,6 @@ userRoutes.get("/users/:cardNum/:lastDigitOfCardNum", zValidator("param",getUser
             .returning();
     }
 
-    //TODO: Create a session token and return it.
-    //For now, we will throw unimplemented.
     return c.json({
         success: true,
         message: "User has been validated in",
@@ -183,6 +181,12 @@ userRoutes.delete(
         .where(eq(users.id, userId))
         .returning()
 
-          return c.json(deletedUser);
+          return c.json(
+            {
+                success: true,
+                message: "User has been deleted",
+                data: deletedUser
+            }
+            );
 
 })

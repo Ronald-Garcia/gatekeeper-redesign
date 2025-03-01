@@ -50,11 +50,15 @@ machineRoutes.get("/machines/searchByName", zValidator("query", queryMachinesByN
       ]);
     
     return c.json({
+        sucess:true,
         data: allMachines,
-        page,
-        limit,
-        total: totalCount,
-    });
+        meta: {
+            page,
+            limit,
+            total: totalCount,
+            },
+        message:"Fetched machines by name"
+        });
 });
 
 // Search all current machines. If you want one type, search the type.
@@ -97,11 +101,15 @@ machineRoutes.get("/machines/searchByType", zValidator("query", queryMachinesByT
       ]);
     
     return c.json({
+        sucess:true,
         data: allMachines,
-        page,
-        limit,
-        total: totalCount,
-    });
+        meta: {
+            page,
+            limit,
+            total: totalCount,
+            },
+        message:"Fetched machines by type."
+        });
 });
 
 //Create a new machine given a machine type
@@ -128,7 +136,11 @@ machineRoutes.post("/machines", zValidator("json", createMachineSchema), async (
         })
         .returning();
 
-    return c.json(newMachine, 201);
+    return c.json({
+        sucess:true,
+        message:"Created a machine",
+        data: newMachine
+    }, 201);
 })
 
 //Update a machine given an id.
@@ -169,7 +181,11 @@ async (c)=>{
         .where(eq(machines.id, id))
         .returning();
 
-    return c.json(updatedMachine, 201);
+    return c.json({
+        sucess:true,
+        message:"Updated a machine",
+        data: updatedMachine
+    }, 201);
 })
 
 //Delete a machine by id.
@@ -194,5 +210,9 @@ machineRoutes.delete("/machines/:id",
         .where(eq(machines.id, id))
         .returning();
 
-    return c.json(deletedMachine, 200);
+    return c.json({
+        sucess:true,
+        message:"Deleted a machine",
+        data: deletedMachine
+    }, 200);
 })

@@ -59,11 +59,16 @@ budgetCodesRoutes.get("/budget-codes", zValidator("query", queryBudgetCodesParam
       ]);
     
     return c.json({
+        sucess:true,
         data: allBudgetCodes,
-        page,
-        limit,
-        total: totalCount,
-    });
+        meta: {
+            page,
+            limit,
+            total: totalCount,
+            },
+        message:"Fetched user routes"
+        }
+    );
     
 });
 
@@ -80,7 +85,11 @@ budgetCodesRoutes.post("/budget-codes", zValidator("json", createBudgetCode), as
         })
         .returning();
 
-    return c.json(newBudgetCode, 201);
+    return c.json({
+        sucess:true,
+        message:"Created new budget code",
+        data:newBudgetCode
+    }, 201);
 
 })
 
@@ -98,6 +107,10 @@ budgetCodesRoutes.delete("/budget-codes", zValidator("json", deleteBudgetCode), 
         .where(eq(budgetCodes.id, id))
         .returning();
 
-    return c.json(deletedBudgetCode, 200)
+    return c.json({
+        sucess:true,
+        message:"Created new budget code",
+        data:deleteBudgetCode
+    }, 200)
 
 })
