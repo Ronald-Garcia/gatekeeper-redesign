@@ -1,7 +1,6 @@
 {
 	"name": "serverlesshono",
 	"type": "module",
-	
 	"scripts": {
 		"start": "vercel dev",
 		"deploy": "vercel",
