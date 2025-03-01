@@ -487,7 +487,7 @@ export const createMachine = async (name: string, type: MachineType, rate: numbe
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({
       name,
-      machineType: type,
+      machineTypeId: type.id,
       hourlyRate: rate
     }),
     credentials: "include"

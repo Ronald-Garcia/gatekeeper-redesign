@@ -4,7 +4,7 @@ import { and, asc, count, desc, eq, ilike, like, or, SQL } from "drizzle-orm";
 import { machineTypes } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { HTTPException } from "hono/http-exception"
-import { queryTypesParamsSchema, updateTypeSchema, validateTypeParamSchema, validateTypeSchema } from "../validators/machineTypeSchema.js";
+import { getMachineTypeSchema, queryTypesParamsSchema, updateTypeSchema, validateTypeParamSchema, validateTypeSchema } from "../validators/machineTypeSchema.js";
 
 
 export const machineTypeRoutes = new Hono();
@@ -101,31 +101,26 @@ machineTypeRoutes.post("/machine-types",
 
 
 // Remove a type of machine
-machineTypeRoutes.delete("/machine-types/:machineType",
-    zValidator("param", validateTypeParamSchema),
+machineTypeRoutes.delete("/machine-types/:machineTypeId",
+    zValidator("param", getMachineTypeSchema),
      async (c)=>{
 
-    const { machineType } = c.req.valid("param");
+    const { machineTypeId } = c.req.valid("param");
 
     // Check if a valid type first, throw 404 if not.
     const  [type]  = await db
-    .select()
-    .from(machineTypes)
-    .where(eq(machineTypes.type, machineType));
+    .delete(machineTypes)
+    .where(eq(machineTypes.id, machineTypeId))
+    .returning();
 
     if (!type) {
         throw new HTTPException(404, { message: "Machine Type not found" });
     }
 
-    const deletedTraining = await db
-        .delete(machineTypes)
-        .where(eq(machineTypes.type, machineType))
-        .returning();
-
     return c.json({
         sucess:true,
-        message:"Deleted a training",
-        data: deletedTraining
+        message:"Deleted a machine type",
+        data: type
     }, 200);
 })
 

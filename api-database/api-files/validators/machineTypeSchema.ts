@@ -8,6 +8,10 @@ export const validateTypeParamSchema = z.object({
     machineType: z.string()
 });
 
+export const getMachineTypeSchema = z.object({
+    machineTypeId: z.coerce.number().int().positive()
+})
+
 
 export const queryTypesParamsSchema = z.object({
     sort: z.enum(["type_asc", "type_desc"]).optional(),
