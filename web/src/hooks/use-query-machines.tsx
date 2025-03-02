@@ -1,5 +1,6 @@
 import { fetchCurrentMachine, getAllMachines, getMachine } from "@/data/api";
-import { setCurrentMachine, setMachines } from "@/data/store";
+import { setCurrentMachine, setKiosk, setMachines } from "@/data/store";
+import { Machine } from "@/data/types/machine";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
@@ -7,10 +8,14 @@ import { toast } from "sonner";
 function useQueryMachines(reload: boolean) {
 
 
-    const getSavedMachine = async () => {
+    const getSavedMachine = async (): Promise<Machine | "kiosk" | undefined> => {
         
         try {
             const { data } = await fetchCurrentMachine();
+            if (data === -1) {
+                setKiosk(true);
+                return "kiosk";
+            }
             const { data: machine } = await getMachine(data);
             setCurrentMachine(machine);
             return machine;

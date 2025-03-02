@@ -24,6 +24,11 @@ const defaultMachine: Machine = {
   type: { id: -1, name: "invalid"},
   hourlyRate: 0
 }
+export const $kiosk = atom<boolean>(false);
+
+export function setKiosk(isKiosk: boolean) {
+  $kiosk.set(isKiosk);
+}
 
 export const $currentUser = map<User>(defaultUser);
 export const $currentMachine = map<Machine>(defaultMachine);
@@ -38,7 +43,7 @@ export function adminCurrentUser() {
 
 
 export function validCurrentMachine() {
-  return $currentMachine.get() !== defaultMachine;
+  return $currentMachine.get() !== defaultMachine || $kiosk.get();
 }
 
 export function setCurrentUser(user: User) {

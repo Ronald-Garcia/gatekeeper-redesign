@@ -38,6 +38,8 @@ function useQueryUsers(reload: boolean) {
         throw new Error("Could not find user! Please contact an admin to get registered.");
       }
 
+
+
       const curMachine = await getSavedMachine();
 
 
@@ -49,6 +51,14 @@ function useQueryUsers(reload: boolean) {
         clearCurrentUser();
         throw new Error("This interlock is not set-up! Please contact an admin to set-up this interlock.");
       }
+
+      if (curMachine === "kiosk" && data.isAdmin) {
+        return "users";
+      } else if (curMachine === "kiosk") {
+        clearCurrentUser();
+        throw new Error("This machine is only accessible for admins!");
+      }
+
 
       const { data: ableToUse } = await validateTraining(data.id, curMachine.id);
 

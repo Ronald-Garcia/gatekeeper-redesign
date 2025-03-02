@@ -1,5 +1,5 @@
 import { createMachine, createMachineType, saveCurrentMachine } from "@/data/api";
-import { setCurrentMachine } from "@/data/store";
+import { setCurrentMachine, setKiosk } from "@/data/store";
 import { Machine } from "@/data/types/machine";
 import { toast } from "sonner";
 
@@ -23,9 +23,9 @@ function useMutationMachines() {
 
     const makeKiosk = async () => {
         try {
-            const { data: type } =  await createMachineType("kiosk");
-            const { data: machine} = await createMachine("Kiosk", type, 0);
-            saveMachine(machine);
+
+            await saveCurrentMachine(-1);
+            setKiosk(true);
 
         } catch (e) {
             const errorMessage = (e as Error).message;
