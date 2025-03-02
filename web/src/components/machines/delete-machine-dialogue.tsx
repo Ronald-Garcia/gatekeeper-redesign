@@ -1,4 +1,3 @@
-import useMutationBudgetCodes from "@/hooks/use-budgetCodes-mutation-hook";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -9,42 +8,38 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
-import useQueryBudgets from "@/hooks/use-query-budgetCodes";
+import useMutationMachines from "@/hooks/use-mutation-machines";
 
 
 //prop for handling state of the dialog
-type DeleteBudgetCodeDialogProp = {
-  budgetcodeId: number;
-  setShowDeleteBudgetCode:  React.Dispatch<React.SetStateAction<boolean>>;
+type DeleteMachineDialogProp = {
+  machineId: number;
+  setShowDeleteMachine:  React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 //function that handles state of the dialog
-const DeleteBudgetCodeDialog = ({
-  budgetcodeId,
-  setShowDeleteBudgetCode,
-}: DeleteBudgetCodeDialogProp) => {
-  const { removeBudgetCode } = useMutationBudgetCodes();
-
-
-  const { loadBudgets } = useQueryBudgets(false);
+const DeleteMachineDialog = ({
+  machineId,
+  setShowDeleteMachine,
+}: DeleteMachineDialogProp) => {
+  const { removeMachineById } = useMutationMachines();
 
   //async function that handles deletion logic
-  const handleDeleteBudgetCode = async (e: React.MouseEvent) => {
+  const handleDeleteUser = async (e: React.MouseEvent) => {
     e.stopPropagation();
-     await removeBudgetCode(budgetcodeId);
-    setShowDeleteBudgetCode(false); //make the dialog disappear
-    loadBudgets();
+     await removeMachineById(machineId);
+    setShowDeleteMachine(false); //make the dialog disappear
   };
 
   const handleCancel = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setShowDeleteBudgetCode(false);
+    setShowDeleteMachine(false); //make the dialog disappear
   };
 
   // Handle dialog close event
   const handleDialogClose = (open: boolean) => {
     if (!open) {
-      setShowDeleteBudgetCode(false);
+    setShowDeleteMachine(false); //make the dialog disappear
     }
   };
 
@@ -54,12 +49,12 @@ const DeleteBudgetCodeDialog = ({
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will delete the budgetcode from using the machines. 
+            This will delete the user from using the machines. 
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={handleCancel}>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDeleteBudgetCode}>
+          <AlertDialogAction onClick={handleDeleteUser}>
             Delete
           </AlertDialogAction>
         </AlertDialogFooter>
@@ -68,4 +63,4 @@ const DeleteBudgetCodeDialog = ({
   );
 };
 
-export default DeleteBudgetCodeDialog;
+export default DeleteMachineDialog;

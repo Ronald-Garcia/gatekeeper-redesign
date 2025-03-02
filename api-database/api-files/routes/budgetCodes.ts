@@ -77,7 +77,7 @@ budgetCodesRoutes.post("/budget-codes", zValidator("json", createBudgetCode), as
     const { name, budgetCode } = c.req.valid("json");
 
     //Insertion of new Budget Code
-    const newBudgetCode = await db
+    const [newBudgetCode] = await db
         .insert(budgetCodes)
         .values({
             name,
@@ -93,7 +93,7 @@ budgetCodesRoutes.post("/budget-codes", zValidator("json", createBudgetCode), as
 
 })
 
-budgetCodesRoutes.delete("/budget-codes", zValidator("param", deleteBudgetCode), async (c)=>{
+budgetCodesRoutes.delete("/budget-codes/:id", zValidator("param", deleteBudgetCode), async (c)=>{
     const { id } = c.req.valid("param");
 
     const budgetCode = await db.select().from(budgetCodes).where(eq(budgetCodes.id, id))
@@ -102,7 +102,7 @@ budgetCodesRoutes.delete("/budget-codes", zValidator("param", deleteBudgetCode),
         throw new HTTPException(404, { message: "Budget Code not found!"});
     }
 
-    const deletedBudgetCode = await db
+    const [deletedBudgetCode] = await db
         .delete(budgetCodes)
         .where(eq(budgetCodes.id, id))
         .returning();

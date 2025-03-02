@@ -1,5 +1,5 @@
-import { createMachine, createMachineType, saveCurrentMachine } from "@/data/api";
-import { setCurrentMachine, setKiosk } from "@/data/store";
+import { createMachine, createMachineType, deleteMachine, saveCurrentMachine } from "@/data/api";
+import { removeMachine, setCurrentMachine, setKiosk } from "@/data/store";
 import { Machine } from "@/data/types/machine";
 import { toast } from "sonner";
 
@@ -34,8 +34,35 @@ function useMutationMachines() {
             });
         }
     }
+
+    const removeMachineById = async (id: number) => {
+
+        try {
+
+            await deleteMachine(id);
+            removeMachine(id);
+        } catch (e) {
+            const errorMessage = (e as Error).message;
+            toast.error("Sorry! There was an error deleting the Machine  🙁", {
+                description: errorMessage  
+            });
+        } 
+    }
+
+    const addMachine = async () => {
+        try {
+
+            await deleteMachine(id);
+            removeMachine(id);
+        } catch (e) {
+            const errorMessage = (e as Error).message;
+            toast.error("Sorry! There was an error deleting the Machine  🙁", {
+                description: errorMessage  
+            });
+        } 
+    }
     
-    return { saveMachine, makeKiosk }
+    return { saveMachine, makeKiosk, removeMachineById }
 }
 
 export default useMutationMachines;

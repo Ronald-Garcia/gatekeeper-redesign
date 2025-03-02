@@ -1,5 +1,4 @@
 import { useState } from "react";
-import useMutationUsers from "@/hooks/user-mutation-hooks";
 import {
   Dialog,
   DialogContent,
@@ -13,18 +12,19 @@ import { Label } from "@/components/ui/label";
 import { Input } from "../ui/input";
 import { User } from "@/data/types/user";
 import useQueryUsers from "@/hooks/use-query-users";
+import useMutationMachines from "@/hooks/use-mutation-machines";
 
 
 
 //prop for handling state of the dialogue
-type AddUserDialogProp = {
-  setShowAddUser: React.Dispatch<React.SetStateAction<boolean>>;
+type AddMachineDialogProp = {
+  setShowAddMachine: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
  
 // function that handles state of the dialogue, error handling from api
-const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
-  const { addNewUser } = useMutationUsers();
+const AddMachineDialog = ({ setShowAddMachine }: AddMachineDialogProp) => {
+  const { addNewUser } = useMutationMachines();
   const { loadUsers } = useQueryUsers(false);
   const [name, setName] = useState("");
 
@@ -48,7 +48,7 @@ const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
     
     await addNewUser(newUser); //use hooks to handle state of training
     loadUsers();
-    setShowAddUser(false); //make the dialogue disappear
+    setShowAddMachine(false); //make the dialogue disappear
   };
 
 
@@ -78,7 +78,7 @@ const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
   
 
   return (
-    <Dialog open={true} onOpenChange={setShowAddUser}>
+    <Dialog open={true} onOpenChange={setShowAddMachine}>
       <DialogOverlay />
       <DialogContent>
         <DialogHeader>
@@ -134,7 +134,7 @@ const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
     
         </div>
         <DialogFooter>
-          <Button onClick={() => setShowAddUser(false)}>Cancel</Button>
+          <Button onClick={() => setShowAddMachine(false)}>Cancel</Button>
           <Button onClick={handleAddUser}>Save Changes</Button>
         </DialogFooter>
       </DialogContent>
@@ -142,4 +142,4 @@ const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
   );
 };
 
-export default AddUserDialog;
+export default AddMachineDialog;

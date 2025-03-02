@@ -435,6 +435,8 @@ export const getAllMachines = async (
   const { message, data }: { message: string; data: Machine[] } =
     await response.json();
 
+    console.log(data);
+
   return { message, data };
 };
 export const getMachine = async (id: number): Promise<{
@@ -505,5 +507,21 @@ export const createMachine = async (name: string, type: MachineType, rate: numbe
 
   return { message, data };
 
+}
+
+export const deleteMachine = async (id: number) => {
+  const response = await fetch(`${API_DB_URL}/machines/${id}`,{
+    method: "DELETE",
+    credentials: "include"
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string} = await response.json();
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string, data: Machine } = await response.json();
+
+  return { message, data };
 }
 

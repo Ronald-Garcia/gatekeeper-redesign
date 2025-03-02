@@ -6,14 +6,14 @@ import useQueryBudgets from "@/hooks/use-query-budgetCodes";
 import { useEffect } from "react";
 
 export default function BudgetCodes() {
-  const {loadBudgets} =  useQueryBudgets(false);
+  useQueryBudgets(true);
 
   const codeList = useStore($codes);
 
-  useEffect(() =>  {
+  // useEffect(() =>  {
    
-    loadBudgets();
-    }, [codeList]);
+  //   loadBudgets();
+  //   }, [codeList]);
     
   return (
     <ScrollArea>

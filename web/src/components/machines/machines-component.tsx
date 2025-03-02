@@ -1,14 +1,15 @@
 import { useStore } from "@nanostores/react";
-import { $users } from "@/data/store";
-import UserComponent from "./user";
+import { $machines, $users } from "@/data/store";
+import UserComponent from "./machine-admin";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import useQueryUsers from "@/hooks/use-query-users";
 import { useEffect } from "react";
+import MachineAdmin from "./machine-admin";
 
-export default function UsersComponent() {
+export default function MachinesComponent() {
   useQueryUsers(true);
 
-  const userList = useStore($users);
+  const machineList = useStore($machines);
 
   // useEffect(() =>  {
    
@@ -20,11 +21,11 @@ export default function UsersComponent() {
     <ScrollArea>
 
         <div className="max-h-[20vh]">
-        {userList.length === 0 ? (
-        <p> No users found. Please add some!  </p>
+        {machineList.length === 0 ? (
+        <p> No machines found. Please add some!  </p>
       ) : (
-        userList.map((user) => (
-          <UserComponent key={user.id} user={user}/>
+        machineList.map((m) => (
+          <MachineAdmin key={m.id} machine={m}/>
         ))
       )}
 

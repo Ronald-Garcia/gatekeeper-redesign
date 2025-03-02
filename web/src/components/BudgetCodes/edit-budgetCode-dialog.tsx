@@ -33,9 +33,9 @@ const EditBudgetCodeDialog = ({ budgetcodeId, setShowUpdateBudgetCode }: EditBud
   const handleEditBudgetCode = async () => {
     
     const newCode: BudgetCode = {
-      code: parseInt(budgetCode),
+      budgetCode: budgetCode,
       id: budgetcodeId,
-      alias: name,
+      name: name,
     }
     await updateBudgetCode(newCode);
     setShowUpdateBudgetCode(false);

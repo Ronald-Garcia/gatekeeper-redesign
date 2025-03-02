@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useMutationUsers from "@/hooks/user-mutation-hooks";
 import {
   Dialog,
@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { ScrollArea } from "../ui/scroll-area";
 import { useStore } from "@nanostores/react";
 import { $machines } from "@/data/store";
+import useQueryMachines from "@/hooks/use-query-machines";
 
 
 //prop for handling state of the dialogue
@@ -34,6 +35,11 @@ const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogP
     setShowEditTraining(false); //make the dialogue disappear
   };
 
+  useQueryMachines(true);
+
+  useEffect(() => {
+    console.log(machineList);
+  }, [machineList]);
 
   return (
     <Dialog open={true} onOpenChange={setShowEditTraining}>

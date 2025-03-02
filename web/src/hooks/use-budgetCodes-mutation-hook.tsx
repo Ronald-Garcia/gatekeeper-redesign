@@ -2,7 +2,7 @@ import { toast } from "sonner";
 import { createBudgetCode, 
     deleteBudgetCode,
      editBudgetCode } from "../data/api";
-import { addBudgetCode, deleteBudgetCodeByNum, updateABudgetCode } from "../data/store";
+import { addBudgetCode, deleteBudgetCodeById, updateABudgetCode } from "../data/store";
 import { BudgetCode } from "@/data/types/budgetCode";
 
 function useMutationBudgetCodes() {
@@ -24,7 +24,7 @@ function useMutationBudgetCodes() {
   const removeBudgetCode = async (codeId: number) => {
     try {
       await deleteBudgetCode(codeId);
-      deleteBudgetCodeByNum(codeId);
+      deleteBudgetCodeById(codeId);
     } catch (e) {
       const errorMessage = (e as Error).message;
       toast.error("Sorry! There was an error removing the budget code 🙁", {

@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "../ui/input";
 import { useState } from "react";
 import { BudgetCode } from "@/data/types/budgetCode";
+import useQueryBudgets from "@/hooks/use-query-budgetCodes";
 
 
 
@@ -25,6 +26,7 @@ type EditBudgetCodeDialogProp = {
 // function that handles state of the dialogue, error handling from api
 const AddBudgetCodeDialog = ({ setShowAddBudgetCode }: EditBudgetCodeDialogProp) => {
   const { addNewBudgetCode } = useMutationBudgetCodes();
+  const { loadBudgets } = useQueryBudgets(false);
   const [budgetCode, setbudgetCode] = useState("");
   const [name, setName] = useState("");
 
@@ -38,6 +40,7 @@ const AddBudgetCodeDialog = ({ setShowAddBudgetCode }: EditBudgetCodeDialogProp)
     }
 
     addNewBudgetCode(newCode);
+    loadBudgets();
     setShowAddBudgetCode(false);
   };
 

@@ -48,7 +48,7 @@ function useQueryMachines(reload: boolean) {
         if (reload) {
             loadMachines();
         }
-    })
+    }, [])
     return { getSavedMachine, loadMachines }
 
 

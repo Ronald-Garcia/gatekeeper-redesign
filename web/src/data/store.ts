@@ -97,6 +97,12 @@ export function addBudgetCode(code: BudgetCode) {
   $codes.set([...$codes.get(), code]);
 }
 
+export function deleteBudgetCodeById(id: number) {
+  $codes.set(
+    $codes.get().filter((code: BudgetCode) => code.id !== id)
+  );
+}
+
 export function deleteBudgetCodeByNum(codeNum: string) {
   $codes.set(
     $codes.get().filter((code: BudgetCode) => code.budgetCode !== codeNum),
@@ -115,9 +121,9 @@ export function addMachine(machine: Machine) {
   )
 }
 
-export function removeMachine(machine: Machine) {
+export function removeMachine(id: number) {
   $machines.set(
-    $machines.get().filter(m => m.id !== machine.id)
+    $machines.get().filter(m => m.id !== id)
   );
 }
 

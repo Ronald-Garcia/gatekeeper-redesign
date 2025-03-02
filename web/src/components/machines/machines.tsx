@@ -7,7 +7,7 @@ import useMutationMachines from "@/hooks/use-mutation-machines";
 import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 
-export default function Machines() {
+export default function MachinesSelect() {
   const machineList = useStore($machines);
   const { makeKiosk } = useMutationMachines();
   const handleKiosk = async () => {
