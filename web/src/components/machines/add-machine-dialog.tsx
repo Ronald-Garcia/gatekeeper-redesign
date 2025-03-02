@@ -24,7 +24,7 @@ type AddMachineDialogProp = {
  
 // function that handles state of the dialogue, error handling from api
 const AddMachineDialog = ({ setShowAddMachine }: AddMachineDialogProp) => {
-  const { addNewUser } = useMutationMachines();
+  const { addMachine } = useMutationMachines();
   const { loadUsers } = useQueryUsers(false);
   const [name, setName] = useState("");
 

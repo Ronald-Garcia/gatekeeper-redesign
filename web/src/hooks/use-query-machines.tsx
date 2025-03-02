@@ -1,5 +1,5 @@
-import { fetchCurrentMachine, getAllMachines, getMachine } from "@/data/api";
-import { setCurrentMachine, setKiosk, setMachines } from "@/data/store";
+import { fetchCurrentMachine, getAllMachines, getMachine, getMachineTypes } from "@/data/api";
+import { setCurrentMachine, setKiosk, setMachines, setMachinesTypes} from "@/data/store";
 import { Machine } from "@/data/types/machine";
 import { useEffect } from "react";
 import { toast } from "sonner";
@@ -44,12 +44,31 @@ function useQueryMachines(reload: boolean) {
         };
 
 
+    const loadMachineTypes = async () => {
+        try {
+            const {
+              data: fetchedMachinesTypes
+            } = await getMachineTypes();
+            setMachinesTypes(fetchedMachinesTypes);
+          }  catch (e) {
+              //get message from api response, put it on a toast
+              const errorMessage = (e as Error).message;
+              toast.error("Sorry! There was an error fetching Users 🙁", {
+                description: errorMessage  
+              });
+            }
+          };
+    
+
+
     useEffect(()=> {
         if (reload) {
             loadMachines();
+            loadMachineTypes();
         }
     }, [])
-    return { getSavedMachine, loadMachines }
+
+    return { getSavedMachine, loadMachines, loadMachineTypes}
 
 
 }

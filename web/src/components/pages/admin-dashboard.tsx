@@ -7,12 +7,14 @@ import { useState } from "react";
 import AddUserDialog from "../Users/add-user-dialogue";
 import AddBudgetCodeDialog from "../BudgetCodes/add-budgetCode-dialogue";
 import { redirectPage } from "@nanostores/router";
+import AddMachineTypeDialog from "../machine_types/add-machine-type-dialog";
 
 const AdminDashboard = () => {
 
   
   const [showAddBudgetCode, setShowAddBudgetCode] = useState(false);
   const [showAddUser, setShowAddUser] = useState(false);
+  const [showAddMachineType, setShowAddMachineType] = useState(false);
 
   const handleCloseAddUser = () => {
     setShowAddUser(false);
@@ -21,6 +23,11 @@ const AdminDashboard = () => {
   const handleCloseAddBudgetCode = () => {
     setShowAddBudgetCode(false);
   };
+
+  const handleCloseAddMachineType = () => {
+    setShowAddMachineType(false);
+  };
+
 
   const router = useStore($router);
   if (!router) {
@@ -44,6 +51,10 @@ const AdminDashboard = () => {
 
 {showAddBudgetCode && (
   <AddBudgetCodeDialog  setShowAddBudgetCode={handleCloseAddBudgetCode} />
+)}
+
+{showAddMachineType && (
+  <AddMachineTypeDialog  setShowAddMachineType={handleCloseAddMachineType} />
 )}
       <div>
 
@@ -78,11 +89,20 @@ const AdminDashboard = () => {
           </Button>
         }
 
-       {router.route === "users" &&
+       {router.route === "users" && <div>
           <Button  className="size-"
             onClick={() => setShowAddUser(true) }>
               Add User 
           </Button>
+
+          <Button  className="size-"
+            onClick={() => setShowAddMachineType(true) }>
+              Add MachineType
+          </Button>
+
+          </div>
+
+
         }
         </div>
         <div>

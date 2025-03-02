@@ -187,7 +187,7 @@ export const getAllTrainingsOfUser = async (user_id: number): Promise<{
   return { message, data };
 }
 
-export const createUserMachineRelation = async (user_id: number, machine_id: number): Promise<{
+export const createUserMachineRelation = async (userId: number, machineTypeId: number): Promise<{
   message: string;
   data: Training;
 }> => {
@@ -196,8 +196,8 @@ export const createUserMachineRelation = async (user_id: number, machine_id: num
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      user_id,
-      machine_id
+      userId,
+      machineTypeId
     }),
     credentials: "include"
   })
@@ -480,6 +480,76 @@ export const createMachineType = async (type: string): Promise<{
 
   return { message, data };
 }
+
+
+export const updateMachineType = async (type: string): Promise<{
+  message: string;
+  data: MachineType
+}> => {
+  const response = await fetch(`${API_DB_URL}/machine-types`,{
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      machineType: type
+    }),
+    credentials: "include"
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string} = await response.json();
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string, data: MachineType } = await response.json();
+
+  return { message, data };
+}
+
+export const deleteMachineType = async (id: number): Promise<{
+  message: string;
+  data: MachineType
+}> => {
+  const response = await fetch(`${API_DB_URL}/machine-types/${id}`,{
+    method: "DELETE",
+    headers: {"Content-Type": "application/json"},
+    credentials: "include"
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string} = await response.json();
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string, data: MachineType } = await response.json();
+
+  return { message, data };
+}
+
+export const getMachineTypes = async ( sort: SortType = "type_asc",
+  page: number = 1,
+  limit: number = 10,
+  search: string = ""
+
+): Promise<{
+  message: string;
+  data: MachineType[];
+}> => {
+  const response = await fetch(`${API_DB_URL}/machine-types?search=${search}&limit=${limit}&page=${page}&sort=${sort}`, {
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string} = await response.json();
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string, data: MachineType[] } = await response.json();
+
+  return { message, data };
+}
+
+
+
 
 export const createMachine = async (name: string, type: MachineType, rate: number): Promise<{
   message: string;

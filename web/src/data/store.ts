@@ -2,11 +2,14 @@ import { User } from "./types/user";
 import { atom, map } from "nanostores";
 import { BudgetCode } from "./types/budgetCode"; 
 import { Machine } from "./types/machine";
+import { MachineType } from "./types/machineType";
+import { TypeOutline } from "lucide-react";
 
 
 export const $users = atom<User[]>([]);
 export const $codes = atom<BudgetCode[]>([]);
 export const $machines = atom<Machine[]>([]);
+export const $machine_types = atom<MachineType[]>([]);
 
 const defaultUser: User = {
   name: "test",
@@ -42,25 +45,15 @@ export function adminCurrentUser() {
 }
 
 
-export function validCurrentMachine() {
-  return $currentMachine.get() !== defaultMachine || $kiosk.get();
-}
-
 export function setCurrentUser(user: User) {
   $currentUser.set(user);
 }
 
-export function setCurrentMachine(machine: Machine) {
-  $currentMachine.set(machine);
-}
 
 export function clearCurrentUser() {
   $currentUser.set(defaultUser);
 }
 
-export function clearCurrentMachine() {
-  $currentMachine.set(defaultMachine);
-}
 
 export function addUser(user: User) {
   $users.set([...$users.get(), user]);
@@ -78,6 +71,24 @@ export function setUsers(userList: User[]) {
   $users.set(userList);
 }
 
+
+//machine state funcitons 
+
+
+export function validCurrentMachine() {
+  return $currentMachine.get() !== defaultMachine || $kiosk.get();
+}
+
+export function setCurrentMachine(machine: Machine) {
+  $currentMachine.set(machine);
+}
+
+
+export function clearCurrentMachine() {
+  $currentMachine.set(defaultMachine);
+}
+
+
 // export function banUserFlag(userId: number) {}
 
 // //logic to update user
@@ -89,6 +100,8 @@ export function setUsers(userList: User[]) {
   );
  }
 
+
+ //budget code store functions 
 export function setBudgetCodes(codeList: BudgetCode[]) {
   $codes.set(codeList);
 }
@@ -115,6 +128,8 @@ export function modifyBudgetCode(codeNum: string, alias:string) {
   );
 }
 
+
+//machine store functions 
 export function addMachine(machine: Machine) {
   $machines.set(
     [...$machines.get(), machine]
@@ -141,3 +156,20 @@ export function updateABudgetCode(updatedCode:BudgetCode) {
     code.id === updatedCode.id ? updatedCode: code)
   );
 }
+
+//machine type functions 
+
+export function addNewMachineType(type: MachineType) {
+  $machine_types.set([...$machine_types.get(), type]);
+}
+
+export function deleteOldMachineType(id: number) {
+  $machine_types.set(
+    $machine_types.get().filter(m => m.id !== id)
+  );
+}
+
+export function setMachinesTypes(typeList: MachineType[]) {
+  $machine_types.set(typeList);
+}
+

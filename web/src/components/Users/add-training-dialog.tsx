@@ -12,8 +12,9 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "../ui/scroll-area";
 import { useStore } from "@nanostores/react";
-import { $machines } from "@/data/store";
+import { $machine_types } from "@/data/store";
 import useQueryMachines from "@/hooks/use-query-machines";
+
 
 
 //prop for handling state of the dialogue
@@ -27,10 +28,11 @@ type EditTrainingDialogProp = {
 const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogProp) => {
   const [training, setTraining] = useState(-1);
   const { giveTraining } = useMutationUsers();
- const machineList = useStore($machines);
+ const machineList = useStore($machine_types);
 
   //async function with editing logic, including error handling
   const handleEditTraining = async () => {
+    console.log(training)
     await giveTraining(userId, training); //use hooks to handle state of training
     setShowEditTraining(false); //make the dialogue disappear
   };
@@ -55,9 +57,14 @@ const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogP
             <ScrollArea>
 
         {
-    machineList.map((machine) => (
-            <div key={machine.id} onClick={() => setTraining(machine.id)}>
-                 {machine.name}
+    machineList.map((type) => (
+     
+            <div key={type.id} onClick={() => setTraining(type.id) }
+            className={`flex flex-col justify-between items-center py-4 max-h-[15vh] text-sm text-clip transition-colors border-y-2 border-solid border-stone-300 hover:bg-stone-100 hover:border-stone-500 cursor-pointer ${
+              training === type.id ? "bg-blue-300 border-blue-600" : ""
+            }`}
+          >
+            <p>{type.type}</p>
             </div>
          ))
            }
