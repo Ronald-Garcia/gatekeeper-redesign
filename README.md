@@ -54,9 +54,9 @@ conda activate [env-yml-name]
 
 ## Running Hello World
 
-[Here](https://interlock-api-database-v1-macof09ts-cameron-koliskos-projects.vercel.app) is the deployed database API.
+[Here](https://interlock-api-database-v1-975qjvoiy-cameron-koliskos-projects.vercel.app) is the deployed database API.
 
-[Here](https://wse-interlock-hv58u3v5f-oscars-projects-b3a9ce10.vercel.app) is the deployed web app.
+[Here](https://wse-interlock-h7m3cp94a-oscars-projects-b3a9ce10.vercel.app/) is the deployed web app.
 
 We also have a dockerized version of the machine API, which you can find [HERE](https://github.com/cs421sp25-homework/team-10/pkgs/container/team-10-api-machine)
 
