@@ -1,5 +1,5 @@
 export type BudgetCode = {
     id: number;
-    budgetCode: number;
+    budgetCode: string;
     name: string;
 }

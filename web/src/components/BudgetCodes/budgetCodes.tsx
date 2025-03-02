@@ -2,21 +2,27 @@ import { useStore } from "@nanostores/react";
 import { $codes } from "@/data/store";
 import BudgetCodeComponent from "./budgetCode";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
-import { BudgetCode } from "@/data/types/budgetCode";
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
+import { useEffect } from "react";
 
 export default function BudgetCodes() {
-  const userList = useStore($codes);
+  const {loadBudgets} =  useQueryBudgets(false);
 
-  useQueryBudgets(true);
+  const codeList = useStore($codes);
+
+  useEffect(() =>  {
+   
+    loadBudgets();
+    }, [codeList]);
+    
   return (
     <ScrollArea>
 
         <div className="max-h-[20vh]">
-        {userList.length === 0 ? (
+        {codeList.length === 0 ? (
         <p> No machines found. Please add some!  </p>
       ) : (
-        userList.map((budgetCode) => (
+        codeList.map((budgetCode) => (
           <BudgetCodeComponent key={budgetCode.id} budgetcode={budgetCode} />
         ))
       )}

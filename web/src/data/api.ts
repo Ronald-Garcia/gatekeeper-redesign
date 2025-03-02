@@ -262,7 +262,7 @@ export const createBudgetCode = async (budget: BudgetCode): Promise<{
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      budget
+      ...budget
     }),
     credentials: "include"
   })

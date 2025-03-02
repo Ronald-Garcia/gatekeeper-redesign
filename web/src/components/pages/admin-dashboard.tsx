@@ -46,10 +46,23 @@ const AdminDashboard = () => {
   <AddBudgetCodeDialog  setShowAddBudgetCode={handleCloseAddBudgetCode} />
 )}
       <div>
-      <Button  className="size-"
+
+        <div>
+        {router.route === "budgetCodes" &&
+           <Button  className="size-"
+           onClick={() => redirectPage($router, "users") }>
+             View Users
+         </Button>
+        }
+
+       {router.route === "users" &&
+            <Button  className="size-"
             onClick={() => redirectPage($router, "budgetCodes") }>
               View BudgetCodes
           </Button>
+        }
+        </div>
+     
         <div className="flex items-center justify-center">
           <div className="relative w-full max-w-lg">
             <input

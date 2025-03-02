@@ -97,13 +97,13 @@ export function addBudgetCode(code: BudgetCode) {
   $codes.set([...$codes.get(), code]);
 }
 
-export function deleteBudgetCodeByNum(codeNum: number) {
+export function deleteBudgetCodeByNum(codeNum: string) {
   $codes.set(
     $codes.get().filter((code: BudgetCode) => code.budgetCode !== codeNum),
   );
 }
 
-export function modifyBudgetCode(codeNum: number, alias:string) {
+export function modifyBudgetCode(codeNum: string, alias:string) {
   $codes.set(
     $codes.get().filter((code: BudgetCode) => code.budgetCode !== codeNum),
   );
