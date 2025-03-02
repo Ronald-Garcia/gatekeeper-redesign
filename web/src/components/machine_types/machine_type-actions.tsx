@@ -12,19 +12,21 @@ import {
     machineTypeId: number;
   };
   
+  /*
+  Machine type actions element, to manage state of the dialogs for the delete action on machine types
+  @param machineTypeId: to prop drill the typeId to the action dialog's to perform CRUD operations.
+  */
   export default function MachineTypeActions({ machineTypeId }: MachineTypeActionsProps) {
      const [ShowDeleteMachineType, setShowDeleteMachineType] = useState(false);
   
     const handleDelete = (e: React.MouseEvent) => {
       e.stopPropagation();
       setShowDeleteMachineType(true);
-     // isActive(true); 
     };
   
   
     const handleCloseDelete = () => {
       setShowDeleteMachineType(false);
-     // isActive(false); 
     };
   
     return (

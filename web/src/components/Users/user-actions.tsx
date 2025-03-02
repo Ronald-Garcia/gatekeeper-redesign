@@ -24,36 +24,35 @@ export default function UserActions({ userId }: UserActionsProps) {
   const handleAddTraining = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowEditTraining(true);
-  // isActive(true);
+  
     
   };
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowDeleteUser(true);
-   // isActive(true); 
+
   };
 
   const handleBan = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowBanUser(true);
-   // isActive(true); 
+  
   };
 
 
   const handleCloseDelete = () => {
     setShowDeleteUser(false);
-   // isActive(false); 
+   
   };
 
   const handleCloseBan = () => {
     setShowBanUser(false);
-   // isActive(false); 
+
   };
 
   const handleCloseTraining = () => {
     setShowEditTraining(false);
-   // isActive(false); 
   };
 
 

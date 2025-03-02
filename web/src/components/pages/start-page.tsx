@@ -6,6 +6,9 @@ import useQueryUsers from "@/hooks/use-query-users";
 import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 
+/*
+
+*/
 const StartPage = () => {
 
   

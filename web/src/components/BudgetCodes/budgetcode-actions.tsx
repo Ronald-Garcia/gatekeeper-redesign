@@ -50,7 +50,7 @@ import {
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem onClick={handleAddTraining}>
-            Add Training
+            Edit BudgetCode
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleDelete} className="delete-text-red">
             Delete

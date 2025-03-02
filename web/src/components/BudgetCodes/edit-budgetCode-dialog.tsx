@@ -55,7 +55,7 @@ const EditBudgetCodeDialog = ({ budgetcodeId, setShowUpdateBudgetCode }: EditBud
       <DialogOverlay />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Training</DialogTitle>
+          <DialogTitle>Edit BudgetCode</DialogTitle>
         </DialogHeader>
         <Label htmlFor="content" className="text-sm">
           Please fill out with the new budget code information: 

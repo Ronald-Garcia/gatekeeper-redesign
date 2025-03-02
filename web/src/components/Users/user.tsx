@@ -3,7 +3,10 @@ import UserActions from "./user-actions";
 
 
 
-
+/* 
+User component for each individual user to be used on the list 
+@param user: user whose info is going to be displayed when mapping through user list. 
+*/
 export default function UserComponent({ user }: { user: User }) {
   return (
     <>

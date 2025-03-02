@@ -1,13 +1,18 @@
-import {  createMachineType, deleteMachine, saveCurrentMachine, deleteMachineType } from "@/data/api";
+import {  createMachineType, deleteMachine, saveCurrentMachine } from "@/data/api";
 import { addNewMachineType, deleteOldMachineType, removeMachine, setCurrentMachine, setKiosk } from "@/data/store";
 import { Machine } from "@/data/types/machine";
 import { toast } from "sonner";
 
 
 
-//primarily has functions handling state of decks after app is loaded, pretty much what's on posts UI
+//primarily has functions handling state of decks after app is loaded, pretty much what's on posts UI but for this application
+
 function useMutationMachines() {
 
+    /*
+      Hook to save machine
+      @param machine: machine to save 
+    */
     const saveMachine = async (machine: Machine) => {
 
         try {
@@ -21,6 +26,9 @@ function useMutationMachines() {
         }
     }
 
+     /*
+      Hook to make kiosk, set current machine as the kiosk
+    */
     const makeKiosk = async () => {
         try {
 
@@ -35,6 +43,10 @@ function useMutationMachines() {
         }
     }
 
+    /*
+    Hook to remove the machine
+    @param id: id of machine to remove
+    */
     const removeMachineById = async (id: number) => {
 
         try {
@@ -49,6 +61,9 @@ function useMutationMachines() {
         } 
     }
 
+    /*
+    Hook to add machine
+    */
     const addMachine = async () => {
         try {
 
@@ -62,7 +77,10 @@ function useMutationMachines() {
         } 
     }
 
-
+    /*
+    Hook to add MachineType
+    @param type: name of the new type of macine to be added
+    */
     const addMachineType = async (type:string) => {
         try {
 
@@ -77,6 +95,10 @@ function useMutationMachines() {
         
     }
 
+     /*
+    Hook to delete MachineType
+    @param id: id of the machinetype to delete
+    */
     const deleteMachineType = async (id:number) => {
         try {
 

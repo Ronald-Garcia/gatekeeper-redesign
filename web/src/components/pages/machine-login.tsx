@@ -2,7 +2,10 @@ import useQueryMachines from "@/hooks/use-query-machines";
 import Machines from "../machines/machines";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
 
-
+/*
+MachineLogin component
+Displayed if current machine is not valid or not associated with a machine from the shop. 
+*/
 const MachineLogin = () => {
 
     useQueryMachines(true);

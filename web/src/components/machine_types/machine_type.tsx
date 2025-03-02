@@ -1,7 +1,10 @@
 import { MachineType } from "@/data/types/machineType";
 import MachineTypeActions from "./machine_type-actions";
 
-
+/*
+Machine type component
+@param type: MachineType, just to access info to display the machine type information on the machineTypes component. 
+*/
 export default function MachineTypeComponent({ type }: { type: MachineType }) {
   return (
     <>

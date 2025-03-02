@@ -20,7 +20,10 @@ type AddUserDialogProp = {
 };
 
  
-// function that handles state of the dialogue, error handling from api
+/*
+AddMachineTypeDialog: Dialog that prompts user to create a new machientype 
+@param setShowAddMachineType: function that controls the state of a flag, that is switched off after user is done interacting with the form. 
+*/
 const AddMachineTypeDialog = ({ setShowAddMachineType }: AddUserDialogProp) => {
   const { addMachineType } = useMutationMachines();
   const [name, setName] = useState("");
@@ -30,7 +33,7 @@ const AddMachineTypeDialog = ({ setShowAddMachineType }: AddUserDialogProp) => {
 
 
     
-    await addMachineType(name); //use hooks to handle state of training
+    await addMachineType(name); //use hooks to handle state of machine type
     setShowAddMachineType(false); //make the dialogue disappear
   };
 
@@ -41,16 +44,16 @@ const AddMachineTypeDialog = ({ setShowAddMachineType }: AddUserDialogProp) => {
 
 
   
-
+    // jsx elements 
   return (
     <Dialog open={true} onOpenChange={setShowAddMachineType}>
       <DialogOverlay />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Training</DialogTitle>
+          <DialogTitle>Add New MachineType</DialogTitle>
         </DialogHeader>
         <Label htmlFor="content" className="text-sm">
-          Please fill out form with new Student Information: 
+          Please fill out form with new Machine Type: 
         </Label>
         <div className="space-y-4">
         <Input

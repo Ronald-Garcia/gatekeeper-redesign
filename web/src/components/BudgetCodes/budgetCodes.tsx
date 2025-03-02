@@ -3,18 +3,14 @@ import { $codes } from "@/data/store";
 import BudgetCodeComponent from "./budgetCode";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
-import { useEffect } from "react";
+
 
 export default function BudgetCodes() {
   useQueryBudgets(true);
 
   const codeList = useStore($codes);
 
-  // useEffect(() =>  {
-   
-  //   loadBudgets();
-  //   }, [codeList]);
-    
+
   return (
     <ScrollArea>
 

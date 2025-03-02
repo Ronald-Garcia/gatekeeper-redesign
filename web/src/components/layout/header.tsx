@@ -1,3 +1,6 @@
+/*
+Header comoponent of the application
+*/
 const Header = () => {
   return (
     <div className="h-2/5 max-h-[100px] bg-[#002D72] flex">

@@ -8,16 +8,14 @@ import { useEffect } from "react";
 import { redirectPage } from "@nanostores/router";
 import Interlock from "../pages/interlock";
 
-
+/*
+Body component of the application
+Handle general routing and validation of users. Routes based on admin status and machine status. 
+*/
 const Body = () => {
 
   
   const router = useStore($router);
-  // const [userValidated, setUserValidated] =  useState(false);
-  // const user = useStore($user);
-  // const { fetchUser} = useMutationUsers();
-  
-  // const [keyboard, setKeyboard] =  useState("");
 
   if (!router) {
     return (
@@ -28,17 +26,17 @@ const Body = () => {
     )
   }
 
+  //validate user when using the application, else rerouted to start page
   useEffect(() => {
-
-
     if (!validCurrentMachine() && !validCurrentUser()) {
       redirectPage($router, "start_page");
+      //check if user is admin and current machine is valid
     } else if (adminCurrentUser() && !validCurrentMachine()) {
       redirectPage($router, "machine_login");
     } 
   }, []);
   
-
+// following pages are only acessible to admin users
   return (
 
     <>

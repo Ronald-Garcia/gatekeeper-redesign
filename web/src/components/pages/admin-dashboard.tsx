@@ -9,6 +9,10 @@ import AddBudgetCodeDialog from "../BudgetCodes/add-budgetCode-dialogue";
 import { redirectPage } from "@nanostores/router";
 import AddMachineTypeDialog from "../machine_types/add-machine-type-dialog";
 
+/*
+Admin dashboard component
+Displays BudgetCodes or Users based on routing. 
+*/
 const AdminDashboard = () => {
 
   
@@ -44,7 +48,8 @@ const AdminDashboard = () => {
     <>
 
 
-    
+{/*Adding forms*/}
+
 {showAddUser && (
   <AddUserDialog  setShowAddUser={handleCloseAddUser} />
 )}
@@ -56,6 +61,8 @@ const AdminDashboard = () => {
 {showAddMachineType && (
   <AddMachineTypeDialog  setShowAddMachineType={handleCloseAddMachineType} />
 )}
+
+{/* Search Bar and Buttons to trigger adding forms */}
       <div>
 
         <div>
@@ -102,9 +109,13 @@ const AdminDashboard = () => {
 
           </div>
 
-
         }
         </div>
+
+
+
+        {/* User or Budget Component that displays list of current data on db */}
+        
         <div>
           {router.route === "users" && <UsersComponent></UsersComponent>}
           {router.route === "budgetCodes" && <BudgetCodes></BudgetCodes>} 

@@ -3,7 +3,6 @@ import { atom, map } from "nanostores";
 import { BudgetCode } from "./types/budgetCode"; 
 import { Machine } from "./types/machine";
 import { MachineType } from "./types/machineType";
-import { TypeOutline } from "lucide-react";
 
 
 export const $users = atom<User[]>([]);
@@ -24,7 +23,7 @@ const defaultUser: User = {
 const defaultMachine: Machine = {
   id: -1,
   name: "invalid",
-  type: { id: -1, name: "invalid"},
+  type: { id: -1, type: "invalid"},
   hourlyRate: 0
 }
 export const $kiosk = atom<boolean>(false);
@@ -72,6 +71,17 @@ export function setUsers(userList: User[]) {
 }
 
 
+// //logic to update user
+export function updateUserById(updatedUser: User) {
+  $users.set(
+    $users.get().map((user: User) =>
+      user.id === updatedUser.id ? updatedUser : user
+    )
+  );
+ }
+
+
+
 //machine state funcitons 
 
 
@@ -88,17 +98,6 @@ export function clearCurrentMachine() {
   $currentMachine.set(defaultMachine);
 }
 
-
-// export function banUserFlag(userId: number) {}
-
-// //logic to update user
- export function updateUserById(updatedUser: User) {
-  $users.set(
-    $users.get().map((user: User) =>
-      user.id === updatedUser.id ? updatedUser : user
-    )
-  );
- }
 
 
  //budget code store functions 
@@ -122,9 +121,11 @@ export function deleteBudgetCodeByNum(codeNum: string) {
   );
 }
 
-export function modifyBudgetCode(codeNum: string, alias:string) {
+
+export function updateABudgetCode(updatedCode:BudgetCode) {
   $codes.set(
-    $codes.get().filter((code: BudgetCode) => code.budgetCode !== codeNum),
+    $codes.get().map((code: BudgetCode) => 
+    code.id === updatedCode.id ? updatedCode: code)
   );
 }
 
@@ -150,12 +151,6 @@ export function clearMachines() {
   $machines.set([]);
 }
 
-export function updateABudgetCode(updatedCode:BudgetCode) {
-  $codes.set(
-    $codes.get().map((code: BudgetCode) => 
-    code.id === updatedCode.id ? updatedCode: code)
-  );
-}
 
 //machine type functions 
 

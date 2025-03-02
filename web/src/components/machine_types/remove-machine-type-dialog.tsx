@@ -17,7 +17,11 @@ type DeleteMachineTypeDialogProp = {
   setShowDeleteMachineType:  React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-//function that handles state of the dialog
+/*
+DeleteMachineTypeDialog: Component to confirm delete operation on a machinetype
+@param typeId: determine with machineType to delete
+@param setShowDeleteMachineType: function that is triggered to close the dialog box. 
+*/
 const DeleteMachineTypeDialog = ({
   typeId,
   setShowDeleteMachineType,

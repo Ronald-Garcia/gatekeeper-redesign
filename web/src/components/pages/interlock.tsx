@@ -9,7 +9,9 @@ import useQueryBudgets from "@/hooks/use-query-budgetCodes";
 import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 
-
+/*
+Display to use on gates when a user logs in. Displays BudgetCodes a user has associated with his account. 
+*/
 const Interlock = () => {
 
     const curUser = useStore($currentUser);
@@ -46,7 +48,7 @@ const Interlock = () => {
                                         value={"val" + code.id} 
                                         variant="outline"
                                         onClick={async () => {
-                                        }}> {code.alias} </ToggleGroupItem>
+                                        }}> {code.name} </ToggleGroupItem>
                                 );
                             })}
                         </ToggleGroup>

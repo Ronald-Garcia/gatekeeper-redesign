@@ -1,10 +1,11 @@
 import { useStore } from "@nanostores/react";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
-import useQueryMachines from "@/hooks/use-query-machines";
 import MachineTypeComponent from "./machine_type";
 import { $machine_types } from "@/data/store";
 
-
+/*
+MachineTypes component, uses machine types from the store variables and maps through them to create MachineTypeComponent for each of them.
+*/
 export default function MachinesComponent() {
 
   const machineTypeList = useStore($machine_types);

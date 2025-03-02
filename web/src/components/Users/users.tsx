@@ -3,18 +3,14 @@ import { $users } from "@/data/store";
 import UserComponent from "./user";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import useQueryUsers from "@/hooks/use-query-users";
-import { useEffect } from "react";
 
+/*
+Users component that list complete list of users from the data base, each on a usercomponent 
+*/
 export default function UsersComponent() {
   useQueryUsers(true);
 
   const userList = useStore($users);
-
-  // useEffect(() =>  {
-   
-  //   loadUsers();
-  //   }, [userList]);
-
 
   return (
     <ScrollArea>

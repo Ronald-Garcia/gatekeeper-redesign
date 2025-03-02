@@ -77,7 +77,7 @@ function useMutationUsers() {
       }
     };
 
-
+/*
     const banUserById = async (user_id: number, ban: number) => {
         try {
         
@@ -93,10 +93,10 @@ function useMutationUsers() {
           }
         };
 
-
+*/
       const fetchUser = async (card: number) => {
           try {
-          const currUser = await getUser(card); 
+           await getUser(card); 
       
           } catch (e) {
             //get message from api response, put it on a toast
@@ -116,7 +116,7 @@ function useMutationUsers() {
     addNewUser,
     giveTraining,
     updateUser,
-    banUserById,
+    //banUserById,
     fetchUser
   }
 }

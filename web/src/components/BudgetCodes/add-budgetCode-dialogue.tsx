@@ -59,23 +59,25 @@ const AddBudgetCodeDialog = ({ setShowAddBudgetCode }: EditBudgetCodeDialogProp)
       <DialogOverlay />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Training</DialogTitle>
+          <DialogTitle>Add New BudgetCode</DialogTitle>
         </DialogHeader>
         <Label htmlFor="content" className="text-sm">
           Please fill out with the new budget code information: 
         </Label>
-        <div className="space-y-4">
-        <Input
-          onChange={handleOnChangeCode}
-          placeholder="Enter Budget Code"
-        >
-        </Input>
-        
-        </div>
+       
         <div className="space-y-4">
         <Input
           onChange={handleOnChangeName}
           placeholder="Enter Name"
+        >
+        </Input>
+        
+        </div>
+
+        <div className="space-y-4">
+        <Input
+          onChange={handleOnChangeCode}
+          placeholder="Enter Budget Code"
         >
         </Input>
         
