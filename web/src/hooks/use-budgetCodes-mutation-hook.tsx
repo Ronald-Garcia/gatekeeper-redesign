@@ -1,8 +1,7 @@
 import { toast } from "sonner";
 import { createBudgetCode, 
-    deleteBudgetCode,
-     editBudgetCode } from "../data/api";
-import { addBudgetCode, deleteBudgetCodeById, updateABudgetCode } from "../data/store";
+    deleteBudgetCode } from "../data/api";
+import { addBudgetCode, deleteBudgetCodeById } from "../data/store";
 import { BudgetCode } from "@/data/types/budgetCode";
 
 function useMutationBudgetCodes() {
@@ -32,7 +31,7 @@ function useMutationBudgetCodes() {
       });
     }
   };
-
+/*
   
   const updateBudgetCode = async (budget: BudgetCode) => {
     try {
@@ -45,12 +44,12 @@ function useMutationBudgetCodes() {
         description: errorMessage,
       });
     }
-  };
+  };*/
 
   return {
     addNewBudgetCode,
     removeBudgetCode,
-    updateBudgetCode,
+   // updateBudgetCode,
   };
 }
 

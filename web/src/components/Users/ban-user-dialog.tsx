@@ -1,4 +1,3 @@
-import useMutationUsers from "@/hooks/user-mutation-hooks";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -19,15 +18,15 @@ type BanUserDialogProp = {
 
 //function that handles state of the dialog
 const BanUserDialog = ({
-  userId,
+  //userId,
   setShowBanUser,
 }: BanUserDialogProp) => {
-  const { banUserById } = useMutationUsers();
+//  const { banUserById } = useMutationUsers();
 
   //async function that handles deletion logic
   const handleBanUser = async (e: React.MouseEvent) => {
     e.stopPropagation();
-     await banUserById(userId,1);
+   //  await banUserById(userId,1);
     setShowBanUser(false); //make the dialog disappear
   };
 

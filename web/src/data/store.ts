@@ -122,13 +122,6 @@ export function deleteBudgetCodeByNum(codeNum: string) {
 }
 
 
-export function updateABudgetCode(updatedCode:BudgetCode) {
-  $codes.set(
-    $codes.get().map((code: BudgetCode) => 
-    code.id === updatedCode.id ? updatedCode: code)
-  );
-}
-
 
 //machine store functions 
 export function addMachine(machine: Machine) {

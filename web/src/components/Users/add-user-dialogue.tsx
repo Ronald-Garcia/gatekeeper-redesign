@@ -25,8 +25,8 @@ type AddUserDialogProp = {
 // function that handles state of the dialogue, error handling from api
 const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
   const { addNewUser } = useMutationUsers();
-  const { loadUsers } = useQueryUsers(false);
   const [name, setName] = useState("");
+  const { loadUsers } = useQueryUsers(false);
 
   const [jhed, setJhed] = useState("");
   const [cardNum, setCardNum ] = useState("");
@@ -37,18 +37,20 @@ const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
   //async function with editing logic, including error handling
   const handleAddUser = async () => {
 
+
     const newUser: User = {
       name,
       JHED: jhed,
       isAdmin: admin,
-      cardNum,
+      cardNum:cardNum.substring(0, 15),
       graduationYear: parseInt(year),
-      lastDigitOfCardNum: 0,
+      lastDigitOfCardNum: parseInt(cardNum.substring(15), 10),
       id: -1}
     
     await addNewUser(newUser); //use hooks to handle state of training
     loadUsers();
     setShowAddUser(false); //make the dialogue disappear
+
   };
 
 
@@ -82,7 +84,7 @@ const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
       <DialogOverlay />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Training</DialogTitle>
+          <DialogTitle>Add New User</DialogTitle>
         </DialogHeader>
         <Label htmlFor="content" className="text-sm">
           Please fill out form with new Student Information: 

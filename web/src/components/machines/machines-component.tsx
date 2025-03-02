@@ -1,9 +1,7 @@
 import { useStore } from "@nanostores/react";
-import { $machines, $users } from "@/data/store";
-import UserComponent from "./machine-admin";
+import { $machines } from "@/data/store";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import useQueryUsers from "@/hooks/use-query-users";
-import { useEffect } from "react";
 import MachineAdmin from "./machine-admin";
 
 export default function MachinesComponent() {

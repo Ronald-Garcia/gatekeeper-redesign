@@ -396,7 +396,7 @@ export const deleteBudgetCode = async (id: number): Promise<{
   return { message, data};
 }
 
-
+/*
 export const editBudgetCode = async (budgetCode: BudgetCode): Promise<{
   message: string,
   data: BudgetCode
@@ -422,7 +422,7 @@ export const editBudgetCode = async (budgetCode: BudgetCode): Promise<{
   return { message, data };
 
 }
-
+*/
 
 /*
 Machine relation API functions

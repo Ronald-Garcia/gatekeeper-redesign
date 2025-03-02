@@ -15,7 +15,7 @@ type MachineActionsProps = {
 
 export default function MachineActions({ machineId }: MachineActionsProps) {
    const [ShowDeleteMachine, setShowDeleteMachine] = useState(false);
-   const [ShowMaintenanceMachine, setShowMaintenanceMachine] = useState(false);
+  // const [ShowMaintenanceMachine, setShowMaintenanceMachine] = useState(false);
 
 
   const handleDelete = (e: React.MouseEvent) => {
@@ -26,7 +26,7 @@ export default function MachineActions({ machineId }: MachineActionsProps) {
 
   const handleMaintenance = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setShowMaintenanceMachine(true);
+   // setShowMaintenanceMachine(true);
    // isActive(true); 
   };
 
@@ -36,10 +36,10 @@ export default function MachineActions({ machineId }: MachineActionsProps) {
    // isActive(false); 
   };
 
-  const handleCloseBan = () => {
-    setShowMaintenanceMachine(false);
+ // const handleCloseBan = () => {
+  //  setShowMaintenanceMachine(false);
    // isActive(false); 
-  };
+ // };
 
   return (
 
