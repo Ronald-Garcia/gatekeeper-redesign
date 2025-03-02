@@ -12,7 +12,19 @@ WSE interlock -- Are you struggling to find an intuitive system for users and ad
 A quick introduction of the minimal setup you need to get the app up & running on a local computer. For example, your advisor might use the instruction here to run the application locally.
 
 ```shell
-commands here
+
+cd web
+pnpm install
+pnpm dev
+
+cd ../api-database
+pnpm install
+pnpm dev
+
+cd ../api-machine
+conda activate machine-api
+python server.py
+
 ```
 
 ## Developing
@@ -43,14 +55,19 @@ Below is the information on setup for the Machine API development but first what
 To setup the machine api, start up anaconda_prompt and run the following command after navigating to the api-machine folder: 
 
 ```shell
-conda env create -f [env-yml-name].yml
+
+cd /api-machine
+conda env create -f machine-api.yml
 ```
 
 To activate the created environment use the following command:
 
 ```shell
-conda activate [env-yml-name]
+conda activate machine-api.yml
+python server.py
 ```
+
+
 
 ## Running Hello World
 
