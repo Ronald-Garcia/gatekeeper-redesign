@@ -56,7 +56,7 @@ conda activate [env-yml-name]
 
 [Here](https://interlock-database-dk0isso1q-cameron-koliskos-projects.vercel.app) is the deployed database API.
 
-[Here](https://oose-deploy-ij91crgi6-cameron-koliskos-projects.vercel.app/) is the deployed web app.
+[Here](https://wse-interlock-699cnruxi-oscars-projects-b3a9ce10.vercel.app) is the deployed web app.
 
 We also have a dockerized version of the machine API, which you can find [HERE](https://github.com/cs421sp25-homework/team-10/pkgs/container/team-10-api-machine)
 
