@@ -25,7 +25,7 @@ type AddUserDialogProp = {
 const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
   const { addNewUser } = useMutationUsers();
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+
   const [jhed, setJhed] = useState("");
   const [cardNum, setCardNum ] = useState("");
   const [admin, setAdmin] = useState(0);
@@ -53,9 +53,7 @@ const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
       setName(e.target.value);
     }
 
-    const handleOnChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setEmail(e.target.value);
-    }
+
 
     const handleOnChangeCardNum = (e: React.ChangeEvent<HTMLInputElement>) => {
       setCardNum(e.target.value);
@@ -95,15 +93,7 @@ const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
         
         </div>
        
-        <div className="space-y-4">
-        <Input
-          onChange={handleOnChangeEmail}
-          placeholder="Email"
-        >
-        </Input>
-        
-    
-        </div>
+      
        
         <div className="Swipe Card to Fill JCard ID">
         <Input
@@ -115,7 +105,7 @@ const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
         </div>
         <div className="Swipe Card to Fill JCard ID">
         <input
-          type="check"
+          type="checkbox"
           onChange={handleOnChangeAdmin}
           placeholder="Admin"
         >

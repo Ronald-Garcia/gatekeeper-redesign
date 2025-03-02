@@ -121,6 +121,7 @@ export const createUser = async (user: User): Promise<{
   data: User;
 }> => {
 
+  console.log(user);
   const response = await fetch(`${API_DB_URL}/users`, {
     method: "POST",
     credentials: "include",
@@ -482,7 +483,9 @@ export const createMachine = async (name: string, type: MachineType, rate: numbe
   message: string;
   data: Machine
 }> => {
-  const response = await fetch(`${API_DB_URL}/machine-types`,{
+
+  console.log(type.id)
+  const response = await fetch(`${API_DB_URL}/machines`,{
     method: "POST",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({
