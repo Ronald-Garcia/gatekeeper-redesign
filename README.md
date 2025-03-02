@@ -54,9 +54,9 @@ conda activate [env-yml-name]
 
 ## Running Hello World
 
-[Here](https://interlock-database-dk0isso1q-cameron-koliskos-projects.vercel.app) is the deployed database API.
+[Here](https://interlock-api-database-v1-macof09ts-cameron-koliskos-projects.vercel.app) is the deployed database API.
 
-[Here](https://wse-interlock-699cnruxi-oscars-projects-b3a9ce10.vercel.app) is the deployed web app.
+[Here](https://wse-interlock-hv58u3v5f-oscars-projects-b3a9ce10.vercel.app) is the deployed web app.
 
 We also have a dockerized version of the machine API, which you can find [HERE](https://github.com/cs421sp25-homework/team-10/pkgs/container/team-10-api-machine)
 
@@ -85,6 +85,27 @@ Finally, open a web browser and naviagte to "http://localhost:PORT_NUMBER_YOU_PU
 ### Local Testing Process
 
 For web enter pnpm install and then type pnpm dev and that will run web locally. 
+
+### Usage Specifications
+
+#### Log In
+
+Copy and paste the following into the input box: 
+
+;1234567890777777;
+
+
+#### Newly Added User
+
+If testing newly added users, make sure to put a random chaarcter in the begginning and end of the card number as this mimics what the scanner will input when a card is scanned. 
+
+#### Creating a User 
+
+When creating a user, keep in mind that card numbers must be 16 digits and mark the checkbox if the user is an admin, which for the purposes of iteration 1 should be marked to test the user stories implented with this user.
+
+#### Creating a BudgetCode
+
+When creating a BudgetCode, keep in mind that the code must be 8 characters long. 
 
 ## Contributing
 Refer to the [Contributing Guidelines](./CONTRIBUTING.md) for information on how to contribute to the project.
