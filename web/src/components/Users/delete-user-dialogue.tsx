@@ -1,4 +1,5 @@
 import useMutationUsers from "@/hooks/user-mutation-hooks";
+import useQueryUsers from "@/hooks/use-query-users";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -23,11 +24,13 @@ const DeleteUserDialog = ({
   setShowDeleteUser,
 }: DeleteUserDialogProp) => {
   const { deleteUser } = useMutationUsers();
+  const { loadUsers } = useQueryUsers(false);
 
   //async function that handles deletion logic
   const handleDeleteUser = async (e: React.MouseEvent) => {
     e.stopPropagation();
      await deleteUser(userId);
+     loadUsers();
     setShowDeleteUser(false); //make the dialog disappear
   };
 
