@@ -120,14 +120,14 @@ export const createUser = async (user: User): Promise<{
   message: string;
   data: User;
 }> => {
-
-  console.log(user);
+  
+ 
   const response = await fetch(`${API_DB_URL}/users`, {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      user
+      ...user
     })
   });
 
