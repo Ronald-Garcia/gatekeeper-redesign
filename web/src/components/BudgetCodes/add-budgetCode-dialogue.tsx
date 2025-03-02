@@ -32,11 +32,11 @@ const AddBudgetCodeDialog = ({ setShowAddBudgetCode }: EditBudgetCodeDialogProp)
   const handleAddBudgetCode = async () => {
     
     const newCode: BudgetCode = {
-      code: parseInt(budgetCode),
+      budgetCode: parseInt(budgetCode),
       id: -1,
-      alias: name
+      name: name
     }
-    
+
     addNewBudgetCode(newCode);
     setShowAddBudgetCode(false);
   };

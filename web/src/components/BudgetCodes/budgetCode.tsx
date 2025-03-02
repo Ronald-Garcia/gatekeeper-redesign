@@ -5,12 +5,13 @@ import BudgetCodeActions from "./budgetcode-actions";
 
 
 export default function BudgetCodeComponent({ budgetcode }: { budgetcode: BudgetCode }) {
+  console.log(budgetcode);
   return (
     <>
       <div>
         <BudgetCodeActions budgetcodeId={budgetcode.id}></BudgetCodeActions>
-        <p>{budgetcode.alias} </p>
-        <p>{budgetcode.code} </p>
+        <p>{budgetcode.name} </p>
+        <p>{budgetcode.budgetCode} </p>
       </div>
     </>
   );

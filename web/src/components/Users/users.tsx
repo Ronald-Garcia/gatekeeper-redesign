@@ -6,15 +6,15 @@ import useQueryUsers from "@/hooks/use-query-users";
 import { useEffect } from "react";
 
 export default function UsersComponent() {
-
   const {loadUsers} =  useQueryUsers(false);
+
   const userList = useStore($users);
 
+  useEffect(() =>  {
+   
+    loadUsers();
+    }, [userList]);
 
-  
-
-  
- 
 
   return (
     <ScrollArea>
@@ -24,7 +24,7 @@ export default function UsersComponent() {
         <p> No users found. Please add some!  </p>
       ) : (
         userList.map((user) => (
-          <UserComponent key={user.id} user={user} modified={} />
+          <UserComponent key={user.id} user={user}/>
         ))
       )}
 

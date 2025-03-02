@@ -99,13 +99,13 @@ export function addBudgetCode(code: BudgetCode) {
 
 export function deleteBudgetCodeByNum(codeNum: number) {
   $codes.set(
-    $codes.get().filter((code: BudgetCode) => code.code !== codeNum),
+    $codes.get().filter((code: BudgetCode) => code.budgetCode !== codeNum),
   );
 }
 
 export function modifyBudgetCode(codeNum: number, alias:string) {
   $codes.set(
-    $codes.get().filter((code: BudgetCode) => code.code !== codeNum),
+    $codes.get().filter((code: BudgetCode) => code.budgetCode !== codeNum),
   );
 }
 
