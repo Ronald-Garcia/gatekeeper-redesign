@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button"; 
 import { useState } from "react";
-import DeleteMachineDialog from "./delete-user-dialogue";
+import DeleteMachineDialog from "./delete-machine-dialogue";
 
 type MachineActionsProps = {
   machineId: number;
