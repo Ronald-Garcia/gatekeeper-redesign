@@ -1,4 +1,4 @@
-import { API_DB_URL, API_MACHINE_URL } from "@/env";
+import { API_DB_URL, API_MACHINE_URL } from "../env";
 import { User } from "./types/user";
 import { Training } from "./types/training"; 
 import { BudgetCode } from "./types/budgetCode"; 
