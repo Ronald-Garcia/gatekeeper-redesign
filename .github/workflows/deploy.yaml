@@ -1,0 +1,28 @@
+name: Deploy to Vercel
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+  push:
+    # this will deploy data files only when no release is created
+    branches:
+      - main
+    paths:
+      - "data/**"
+      - "pages/docs/**"
+
+jobs:
+  deploy:
+    if: github.repository == 'master'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Vercel Deploy Web
+      - run: cd .\web\
+      - run: vercel deploy --prod
+      - run: cd ..
+      - run: cd .\api-database
+      - run: vercel deploy --prod
