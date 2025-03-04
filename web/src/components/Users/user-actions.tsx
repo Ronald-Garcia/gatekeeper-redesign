@@ -7,7 +7,7 @@ import {
 import { Button } from "@/components/ui/button"; 
 import { useState } from "react";
 import DeleteUserDialog from "./delete-user-dialogue";
-import TimeoutUserDialog from "./timeout-user-dialog";
+import BanUserDialog from "./ban-user-dialog";
 import AddTrainingDialog from "./add-training-dialog";
 
 type UserActionsProps = {
@@ -88,7 +88,7 @@ export default function UserActions({ userId, setIsActive}: UserActionsProps) {
 )}
 
 {ShowTimeoutUser && (
-  <TimeoutUserDialog userId={userId} setShowTimeoutUser={handleCloseTimeout} />
+  <BanUserDialog userId={userId} setShowBanUser={handleCloseTimeout} />
 )}
 
 </>
