@@ -7,7 +7,7 @@ console.log(`Server is running on port ${port}`);
 
 // This whole setup is so it can work with the vercel handle function. 
 // Please do not touch this.
-
+ 
 // Fetch handler routes local requests to handlers
 const fetchHandler = (req:Request) => {
     // Match based on HTTP method
