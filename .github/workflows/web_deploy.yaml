@@ -22,6 +22,6 @@ jobs:
       - name: Change directory, install vercel CLI, pull environment, then deploy that john.
         run: |
           cd web/
-          npm install vercel@latest
+          npm install --global vercel@latest
           vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
           vercel deploy --token=${{ secrets.VERCEL_TOKEN }}      
