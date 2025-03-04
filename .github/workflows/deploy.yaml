@@ -16,12 +16,12 @@ on:
 jobs:
   deploy:
     if: github.repository == 'cs421sp25-homework/team-10'
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Change directory
         run: |
-          cd .\web\
+          cd web\
       - name: Setup pnpm
         uses: pnpm/action-setup@v3 # docs https://pnpm.io/continuous-integration#github-actions
       - name: install Vercel CLI
