@@ -10,6 +10,19 @@ export const $codes = atom<BudgetCode[]>([]);
 export const $machines = atom<Machine[]>([]);
 export const $machine_types = atom<MachineType[]>([]);
 
+
+type Selected = User | BudgetCode;
+
+export const $selected = atom<Selected | null>(null);
+export function selectItem(item: Selected) {
+  $selected.set(item);
+}
+
+export function clearItem() {
+  $selected.set(null);
+}
+
+
 const defaultUser: User = {
   name: "test",
   cardNum: "-1",
