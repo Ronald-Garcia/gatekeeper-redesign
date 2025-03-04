@@ -19,10 +19,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: install Vercel CLI
-        run: npm install --global vercel@latest
-      - name: Change directory, pull environment, then deploy that john.
+      - name: Change directory, install vercel CLI, pull environment, then deploy that john.
         run: |
           cd web/
+          npm install vercel@latest
           vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
           vercel deploy --token=${{ secrets.VERCEL_TOKEN }}      
