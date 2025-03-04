@@ -1,8 +1,8 @@
 # Source for original workflow creator: https://www.youtube.com/watch?v=gIHBVpJhmEk
-name: Deploy api to Vercel
+name: Deploy web to Vercel
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_API_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_WEB_ID }}
 on:
   workflow_dispatch:
   release:
@@ -11,7 +11,7 @@ on:
     branches:
       - main
     paths:
-      - "api/**"
+      - "web/**"
       
 jobs:
   deploy:
@@ -23,6 +23,6 @@ jobs:
         run: npm install --global vercel@latest
       - name: Change directory and npm install
         run: |
-          cd api-database/
+          cd web/
           vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-          vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }}
+          vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }}      
