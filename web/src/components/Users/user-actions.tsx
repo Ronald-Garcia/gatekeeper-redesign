@@ -7,37 +7,36 @@ import {
 import { Button } from "@/components/ui/button"; 
 import { useState } from "react";
 import DeleteUserDialog from "./delete-user-dialogue";
-import BanUserDialog from "./ban-user-dialog";
+import TimeoutUserDialog from "./timeout-user-dialog";
 import AddTrainingDialog from "./add-training-dialog";
 
 type UserActionsProps = {
   userId: number;
-
+  setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function UserActions({ userId }: UserActionsProps) {
+export default function UserActions({ userId, setIsActive}: UserActionsProps) {
    const [ShowEditTraining, setShowEditTraining] = useState(false);
    const [ShowDeleteUser, setShowDeleteUser] = useState(false);
-   const [ShowBanUser, setShowBanUser] = useState(false);
+   const [ShowTimeoutUser, setShowTimeoutUser] = useState(false);
 
 
   const handleAddTraining = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowEditTraining(true);
-  
-    
+    setIsActive(true);    
   };
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowDeleteUser(true);
-
+    setIsActive(true);   
   };
 
-  const handleBan = (e: React.MouseEvent) => {
+  const handleTimeout = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setShowBanUser(true);
-  
+    setShowTimeoutUser(true);
+    setIsActive(true);   
   };
 
 
@@ -46,8 +45,8 @@ export default function UserActions({ userId }: UserActionsProps) {
    
   };
 
-  const handleCloseBan = () => {
-    setShowBanUser(false);
+  const handleCloseTimeout = () => {
+    setShowTimeoutUser(false);
 
   };
 
@@ -72,8 +71,8 @@ export default function UserActions({ userId }: UserActionsProps) {
         <DropdownMenuItem onClick={handleDelete} className="delete-text-red">
           Delete
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleBan} className="delete-text-red">
-          Ban
+        <DropdownMenuItem onClick={handleTimeout} className="delete-text-red">
+          Timeout
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -88,8 +87,8 @@ export default function UserActions({ userId }: UserActionsProps) {
   />
 )}
 
-{ShowBanUser && (
-  <BanUserDialog userId={userId} setShowBanUser={handleCloseBan} />
+{ShowTimeoutUser && (
+  <TimeoutUserDialog userId={userId} setShowTimeoutUser={handleCloseTimeout} />
 )}
 
 </>
