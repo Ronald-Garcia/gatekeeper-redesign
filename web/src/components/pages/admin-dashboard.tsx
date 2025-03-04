@@ -8,6 +8,10 @@ import AddUserDialog from "../Users/add-user-dialogue";
 import AddBudgetCodeDialog from "../BudgetCodes/add-budgetCode-dialogue";
 import { redirectPage } from "@nanostores/router";
 import AddMachineTypeDialog from "../machine_types/add-machine-type-dialog";
+import UserInfo from "../Users/selected-info";
+import { $selected } from "@/data/store";
+
+
 
 /*
 Admin dashboard component
@@ -19,6 +23,9 @@ const AdminDashboard = () => {
   const [showAddBudgetCode, setShowAddBudgetCode] = useState(false);
   const [showAddUser, setShowAddUser] = useState(false);
   const [showAddMachineType, setShowAddMachineType] = useState(false);
+
+  
+  const selection = useStore($selected);
 
   const handleCloseAddUser = () => {
     setShowAddUser(false);
@@ -49,6 +56,9 @@ const AdminDashboard = () => {
 
 
 {/*Adding forms*/}
+{selection &&  (
+  <UserInfo></UserInfo>
+)}
 
 {showAddUser && (
   <AddUserDialog  setShowAddUser={handleCloseAddUser} />
