@@ -1,7 +1,6 @@
 import { $selected, clearItem} from "@/data/store";
 import { User } from "@/data/types/user";
 import { useStore } from "@nanostores/react";
-import { JSX } from "react";
 
 
 const selection = useStore($selected);
