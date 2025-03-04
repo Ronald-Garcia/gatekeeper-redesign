@@ -9,7 +9,8 @@ on:
     types: [published]
   push:
     branches:
-      - main
+      - master
+    
       
 jobs:
   deploy:
