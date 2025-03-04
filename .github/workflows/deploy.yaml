@@ -19,14 +19,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Change directory
+        run: cd ./web
       - name: install Vercel CLI
         run: npm install --global vercel@latest
       - name: pull Vercel environment information
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
       - name: build project artifacts
-        run: | 
-          cd ./web
-          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
       - name: deploy project artifacts to Vercel
         run: |
           OUTPUT=$(du --inodes -d 5 .vercel/output)
