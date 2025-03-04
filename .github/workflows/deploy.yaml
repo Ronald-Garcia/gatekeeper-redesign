@@ -21,12 +21,10 @@ jobs:
       - uses: actions/checkout@v4
       - name: Change directory
         run: |
-          cd web\
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3 # docs https://pnpm.io/continuous-integration#github-actions
+          cd web/
       - name: install Vercel CLI
-        run: pnpm install --global vercel@latest
+        run: npm install --global vercel@latest
       - name: pull Vercel environment information
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
       - name: build project artifacts
-        run: vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
