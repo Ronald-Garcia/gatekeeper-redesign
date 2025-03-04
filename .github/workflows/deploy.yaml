@@ -20,7 +20,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Change directory
-        run: cd ./web
+        run: |
+          cd ./web
+          npm install
       - name: install Vercel CLI
         run: npm install --global vercel@latest
       - name: pull Vercel environment information
