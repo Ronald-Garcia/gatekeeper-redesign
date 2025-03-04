@@ -17,7 +17,7 @@ app.use(logger());
 app.use(
    "/*",
    cors({
-     origin: (origin) => origin, // Allow any origin
+     origin: (origin) => origin, // Allow any origin 
       credentials: true, // Allow credentials
      allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
      allowHeaders: ["Content-Type", "Authorization"],

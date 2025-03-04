@@ -10,7 +10,8 @@ on:
   push:
     branches:
       - master
-    
+    paths:
+      - "web/**"
       
 jobs:
   deploy:
