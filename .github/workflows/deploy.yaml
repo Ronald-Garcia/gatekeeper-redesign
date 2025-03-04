@@ -1,8 +1,8 @@
 # Source for original workflow creator: https://www.youtube.com/watch?v=gIHBVpJhmEk
-name: Deploy to Vercel
+name: Deploy web to Vercel
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_WEB_ID }}
 on:
   workflow_dispatch:
   release:
@@ -12,8 +12,7 @@ on:
       - main
     paths:
       - "web/**"
-      - "api-database/**"
-
+      
 jobs:
   deploy:
     if: github.repository == 'cs421sp25-homework/team-10'
@@ -25,7 +24,9 @@ jobs:
       - name: pull Vercel environment information
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
       - name: build project artifacts
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: | 
+          cd ./web
+          vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
       - name: deploy project artifacts to Vercel
         run: |
           OUTPUT=$(du --inodes -d 5 .vercel/output)
