@@ -12,7 +12,6 @@ User component for each individual user to be used on the list
 export default function UserComponent({ user }: { user: User }) {
    const [isActive, setIsActive] = useState(false);
 
-   
 
    function selectUser() {
     if (!isActive) {
