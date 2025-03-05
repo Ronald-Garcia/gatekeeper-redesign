@@ -19,10 +19,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Install jest
         run: npm install
+
       - name: Run Jest tests
         run: npm test
+        
       - name: Change directory, install vercel CLI, pull environment, then deploy that john.
         run: |
           cd web/
