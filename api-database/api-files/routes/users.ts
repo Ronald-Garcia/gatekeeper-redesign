@@ -72,7 +72,7 @@ userRoutes.get("/users", zValidator("query", queryUsersParamsSchema), async (c) 
     
     return c.json(
     {
-    sucess:true,
+    success:true,
     data: allUsers,
     meta: {
         page,
@@ -191,3 +191,5 @@ userRoutes.delete(
             );
 
 })
+
+
