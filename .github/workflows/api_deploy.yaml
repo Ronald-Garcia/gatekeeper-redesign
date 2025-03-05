@@ -23,6 +23,10 @@ jobs:
       - name: Run Jest tests
         run: npm test
       - uses: actions/checkout@v4
+      - name: Install jest
+        run: npm install
+      - name: Run Jest tests
+        run: npm test
       - name: install Vercel CLI
         run: npm install --global vercel@latest
       - name: Change directory, pull vercel info, then deploy that john

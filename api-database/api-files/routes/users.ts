@@ -155,6 +155,7 @@ userRoutes.get("/users/:cardNum/:lastDigitOfCardNum", zValidator("param",getUser
     })
 })
 
+//Delete a user by id.
 userRoutes.delete(
     "/users/:userId", 
     //authGuard,
