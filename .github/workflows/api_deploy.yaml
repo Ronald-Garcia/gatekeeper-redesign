@@ -9,7 +9,7 @@ on:
     types: [published]
   push:
     branches:
-      - testing
+      - master
     paths:
       - "api-database/**"
       
