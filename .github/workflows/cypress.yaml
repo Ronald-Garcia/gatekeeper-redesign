@@ -41,11 +41,11 @@ jobs:
             exit 1
           fi
    
-      - name: Install pnpm
+      - name: Install pnpm and dependencies
         if: steps.detect-package-manager.outputs.manager == 'pnpm'
         run: | 
           npm install -g pnpm
-          pnpm add cypress --save-dev
+          pnpm install
 
       - name: Cypress run
         uses: cypress-io/github-action@v6
