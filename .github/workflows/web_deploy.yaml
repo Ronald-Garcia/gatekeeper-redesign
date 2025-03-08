@@ -25,13 +25,6 @@ jobs:
 
       - name: Run Jest tests
         run: npm test
-
-      - name: Cypress run
-        uses: cypress-io/github-action@v6
-        with:
-          build: npm run build
-          start: npm start
-
         
       - name: Change directory, install vercel CLI, pull environment, then deploy that john.
         run: |
@@ -40,3 +33,9 @@ jobs:
           vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
           vercel deploy --token=${{ secrets.VERCEL_TOKEN }}
           vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          build: npm run build
+          start: npm start
