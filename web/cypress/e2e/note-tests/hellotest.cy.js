@@ -12,6 +12,11 @@ describe('Notes testing', () => {
       // Then, we use `should` to assert that there are two matched items,
       // which are the two default items.
       cy.get('[data-testid="cardnum-input"]').type(";1234567890777777;")
+      cy.get('[data-testid="cardnum-input"]').should("have.value", ";1234567890777777;")
+      cy.get('[data-testid="cardnum-input"]').type("\n")
+      
+
+
     })
   
 }
