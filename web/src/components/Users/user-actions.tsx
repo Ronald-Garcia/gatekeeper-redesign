@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import DeleteUserDialog from "./delete-user-dialogue";
 import BanUserDialog from "./ban-user-dialog";
-import AddTrainingDialog from "./add-training-dialog";
+import AddTrainingDialog from "./training-dialog";
 
 type UserActionsProps = {
   userId: number;
@@ -21,7 +21,7 @@ export default function UserActions({ userId, setIsActive}: UserActionsProps) {
    const [ShowTimeoutUser, setShowTimeoutUser] = useState(false);
 
 
-  const handleAddTraining = (e: React.MouseEvent) => {
+  const handleTraining = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowEditTraining(true);
     setIsActive(true);    
@@ -65,8 +65,8 @@ export default function UserActions({ userId, setIsActive}: UserActionsProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem onClick={handleAddTraining}>
-          Add Training
+        <DropdownMenuItem onClick={handleTraining}>
+          Training
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleDelete} className="delete-text-red">
           Delete
