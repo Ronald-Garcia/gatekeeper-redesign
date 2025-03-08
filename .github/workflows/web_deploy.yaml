@@ -29,11 +29,8 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          run: cd web/
-          build: |
-            npm run build
-          start: |
-            npm start
+          build: npm run build
+          start: npm start
 
         
       - name: Change directory, install vercel CLI, pull environment, then deploy that john.
