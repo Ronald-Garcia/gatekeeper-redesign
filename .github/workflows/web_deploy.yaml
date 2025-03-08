@@ -20,8 +20,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-    # Install npm dependencies, cache them correctly
-    # and run all Cypress tests
+      - name: Install jest
+        run: npm install
+
+      - name: Run Jest tests
+        run: npm test
+
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
@@ -32,12 +36,6 @@ jobs:
             cd web/
             npm start
 
-
-      - name: Install jest
-        run: npm install
-
-      - name: Run Jest tests
-        run: npm test
         
       - name: Change directory, install vercel CLI, pull environment, then deploy that john.
         run: |
@@ -45,4 +43,4 @@ jobs:
           npm install --global vercel@latest
           vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
           vercel deploy --token=${{ secrets.VERCEL_TOKEN }}
-          vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }}            
+          vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }}
