@@ -8,8 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import DeleteUserDialog from "./delete-user-dialogue";
 import BanUserDialog from "./ban-user-dialog";
-import AddTrainingDialog from "./training-dialog";
-
+import TrainingDialog from "./training-dialog";
 type UserActionsProps = {
   userId: number;
   setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
@@ -39,6 +38,11 @@ export default function UserActions({ userId, setIsActive}: UserActionsProps) {
     setIsActive(true);   
   };
 
+  const handleBudgetCode = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    //to set true
+  };
+
 
   const handleCloseDelete = () => {
     setShowDeleteUser(false);
@@ -52,6 +56,10 @@ export default function UserActions({ userId, setIsActive}: UserActionsProps) {
 
   const handleCloseTraining = () => {
     setShowEditTraining(false);
+  };
+
+  const handleCloseBudgetCode = () => {
+    //To set false
   };
 
 
@@ -68,6 +76,9 @@ export default function UserActions({ userId, setIsActive}: UserActionsProps) {
         <DropdownMenuItem onClick={handleTraining}>
           Training
         </DropdownMenuItem>
+        <DropdownMenuItem onClick={handleBudgetCode}>
+          Budget Code
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={handleDelete} className="delete-text-red">
           Delete
         </DropdownMenuItem>
@@ -78,7 +89,7 @@ export default function UserActions({ userId, setIsActive}: UserActionsProps) {
     </DropdownMenu>
 
 {ShowEditTraining && (
-  <AddTrainingDialog userId={userId} setShowEditTraining={handleCloseTraining} />
+  <TrainingDialog userId={userId} setShowEditTraining={handleCloseTraining} />
 )}
 {ShowDeleteUser && (
   <DeleteUserDialog
