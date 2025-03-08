@@ -1,8 +1,8 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { queryBudgetCodesParamsSchema, createBudgetCode, deleteBudgetCode } from "../validators/schemas.js";
+import { createStatementSchema, queryFinStatementParamsSchema } from "../validators/financialStatementSchemas.js";
 import { like, SQL, or, desc, asc, eq, and, count } from "drizzle-orm";
-import { budgetCodes } from "../db/schema.js";
+import { budgetCodes, financialStatementsTable, users } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
 
@@ -10,8 +10,9 @@ import { HTTPException} from "hono/http-exception";
 
 export const financialStatementRoutes = new Hono();
 
+// not done
 financialStatementRoutes.get("/fin-statements",
-    zValidator("query", queryBudgetCodesParamsSchema),
+    zValidator("query", queryFinStatementParamsSchema),
     async (c) => {
     const { page = 1, limit = 20, search, sort } = c.req.valid("query");
 
@@ -24,17 +25,11 @@ financialStatementRoutes.get("/fin-statements",
         const orderByClause: SQL[] = [];
     
         switch (sort) {
-            case "name_desc":
+            case "type_desc":
                 orderByClause.push(desc(budgetCodes.name));
                 break;
-            case "name_asc":
+            case "type_asc":
                 orderByClause.push(asc(budgetCodes.name));
-                break;
-            case "code_desc":
-                orderByClause.push(desc(budgetCodes.budgetCode));
-                break;
-            case "code_desc":
-                orderByClause.push(asc(budgetCodes.budgetCode));
                 break;
         }
 
@@ -53,7 +48,6 @@ financialStatementRoutes.get("/fin-statements",
           .limit(limit)
           .offset(offset),
 
-          //This gets user count from database.
         db
           .select({ totalCount: count() })
           .from(budgetCodes)
@@ -74,45 +68,34 @@ financialStatementRoutes.get("/fin-statements",
     
 });
 
-financialStatementRoutes.post("/budget-codes", zValidator("json", createBudgetCode), async (c)=>{
+// adding a new financial statement
+financialStatementRoutes.post("/fin-statements",
+    zValidator("json", createStatementSchema),
+    async (c)=>{
 
-    const { name, budgetCode } = c.req.valid("json");
+    const { cardNum, budgetCode, machineId, startTime, endTime } = c.req.valid("json");
+
+    const  [user_ent]  = await db
+    .select()
+    .from(users)
+    .where(eq(users.cardNum, cardNum));
 
     //Insertion of new Budget Code
-    const [newBudgetCode] = await db
-        .insert(budgetCodes)
+    const [newFinStatement] = await db
+        .insert(financialStatementsTable)
         .values({
-            name,
-            budgetCode
+            cardNum,
+            budgetCode,
+            machineId,
+            startTime,
+            endTime
         })
         .returning();
 
     return c.json({
         sucess:true,
-        message:"Created new budget code",
-        data:newBudgetCode
+        message:"Created new financial statement code",
+        data:newFinStatement
     }, 201);
-
-})
-
-financialStatementRoutes.delete("/budget-codes/:id", zValidator("param", deleteBudgetCode), async (c)=>{
-    const { id } = c.req.valid("param");
-
-    const budgetCode = await db.select().from(budgetCodes).where(eq(budgetCodes.id, id))
-
-    if (!budgetCode) {
-        throw new HTTPException(404, { message: "Budget Code not found!"});
-    }
-
-    const [deletedBudgetCode] = await db
-        .delete(budgetCodes)
-        .where(eq(budgetCodes.id, id))
-        .returning();
-
-    return c.json({
-        sucess:true,
-        message:"Created new budget code",
-        data:deleteBudgetCode
-    }, 200)
 
 })
