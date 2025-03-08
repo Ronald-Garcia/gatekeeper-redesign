@@ -1,17 +1,10 @@
 import { z } from "zod";
 
-export const validateTrainingSchema = z.object({
-    userId: z
-    .coerce.number().int().positive(),
-    machineId: z
-    .coerce.number().int().positive(),
-});
-
 export const createStatementSchema = z.object({
-    cardNum: z
-      .coerce.string().nonempty(),
+    userId: z
+      .coerce.number().int().positive(),
     budgetCode: z
-      .coerce.string().nonempty(),
+      .coerce.number().int().positive(),
     machineId: z
       .coerce.number().int().positive(),
     startTime: z
@@ -20,18 +13,8 @@ export const createStatementSchema = z.object({
       .coerce.number().int().positive()
 });
 
-export const validateUserParamSchema = z.object({
-    id: z
-    .coerce
-    .number()
-    .int()
-    .positive(),
-});
-
-
 export const queryFinStatementParamsSchema = z.object({
     sort: z.enum(["type_asc", "type_desc"]).optional(),
-    search: z.string().optional(),
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().optional(),
 

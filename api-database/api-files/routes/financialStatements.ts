@@ -4,23 +4,14 @@ import { createStatementSchema, queryFinStatementParamsSchema } from "../validat
 import { like, SQL, or, desc, asc, eq, and, count } from "drizzle-orm";
 import { budgetCodes, financialStatementsTable, users } from "../db/schema.js";
 import { db } from "../db/index.js";
-import { HTTPException} from "hono/http-exception";
-
-
 
 export const financialStatementRoutes = new Hono();
 
-// not done
+// getting all financial statements
 financialStatementRoutes.get("/fin-statements",
     zValidator("query", queryFinStatementParamsSchema),
     async (c) => {
-    const { page = 1, limit = 20, search, sort } = c.req.valid("query");
-
-    const whereClause: (SQL | undefined)[] = [];
-
-    if (search) {
-        whereClause.push(like(budgetCodes.name, `%${search}%`));
-    }
+    const { page = 1, limit = 20, sort } = c.req.valid("query");
 
         const orderByClause: SQL[] = [];
     
@@ -43,7 +34,6 @@ financialStatementRoutes.get("/fin-statements",
             budgetCode: budgetCodes.budgetCode
         })
           .from(budgetCodes)
-          .where(and(...whereClause))
           .orderBy(...orderByClause)
           .limit(limit)
           .offset(offset),
@@ -51,7 +41,6 @@ financialStatementRoutes.get("/fin-statements",
         db
           .select({ totalCount: count() })
           .from(budgetCodes)
-          .where(and(...whereClause)),
       ]);
     
     return c.json({
@@ -73,18 +62,13 @@ financialStatementRoutes.post("/fin-statements",
     zValidator("json", createStatementSchema),
     async (c)=>{
 
-    const { cardNum, budgetCode, machineId, startTime, endTime } = c.req.valid("json");
-
-    const  [user_ent]  = await db
-    .select()
-    .from(users)
-    .where(eq(users.cardNum, cardNum));
+    const { userId, budgetCode, machineId, startTime, endTime } = c.req.valid("json");
 
     //Insertion of new Budget Code
     const [newFinStatement] = await db
         .insert(financialStatementsTable)
         .values({
-            cardNum,
+            userId,
             budgetCode,
             machineId,
             startTime,
