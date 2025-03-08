@@ -50,7 +50,22 @@ const EditBudgetCodeDialog = ({ userId, setShowEditBudgetCode }: EditBudgetCodeD
             <Label htmlFor="content" className="text-sm">
               Please select the title of your budget code
             </Label>
-            
+            <div className="space-y-4">
+                <ScrollArea>
+            {
+        codesList.map((type) => (
+        
+                <div key={type.id} onClick={() => setBudgetCode(type.id) }
+                className={`flex flex-col justify-between items-center py-4 max-h-[15vh] text-sm text-clip transition-colors border-y-2 border-solid border-stone-300 hover:bg-stone-100 hover:border-stone-500 cursor-pointer ${
+                budgetCode === type.id ? "bg-blue-300 border-blue-600" : ""
+                }`}
+            >
+                <p>{type.name}</p>
+                </div>
+            ))
+            }
+            </ScrollArea>  
+            </div>
             <DialogFooter>
               <Button onClick={() => setShowEditBudgetCode(false)}>Cancel</Button>
               <Button onClick={handleEditBudgetCode}>Save Changes</Button>
