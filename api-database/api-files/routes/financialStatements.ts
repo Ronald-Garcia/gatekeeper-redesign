@@ -10,7 +10,9 @@ import { HTTPException} from "hono/http-exception";
 
 export const financialStatementRoutes = new Hono();
 
-financialStatementRoutes.get("/budget-codes", zValidator("query", queryBudgetCodesParamsSchema), async (c) => {
+financialStatementRoutes.get("/fin-statements",
+    zValidator("query", queryBudgetCodesParamsSchema),
+    async (c) => {
     const { page = 1, limit = 20, search, sort } = c.req.valid("query");
 
     const whereClause: (SQL | undefined)[] = [];

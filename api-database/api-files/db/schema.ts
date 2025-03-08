@@ -45,10 +45,11 @@ export const userBudgetCodeTable = pgTable("user_budget_code_table",{
 
 export const financialStatementsTable = pgTable("financial_statements_table", {
   id: serial().primaryKey(),
-  name: text().notNull(),
   cardNum: text().notNull().unique(),
-  JHED: text().notNull(),
+  budgetCode: text().notNull(),
   machineId: integer().notNull(),
+  startTime: integer().notNull(),
+  endTime: integer().notNull(),
 });
 
 export type InsertUser = typeof users.$inferInsert;
