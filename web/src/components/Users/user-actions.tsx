@@ -9,6 +9,8 @@ import { useState } from "react";
 import DeleteUserDialog from "./delete-user-dialogue";
 import BanUserDialog from "./ban-user-dialog";
 import TrainingDialog from "./training-dialog";
+import BudgetCodeDialog from "./budget-code-dialog";
+
 type UserActionsProps = {
   userId: number;
   setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
@@ -92,6 +94,9 @@ export default function UserActions({ userId, setIsActive}: UserActionsProps) {
 
 {ShowEditTraining && (
   <TrainingDialog userId={userId} setShowEditTraining={handleCloseTraining} />
+)}
+{ShowEditTraining && (
+  <BudgetCodeDialog userId={userId} setShowEditBudgetCode={handleCloseTraining} />
 )}
 {ShowDeleteUser && (
   <DeleteUserDialog
