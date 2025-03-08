@@ -18,6 +18,32 @@ jobs:
           mv web/* .
           rm -rf web
           ls -lah
+          - name: Detect package manager
+          id: detect-package-manager
+          run: |
+            if [ -f "${{ github.workspace }}/pnpm-lock.yaml" ]; then
+              echo "::set-output name=manager::pnpm"
+              echo "::set-output name=command::install"
+              echo "::set-output name=runner::pnpx --no-install"
+              exit 0
+            elif [ -f "${{ github.workspace }}/yarn.lock" ]; then
+              echo "::set-output name=manager::yarn"
+              echo "::set-output name=command::install"
+              echo "::set-output name=runner::yarn"
+              exit 0
+            elif [ -f "${{ github.workspace }}/package-lock.json" ]; then
+              echo "::set-output name=manager::npm"
+              echo "::set-output name=command::ci"
+              echo "::set-output name=runner::npx --no-install"
+              exit 0
+            else
+              echo "Unable to determine package manager"
+              exit 1
+            fi
+   
+      - name: Install pnpm
+        if: steps.detect-package-manager.outputs.manager == 'pnpm'
+        run: npm install -g pnpm
 
       - name: Cypress run
         uses: cypress-io/github-action@v6
