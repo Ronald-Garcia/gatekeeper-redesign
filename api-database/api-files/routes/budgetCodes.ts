@@ -59,7 +59,7 @@ budgetCodesRoutes.get("/budget-codes", zValidator("query", queryBudgetCodesParam
       ]);
     
     return c.json({
-        sucess:true,
+        success:true,
         data: allBudgetCodes,
         meta: {
             page,
@@ -86,7 +86,7 @@ budgetCodesRoutes.post("/budget-codes", zValidator("json", createBudgetCode), as
         .returning();
 
     return c.json({
-        sucess:true,
+        success:true,
         message:"Created new budget code",
         data:newBudgetCode
     }, 201);
@@ -108,7 +108,7 @@ budgetCodesRoutes.delete("/budget-codes/:id", zValidator("param", deleteBudgetCo
         .returning();
 
     return c.json({
-        sucess:true,
+        success:true,
         message:"Created new budget code",
         data:deleteBudgetCode
     }, 200)

@@ -57,3 +57,6 @@ export const POST = appHandler;
 export const PATCH = appHandler;
 export const DELETE = appHandler;
 export const OPTIONS = appHandler;
+
+
+export default app;

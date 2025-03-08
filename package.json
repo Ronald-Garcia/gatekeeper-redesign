@@ -1,6 +1,7 @@
 {	
 	"scripts": {
-    "test": "jest"
+    "test": "jest --detectOpenHandles"
+	
   	},
 	
 	"devDependencies": {
