@@ -5,20 +5,19 @@ import { machines, machineTypes } from '../../api-files/db/schema.js';
 import { like, eq } from 'drizzle-orm';
 import { HTTPException } from 'hono/http-exception';
 
-// Create a Hono instance and mount machine routes
+//Create a Hono instance and mount machine routes
 const app = new Hono();
 app.route('/', machineRoutes);
 
-//error handler for json responses during error testing
+//error handler for json responses during error testing, necessary to make tests 
 app.onError((err, c) => {
     if (err instanceof HTTPException) {
-      // Always return JSON for HTTPException errors.
       return c.json({ message: err.message || 'Error' }, err.status);
     }
     return c.json({ message: err.message || 'Internal Server Error' }, 500);
   });
 
-//generate machineNames for testing purposes
+//generate machineNames for testing purposes, easier to clean after tests from the data base 
 function generateTestMachineName(): string {
   return 'TEST_MACHINE_' + Math.floor(Math.random() * 1e8).toString().padStart(8, '0');
 }

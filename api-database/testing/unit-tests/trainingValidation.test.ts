@@ -9,7 +9,7 @@ import { eq } from 'drizzle-orm';
 const app = new Hono();
 app.route('/', trainingRoutes);
 
-// Global error handler to return JSON responses
+//Error handler to return JSON responses
 app.onError((err, c) => {
   if (typeof (err as any).getResponse === 'function') {
     return (err as any).getResponse();
@@ -26,7 +26,7 @@ beforeAll(async () => {
     .insert(users)
     .values({
       name: "Test Training User",
-      cardNum: "999000000000001", // unique test value
+      cardNum: "999000000000001", 
       lastDigitOfCardNum: 1,
       JHED: "trainuser",
       isAdmin: 0,
@@ -61,7 +61,7 @@ describe('Training Routes', () => {
       const body = await response.json();
       expect(body).toHaveProperty('sucess', true);
       expect(body).toHaveProperty('data');
-      //Adjust based on return structure:
+      // check the return, ensure it matches expected 
       const returned = body.data[0] || body.data;
       expect(returned).toMatchObject(newTraining);
     });
@@ -95,7 +95,7 @@ describe('Training Routes', () => {
   });
 });
 
-//Cleanup: delete test training records, the test user, and the test machine type.
+//delete test training records, the test user, and the test machine type.
 afterAll(async () => {
   await db
     .delete(userMachineType)

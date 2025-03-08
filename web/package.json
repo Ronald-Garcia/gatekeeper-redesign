@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "prettier": "prettier --write \"src/**/*.{js,ts,jsx,tsx}\" --config \".prettierrc.json\"",
     "lint": "eslint --fix \"src/**/*.{js,ts,jsx,tsx}\""
+  
   },
   "dependencies": {
     "@nanostores/logger": "^0.4.0",

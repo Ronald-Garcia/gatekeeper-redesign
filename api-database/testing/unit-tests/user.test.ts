@@ -8,7 +8,7 @@ import { like } from 'drizzle-orm';
 const app = new Hono();
 app.route('/', userRoutes);
 
-// Add an error handler so that errors are returned as JSON
+// Add an error handler so that errors are returned as JSON, will not work without this
 app.onError((err, c) => {
   if (err instanceof Error && 'status' in err) {
     return c.json({ message: err.message }, (err as any).status || 400);
@@ -16,9 +16,9 @@ app.onError((err, c) => {
   return c.json({ message: 'Internal Server Error' }, 500);
 });
 
-// Helper to generate a unique 15-digit card number for tests that always starts with "999"
+//Helper to generate a unique 15-digit card number for tests that always starts with "999"
 function generateTestCardNumber(): string {
-  // "999" + 12 random digits
+  // 999 + 12 random digits, makes it easieer to delete from teh data base 
   const randomPart = Math.floor(Math.random() * 1e12)
     .toString()
     .padStart(12, '0');
@@ -77,7 +77,7 @@ describe('User Routes', () => {
         graduationYear: 2024,
       };
 
-      // First creation should succeed
+      //First creation should succeed
       await app.request('/users', {
         method: 'POST',
         headers: new Headers({ 'Content-Type': 'application/json' }),
@@ -100,7 +100,7 @@ describe('User Routes', () => {
     test('returns a user if one exists', async () => {
       const newUser = {
         name: "John Doe",
-        cardNum: generateTestCardNumber(), // unique test card number
+        cardNum: generateTestCardNumber(),
         lastDigitOfCardNum: 1,
         JHED: "johndoe",
         isAdmin: 0,

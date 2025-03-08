@@ -33,15 +33,15 @@ import {
   
     return (
   
-      <>
-      <DropdownMenu>
+      <div data-cy="budget-code-actions">
+      <DropdownMenu >
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="absolute top-2 right-2 deck-actions">
+          <Button variant="ghost" className="absolute top-2 right-2 deck-actions" data-cy="budget-code-trigger" >
             ...
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem onClick={handleDelete} className="delete-text-red">
+          <DropdownMenuItem onClick={handleDelete} className="delete-text-red" data-cy="budget-code-delete" >
             Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -56,7 +56,7 @@ import {
   )}
 
   
-  </>
+  </div >
     );
   }
   
