@@ -45,7 +45,7 @@ jobs:
         if: steps.detect-package-manager.outputs.manager == 'pnpm'
         run: | 
           npm install -g pnpm
-          cypress install
+          .\node_modules\.bin\cypress.cmd install --force
 
       - name: Cypress run
         uses: cypress-io/github-action@v6
