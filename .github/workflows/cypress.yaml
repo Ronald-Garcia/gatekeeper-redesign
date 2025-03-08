@@ -6,6 +6,14 @@ jobs:
    steps:
      - name: Checkout GitCode
        uses: actions/checkout@v2
+
+     - name: Move files in the "web" folder to the root
+       run: |
+         ls -lah
+         shopt -s dotglob
+         mv web/* .
+         rm -rf web
+         ls -lah
  
      - name: Run Cypress Test
        uses: cypress-io/github-action@v4
