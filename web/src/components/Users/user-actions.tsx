@@ -16,7 +16,7 @@ type UserActionsProps = {
 
 export default function UserActions({ userId, setIsActive}: UserActionsProps) {
    const [ShowEditTraining, setShowEditTraining] = useState(false);
-   //const [ShowBudgetCode, setBudgetCode] = useState(false);
+   const [ShowBudgetCode, setShowBudgetCode] = useState(false);
    const [ShowDeleteUser, setShowDeleteUser] = useState(false);
    const [ShowTimeoutUser, setShowTimeoutUser] = useState(false);
 
@@ -41,7 +41,8 @@ export default function UserActions({ userId, setIsActive}: UserActionsProps) {
 
   const handleBudgetCode = (e: React.MouseEvent) => {
     e.stopPropagation();
-    //to set true
+    setShowBudgetCode(true);
+    setIsActive(true);
   };
 
 
@@ -60,7 +61,7 @@ export default function UserActions({ userId, setIsActive}: UserActionsProps) {
   };
 
   const handleCloseBudgetCode = () => {
-    //To set false
+    setShowBudgetCode(false);
   };
 
 
