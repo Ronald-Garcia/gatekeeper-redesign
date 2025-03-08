@@ -24,13 +24,15 @@ type EditBudgetCodeDialogProp = {
 // function that handles state of the dialogue, error handling from api
 const EditBudgetCodeDialog = ({ userId, setShowEditBudgetCode }: EditBudgetCodeDialogProp) => {
     const [budgetCode, setBudgetCode] = useState(-1);
-    const { giveTraining } = useMutationUsers();
+    //ADD WHEN ROUTES FIXED
+    //const { giveBudgetCode} = useMutationUsers();
    const codesList = useStore($codes);
   
     //async function with editing logic, including error handling
     const handleEditBudgetCode = async () => {
       console.log(budgetCode)
-      await giveTraining(userId, budgetCode); //use hooks to handle state of training
+      //ADD WHEN ROUTES FIXED
+      //await giveBudgetCode(userId, budgetCode); //use hooks to handle state of budget code
       setShowEditBudgetCode(false); //make the dialogue disappear
     };
   

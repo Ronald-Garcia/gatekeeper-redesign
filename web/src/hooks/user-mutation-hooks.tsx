@@ -47,6 +47,21 @@ function useMutationUsers() {
       }
     };
 
+  // ADD WHEN createUserBudgetCodeRelation is created!
+  // //function that handles state of deck
+  // const giveBudgetCode = async (user_id: number, budget_code: number) => {
+  //   try {
+  //     await createUserBudgetCodeRelation(user_id, budget_code);
+
+  //   } catch (e) {
+  //       //get message from api response, put it on a toast
+  //       const errorMessage = (e as Error).message;
+  //       toast.error("Sorry! There was an error creating budget code relation 🙁", {
+  //         description: errorMessage  
+  //       });
+  //     }
+  //   };
+
 
   //function that handles state of deck
   const giveTraining = async (user_id: number, machine_id: number) => {
@@ -76,6 +91,9 @@ function useMutationUsers() {
         });
       }
     };
+
+
+
 
 /*
     const banUserById = async (user_id: number, ban: number) => {
