@@ -16,6 +16,7 @@ type UserActionsProps = {
 
 export default function UserActions({ userId, setIsActive}: UserActionsProps) {
    const [ShowEditTraining, setShowEditTraining] = useState(false);
+   //const [ShowBudgetCode, setBudgetCode] = useState(false);
    const [ShowDeleteUser, setShowDeleteUser] = useState(false);
    const [ShowTimeoutUser, setShowTimeoutUser] = useState(false);
 
