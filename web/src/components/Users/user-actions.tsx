@@ -96,7 +96,7 @@ export default function UserActions({ userId, setIsActive}: UserActionsProps) {
   <TrainingDialog userId={userId} setShowEditTraining={handleCloseTraining} />
 )}
 {ShowEditTraining && (
-  <BudgetCodeDialog userId={userId} setShowEditBudgetCode={handleCloseTraining} />
+  <BudgetCodeDialog userId={userId} setShowEditBudgetCode={handleCloseBudgetCode} />
 )}
 {ShowDeleteUser && (
   <DeleteUserDialog
