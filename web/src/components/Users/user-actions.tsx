@@ -18,7 +18,7 @@ type UserActionsProps = {
 
 export default function UserActions({ userId, setIsActive}: UserActionsProps) {
    const [ShowEditTraining, setShowEditTraining] = useState(false);
-   const [ShowBudgetCode, setShowBudgetCode] = useState(false);
+   const [ShowEditBudgetCode, setShowBudgetCode] = useState(false);
    const [ShowDeleteUser, setShowDeleteUser] = useState(false);
    const [ShowTimeoutUser, setShowTimeoutUser] = useState(false);
 
@@ -95,7 +95,7 @@ export default function UserActions({ userId, setIsActive}: UserActionsProps) {
 {ShowEditTraining && (
   <TrainingDialog userId={userId} setShowEditTraining={handleCloseTraining} />
 )}
-{ShowEditTraining && (
+{ShowEditBudgetCode && (
   <BudgetCodeDialog userId={userId} setShowEditBudgetCode={handleCloseBudgetCode} />
 )}
 {ShowDeleteUser && (
