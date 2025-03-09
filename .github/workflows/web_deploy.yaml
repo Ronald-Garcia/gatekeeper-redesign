@@ -31,9 +31,20 @@ jobs:
           pnpm dev & wait-on http://localhost:5173
           npx cypress run
 
+      - name: Install dependencies in web and api database
+        run: |
+            cd web/
+            npm install -g pnpm
+            npm install
+            pnpm install
+            cd ..
+            cd api-database
+            npm install -g pnpm
+            npm install
+            pnpm install
+  
       - name: Install jest
         run: npm install
-
       - name: Run Jest tests
         run: npm test
         
