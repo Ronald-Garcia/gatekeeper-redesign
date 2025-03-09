@@ -14,6 +14,6 @@ jobs:
           cd web/
           npm install cypress --save-dev
           npm install
-          npm dev
+          npm start & wait-on http://localhost:5173/
           npx Cypress run
 
