@@ -178,5 +178,6 @@ afterAll(async () => {
       like(users.cardNum, '999%')
     )
     .execute();
+    await (db.$client as any).end();
   }
 )

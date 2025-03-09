@@ -120,5 +120,5 @@ afterAll(async () => {
     .delete(machineTypes)
     .where(eq(machineTypes.id, testMachineTypeId))
     .execute();
-  
+    await (db.$client as any).end();
 });

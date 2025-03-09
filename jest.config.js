@@ -3,24 +3,16 @@ module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
   transform: {
-    "^.+\\.[tj]sx?$": "ts-jest",
+    "^.+\\.[tj]sx?$": [
+      "ts-jest",
+      {
+        useESM: true,
+        tsconfig: "tsconfig.jest.json"
+      }
+    ]
   },
-  globals: {
-    'ts-jest': {
-        useESM: true, 
-        tsconfig: {
-          target: "ESNext",
-          module: "ESNext",
-          moduleResolution: "node",
-          esModuleInterop: true,
-          skipLibCheck: true,
-          strict: true,
-        },
-    }
-},
-moduleNameMapper: {
-    '(.+)\\.js': '$1'
-},
-extensionsToTreatAsEsm: ['.ts']
+  moduleNameMapper: {
+    "(.+)\\.js": "$1"
+  },
+  extensionsToTreatAsEsm: [".ts"]
 };
-

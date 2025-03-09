@@ -102,4 +102,6 @@ afterAll(async () => {
     .delete(budgetCodes)
     .where(like(budgetCodes.name, 'Test Budget%'))
     .execute();
+
+    await (db.$client as any).end();
 });

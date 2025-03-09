@@ -80,6 +80,7 @@ const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
   
 
   return (
+    <div data-cy = "user-add-dialog">
     <Dialog open={true} onOpenChange={setShowAddUser}>
       <DialogOverlay />
       <DialogContent>
@@ -136,11 +137,12 @@ const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
     
         </div>
         <DialogFooter>
-          <Button onClick={() => setShowAddUser(false)}>Cancel</Button>
-          <Button onClick={handleAddUser}>Save Changes</Button>
+          <Button data-cy = "user-add-cancel" onClick={() => setShowAddUser(false)}>Cancel</Button>
+          <Button data-cy = "user-add-confirm" onClick={handleAddUser}>Save Changes</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
+    </div>
   );
 };
 
