@@ -17,7 +17,7 @@ jobs:
           pnpm add --save-dev cypress
           npm install -g wait-on
           pnpm dev & wait-on http://localhost:5173
-          npx Cypress run
+          npx cypress run
       - name: Run cypress tests
         run: |
           cd web/
