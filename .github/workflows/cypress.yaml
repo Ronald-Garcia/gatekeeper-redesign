@@ -13,6 +13,7 @@ jobs:
         run: |
           cd web/
           npm install -g pnpm
+          npm install
           pnpm install
           pnpm add --save-dev cypress
           npm install -g wait-on
