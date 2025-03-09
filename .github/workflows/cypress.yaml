@@ -45,6 +45,9 @@ jobs:
           npm install -g pnpm
           pnpm install
           pnpm add --save-dev cypress
+          npm install cypress --save-dev
+
+
 
           
       # Install npm dependencies, cache them correctly
