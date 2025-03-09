@@ -16,6 +16,6 @@ jobs:
           pnpm add --save-dev cypress
           pnpm install
           pnpm dev
-          npx Cypress run
+          cypress run
 
           if: steps.detect-package-manager.outputs.manager == 'pnpm'
