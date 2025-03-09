@@ -14,12 +14,12 @@ jobs:
           cd web/
           npm install -g pnpm
           pnpm install
-          pnpm dev
+          pnpm add --save-dev cypress
+          pnpm dev && npx Cypress run
       - name: Run cypress tests
         run: |
           cd web/
           npm install -g pnpm
-          pnpm add --save-dev cypress
           npx Cypress run
 
           if: steps.detect-package-manager.outputs.manager == 'pnpm'
