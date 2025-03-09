@@ -69,7 +69,6 @@ describe('Machine Routes', () => {
       const body = await response.json();
       expect(body).toHaveProperty('sucess', true);
       expect(body).toHaveProperty('data');
-      // Adjust based on return structure:
       const returned = body.data[0] || body.data;
       expect(returned).toMatchObject(newMachine);
     });

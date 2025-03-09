@@ -5,11 +5,11 @@ import { machineTypes } from '../../api-files/db/schema.js';
 import { eq, asc, desc, ilike, and } from 'drizzle-orm';
 import { HTTPException } from 'hono/http-exception';
 
-// Create a Hono instance and mount machine type routes.
+//Create a Hono instance and mount machine type routes.
 const app = new Hono();
 app.route('/', machineTypeRoutes);
 
-// Global error handler.
+//error handler
 app.onError((err, c) => {
   if (typeof (err as any).getResponse === 'function') {
     return (err as any).getResponse();
@@ -26,7 +26,7 @@ describe('MachineType Routes', () => {
       const response = await app.request('/machine-types?page=1&limit=20');
       expect(response.status).toBe(200);
       const body = await response.json();
-      // Note: Your route returns "sucess" (misspelled) in the JSON.
+      // sucess is mispelled :(
       expect(body).toHaveProperty('sucess', true);
       expect(body).toHaveProperty('data');
       expect(Array.isArray(body.data)).toBe(true);
@@ -50,7 +50,7 @@ describe('MachineType Routes', () => {
       expect(body).toHaveProperty('sucess', true);
       expect(body).toHaveProperty('message', "Created a new machine type");
       expect(body).toHaveProperty('data');
-      // Store the new machine type ID for later deletion/updating.
+      //Store the new machine type ID for later deletion/updating.
       testMachineTypeId = body.data.id;
     });
 
@@ -62,7 +62,7 @@ describe('MachineType Routes', () => {
         body: JSON.stringify(duplicateType),
       });
       expect(response.status).toBe(409);
-      // Use text() because the error response is not valid JSON.
+      // Use text() because the error response is not valid JSON
       const text = await response.text();
       expect(text).toContain("Machine Type already exists");
     });
@@ -94,7 +94,7 @@ describe('MachineType Routes', () => {
 
   describe('PATCH /machine-types/:machineType', () => {
     beforeAll(async () => {
-      // Insert a machine type for updating.
+      //Insert a machine type for updating.
       const [inserted] = await db
         .insert(machineTypes)
         .values({ type: "TEST_UPDATE_TYPE" })
@@ -116,7 +116,7 @@ describe('MachineType Routes', () => {
       }
       expect(response.status).toBe(200);
       const body = await response.json();
-      // The PATCH route returns "success" (correctly spelled)
+      //assert properties
       expect(body).toHaveProperty('success', true);
       expect(body).toHaveProperty('message', "Deck updated successfully");
       expect(body).toHaveProperty('data');
@@ -138,7 +138,7 @@ describe('MachineType Routes', () => {
   });
 });
 
-// Cleanup: Remove any test machine types inserted.
+//Remove any test machine types inserted.
 afterAll(async () => {
   if (testMachineTypeId) {
     await db
