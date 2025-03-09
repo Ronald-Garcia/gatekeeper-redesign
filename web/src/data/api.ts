@@ -497,11 +497,20 @@ export const fetchCurrentMachine = async (): Promise<{
     message: string,
     data: number
   }> => {
+  let response;
+  try {
+      response = await fetch(`${API_MACHINE_URL}/whoami`,{
+      credentials: "include"
+    })
+  } catch { //Catching a disconnect / lack of connection. Assumes kiosk.
+    return {
+      message: "Failed to connect to python server, assume kiosk",
+      data:-1}
+  }
 
-  const response = await fetch(`${API_MACHINE_URL}/whoami`,{
-    credentials: "include"
-  })
-
+  if (response === undefined) {
+    throw new Error("This should not be possible, response undefined.");
+  }
   if (!response.ok) {
     const { message } = await response.json();
     throw new Error(message);

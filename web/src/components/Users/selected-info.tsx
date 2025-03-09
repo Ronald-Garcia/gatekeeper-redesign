@@ -3,7 +3,6 @@ import { User } from "@/data/types/user";
 import { useStore } from "@nanostores/react";
 
 
-const selection = useStore($selected);
 
 //type guard to see if selection is user or budget code
 function isUser(selection: any ): selection is User {
@@ -11,9 +10,11 @@ function isUser(selection: any ): selection is User {
 }
 
 
-export default function userInfo(){
+export default function UserInfo() {
 
-    if (!selection) return null; 
+    const selection = useStore($selected);
+
+    if (!selection) return <></>; 
     // display User Info
     if (isUser(selection)){
 
@@ -30,6 +31,7 @@ export default function userInfo(){
     );
     // else display budget Code info 
   }  else {
+    return (
     <>
         <div>
         <p>{selection.name} </p>
@@ -37,7 +39,7 @@ export default function userInfo(){
         <p>{selection.id} </p>
         </div>
         </>
-    
+    )
   }
 
 
