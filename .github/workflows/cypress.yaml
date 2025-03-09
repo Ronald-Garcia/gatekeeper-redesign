@@ -12,8 +12,10 @@ jobs:
       - name: Cyprus
         run: |
           cd web/
-          npm install cypress --save-dev
-          npm install
-          npm start & wait-on http://localhost:5173/
+          npm install -g pnpm
+          pnpm add --save-dev cypress
+          pnpm install
+          pnpm dev & wait-on http://localhost:5173/
           npx Cypress run
 
+          if: steps.detect-package-manager.outputs.manager == 'pnpm'
