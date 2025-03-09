@@ -47,6 +47,7 @@ const DeleteUserDialog = ({
   };
 
   return (
+    <div data-cy = "user-delete-dialog">
     <AlertDialog open={true} onOpenChange={handleDialogClose}>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -56,13 +57,14 @@ const DeleteUserDialog = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={handleCancel}>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDeleteUser}>
+          <AlertDialogCancel data-cy = "user-delete-cancel" onClick={handleCancel}>Cancel</AlertDialogCancel>
+          <AlertDialogAction data-cy = "user-delete-confirm" onClick={handleDeleteUser}>
             Delete
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
+    </div>
   );
 };
 

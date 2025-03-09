@@ -10,7 +10,7 @@ import { machines, machineTypes } from "../db/schema.js";
 
 export const machineRoutes = new Hono();
 
-// Search all current machines. If you want one type, search the type.
+// Search all current machines by name
 machineRoutes.get("/machines/searchByName", zValidator("query", queryMachinesByNameSchema), async (c) => {
     const { page = 1, limit = 20, search, sort } = c.req.valid("query");
 
@@ -61,7 +61,7 @@ machineRoutes.get("/machines/searchByName", zValidator("query", queryMachinesByN
         });
 });
 
-// Search all current machines. If you want one type, search the type.
+// Search all current machines by type
 machineRoutes.get("/machines/searchByType", zValidator("query", queryMachinesByTypeSchema), async (c) => {
     const { page = 1, limit = 20, search, sort } = c.req.valid("query");
 
