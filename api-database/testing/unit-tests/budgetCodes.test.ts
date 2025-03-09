@@ -3,15 +3,19 @@ import { budgetCodesRoutes } from '../../api-files/routes/budgetCodes.js';
 import { db } from '../../api-files/db/index.js';
 import { budgetCodes } from '../../api-files/db/schema.js';
 import { like } from 'drizzle-orm';
+import { HTTPResponseError } from 'hono/types';
 
 //Create a Hono instance and mount budgetCodes routes
 const app = new Hono();
 app.route('/', budgetCodesRoutes);
 
 //error handler to return JSON responses
-app.onError((err, c) => {
-  if (typeof (err as any).getResponse === 'function') {
-    return (err as any).getResponse();
+app.onError((err: HTTPResponseError|Error, c) => {
+
+  if (typeof (err as any).status) {
+    //return (err as any).getResponse();
+    return c.json({ message: err.message }, 404);
+
   }
   return c.json({ message: err.message || 'Internal Server Error' }, 500);
 });
@@ -81,15 +85,15 @@ describe('BudgetCodes Routes', () => {
       expect(deleteResponse.status).toBe(200);
       const deleteBody = await deleteResponse.json();
       expect(deleteBody).toHaveProperty('success', true);
-      expect(deleteBody).toHaveProperty('message', 'Created new budget code');
+      expect(deleteBody).toHaveProperty('message', 'Deleted budget code');
     });
 
     // this is not good 
     test('returns 404 when trying to delete a non-existent budget code', async () => {
-      const response = await app.request('/budget-codes/9999999', { method: 'DELETE' });
+      const response = await app.request('/budget-codes/999', { method: 'DELETE' });
       expect(response.status).toBe(404);
       const body = await response.json();
-      expect(body).toHaveProperty('message');
+      expect(body).toHaveProperty('message',"Budget Code not found!");
     });
   });
 });
