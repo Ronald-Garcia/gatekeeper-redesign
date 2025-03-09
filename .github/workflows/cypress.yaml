@@ -15,8 +15,7 @@ jobs:
           npm install -g pnpm
           pnpm add --save-dev cypress
           pnpm install
-          npx Cypress run
           pnpm dev & wait-on http://localhost:5173/
-          cypress run
+          npx Cypress run
 
           if: steps.detect-package-manager.outputs.manager == 'pnpm'
