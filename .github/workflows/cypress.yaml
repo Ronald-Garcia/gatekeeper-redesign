@@ -9,20 +9,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Run local host
-        run: |
-          cd web/
-          npm install -g pnpm
-          npm install
-          pnpm install
-          pnpm add --save-dev cypress
-          npm install -g wait-on
-          pnpm dev & wait-on http://localhost:5173
-          npx cypress run
       - name: Run cypress tests
         run: |
           cd web/
           npm install -g pnpm
-          npx Cypress run
+          npm install
+          npm install --save-dev cypress
+          pnpm install
+          npm install -g wait-on
+          pnpm dev & wait-on http://localhost:5173
+          npx cypress run
 
           if: steps.detect-package-manager.outputs.manager == 'pnpm'
