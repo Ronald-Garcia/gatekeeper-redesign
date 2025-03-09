@@ -8,6 +8,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Move files in the "web" folder to the root
+        run: |
+          ls -lah
+          shopt -s dotglob
+          mv web/* .
+          rm -rf web
+          ls -lah
       # Install npm dependencies, cache them correctly
       # and run all Cypress tests
       - name: Cypress run
