@@ -8,6 +8,8 @@ on:
   release:
     types: [published]
   push:
+    branches:
+      - master
     paths:
       - "web/**"
       
@@ -17,10 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install jest
-        run: npm install
-      - name: Run Jest tests
-        run: npm test
 
       - name: Run cypress tests
         run: |
@@ -32,10 +30,15 @@ jobs:
           npm install -g wait-on
           pnpm dev & wait-on http://localhost:5173
           npx cypress ru
+                    
+      - name: Install jest
+        run: npm install
+      - name: Run Jest tests
+        run: npm test
 
       - name: Change directory, install vercel CLI, pull environment, then deploy that john.
         run: |
           cd web/
           npm install --global vercel@latest
           vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-          vercel deploy --token=${{ secrets.VERCEL_TOKEN }}
+          vercel deploy --token=${{ secrets.VERCEL_TOKEN }}      
