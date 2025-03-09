@@ -43,6 +43,8 @@ jobs:
         if: steps.detect-package-manager.outputs.manager == 'pnpm'
         run: | 
           npm install -g pnpm
+          pnpm install
+          pnpm install cypress –-save-dev
           
       # Install npm dependencies, cache them correctly
       # and run all Cypress tests
