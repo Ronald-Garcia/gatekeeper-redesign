@@ -6,10 +6,23 @@ import { users } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
 
-
+/**
+ * Routes for budget code operations.
+ * @get     /users       querys all users stored in database.
+ * @post    /users       creates a new user in the database.
+ * @delete  /users/:id   deletes a budget code.
+ */
 export const userRoutes = new Hono();
 
 
+/**
+ * Queries all users stored in the database.
+ * @query page         the page to query.
+ * @query limit        the amount of entries per page.
+ * @query search       search through the name and jhed of the users.
+ * @query sort         sort by name, jhed, or year, ascending or descending.
+ * @returns page of data.
+ */
 userRoutes.get("/users", zValidator("query", queryUsersParamsSchema), async (c) => {
     const { page = 1, limit = 20, sort, search } = c.req.valid("query");
 
@@ -84,12 +97,20 @@ userRoutes.get("/users", zValidator("query", queryUsersParamsSchema), async (c) 
 );
 });
 
-
-//Sign up a user
+/**
+ * Create a new user.
+ * @body name               the name of the user
+ * @body cardNum            the card number of the user
+ * @body JHED               the jhed of the user.
+ * @body graduationYear     the graduation year of the user.
+ * @body isAdmin            whether or not the user is an admin.
+ * @returns the newly created user.
+ */
 userRoutes.post("/users", zValidator("json", createUserSchema), async (c)=>{
 
-    const { name, lastDigitOfCardNum, cardNum, JHED, graduationYear, isAdmin } = c.req.valid("json");
+    const { name, cardNum, JHED, graduationYear, isAdmin } = c.req.valid("json");
 
+    const lastDigitOfCardNum = Number.parseInt(cardNum.charAt(cardNum.length - 1));
     //First, check if a user with that card number exists. If they do, send back an error.
     const [userCheck] = await db
     .select()
@@ -115,27 +136,28 @@ userRoutes.post("/users", zValidator("json", createUserSchema), async (c)=>{
 
     return c.json({
         success: true,
-        message: "User has been deleted",
+        message: "User has been created",
         data: newUser
     }, 201);
 })
 
-// Get user by card num and last digit of card num
-userRoutes.get("/users/:cardNum/:lastDigitOfCardNum", zValidator("param",getUserByCardNumSchema), async(c) => {
+/**
+ * Get user by card number.
+ * @param cardNum the card number of the user.
+ * @returns the user.
+ */
+userRoutes.get("/users/:cardNum", zValidator("param",getUserByCardNumSchema), async(c) => {
     //Given you have a well formed card number, check if that card num exists in user table.
-    const {cardNum, lastDigitOfCardNum} = c.req.valid("param");
-    var [user] = await db
+    const { cardNum } = c.req.valid("param");
+    const lastDigitOfCardNum = Number.parseInt(cardNum.charAt(cardNum.length - 1));
+    let [user] = await db
         .select()
         .from(users)
         .where(and(eq(users.cardNum, cardNum), eq(users.lastDigitOfCardNum, lastDigitOfCardNum)));
     
     // Check if exists. If not, throw error.
-    if (!user) {    
-        throw new HTTPException(404, { message: "User not found" });
-    }
     // Also, do a check to see if this is an old jcard scan attempt. If yes, deny.
-    // We should make this happen at same time as other check to avoid distinguishing time of response.
-    if (user.lastDigitOfCardNum > lastDigitOfCardNum) {
+    if (!user || user.lastDigitOfCardNum > lastDigitOfCardNum) {    
         throw new HTTPException(404, { message: "User not found" });
     }
 
@@ -155,20 +177,22 @@ userRoutes.get("/users/:cardNum/:lastDigitOfCardNum", zValidator("param",getUser
     })
 })
 
-//Delete a user by id.
+/**
+ * Delete a user by id.
+ * @param id the database ID of the user.
+ * @returns the deleted user.
+ */
 userRoutes.delete(
-    "/users/:userId", 
+    "/users/:id", 
     //authGuard,
     zValidator("param", getUserSchema),
     async (c)=>{
-        
-        console.log(c);
-        
-        const {userId} = c.req.valid("param");
+                
+        const { id } = c.req.valid("param");
         const [user] = await db
             .select()
             .from(users)
-            .where(eq(users.id, userId))
+            .where(eq(users.id, id))
         
         
         if (!user) {
@@ -179,7 +203,7 @@ userRoutes.delete(
         // For now, no auth, just replace.
         const deletedUser = await db
         .delete(users)
-        .where(eq(users.id, userId))
+        .where(eq(users.id, id))
         .returning()
 
           return c.json(

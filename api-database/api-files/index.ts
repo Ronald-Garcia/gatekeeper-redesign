@@ -9,6 +9,7 @@ import { budgetCodesRoutes } from "./routes/budgetCodes.js";
 import { machineRoutes } from "./routes/machines.js";
 import { trainingRoutes } from "./routes/trainingValidation.js";
 import { machineTypeRoutes } from "./routes/machineTypes.js";
+import { userBudgetCodeRelationRoute } from "./routes/userBudgetCodeRelations.js";
 
 
 const app = new Hono();
@@ -39,6 +40,7 @@ app.route("/", budgetCodesRoutes);
 app.route("/", trainingRoutes);
 app.route("/", machineTypeRoutes);
 app.route("/", machineRoutes);
+app.route("/", userBudgetCodeRelationRoute);
 
 app.onError((err, c) => {
   console.error(`${err}`);

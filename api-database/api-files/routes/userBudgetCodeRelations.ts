@@ -1,0 +1,100 @@
+import { zValidator } from "@hono/zod-validator";
+import { Hono } from "hono";
+import { createUserBudgetSchema, queryUserBudgetsSchema } from "../validators/userBudgetCodeRelationSchemas";
+import { getUserSchema, queryBudgetCodesParamsSchema } from "../validators/schemas";
+import { and, asc, count, desc, eq, exists, ilike, SQL } from "drizzle-orm";
+import { db } from "../db";
+import { budgetCodes, userBudgetCodeTable, users } from "../db/schema";
+import { HTTPException } from "hono/http-exception";
+import { validateUserParamSchema } from "../validators/trainingSchema";
+
+
+export const userBudgetCodeRelationRoute = new Hono();
+
+
+userBudgetCodeRelationRoute.get("/user-budgets/:id",
+    zValidator("query", queryUserBudgetsSchema),
+    zValidator("param", validateUserParamSchema),
+    async (c) => {
+
+        const { id } = c.req.valid("param")
+        const { page = 1, limit = 20, sort } = c.req.valid("query");
+        const whereClause: (SQL | undefined)[] = [];
+        // Check if a valid user first, throw 404 if not.
+        const  [user_ent]  = await db
+            .select()
+            .from(users)
+            .where(eq(users.id, id));
+
+        if (!user_ent) {
+            throw new HTTPException(404, { message: "User not found" });
+        }
+        
+        const orderByClause: SQL[] = [];
+           
+        switch (sort) {
+            case "desc":
+                orderByClause.push(desc(budgetCodes.name));
+                break;
+            default:
+                orderByClause.push(asc(budgetCodes.name));
+                break;
+        }
+    
+        const offset = (page - 1) * limit;
+        
+        const [allCodes, [{ totalCount }]] = await Promise.all([
+            db
+                .select()
+                .from(userBudgetCodeTable)
+                .innerJoin(budgetCodes, eq(userBudgetCodeTable.budgetCodeId, budgetCodes.id))
+                .where(and(...whereClause))
+                .orderBy(...orderByClause)
+                .limit(limit)
+                .offset(offset),
+           
+                     //This gets user count from database.
+                   db
+                     .select({ totalCount: count() })
+                     .from(userBudgetCodeTable)
+                     .where(and(...whereClause)),
+                 ]);
+               
+               return c.json({
+                   sucess:true,
+                   data: allCodes.map(c => c.user_budget_code_table),
+                   meta: {
+                       page,
+                       limit,
+                       total: totalCount,
+                       },
+                   message:"Fetched user routes"
+                   }); 
+
+    }
+
+)
+
+userBudgetCodeRelationRoute.post("/user-budgets", 
+    zValidator("json", createUserBudgetSchema),
+    async (c) => {
+        const { userId, budgetCodeId } = c.req.valid("json");
+
+        const [ ubc ] = await db.insert(userBudgetCodeTable)
+            .values({
+                userId,
+                budgetCodeId
+            }).returning()
+
+        if (!ubc) {
+            throw new HTTPException(404, { message: "User or budget not found."});
+        }
+
+        return c.json({
+            success: true,
+            message: "User-budget relation added successfully.",
+            data: ubc
+        })
+    }
+)
+
