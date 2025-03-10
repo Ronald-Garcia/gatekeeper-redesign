@@ -149,11 +149,14 @@ userRoutes.post("/users", zValidator("json", createUserSchema), async (c)=>{
 userRoutes.get("/users/:cardNum", zValidator("param",getUserByCardNumSchema), async(c) => {
     //Given you have a well formed card number, check if that card num exists in user table.
     const { cardNum } = c.req.valid("param");
+
+    const cardNumTrunc = cardNum.substring(0, cardNum.length - 1);
+
     const lastDigitOfCardNum = Number.parseInt(cardNum.charAt(cardNum.length - 1));
     let [user] = await db
         .select()
         .from(users)
-        .where(and(eq(users.cardNum, cardNum), eq(users.lastDigitOfCardNum, lastDigitOfCardNum)));
+        .where(and(eq(users.cardNum, cardNumTrunc), eq(users.lastDigitOfCardNum, lastDigitOfCardNum)));
     
     // Check if exists. If not, throw error.
     // Also, do a check to see if this is an old jcard scan attempt. If yes, deny.

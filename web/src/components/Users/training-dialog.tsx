@@ -64,7 +64,7 @@ const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogP
               training === type.id ? "bg-blue-300 border-blue-600" : ""
             }`}
           >
-            <p>{type.type}</p>
+            <p>{type.name}</p>
             </div>
          ))
            }

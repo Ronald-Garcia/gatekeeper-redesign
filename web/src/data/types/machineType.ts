@@ -1,4 +1,4 @@
 export type MachineType = {
     id: number;
-    type: string;
+    name: string;
 }

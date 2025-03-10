@@ -66,7 +66,7 @@ function useQueryUsers(reload: boolean) {
       if (!ableToUse) {
         throw new Error("User does not have access to this machine!");
       }
-      const ret = curMachine.type.type === "kiosk" ? "users" : "interlock";
+      const ret = curMachine.type.name === "kiosk" ? "users" : "interlock";
       return ret;
     } catch (e) {
       console.log(e);

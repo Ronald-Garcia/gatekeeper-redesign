@@ -17,3 +17,5 @@ export const createUserBudgetSchema = z.object({
     userId: z.coerce.number().int().positive(),
     budgetCodeId: z.coerce.number().int().positive()
 })
+
+export const deleteUserBudgetSchema = createUserBudgetSchema;

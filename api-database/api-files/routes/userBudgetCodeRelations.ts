@@ -1,6 +1,6 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { createUserBudgetSchema, queryUserBudgetsSchema } from "../validators/userBudgetCodeRelationSchemas";
+import { createUserBudgetSchema, deleteUserBudgetSchema, queryUserBudgetsSchema } from "../validators/userBudgetCodeRelationSchemas";
 import { getUserSchema, queryBudgetCodesParamsSchema } from "../validators/schemas";
 import { and, asc, count, desc, eq, exists, ilike, SQL } from "drizzle-orm";
 import { db } from "../db";
@@ -98,3 +98,22 @@ userBudgetCodeRelationRoute.post("/user-budgets",
     }
 )
 
+userBudgetCodeRelationRoute.delete("/user-budgets/:userId/:budgetCodeId", 
+    zValidator("param", deleteUserBudgetSchema),
+    async (c) => {
+        const {userId, budgetCodeId} = c.req.valid("param");
+
+        const [ userBudgetRelation ] = await db.delete(userBudgetCodeTable).where(and(eq(userBudgetCodeTable.userId, userId), eq(userBudgetCodeTable.budgetCodeId, budgetCodeId))).returning();
+
+
+        if (!userBudgetRelation) {
+            throw new HTTPException(404, {message: "User budget relation not found."});
+        }
+
+        return c.json({
+            success: true,
+            message: "Deleted user-budget relation",
+            data: userBudgetRelation
+        })
+    }
+)

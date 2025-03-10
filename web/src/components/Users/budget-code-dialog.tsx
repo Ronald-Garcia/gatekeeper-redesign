@@ -25,14 +25,14 @@ type EditBudgetCodeDialogProp = {
 const EditBudgetCodeDialog = ({ userId, setShowEditBudgetCode }: EditBudgetCodeDialogProp) => {
     const [budgetCode, setBudgetCode] = useState(-1);
     //ADD WHEN ROUTES FIXED
-    //const { giveBudgetCode} = useMutationUsers();
+    const { giveBudgetCode} = useMutationUsers();
    const codesList = useStore($codes);
   
     //async function with editing logic, including error handling
     const handleEditBudgetCode = async () => {
       console.log(budgetCode)
       //ADD WHEN ROUTES FIXED
-      //await giveBudgetCode(userId, budgetCode); //use hooks to handle state of budget code
+      await giveBudgetCode(userId, budgetCode); //use hooks to handle state of budget code
       setShowEditBudgetCode(false); //make the dialogue disappear
     };
   
