@@ -27,7 +27,7 @@ app.use(
 
 //Probably remove this later.
  app.get("/", (c) => {
-	return c.text("Hello, Vercel!!!!");
+	return c.text("Hello, Vercel");
 });
 
 app.get("/hello/:name", (c) => {

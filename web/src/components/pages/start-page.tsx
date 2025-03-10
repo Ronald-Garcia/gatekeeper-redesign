@@ -62,7 +62,7 @@ const StartPage = () => {
           onChange={handleOnChange}
           placeholder="Swipe your card!"
           onKeyDown={handleSubmitOnEnter}
-          data-testid="cardnum-input"
+          data-cy="cardnum-input"
         >
         </Input>
       </div>

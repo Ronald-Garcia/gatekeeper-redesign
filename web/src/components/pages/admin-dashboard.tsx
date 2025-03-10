@@ -52,8 +52,7 @@ const AdminDashboard = () => {
 
 
   return (
-    <>
-
+    <div>
 
 {/*Adding forms*/}
 {selection &&  (
@@ -73,7 +72,7 @@ const AdminDashboard = () => {
 )}
 
 {/* Search Bar and Buttons to trigger adding forms */}
-      <div>
+      <div data-cy="admin-dashboard">
 
         <div>
         {router.route === "budgetCodes" &&
@@ -96,7 +95,7 @@ const AdminDashboard = () => {
             <input
               type="text"
               placeholder="Search"
-              className="w-full p-4 pl-12 text-lg  border border-gray-600 rounded-full focus:outline-none focus:ring-4 focus:ring-blue-500/50 transition duration-300 ease-in-out shadow-lg"
+              className="w-full p-4 pl-12 text-lg transition duration-300 ease-in-out border border-gray-600 rounded-full shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500/50"
             />
           </div>
           {router.route === "budgetCodes" &&
@@ -107,7 +106,7 @@ const AdminDashboard = () => {
         }
 
        {router.route === "users" && <div>
-          <Button  className="size-"
+          <Button  data-cy="add-user-button" className="size-"
             onClick={() => setShowAddUser(true) }>
               Add User 
           </Button>
@@ -134,7 +133,7 @@ const AdminDashboard = () => {
       
       </div>
 
-    </>
+    </div>
   );
 };
 

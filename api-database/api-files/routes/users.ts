@@ -115,7 +115,7 @@ userRoutes.post("/users", zValidator("json", createUserSchema), async (c)=>{
 
     return c.json({
         success: true,
-        message: "User has been deleted",
+        message: "User created",
         data: newUser
     }, 201);
 })
