@@ -587,7 +587,6 @@ export const getAllMachines = async (
   const { message, data }: { message: string; data: Machine[] } =
     await response.json();
 
-    console.log(data);
 
   return { message, data };
 };
@@ -752,7 +751,6 @@ export const createMachine = async (name: string, type: MachineType, rate: numbe
   data: Machine
 }> => {
 
-  console.log(type.id)
   const response = await fetch(`${API_DB_URL}/machines`,{
     method: "POST",
     headers: {"Content-Type": "application/json"},

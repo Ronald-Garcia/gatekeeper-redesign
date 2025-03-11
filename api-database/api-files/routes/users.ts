@@ -72,7 +72,7 @@ userRoutes.get("/users", zValidator("query", queryUsersParamsSchema), async (c) 
     
     return c.json(
     {
-    sucess:true,
+    success:true,
     data: allUsers,
     meta: {
         page,
@@ -115,7 +115,7 @@ userRoutes.post("/users", zValidator("json", createUserSchema), async (c)=>{
 
     return c.json({
         success: true,
-        message: "User has been deleted",
+        message: "User created",
         data: newUser
     }, 201);
 })
@@ -161,9 +161,7 @@ userRoutes.delete(
     //authGuard,
     zValidator("param", getUserSchema),
     async (c)=>{
-        
-        console.log(c);
-        
+                
         const {userId} = c.req.valid("param");
         const [user] = await db
             .select()
@@ -191,3 +189,5 @@ userRoutes.delete(
             );
 
 })
+
+

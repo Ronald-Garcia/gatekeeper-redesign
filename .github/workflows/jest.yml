@@ -1,0 +1,26 @@
+name: Jest
+
+on: push
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install dependencies in web and api database
+        run: |
+          cd web/
+          npm install -g pnpm
+          npm install
+          pnpm install
+          cd ..
+          cd api-database
+          npm install -g pnpm
+          npm install
+          pnpm install
+
+      - name: Install jest
+        run: npm install
+      - name: Run Jest tests
+        run: npm test

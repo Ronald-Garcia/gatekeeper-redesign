@@ -27,7 +27,7 @@ const StartPage = () => {
 
       const newCardNum = cardNum.substring(1, cardNum.length - 1);
       
-      validateUser(Number.parseInt(newCardNum)).then(s => {        
+      validateUser(Number.parseInt(newCardNum), 0).then(s => {        
         redirectPage($router, s);
       });
 
@@ -45,7 +45,7 @@ const StartPage = () => {
         <h1 className="text-3xl">Swipe</h1>
 
         <h2 className="w-2/4 text-center border-b border-black leading-none my-2.5">
-          <span className="bg-white px-2">or</span>
+          <span className="px-2 bg-white">or</span>
         </h2>
         <Button
           className="size-"
@@ -62,6 +62,7 @@ const StartPage = () => {
           onChange={handleOnChange}
           placeholder="Swipe your card!"
           onKeyDown={handleSubmitOnEnter}
+          data-cy="cardnum-input"
         >
         </Input>
       </div>

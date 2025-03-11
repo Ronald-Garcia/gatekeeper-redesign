@@ -43,6 +43,7 @@ const BanUserDialog = ({
   };
 
   return (
+    <div data-cy = "user-delete-dialog">
     <AlertDialog open={true} onOpenChange={handleDialogClose}>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -52,13 +53,14 @@ const BanUserDialog = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={handleCancel}>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleBanUser}>
+          <AlertDialogCancel data-cy = "user-ban-cancel" onClick={handleCancel}>Cancel</AlertDialogCancel>
+          <AlertDialogAction  data-cy = "user-ban-confirm" onClick={handleBanUser}>
             Ban
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
+    </div>
   );
 };
 

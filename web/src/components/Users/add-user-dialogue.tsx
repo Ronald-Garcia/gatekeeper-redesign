@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "../ui/input";
 import { User } from "@/data/types/user";
 import useQueryUsers from "@/hooks/use-query-users";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 
 
 
@@ -30,6 +31,7 @@ const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
 
   const [jhed, setJhed] = useState("");
   const [cardNum, setCardNum ] = useState("");
+  // Default state of admin is 0 = not admin.
   const [admin, setAdmin] = useState(0);
   const [year, setYear] = useState("");
 
@@ -72,14 +74,24 @@ const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
       setJhed(e.target.value);
     }
 
-    const handleOnChangeAdmin = () => {
-      setAdmin(admin ^ 1);
+    // Function that handles clicking on the radio components.
+    // Keep in mind, admin is by default set to 0.
+    const handleOnClickAdmin = (toggleAdmin:boolean) => {
+      // If clicked on yes, set as one.
+      if (toggleAdmin) {
+        setAdmin(1);
+      }
+      // If clicked on no, set as 0.
+      else {
+        setAdmin(0);
+      }
     }
   
   
   
 
   return (
+    <div data-cy = "user-add-dialog" >
     <Dialog open={true} onOpenChange={setShowAddUser}>
       <DialogOverlay />
       <DialogContent>
@@ -93,6 +105,7 @@ const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
         <Input
           onChange={handleOnChangeName}
           placeholder="Enter Student Name"
+          data-cy = "enter-student-name"
         >
         </Input>
         
@@ -104,17 +117,10 @@ const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
         <Input
           onChange={handleOnChangeCardNum}
           placeholder="Card Number"
+          data-cy = "enter-cardnum"
+
         >
         </Input>
-    
-        </div>
-        <div className="Swipe Card to Fill JCard ID">
-        <input
-          type="checkbox"
-          onChange={handleOnChangeAdmin}
-          placeholder="Admin"
-        >
-        </input>
     
         </div>
 
@@ -122,25 +128,46 @@ const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
         <Input
           onChange={handleOnChangeJhed}
           placeholder="jhed"
+          data-cy = "enter-jhed"
+
         >
         </Input>
     
         </div>
 
-        <div className="Swipe Card to Fill JCard ID">
+        <div className="Enter Graduation Year">
         <Input
           onChange={handleOnChangeYear}
           placeholder="year"
+          data-cy = "enter-grad-year"
         >
         </Input>
-    
         </div>
+        
+        <div className="Is Admin Checkbox">
+          <div className="flex gap-2">
+            Is this user an Administrator?
+          </div>
+        </div>
+        <RadioGroup defaultValue="No">
+          <div className="flex items-center space-x-2" onClick={() => handleOnClickAdmin(false)}>
+            <RadioGroupItem value="No" id="r1"/>
+            <Label htmlFor="r1">No</Label>
+          </div>
+          <div className="flex items-center space-x-2" onClick={() => handleOnClickAdmin(true)}>
+            <RadioGroupItem value="Yes" id="r2"/>
+            <Label htmlFor="r2">Yes</Label>
+          </div>
+        </RadioGroup>
+
+
         <DialogFooter>
-          <Button onClick={() => setShowAddUser(false)}>Cancel</Button>
-          <Button onClick={handleAddUser}>Save Changes</Button>
+          <Button data-cy = "user-add-cancel" onClick={() => setShowAddUser(false)}>Cancel</Button>
+          <Button data-cy = "user-add-confirm" onClick={handleAddUser}>Save Changes</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
+    </div>
   );
 };
 

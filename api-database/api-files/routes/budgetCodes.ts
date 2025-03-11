@@ -59,7 +59,7 @@ budgetCodesRoutes.get("/budget-codes", zValidator("query", queryBudgetCodesParam
       ]);
     
     return c.json({
-        sucess:true,
+        success:true,
         data: allBudgetCodes,
         meta: {
             page,
@@ -86,7 +86,7 @@ budgetCodesRoutes.post("/budget-codes", zValidator("json", createBudgetCode), as
         .returning();
 
     return c.json({
-        sucess:true,
+        success:true,
         message:"Created new budget code",
         data:newBudgetCode
     }, 201);
@@ -96,7 +96,7 @@ budgetCodesRoutes.post("/budget-codes", zValidator("json", createBudgetCode), as
 budgetCodesRoutes.delete("/budget-codes/:id", zValidator("param", deleteBudgetCode), async (c)=>{
     const { id } = c.req.valid("param");
 
-    const budgetCode = await db.select().from(budgetCodes).where(eq(budgetCodes.id, id))
+    const [budgetCode] = await db.select().from(budgetCodes).where(eq(budgetCodes.id, id))
 
     if (!budgetCode) {
         throw new HTTPException(404, { message: "Budget Code not found!"});
@@ -108,9 +108,9 @@ budgetCodesRoutes.delete("/budget-codes/:id", zValidator("param", deleteBudgetCo
         .returning();
 
     return c.json({
-        sucess:true,
-        message:"Created new budget code",
-        data:deleteBudgetCode
+        success:true,
+        message:"Deleted budget code",
+        data:deletedBudgetCode
     }, 200)
 
 })
