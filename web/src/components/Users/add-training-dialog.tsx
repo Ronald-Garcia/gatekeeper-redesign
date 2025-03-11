@@ -32,7 +32,6 @@ const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogP
 
   //async function with editing logic, including error handling
   const handleEditTraining = async () => {
-    console.log(training)
     await giveTraining(userId, training); //use hooks to handle state of training
     setShowEditTraining(false); //make the dialogue disappear
   };
@@ -40,7 +39,6 @@ const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogP
   useQueryMachines(true);
 
   useEffect(() => {
-    console.log(machineList);
   }, [machineList]);
 
   return (

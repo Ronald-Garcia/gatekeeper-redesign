@@ -161,9 +161,7 @@ userRoutes.delete(
     //authGuard,
     zValidator("param", getUserSchema),
     async (c)=>{
-        
-        console.log(c);
-        
+                
         const {userId} = c.req.valid("param");
         const [user] = await db
             .select()

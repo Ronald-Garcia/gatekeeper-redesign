@@ -69,7 +69,6 @@ function useQueryUsers(reload: boolean) {
       const ret = curMachine.type.type === "kiosk" ? "users" : "interlock";
       return ret;
     } catch (e) {
-      console.log(e);
       const errorMessage = (e as Error).message;
         toast.error("Sorry! There was an error 🙁", {
           description: errorMessage  
