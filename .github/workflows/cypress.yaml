@@ -18,4 +18,4 @@ jobs:
           pnpm install
           npm install -g wait-on
           pnpm dev & wait-on http://localhost:5173
-          npx cypress run
+          npx cypress run --browser chrome
