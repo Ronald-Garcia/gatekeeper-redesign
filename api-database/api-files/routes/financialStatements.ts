@@ -2,7 +2,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { createStatementSchema, queryFinStatementParamsSchema } from "../validators/financialStatementSchemas.js";
 import { like, SQL, or, desc, asc, eq, and, count } from "drizzle-orm";
-import { budgetCodes, financialStatementsTable, users } from "../db/schema.js";
+import { financialStatementsTable, users } from "../db/schema.js";
 import { db } from "../db/index.js";
 
 export const financialStatementRoutes = new Hono();
@@ -26,12 +26,11 @@ financialStatementRoutes.get("/fin-statements",
 
     const offset = (page - 1) * limit;
 
-    const [allBudgetCodes, [{ totalCount }]] = await Promise.all([
+    const [allFinancialStatements, [{ totalCount }]] = await Promise.all([
         db
         .select({
             id: financialStatementsTable.userId,
-            name: budgetCodes.name,
-            budgetCode: budgetCodes.budgetCode
+            budgetCode: financialStatementsTable.budgetCode
         })
           .from(financialStatementsTable)
           .orderBy(...orderByClause)
@@ -40,18 +39,18 @@ financialStatementRoutes.get("/fin-statements",
 
         db
           .select({ totalCount: count() })
-          .from(budgetCodes)
+          .from(financialStatementsTable)
       ]);
     
     return c.json({
         sucess:true,
-        data: allBudgetCodes,
+        data: allFinancialStatements,
         meta: {
             page,
             limit,
             total: totalCount,
             },
-        message:"Fetched user routes"
+        message:"Fetched Financial Statements"
         }
     );
     
