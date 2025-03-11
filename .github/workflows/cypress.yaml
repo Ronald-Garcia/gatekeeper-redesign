@@ -8,6 +8,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+        
 
       - name: Run cypress tests
         run: |
@@ -18,4 +23,4 @@ jobs:
           pnpm install
           npm install -g wait-on
           pnpm dev & wait-on http://localhost:5173
-          npx cypress run --browser chrome
+          npx cypress run
