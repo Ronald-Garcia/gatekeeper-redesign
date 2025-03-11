@@ -19,15 +19,9 @@ describe('Entering kiosk testing', () => {
     })
 
     it('displays kiosk when logging in without connection to python server', () => {
-      //Intercept and wait for the machine api call.
-      cy.intercept('GET', '**/whoami*', (req) => {}).as("whoAmICall");
-
-      cy.get('[data-cy="cardnum-input"]').type(";1234567890777777;");
-      cy.get('[data-cy="cardnum-input"]').type("\n");
-
-      //Need to wait a while for the whoAmI request to time out. Is this jank? Yes. Solution besides python server? Currently none.
-      cy.wait("@whoAmICall");
-      cy.get('[data-cy="admin-dashboard"]').should("be.visible");
+      cy.get('[data-cy="cardnum-input"]').type(";1234567890777777;")
+      cy.get('[data-cy="cardnum-input"]').type("\n")
+      cy.get('[data-cy="admin-dashboard"]').should("be.visible")
     })
   
 }
@@ -37,13 +31,9 @@ describe('Adding a user test', () => {
   beforeEach(() => {
       //Before each test, go to our locally running app and use the testing carNum "1234567890777777"
     cy.visit('http://localhost:5173/')
-
-    //Intercept and wait for the machine api call.
-    cy.intercept('GET', '**/whoami*', (req) => {}).as("whoAmICall");
-    
     cy.get('[data-cy="cardnum-input"]').type(";1234567890777777;")
     cy.get('[data-cy="cardnum-input"]').type("\n")
-    cy.wait("@whoAmICall")
+
   })
 
   it('Add a user and have it show up on the dashboard', () => {
