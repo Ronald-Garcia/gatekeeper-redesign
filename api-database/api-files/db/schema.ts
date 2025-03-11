@@ -1,4 +1,5 @@
 
+import { int } from "drizzle-orm/mysql-core";
 import { integer, pgTable, serial, text } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users_table", {
@@ -40,6 +41,15 @@ export const userBudgetCodeTable = pgTable("user_budget_code_table",{
   id: serial().primaryKey(),
   userId: serial().notNull().references(() => users.id, {onDelete: "cascade"}),
   budgetCodeId: serial().notNull().references(()=> budgetCodes.id, {onDelete:"cascade"})
+});
+
+export const financialStatementsTable = pgTable("financial_statements_table", {
+  id: serial().primaryKey(),
+  userId: serial().notNull().references(() => users.id, {onDelete: "no action"}),
+  budgetCode: serial().notNull().references(() => budgetCodes.id, {onDelete: "no action"}),
+  machineId: serial().notNull().references(() => machines.id, {onDelete: "no action"}),
+  startTime: integer().notNull(),
+  endTime: integer().notNull(),
 });
 
 export type InsertUser = typeof users.$inferInsert;
