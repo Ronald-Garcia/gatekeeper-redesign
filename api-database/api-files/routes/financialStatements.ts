@@ -17,10 +17,10 @@ financialStatementRoutes.get("/fin-statements",
     
         switch (sort) {
             case "type_desc":
-                orderByClause.push(desc(budgetCodes.name));
+                orderByClause.push(desc(financialStatementsTable.userId));
                 break;
             case "type_asc":
-                orderByClause.push(asc(budgetCodes.name));
+                orderByClause.push(asc(financialStatementsTable.userId));
                 break;
         }
 
@@ -29,11 +29,11 @@ financialStatementRoutes.get("/fin-statements",
     const [allBudgetCodes, [{ totalCount }]] = await Promise.all([
         db
         .select({
-            id: budgetCodes.id,
+            id: financialStatementsTable.userId,
             name: budgetCodes.name,
             budgetCode: budgetCodes.budgetCode
         })
-          .from(budgetCodes)
+          .from(financialStatementsTable)
           .orderBy(...orderByClause)
           .limit(limit)
           .offset(offset),
