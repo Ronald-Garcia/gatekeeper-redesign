@@ -14,7 +14,7 @@ const Header = () => {
         </object>
       </div>
 
-      <div className="text-5xl self-center right-[calc(50vw-399px/2)] font-[Quadon] text-white">
+      <div className="freight-text-medium text-5xl self-center right-[calc(50vw-399px/2)] text-white">
         WSE Manufacturing
       </div>
     </div>

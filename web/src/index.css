@@ -90,3 +90,140 @@
     @apply bg-background text-foreground;
   }
 }
+
+/*Some modifications to shad buttons for JHU blue*/
+.jhu-blue-button{
+  color: white;
+  background-color: #002d72;
+}
+
+/*404 page styling*/
+.not-found-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height:calc(100% - 100px);
+  align-items: center;
+}
+
+/*Below are most of the JHU official web fonts*/
+/*To use in your compoent, just type the name in class names.
+  Example: <div className = factoria-light></div> 
+*/
+
+
+/* Factoria Font Styles */
+.factoria-light {
+font-family: "factoria", sans-serif;
+font-weight: 300;
+font-style: normal;
+}
+.factoria-light-italic {
+font-family: "factoria", sans-serif;
+font-weight: 300;
+font-style: Italic;
+}
+.factoria-medium {
+font-family: "factoria", sans-serif;
+font-weight: 500;
+font-style: normal;
+}
+.factoria-medium-italic {
+font-family: "factoria", sans-serif;
+font-weight: 500;
+font-style: Italic;
+}
+.factoria-bold {
+font-family: "factoria", sans-serif;
+font-weight: 700;
+font-style: normal;
+}
+.factoria-bold-italic {
+font-family: "factoria", sans-serif;
+font-weight: 700;
+font-style: Italic;
+}
+.factoria-bold-ultra {
+font-family: "factoria", sans-serif;
+font-weight: 900;
+font-style: normal;
+}
+.factoria-bold-italic {
+font-family: "factoria", sans-serif;
+font-weight: 900;
+font-style: Italic;
+}
+
+/* Proxima Nova Font Styles */
+.proxima-nova-light {
+  font-family: "proxima-nova", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.proxima-nova-light-italic {
+  font-family: "proxima-nova", sans-serif;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.proxima-nova-medium {
+  font-family: "proxima-nova", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.proxima-nova-medium-italic {
+  font-family: "proxima-nova", sans-serif;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.proxima-nova-bold {
+  font-family: "proxima-nova", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.proxima-nova-bold-italic {
+  font-family: "proxima-nova", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.proxima-nova-black {
+  font-family: "proxima-nova", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.proxima-nova-black-italic {
+  font-family: "proxima-nova", sans-serif;
+  font-weight: 900;
+  font-style: italic;
+}
+
+/* Freight Text Font Styles */
+.freight-text-medium {
+  font-family: "freight-text-pro", serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.freight-text-medium-italic {
+  font-family: "freight-text-pro", serif;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.freight-text-black {
+  font-family: "freight-text-pro", serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.freight-text-black-italic {
+  font-family: "freight-text-pro", serif;
+  font-weight: 900;
+  font-style: italic;
+}

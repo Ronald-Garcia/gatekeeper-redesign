@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { redirectPage } from "@nanostores/router";
 import Interlock from "../pages/interlock";
 import KioskStartPage from "../pages/kiosk-start-page";
+import { Button } from "../ui/button";
 
 /*
 Body component of the application
@@ -21,8 +22,16 @@ const Body = () => {
   if (!router) {
     return (
       <>
-        <div>
-          404 - Page not Found
+        <div className=" not-found-page">
+          <h1 className="items-center text-5xl font-size freight-text-medium">
+            404 - Page Not Found
+          </h1>
+          <p className="text-lg freight-text-medium">
+            Oops! The page you are looking for does not exist.
+          </p>
+          <Button  className="jhu-blue-button">
+            Go back to Home
+          </Button>
         </div>
       </>
     )
