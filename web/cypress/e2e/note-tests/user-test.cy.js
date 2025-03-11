@@ -13,7 +13,7 @@ describe('Entering kiosk testing', () => {
 
     it('displays kiosk when logging in (without connection to python server)', () => {
       cy.get('[data-cy="cardnum-input"]').type(";1234567890777777;")
-      cy.get('[data-cy="cardnum-input"]').type("\n")
+      cy.get('[data-cy="cardnum-input"]').type('{enter}')
       cy.get('[data-cy="admin-dashboard"]').should("be.visible")
     })  
 }
