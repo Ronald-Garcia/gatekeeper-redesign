@@ -7,7 +7,7 @@ const API_DB_URL = "https://interlock-api-database-v1.vercel.app"
 describe('Entering kiosk testing', () => {
     beforeEach(() => {
         //Before each test, go to our locally running app.
-      cy.visit('http://localhost:5173/')
+      cy.visit('http://localhost:5173/kiosk')
     })
   
     it('Able to type into input field (for current testing)', () => {
@@ -30,7 +30,7 @@ describe('Entering kiosk testing', () => {
 describe('Adding a user test', () => {
   beforeEach(() => {
       //Before each test, go to our locally running app and use the testing carNum "1234567890777777"
-    cy.visit('http://localhost:5173/')
+    cy.visit('http://localhost:5173/kiosk')
     cy.get('[data-cy="cardnum-input"]').type(";1234567890777777;")
     cy.get('[data-cy="cardnum-input"]').type("\n")
 

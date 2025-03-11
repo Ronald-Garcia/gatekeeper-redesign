@@ -9,6 +9,7 @@ import { useStore } from "@nanostores/react";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import useQueryMachines from "./use-query-machines";
+import { Machine } from "@/data/types/machine";
 
 function useQueryUsers(reload: boolean) {
   const users = useStore($users);
@@ -29,7 +30,7 @@ function useQueryUsers(reload: boolean) {
       }
     };
 
-  const validateUser = async (cardNum: number): Promise<"machine_login" | "users" | "start_page" | "interlock">  => {
+  const validateUser = async (cardNum: number, isKiosk:number): Promise<"machine_login" | "users" | "start_page" | "interlock">  => {
     try {
       const {
         data
@@ -38,10 +39,12 @@ function useQueryUsers(reload: boolean) {
         throw new Error("Could not find user! Please contact an admin to get registered.");
       }
 
-
-
-      const curMachine = await getSavedMachine();
-
+      let curMachine: Machine | "kiosk" | undefined
+      if (!isKiosk){
+        curMachine = await getSavedMachine();
+      } else {
+        curMachine = "kiosk";
+      }
 
       if (!curMachine) {
         if (data.isAdmin) {

@@ -9,7 +9,7 @@ import { $router } from "@/data/router";
 /*
 
 */
-const StartPage = () => {
+const KioskStartPage = () => {
 
   
   const [cardNum, setCardNum] = useState("");
@@ -27,7 +27,7 @@ const StartPage = () => {
 
       const newCardNum = cardNum.substring(1, cardNum.length - 1);
       
-      validateUser(Number.parseInt(newCardNum), 0).then(s => {        
+      validateUser(Number.parseInt(newCardNum), 1).then(s => {        
         redirectPage($router, s);
       });
 
@@ -42,6 +42,7 @@ const StartPage = () => {
   return (
     <>
       <div className="flex flex-col justify-center items-center h-[100vp] w-[100vp]">
+        
         <h1 className="text-3xl">Swipe</h1>
 
         <h2 className="w-2/4 text-center border-b border-black leading-none my-2.5">
@@ -70,5 +71,4 @@ const StartPage = () => {
   );
 };
 
-export default StartPage;
-
+export default KioskStartPage;
