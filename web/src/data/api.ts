@@ -488,25 +488,6 @@ export const banUser = async (id: number, ban: number): Promise<{
 }
 
 
-
-
-async function fetchWithTimeout(resource:string, timeout:number) {
-  
-  
-  const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), timeout);
-
-  const response = await fetch(resource, {
-    credentials: "include",
-    signal: controller.signal  
-  });
-
-  clearTimeout(id);
-
-  return response;
-}
-
-
 /**
  * Fetches the current machine ID.
  * @returns {Promise<{message: string, data: number}>} A promise that resolves with a message and the current machine ID.
@@ -518,9 +499,7 @@ export const fetchCurrentMachine = async (): Promise<{
   }> => {
   let response;
   try {
-      response  = await fetchWithTimeout(`${API_MACHINE_URL}/whoami`, 3500)
-     
-      const response2 = await fetch(`${API_MACHINE_URL}/whoami`,{
+      response = await fetch(`${API_MACHINE_URL}/whoami`,{
       credentials: "include"
     })
   } catch { //Catching a disconnect / lack of connection. Assumes kiosk.
