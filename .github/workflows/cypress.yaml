@@ -20,6 +20,10 @@ jobs:
           echo VITE_API_DB_URL = http://localhost:3000
           echo VITE_API_MACHINE_URL = http://localhost:5000
           echo VITE_BASE_URL = http://localhost:5173
+      - name: 'Recreate env file for a locally running version in web folder'
+        run: |
+          cd api-database/
+          touch .env
 
       - name: Run local host api
         run: |
