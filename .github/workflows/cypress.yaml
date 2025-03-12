@@ -8,9 +8,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
 
-      - name: Run cypress tests
+      - name: Run local host api
         run: |
           cd api-database/
           npm install -g pnpm
@@ -19,6 +18,9 @@ jobs:
           npm install -g wait-on
           pnpm dev & wait-on http://localhost:3000
 
+
+      - name: Run cypress tests
+        run: |
           cd web/
           npm install -g pnpm
           npm install
