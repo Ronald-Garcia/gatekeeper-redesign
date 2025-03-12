@@ -49,7 +49,8 @@ const DeleteBudgetCodeDialog = ({
   };
 
   return (
-    <AlertDialog open={true} onOpenChange={handleDialogClose}>
+    <div  data-cy="budget-code-delete-dialog">
+    <AlertDialog open={true} onOpenChange={handleDialogClose} >
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
@@ -58,13 +59,15 @@ const DeleteBudgetCodeDialog = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={handleCancel}>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDeleteBudgetCode}>
+          <AlertDialogCancel onClick={handleCancel} data-cy="budget-code-delete-cancel">Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={handleDeleteBudgetCode}  data-cy="budget-code-delete-confirm">
             Delete
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
+    </div>
+
   );
 };
 

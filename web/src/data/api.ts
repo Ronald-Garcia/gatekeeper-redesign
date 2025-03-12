@@ -143,7 +143,12 @@ export const getUser = async (cardNum: number): Promise<{
   data: User
 }> => {
 
-  const response = await fetch(`${API_DB_URL}/users/${Math.floor(cardNum / 10)}/${cardNum % 10}`, {
+  let cardNums: string = String(cardNum);
+  while (cardNums.length < 16) {
+    cardNums = "0".concat(cardNums);
+  }
+
+  const response = await fetch(`${API_DB_URL}/users/${cardNums}`, {
     credentials: "include",
   });
 
@@ -497,11 +502,20 @@ export const fetchCurrentMachine = async (): Promise<{
     message: string,
     data: number
   }> => {
+  let response;
+  try {
+      response = await fetch(`${API_MACHINE_URL}/whoami`,{
+      credentials: "include"
+    })
+  } catch { //Catching a disconnect / lack of connection. Assumes kiosk.
+    return {
+      message: "Failed to connect to python server, assume kiosk",
+      data:-1}
+  }
 
-  const response = await fetch(`${API_MACHINE_URL}/whoami`,{
-    credentials: "include"
-  })
-
+  if (response === undefined) {
+    throw new Error("This should not be possible, response undefined.");
+  }
   if (!response.ok) {
     const { message } = await response.json();
     throw new Error(message);
@@ -559,13 +573,14 @@ export const getAllMachines = async (
   sort: SortType = "name_asc",
   page: number = 1,
   limit: number = 10,
-  search: string = ""
+  search: string = "",
+  type: string = "",
 
 ): Promise<{
   message: string;
   data: Machine[];
 }> => {
-  const response = await fetch(`${API_DB_URL}/machines/searchByName?search=${search}&limit=${limit}&page=${page}&sort=${sort}`, {
+  const response = await fetch(`${API_DB_URL}/machines?search=${search}&limit=${limit}&page=${page}&sort=${sort}&type=${type}`, {
     credentials: "include",
   });
 
@@ -578,7 +593,6 @@ export const getAllMachines = async (
   const { message, data }: { message: string; data: Machine[] } =
     await response.json();
 
-    console.log(data);
 
   return { message, data };
 };
@@ -623,7 +637,7 @@ export const createMachineType = async (type: string): Promise<{
     method: "POST",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({
-      machineType: type
+      name: type
     }),
     credentials: "include"
   });
@@ -697,14 +711,14 @@ export const deleteMachineType = async (id: number): Promise<{
 
 /**
  * Retrieves machine types with optional sorting, pagination, and search.
- * @param {SortType} sort - Sorting order, default "type_asc".
+ * @param {SortType} sort - Sorting order, default "asc".
  * @param {number} page - Page number, default 1.
  * @param {number} limit - Number of machine types per page, default 10.
  * @param {string} search - Search term, default empty string.
  * @returns {Promise<{message: string, data: MachineType[]}>} A promise that resolves with a message and an array of machine types.
  * @throws {Error} If the response is not ok, throws an error with the response message.
  */
-export const getMachineTypes = async ( sort: SortType = "type_asc",
+export const getMachineTypes = async ( sort: SortType = "asc",
   page: number = 1,
   limit: number = 10,
   search: string = ""
@@ -743,7 +757,6 @@ export const createMachine = async (name: string, type: MachineType, rate: numbe
   data: Machine
 }> => {
 
-  console.log(type.id)
   const response = await fetch(`${API_DB_URL}/machines`,{
     method: "POST",
     headers: {"Content-Type": "application/json"},
@@ -789,3 +802,24 @@ export const deleteMachine = async (id: number) => {
   return { message, data };
 }
 
+export const createUserBudgetCode = async (user_id: number, budget_code_id: number): Promise<boolean> => {
+
+  const response = await fetch(`${API_DB_URL}/user-budgets`, {
+    method: "POST",
+    credentials: "include",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      userId: user_id,
+      budgetCodeId: budget_code_id
+    })});
+
+
+  if (!response.ok) {
+    const { message }: { message: string} = await response.json();
+    throw new Error(message);
+  } 
+
+  return true;
+
+
+}

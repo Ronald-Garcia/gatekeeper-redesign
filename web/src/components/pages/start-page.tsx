@@ -27,7 +27,7 @@ const StartPage = () => {
 
       const newCardNum = cardNum.substring(1, cardNum.length - 1);
       
-      validateUser(Number.parseInt(newCardNum)).then(s => {        
+      validateUser(Number.parseInt(newCardNum), 0).then(s => {        
         redirectPage($router, s);
       });
 
@@ -62,7 +62,7 @@ const StartPage = () => {
           onChange={handleOnChange}
           placeholder="Swipe your card!"
           onKeyDown={handleSubmitOnEnter}
-          data-testid="cardnum-input"
+          data-cy="cardnum-input"
         >
         </Input>
       </div>

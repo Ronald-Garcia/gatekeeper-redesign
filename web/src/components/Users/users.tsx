@@ -15,7 +15,7 @@ export default function UsersComponent() {
   return (
     <ScrollArea>
 
-        <div className="max-h-[20vh]">
+        <div data-cy = "users-component"  className="max-h-[20vh]">
         {userList.length === 0 ? (
         <p> No users found. Please add some!  </p>
       ) : (

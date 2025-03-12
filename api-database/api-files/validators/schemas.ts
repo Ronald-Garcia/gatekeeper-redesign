@@ -16,17 +16,11 @@ export const queryUsersParamsSchema = z.object({
 export const createUserSchema = z.object({
     name: z.string()
       .min(1, "Name is required")
-      .max(100, "Name must be 100 characters or less"),
-    lastDigitOfCardNum: z.coerce
-      .number()
-      .int()
-      .min(0)
-      .max(9),
-    
+      .max(100, "Name must be 100 characters or less"),    
     cardNum: z
       .string()
-      .min(15, "Needs a 15 Digit J-Card Number")
-      .max(15, "Needs a 15 Digit J-Card Number"),
+      .min(16, "Needs a 16 Digit J-Card Number")
+      .max(16, "Needs a 16 Digit J-Card Number"),
 
     graduationYear: z
       .coerce
@@ -50,19 +44,13 @@ export const createUserSchema = z.object({
 export const getUserByCardNumSchema = z.object({
   cardNum: z
   .string()
-  .min(15, "Needs a 15 Digit J-Card Number")
-  .max(15, "Needs a 15 Digit J-Card Number"),
-
-  lastDigitOfCardNum: z.coerce
-  .number()
-  .int()
-  .min(0)
-  .max(9),
+  .min(16, "Needs a 16 Digit J-Card Number")
+  .max(16, "Needs a 16 Digit J-Card Number"),
 })
 
 //Just checks if the id number is int and positive.
 export const getUserSchema = z.object({
-    userId: z.coerce.number().int().positive()
+    id: z.coerce.number().int().positive()
 });
 
 export const queryBudgetCodesParamsSchema = z.object({
@@ -78,14 +66,12 @@ export const createBudgetCode = z.object({
   name: z.string()
     .min(1, "Name is required")
     .max(100, "Name must be 100 characters or less"),
-  budgetCode: z.string()
-    .min(8, "Needs a 8 Character Budget Code")
-    .max(8, "Needs a 8 Character Budget Code"),
+  code: z.string().min(0),
 
   
 });
 
-export const deleteBudgetCode = z.object({
+export const deleteBudgetCodeSchema = z.object({
   id: z.coerce.number().int().positive()
 
 });

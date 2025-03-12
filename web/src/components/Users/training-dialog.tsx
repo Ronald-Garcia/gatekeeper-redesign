@@ -32,7 +32,6 @@ const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogP
 
   //async function with editing logic, including error handling
   const handleEditTraining = async () => {
-    console.log(training)
     await giveTraining(userId, training); //use hooks to handle state of training
     setShowEditTraining(false); //make the dialogue disappear
   };
@@ -40,10 +39,10 @@ const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogP
   useQueryMachines(true);
 
   useEffect(() => {
-    console.log(machineList);
   }, [machineList]);
 
   return (
+    <div data-cy= "user-training-dialog">
     <Dialog open={true} onOpenChange={setShowEditTraining}>
       <DialogOverlay />
       <DialogContent>
@@ -59,12 +58,12 @@ const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogP
         {
     machineList.map((type) => (
      
-            <div key={type.id} onClick={() => setTraining(type.id) }
+            <div key={type.id} data-cy="machine-option" onClick={() => setTraining(type.id) }
             className={`flex flex-col justify-between items-center py-4 max-h-[15vh] text-sm text-clip transition-colors border-y-2 border-solid border-stone-300 hover:bg-stone-100 hover:border-stone-500 cursor-pointer ${
               training === type.id ? "bg-blue-300 border-blue-600" : ""
             }`}
           >
-            <p>{type.type}</p>
+            <p>{type.name}</p>
             </div>
          ))
            }
@@ -72,11 +71,12 @@ const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogP
     
         </div>
         <DialogFooter>
-          <Button onClick={() => setShowEditTraining(false)}>Cancel</Button>
-          <Button onClick={handleEditTraining}>Save Changes</Button>
+          <Button data-cy = "user-traning-cancel"  onClick={() => setShowEditTraining(false)}>Cancel</Button>
+          <Button data-cy = "user-training-add"  onClick={handleEditTraining}>Save Changes</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
+    </div>
   );
 };
 

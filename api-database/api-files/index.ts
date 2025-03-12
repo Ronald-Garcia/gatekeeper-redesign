@@ -10,6 +10,7 @@ import { machineRoutes } from "./routes/machines.js";
 import { trainingRoutes } from "./routes/trainingValidation.js";
 import { machineTypeRoutes } from "./routes/machineTypes.js";
 import { financialStatementRoutes } from "./routes/financialStatements.js";
+import { userBudgetCodeRelationRoute } from "./routes/userBudgetCodeRelations.js";
 
 
 const app = new Hono();
@@ -28,7 +29,7 @@ app.use(
 
 //Probably remove this later.
  app.get("/", (c) => {
-	return c.text("Hello, Vercel!!!!");
+	return c.text("Hello, Vercel");
 });
 
 app.get("/hello/:name", (c) => {
@@ -41,6 +42,7 @@ app.route("/", trainingRoutes);
 app.route("/", machineTypeRoutes);
 app.route("/", machineRoutes);
 app.route("/", financialStatementRoutes);
+app.route("/", userBudgetCodeRelationRoute);
 
 app.onError((err, c) => {
   console.error(`${err}`);

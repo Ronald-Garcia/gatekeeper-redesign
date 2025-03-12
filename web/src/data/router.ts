@@ -7,4 +7,6 @@ export const $router = createRouter({
   interlock: `${BASE_URL}interlock`,
   users: `${BASE_URL}users`,
   budgetCodes: `${BASE_URL}budgets`,
+  kiosk: `${BASE_URL}kiosk`,
+
 });

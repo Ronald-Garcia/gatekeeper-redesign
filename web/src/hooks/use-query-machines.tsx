@@ -20,6 +20,7 @@ function useQueryMachines(reload: boolean) {
             setCurrentMachine(machine);
             return machine;
         } catch (e) {
+          
             const errorMessage = (e as Error).message;
             toast.error("Sorry! There was an error fetching the Machine  🙁", {
                 description: errorMessage  

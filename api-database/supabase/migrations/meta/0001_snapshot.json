@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "id": "543d88e2-ffa9-41f0-8cbe-39bf3f3320ee",
+=======
+  "id": "4b77acef-adb2-44e6-847d-e9144ec40056",
+>>>>>>> master
   "prevId": "374e3516-3eec-4d3a-965f-8212541895f6",
   "version": "7",
   "dialect": "postgresql",
@@ -14,8 +18,13 @@
           "primaryKey": true,
           "notNull": true
         },
+<<<<<<< HEAD
         "code": {
           "name": "code",
+=======
+        "budgetCode": {
+          "name": "budgetCode",
+>>>>>>> master
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -45,8 +54,13 @@
           "primaryKey": true,
           "notNull": true
         },
+<<<<<<< HEAD
         "name": {
           "name": "name",
+=======
+        "type": {
+          "name": "type",
+>>>>>>> master
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -56,11 +70,19 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
+<<<<<<< HEAD
         "machine_type_name_unique": {
           "name": "machine_type_name_unique",
           "nullsNotDistinct": false,
           "columns": [
             "name"
+=======
+        "machine_type_type_unique": {
+          "name": "machine_type_type_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "type"
+>>>>>>> master
           ]
         }
       },

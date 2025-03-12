@@ -4,16 +4,29 @@ import { and, asc, count, desc, eq, ilike, like, or, SQL } from "drizzle-orm";
 import { machines, machineTypes, userMachineType, users } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { HTTPException } from "hono/http-exception"
-import { createTrainingSchema, getTrainingSchema, queryTrainingsParamsSchema, validateTrainingSchema, validateUserParamSchema } from "../validators/trainingSchema.js";
+import { createTrainingSchema, getTrainingFromMachineSchema, getTrainingSchema, queryTrainingsParamsSchema, validateUserParamSchema } from "../validators/trainingSchema.js";
 
 
+/**
+ * Route to handle training operations.
+ * @get     /trainings/:userId/:machineId   get a particular training between a user and a machine.
+ * @get     /trainings/:id                  get all trainings of a particular user.
+ * @post    /trainings/                     create a new training.
+ * @delete  /trainings/                     delete a training.
+ */
 export const trainingRoutes = new Hono();
 
+/**
+ * Get a particular training between a user and a machine.
+ * @param userId    the database ID of the user.
+ * @param machineId the database ID of the machine.
+ * @returns the relation.
+ */
 trainingRoutes.get(
     "/trainings/:userId/:machineId",
     zValidator(
         "param",
-        validateTrainingSchema),
+        getTrainingFromMachineSchema),
     async (c) => {
     const { userId, machineId } = c.req.valid("param")
     const  [user_ent]  = await db
@@ -39,11 +52,14 @@ trainingRoutes.get(
         .from(machineTypes)
         .where(eq(machineTypes.id, machine.machineTypeId))
 
-    
+    if (!machineType) {
+        throw new HTTPException(404, { message: "Machine type not found."});
+    }
+
     const machineRelation = await db
         .select()
         .from(userMachineType)
-        .where(and(eq(userMachineType.userId, userId), eq(userMachineType.id, machine.machineTypeId)))
+        .where(and(eq(userMachineType.userId, userId), eq(userMachineType.id, machineType.id)))
     
     if (!machineRelation) {
         throw new HTTPException(401, { message: "User not authorized to use machine" });
@@ -54,7 +70,15 @@ trainingRoutes.get(
 })
 
 
-// Getting list of a student's current trainings by id.
+/**
+ * Get all the trainings of a user.
+ * @param id           the database ID of the user.
+ * @query page         the page to query.
+ * @query limit        the amount of entries per page.
+ * @query search       search through the name of the machine types.
+ * @query sort         sort by type, ascending or descending.
+ * @returns all the machine types the user is trained on.
+ */
 trainingRoutes.get(
     "/trainings/:id",
     zValidator("param", validateUserParamSchema),
@@ -74,42 +98,48 @@ trainingRoutes.get(
             throw new HTTPException(404, { message: "User not found" });
         }
 
+        const userTrainings = await db.select().from(userMachineType).where(eq(userMachineType.userId, id));
+
+        whereClause.push(and(...userTrainings.map(u => eq(machineTypes.id, u.machineTypeId))));
         // Get into searching
-        // if (search) {
-        //     whereClause.push(
-        //         and(ilike(userMachineType.machineType, `%${search}%`), eq(userMachineType.userId, id))
-        //     );
-        // }
+        if (search) {
+            whereClause.push(
+                and(ilike(machineTypes.name, `%${search}%`))
+            );
+        }
     
         const orderByClause: SQL[] = [];
     
-        // switch (sort) {
-        //     case "type_desc":
-        //         orderByClause.push(desc(userMachineType.machineType));
-        //         break;
-        //     case "type_asc":
-        //         orderByClause.push(asc(userMachineType.machineType));
-        //         break;
-        // }
+        switch (sort) {
+            case "desc":
+                orderByClause.push(desc(machineTypes.name));
+                break;
+            case "asc":
+                orderByClause.push(asc(machineTypes.name));
+                break;
+        }
     
         const offset = (page - 1) * limit;
     
-        const [allTrainings, [{ totalCount }]] = await Promise.all([
-            db
-            .select()
-            .from(userMachineType)
-            .where(and(...whereClause))
-            .orderBy(...orderByClause)
-            .limit(limit)
-            .offset(offset),
-    
-              //This gets user count from database.
-            db
-              .select({ totalCount: count() })
-              .from(userMachineType)
-              .where(and(...whereClause)),
-          ]);
+        let [allTrainings, totalCount] = [[], 0];
+
+        if (userTrainings.length !== 0) {
+            const [allTrainings, [{ totalCount }]] = await Promise.all([
+                db
+                .select()
+                .from(userMachineType)
+                .where(and(...whereClause))
+                .orderBy(...orderByClause)
+                .limit(limit)
+                .offset(offset),
         
+                  //This gets user count from database.
+                db
+                  .select({ totalCount: count() })
+                  .from(userMachineType)
+                  .where(and(...whereClause)),
+              ]);    
+        }
         return c.json({
             sucess:true,
             data: allTrainings,
@@ -118,12 +148,17 @@ trainingRoutes.get(
                 limit,
                 total: totalCount,
                 },
-            message:"Fetched user routes"
+            message:"Fetched user trainings"
             });
     });
 
 
-// Add trainings
+/**
+ * Create a new training.
+ * @body userId         the database ID of the user.
+ * @body machineTypeId  the database ID of the machine type.
+ * @returns the newly created training.
+ */
 trainingRoutes.post("/trainings",
     zValidator("json", createTrainingSchema),
      async (c)=>{
@@ -151,13 +186,17 @@ trainingRoutes.post("/trainings",
     return c.json({
         sucess:true,
         data:newTraining,
-        message:"Deleted training"
+        message:"Created training"
     }, 201)
 })
 
 
-// Remove trainings
-//Sign up a user
+/**
+ * Delete a training.
+ * @body userId the database ID of the user.
+ * @body machineTypeId the database ID of the machine type.
+ * @returns the deleted training.
+ */
 trainingRoutes.delete("/trainings",
     zValidator("json", getTrainingSchema),
      async (c)=>{
