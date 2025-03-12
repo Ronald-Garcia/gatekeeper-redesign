@@ -30,7 +30,7 @@ function useQueryUsers(reload: boolean) {
       }
     };
 
-  const validateUser = async (cardNum: number, isKiosk:number): Promise<"machine_login" | "users" | "start_page" | "interlock">  => {
+  const validateUser = async (cardNum: number, callPython:number): Promise<"machine_login" | "users" | "start_page" | "interlock">  => {
     try {
       const {
         data
@@ -40,7 +40,7 @@ function useQueryUsers(reload: boolean) {
       }
 
       let curMachine: Machine | "kiosk" | undefined
-      if (!isKiosk){
+      if (callPython){
         curMachine = await getSavedMachine();
       } else {
         curMachine = "kiosk";

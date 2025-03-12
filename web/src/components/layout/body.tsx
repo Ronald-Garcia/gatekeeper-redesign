@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { redirectPage } from "@nanostores/router";
 import Interlock from "../pages/interlock";
 import KioskStartPage from "../pages/kiosk-start-page";
+import { Button } from "../ui/button";
+import ErrorPage from "./ErrorPage";
 
 /*
 Body component of the application
@@ -18,22 +20,16 @@ const Body = () => {
   
   const router = useStore($router);
 
-  if (!router) {
-    return (
-      <>
-        <div>
-          404 - Page not Found
-        </div>
-      </>
-    )
-  }
-
   const [kiosk, setIsKiosk] = useState(false)
 
   //validate user when using the application, else rerouted to start page
   useEffect(() => {
+    // This is our error page, don't want to make calls.
+    if (!router) {
+
+    }
     // kiosk gets special treatment to avoid machine stuff.
-    if (router.route === "kiosk" || kiosk) {
+    else if (router.route === "kiosk" || kiosk) {
       setIsKiosk(true)
     }
     else if (!validCurrentMachine() && !validCurrentUser()) {
@@ -43,9 +39,15 @@ const Body = () => {
       redirectPage($router, "machine_login");
     } 
   }, []);
+
+  if (!router) {
+    return (
+        <ErrorPage/>
+    )
+  }
   
 // following pages are only acessible to admin users
-  return (
+  else return (
 
     <>
     

@@ -86,7 +86,6 @@ export const editUser = async (user: User): Promise<{
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       name: user.name,
-      lastDigitOfCardNum: user.lastDigitOfCardNum,
       graduationYear: user.graduationYear,
       isAdmin: user.isAdmin
     }),

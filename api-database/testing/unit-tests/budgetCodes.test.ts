@@ -46,7 +46,7 @@ describe('BudgetCodes Routes', () => {
       const newBudgetCode = {
         name: 'Test Budget ' + generateTestBudgetCode(),
         //budgetCode must be exactly 8 characters 
-        budgetCode: generateTestBudgetCode(),
+        code: generateTestBudgetCode(),
       };
 
       const response = await app.request('/budget-codes', {
@@ -67,7 +67,7 @@ describe('BudgetCodes Routes', () => {
       // First, create a budget code to delete.
       const newBudgetCode = {
         name: 'Test Budget ' + generateTestBudgetCode(),
-        budgetCode: generateTestBudgetCode(),
+        code: generateTestBudgetCode(),
       };
 
       const postResponse = await app.request('/budget-codes', {

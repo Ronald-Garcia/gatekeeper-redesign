@@ -1,4 +1,5 @@
 
+import { int } from "drizzle-orm/mysql-core";
 import { integer, pgTable, serial, text } from "drizzle-orm/pg-core";
 
 

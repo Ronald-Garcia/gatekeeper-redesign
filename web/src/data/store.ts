@@ -26,7 +26,6 @@ export function clearItem() {
 const defaultUser: User = {
   name: "test",
   cardNum: "-1",
-  lastDigitOfCardNum: -1,
   isAdmin: 0,
   graduationYear: 2020,
   JHED: "ttest01",

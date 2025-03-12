@@ -17,15 +17,19 @@ export default function UserInfo() {
     if (!selection) return <></>; 
     // display User Info
     if (isUser(selection)){
+      let role = "User"
+      if (selection.isAdmin === 1) {
+        role = "Admin"
+      }
 
     return (
         <>
-        <div onBlur={clearItem}>
-        <p>{selection.name} </p>
-        <p>{selection.JHED} </p>
-        <p>{selection.cardNum} </p>
-        <p>{selection.graduationYear} </p>
-        <p>{selection.isAdmin} </p>
+        <div className = "Userinfo"onBlur={clearItem}>
+        <p>Name: {selection.name} </p>
+        <p>JHED: {selection.JHED} </p>
+        <p>Card Number:{selection.cardNum} </p>
+        <p>Year: {selection.graduationYear} </p>
+        <p>Role: {role} </p>
         </div>
         </>
     );

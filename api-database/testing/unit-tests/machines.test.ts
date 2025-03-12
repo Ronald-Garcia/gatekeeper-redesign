@@ -30,7 +30,7 @@ beforeAll(async () => {
   
   const [inserted] = await db
     .insert(machineTypes)
-    .values({ type: 'TEST_TYPE_' + Math.floor(Math.random() * 1e5).toString() })
+    .values({ name: 'TEST_TYPE_' + Math.floor(Math.random() * 1e5).toString() })
     .returning();
   testMachineTypeId = inserted.id;
 });
@@ -38,7 +38,7 @@ beforeAll(async () => {
 describe('Machine Routes', () => {
   describe('GET /machines/searchByName', () => {
     test('returns an array of machines with correct meta info', async () => {
-      const response = await app.request('/machines/searchByName?page=1&limit=20');
+      const response = await app.request('/machines?page=1&limit=20');
       expect(response.status).toBe(200);
       const body = await response.json();
       expect(body).toHaveProperty('sucess', true);
