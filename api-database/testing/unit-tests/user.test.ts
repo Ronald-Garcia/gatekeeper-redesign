@@ -19,9 +19,9 @@ app.onError((err, c) => {
 //Helper to generate a unique 15-digit card number for tests that always starts with "999"
 function generateTestCardNumber(): string {
   // 999 + 12 random digits, makes it easieer to delete from teh data base 
-  const randomPart = Math.floor(Math.random() * 1e12)
+  const randomPart = Math.floor(Math.random() * 1e13)
     .toString()
-    .padStart(12, '0');
+    .padStart(13, '0');
   return "999" + randomPart;
 }
 
@@ -43,10 +43,20 @@ describe('User Routes', () => {
 
   describe('POST /users', () => {
     test('creates a user and returns it on response', async () => {
+
+      const testCardNum = generateTestCardNumber();
       const newUser = {
         name: "Ronald Cameron",
-        cardNum: generateTestCardNumber(), // unique 15-digit test card number
-        lastDigitOfCardNum: 5,
+        cardNum: testCardNum, // unique 15-digit test card number
+        JHED: "roncam",
+        isAdmin: 1,
+        graduationYear: 2024,
+      };
+
+      const newUserRes = {
+        name: "Ronald Cameron",
+        cardNum: testCardNum.substring(0, testCardNum.length - 1), // unique 15-digit test card number
+        lastDigitOfCardNum: Number.parseInt(testCardNum.at(testCardNum.length - 1) as string),
         JHED: "roncam",
         isAdmin: 1,
         graduationYear: 2024,
@@ -62,7 +72,7 @@ describe('User Routes', () => {
       expect(body).toHaveProperty('success', true);
       expect(body).toHaveProperty('data');
       // Assuming the created user is returned as the first element in data:
-      expect(body.data[0]).toMatchObject(newUser);
+      expect(body.data[0]).toMatchObject(newUserRes);
     });
 
     test('returns 409 when a user with the same card number already exists', async () => {
@@ -100,10 +110,19 @@ describe('User Routes', () => {
 
   describe('GET /users/:cardNum/:lastDigitOfCardNum', () => {
     test('returns a user if one exists', async () => {
+      const testCardNum = generateTestCardNumber();
       const newUser = {
         name: "John Doe",
-        cardNum: generateTestCardNumber(),
-        lastDigitOfCardNum: 1,
+        cardNum: testCardNum, // unique 15-digit test card number
+        JHED: "johndoe",
+        isAdmin: 0,
+        graduationYear: 2023,
+      };
+
+      const newUserRes = {
+        name: "John Doe",
+        cardNum: testCardNum.substring(0, testCardNum.length - 1), // unique 15-digit test card number
+        lastDigitOfCardNum: Number.parseInt(testCardNum.at(testCardNum.length - 1) as string),
         JHED: "johndoe",
         isAdmin: 0,
         graduationYear: 2023,
@@ -118,12 +137,11 @@ describe('User Routes', () => {
 
       // Retrieve the user by card number and last digit
       const response = await app.request(`/users/${newUser.cardNum}`);
-      console.log(response);
       expect(response.status).toBe(200);
       const body = await response.json();
       expect(body).toHaveProperty('success', true);
       expect(body).toHaveProperty('data');
-      expect(body.data).toMatchObject(newUser);
+      expect(body.data).toMatchObject(newUserRes);
     });
 
     test('returns 404 if the user is not found', async () => {
@@ -140,7 +158,7 @@ describe('User Routes', () => {
         name: "Jane Doe",
         cardNum: generateTestCardNumber(), // unique test card number
         lastDigitOfCardNum: 2,
-        JHED: "janedoe",0
+        JHED: "janedoe",
         isAdmin: 0,
         graduationYear: 2022,
       };

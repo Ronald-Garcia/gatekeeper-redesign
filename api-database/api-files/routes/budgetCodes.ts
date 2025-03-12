@@ -127,7 +127,7 @@ budgetCodesRoutes.delete("/budget-codes/:id", zValidator("param", deleteBudgetCo
     }
 
     return c.json({
-        sucess:true,
+        success:true,
         message:"Deleted budget code",
         data:deletedBudgetCode
     }, 200)
