@@ -3,6 +3,12 @@ name: Cypress Tests
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_WEB_ID }}
+  VITE_API_DB_URL: http://localhost:3000
+  VITE_API_MACHINE_URL: http://localhost:5000
+  VITE_BASE_URL: http://localhost:5173
+  DATABASE_URL: ${{ secrets.DATABASE_CREDENTIALS }}
+
+
 
 on: push
       
@@ -24,6 +30,7 @@ jobs:
         run: |
           cd api-database/
           touch .env
+          echo DATABASE_URL=${{ secrets.DATABASE_CREDENTIALS }}
 
       - name: Run local host api
         run: |
