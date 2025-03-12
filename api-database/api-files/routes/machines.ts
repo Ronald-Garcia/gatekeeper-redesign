@@ -3,21 +3,46 @@ import { Hono } from "hono";
 import { like, SQL, or, desc, asc, eq, and, count, ilike, exists } from "drizzle-orm";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
-import { createMachineSchema, getMachineSchema, queryMachinesByNameSchema, queryMachinesByTypeSchema, validateMachineIdSchema } from "../validators/machineSchema.js";
+import { createMachineSchema, getMachineSchema, queryMachinesSchema, validateMachineIdSchema } from "../validators/machineSchema.js";
 import { machines, machineTypes } from "../db/schema.js";
 
 
 
+/**
+ * Routes for machine operations.
+ * @get     /machines           querys all machines stored in database.
+ * @get     /machines/:id       gets a specific machine by database ID.
+ * @post    /machines           creates a new machine in the database.
+ * @delete  /machines/:id       deletes a machine.
+ */
 export const machineRoutes = new Hono();
 
-// Search all current machines by name
-machineRoutes.get("/machines/searchByName", zValidator("query", queryMachinesByNameSchema), async (c) => {
-    const { page = 1, limit = 20, search, sort } = c.req.valid("query");
+
+/**
+ * Queries all machines stored in the database.
+ * @query page         the page to query.
+ * @query limit        the amount of entries per page.
+ * @query search       search through the name of the machines.
+ * @query type         search through the type of the machines.
+ * @query sort         sort by name or type, ascending or descending.
+ * @returns page of data.
+ */
+machineRoutes.get("/machines", zValidator("query", queryMachinesSchema), async (c) => {
+    const { page = 1, limit = 20, search, sort, type } = c.req.valid("query");
 
     const whereClause: (SQL | undefined)[] = [];
 
     if (search) {
-        whereClause.push(or(ilike(machines.name, `%${search}%`)));
+        whereClause.push(ilike(machines.name, `%${search}%`));
+    }
+
+    if (type) {
+        const types = await db
+                                .select()
+                                .from(machineTypes)
+                                .where(ilike(machineTypes.name, `%${type}%`));
+
+        whereClause.push(and(...types.map(t => eq(machines.machineTypeId, t.id))));
     }
 
         const orderByClause: SQL[] = [];
@@ -29,6 +54,11 @@ machineRoutes.get("/machines/searchByName", zValidator("query", queryMachinesByN
             case "name_asc":
                 orderByClause.push(asc(machines.name));
                 break;
+            case "type_asc":
+                orderByClause.push(asc(machineTypes.name));
+                break;
+            case "type_desc":
+                orderByClause.push(desc(machineTypes.name));
         }
 
     const offset = (page - 1) * limit;
@@ -37,6 +67,7 @@ machineRoutes.get("/machines/searchByName", zValidator("query", queryMachinesByN
         db
         .select()
         .from(machines)
+        .innerJoin(machineTypes, eq(machineTypes.id, machines.machineTypeId))
         .where(and(...whereClause))
         .orderBy(...orderByClause)
         .limit(limit)
@@ -51,67 +82,21 @@ machineRoutes.get("/machines/searchByName", zValidator("query", queryMachinesByN
     
     return c.json({
         sucess:true,
-        data: allMachines,
+        data: allMachines.map(data => data.machines_table),
         meta: {
             page,
             limit,
             total: totalCount,
             },
-        message:"Fetched machines by name"
+        message:"Fetched machines"
         });
 });
 
-// Search all current machines by type
-machineRoutes.get("/machines/searchByType", zValidator("query", queryMachinesByTypeSchema), async (c) => {
-    const { page = 1, limit = 20, search, sort } = c.req.valid("query");
-
-    const whereClause: (SQL | undefined)[] = [];
-
-    if (search) {
-        whereClause.push(or(ilike(machineTypes.type, `%${search}%`)));
-    }
-
-        const orderByClause: SQL[] = [];
-    
-        switch (sort) {
-            case "type_desc":
-                orderByClause.push(desc(machineTypes.type));
-                break;
-            case "type_asc":
-                orderByClause.push(asc(machineTypes.type));
-                break;
-        }
-
-    const offset = (page - 1) * limit;
-
-    const [allMachines, [{ totalCount }]] = await Promise.all([
-        db
-        .select()
-        .from(machines)
-        .where(
-            exists(db.select().from(machineTypes).where(and(...whereClause)).orderBy(...orderByClause)))
-        .limit(limit)
-        .offset(offset),
-
-        //This gets machine count from database.
-        db
-          .select({ totalCount: count() })
-          .from(machines)
-          .where(exists(db.select().from(machineTypes).where(and(...whereClause)))),
-      ]);
-    
-    return c.json({
-        sucess:true,
-        data: allMachines,
-        meta: {
-            page,
-            limit,
-            total: totalCount,
-            },
-        message:"Fetched machines by type."
-        });
-});
-
+/**
+ * Gets a specific machine in the database.
+ * @param id the database ID of the machine
+ * @returns the machine.
+ */
 machineRoutes.get("/machines/:id", zValidator("param", getMachineSchema), async (c) => {
 
     const { id } = c.req.valid("param");
@@ -132,7 +117,14 @@ machineRoutes.get("/machines/:id", zValidator("param", getMachineSchema), async 
     });
 })
 
-//Create a new machine given a machine type
+
+/**
+ * Creates a new machine in the database.
+ * @body name           the name of the new machine.
+ * @body machineTypeId  the type of the machine.
+ * @body hourlyRate     the rate of the machine.
+ * @returns the newly created machine.
+ */
 machineRoutes.post("/machines", zValidator("json", createMachineSchema), async (c)=>{
 
     const { name, machineTypeId, hourlyRate } = c.req.valid("json");
@@ -163,7 +155,14 @@ machineRoutes.post("/machines", zValidator("json", createMachineSchema), async (
     }, 201);
 })
 
-//Update a machine given an id.
+/**
+ * Update a particular machine in the database.
+ * @param id            the database ID of the machine
+ * @body name           the new name of the machine.
+ * @body machineTypeId  the new type of the machine.
+ * @body hourlyRate     the new rate of the machine.
+ * @returns the newly updated machine.
+ */
 machineRoutes.patch("/machines/:id",
 zValidator("param", validateMachineIdSchema),
 zValidator("json", createMachineSchema),
@@ -208,7 +207,12 @@ async (c)=>{
     }, 201);
 })
 
-//Delete a machine by id.
+
+/**
+ * Delete a particular machine in the database.
+ * @param id the database ID of the machine.
+ * @returns the deleted machine.
+ */
 machineRoutes.delete("/machines/:id",
     zValidator("param", validateMachineIdSchema),
      async (c)=>{

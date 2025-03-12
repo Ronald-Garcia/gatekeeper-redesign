@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import DeleteUserDialog from "./delete-user-dialogue";
 import BanUserDialog from "./ban-user-dialog";
-import AddTrainingDialog from "./add-training-dialog";
+import TrainingDialog from "./training-dialog";
+import BudgetCodeDialog from "./budget-code-dialog";
 
 type UserActionsProps = {
   userId: number;
@@ -17,11 +18,12 @@ type UserActionsProps = {
 
 export default function UserActions({ userId, setIsActive}: UserActionsProps) {
    const [ShowEditTraining, setShowEditTraining] = useState(false);
+   const [ShowEditBudgetCode, setShowBudgetCode] = useState(false);
    const [ShowDeleteUser, setShowDeleteUser] = useState(false);
    const [ShowTimeoutUser, setShowTimeoutUser] = useState(false);
 
 
-  const handleAddTraining = (e: React.MouseEvent) => {
+  const handleTraining = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowEditTraining(true);
     setIsActive(true);    
@@ -39,6 +41,12 @@ export default function UserActions({ userId, setIsActive}: UserActionsProps) {
     setIsActive(true);   
   };
 
+  const handleBudgetCode = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowBudgetCode(true);
+    setIsActive(true);
+  };
+
 
   const handleCloseDelete = () => {
     setShowDeleteUser(false);
@@ -54,6 +62,10 @@ export default function UserActions({ userId, setIsActive}: UserActionsProps) {
     setShowEditTraining(false);
   };
 
+  const handleCloseBudgetCode = () => {
+    setShowBudgetCode(false);
+  };
+
 
   return (
 
@@ -65,8 +77,11 @@ export default function UserActions({ userId, setIsActive}: UserActionsProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem onClick={handleAddTraining} data-cy="user-add">
-          Add Training
+        <DropdownMenuItem onClick={handleTraining}>
+          Training
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={handleBudgetCode}>
+          Budget Code
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleDelete} className="delete-text-red" data-cy="user-delete">
           Delete
@@ -78,7 +93,10 @@ export default function UserActions({ userId, setIsActive}: UserActionsProps) {
     </DropdownMenu>
 
 {ShowEditTraining && (
-  <AddTrainingDialog userId={userId} setShowEditTraining={handleCloseTraining} />
+  <TrainingDialog userId={userId} setShowEditTraining={handleCloseTraining} />
+)}
+{ShowEditBudgetCode && (
+  <BudgetCodeDialog userId={userId} setShowEditBudgetCode={handleCloseBudgetCode} />
 )}
 {ShowDeleteUser && (
   <DeleteUserDialog

@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 
 function useQueryBudgets(reload: boolean) {
-  const decks = useStore($codes);
+  const codes = useStore($codes);
 
   const loadBudgets = async () => {
     try {
@@ -48,7 +48,7 @@ function useQueryBudgets(reload: boolean) {
     }
   }, []);
 
-  return { decks, loadBudgets, getBudgetsOfUser };
+  return { codes, loadBudgets, getBudgetsOfUser };
 }
 
 export default useQueryBudgets;

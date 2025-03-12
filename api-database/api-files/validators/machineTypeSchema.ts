@@ -1,26 +1,20 @@
 import { z } from "zod";
 
-export const validateTypeSchema = z.object({
-    machineType: z.string()
+export const createMachineTypeSchema = z.object({
+    name: z.string()
 });
 
-export const validateTypeParamSchema = z.object({
-    machineType: z.string()
-});
+export const updateMachineTypeSchema = createMachineTypeSchema;
 
 export const getMachineTypeSchema = z.object({
-    machineTypeId: z.coerce.number().int().positive()
+    id: z.coerce.number().int().positive()
 })
 
 
 export const queryTypesParamsSchema = z.object({
-    sort: z.enum(["type_asc", "type_desc"]).optional(),
+    sort: z.enum(["asc", "desc"]).optional(),
     search: z.string().optional(),
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().optional(),
 
-});
-
-export const updateTypeSchema = z.object({
-    updateType: z.string()
 });
