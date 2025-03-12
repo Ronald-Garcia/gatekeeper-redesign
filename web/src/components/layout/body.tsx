@@ -8,8 +8,7 @@ import { useEffect, useState } from "react";
 import { redirectPage } from "@nanostores/router";
 import Interlock from "../pages/interlock";
 import KioskStartPage from "../pages/kiosk-start-page";
-import { Button } from "../ui/button";
-import ErrorPage from "./ErrorPage";
+import ErrorPage from "./errorPage";
 
 /*
 Body component of the application

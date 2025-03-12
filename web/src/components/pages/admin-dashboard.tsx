@@ -10,6 +10,8 @@ import { redirectPage } from "@nanostores/router";
 import AddMachineTypeDialog from "../machine_types/add-machine-type-dialog";
 import UserInfo from "../Users/selected-info";
 import { $selected } from "@/data/store";
+import UsersActions from "./user-actions";
+import BudgetActions from "./budget-code-actions";
 
 
 
@@ -41,6 +43,7 @@ const AdminDashboard = () => {
 
 
   const router = useStore($router);
+  // Don't think we need this.
   if (!router) {
     return (
       <>
@@ -50,8 +53,7 @@ const AdminDashboard = () => {
     )
   }
 
-
-  return (
+  else return (
     <div>
 
 {/*Adding forms*/}
@@ -73,7 +75,6 @@ const AdminDashboard = () => {
 
 {/* Search Bar and Buttons to trigger adding forms */}
       <div data-cy="admin-dashboard">
-
         <div>
         {router.route === "budgetCodes" &&
            <Button  className="size-"
@@ -121,8 +122,6 @@ const AdminDashboard = () => {
         }
         </div>
 
-
-
         {/* User or Budget Component that displays list of current data on db */}
         
         <div>
@@ -130,7 +129,6 @@ const AdminDashboard = () => {
           {router.route === "budgetCodes" && <BudgetCodes></BudgetCodes>} 
         </div>
         
-      
       </div>
 
     </div>
