@@ -12,6 +12,13 @@ jobs:
 
       - name: Run cypress tests
         run: |
+          cd api-database/
+          npm install -g pnpm
+          npm install
+          pnpm install
+          npm install -g wait-on
+          pnpm dev & wait-on http://localhost:3000
+
           cd web/
           npm install -g pnpm
           npm install
