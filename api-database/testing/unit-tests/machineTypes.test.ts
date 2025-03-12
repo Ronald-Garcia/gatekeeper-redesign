@@ -119,15 +119,15 @@ describe('MachineType Routes', () => {
       const body = await response.json();
       //assert properties
       expect(body).toHaveProperty('success', true);
-      expect(body).toHaveProperty('message', "Deck updated successfully");
+      expect(body).toHaveProperty('message', "Machine type updated successfully");
       expect(body).toHaveProperty('data');
-      expect(body.data[0].type).toEqual(uniqueValue);
+      expect(body.data.name).toEqual(uniqueValue);
     });
   
 
     test("returns 404 when updating a non-existent machine type", async () => {
       const updatePayload = { name: "DOES_NOT_EXIST" };
-      const response = await app.request(`/machine-types/${testMachineTypeId}`, {
+      const response = await app.request(`/machine-types/999999999`, {
         method: 'PATCH',
         headers: new Headers({ 'Content-Type': 'application/json' }),
         body: JSON.stringify(updatePayload),
