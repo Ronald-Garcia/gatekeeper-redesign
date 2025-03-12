@@ -90,6 +90,8 @@ describe('User Routes', () => {
         headers: new Headers({ 'Content-Type': 'application/json' }),
         body: JSON.stringify(duplicateUser),
       });
+
+
       expect(response.status).toBe(409);
       const body = await response.json();
       expect(body).toHaveProperty('message', 'User with this card number already exists.');
@@ -115,7 +117,8 @@ describe('User Routes', () => {
       });
 
       // Retrieve the user by card number and last digit
-      const response = await app.request(`/users/${newUser.cardNum}/${newUser.lastDigitOfCardNum}`);
+      const response = await app.request(`/users/${newUser.cardNum}`);
+      console.log(response);
       expect(response.status).toBe(200);
       const body = await response.json();
       expect(body).toHaveProperty('success', true);
@@ -124,7 +127,7 @@ describe('User Routes', () => {
     });
 
     test('returns 404 if the user is not found', async () => {
-      const response = await app.request('/users/000000000000000/0');
+      const response = await app.request('/users/0000000000000000');
       expect(response.status).toBe(404);
       const body = await response.json();
       expect(body).toHaveProperty('message', 'User not found');
@@ -137,7 +140,7 @@ describe('User Routes', () => {
         name: "Jane Doe",
         cardNum: generateTestCardNumber(), // unique test card number
         lastDigitOfCardNum: 2,
-        JHED: "janedoe",
+        JHED: "janedoe",0
         isAdmin: 0,
         graduationYear: 2022,
       };
