@@ -9,7 +9,7 @@ import { toast } from "sonner";
 
 function useMutationMachines() {
 
-    /*
+    /**
       Hook to save machine
       @param machine: machine to save 
     */

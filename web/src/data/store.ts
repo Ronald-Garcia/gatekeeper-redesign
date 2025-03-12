@@ -36,7 +36,7 @@ const defaultUser: User = {
 const defaultMachine: Machine = {
   id: -1,
   name: "invalid",
-  type: { id: -1, type: "invalid"},
+  type: { id: -1, name: "invalid"},
   hourlyRate: 0
 }
 export const $kiosk = atom<boolean>(false);
