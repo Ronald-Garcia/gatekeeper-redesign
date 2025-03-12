@@ -44,9 +44,8 @@ const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
       name,
       JHED: jhed,
       isAdmin: admin,
-      cardNum:cardNum.substring(0, 15),
+      cardNum:cardNum,
       graduationYear: parseInt(year),
-      lastDigitOfCardNum: parseInt(cardNum.substring(15), 10),
       id: -1}
     
     await addNewUser(newUser); //use hooks to handle state of training
