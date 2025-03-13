@@ -4,7 +4,7 @@ import { Training } from "./types/training";
 import { BudgetCode } from "./types/budgetCode"; 
 import { Machine } from "./types/machine";
 import { MachineType } from "./types/machineType";
-import { SortType } from "./types/sort";
+import { SortBudgetType, SortType } from "./types/sort";
 
 /**
  * Turns on the machine.
@@ -299,11 +299,16 @@ BudgetCode API functions
  * @returns {Promise<{message: string; data: BudgetCode[]}>} A promise that resolves with a message and an array of budget codes.
  * @throws {Error} If the response is not ok, throws an error with the response message.
  */
-export const getAllBudgets = async (): Promise<{
+export const getAllBudgets = async (
+  sort: SortBudgetType = "name_asc",
+  page: number = 1,
+  limit: number = 10,
+  search: string = ""
+): Promise<{
   message: string;
   data: BudgetCode[];
 }> => {
-  const response = await fetch(`${API_DB_URL}/budget-codes`, {
+  const response = await fetch(`${API_DB_URL}/budget-codes?search=${search}&limit=${limit}&page=${page}&sort=${sort}`, {
     credentials: "include",
   });
 

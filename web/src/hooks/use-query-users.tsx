@@ -10,16 +10,22 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 import useQueryMachines from "./use-query-machines";
 import { Machine } from "@/data/types/machine";
+import { SortType } from "@/data/types/sort";
 
 function useQueryUsers(reload: boolean) {
   const users = useStore($users);
   const { getSavedMachine } = useQueryMachines(false);
 
-  const loadUsers = async () => {
+  const loadUsers = async (
+    sort: SortType = "name_asc",
+    page: number = 1,
+    limit: number = 10,
+    search: string = ""
+  ) => {
     try {
       const {
         data: fetchedUsers
-      } = await getAllUsers();
+      } = await getAllUsers(sort,page,limit,search);
       setUsers(fetchedUsers);
     }  catch (e) {
         //get message from api response, put it on a toast
@@ -84,6 +90,7 @@ function useQueryUsers(reload: boolean) {
   }
 
   useEffect(() => {
+    // Check if there is active search. If yes, use load users with that search
     if (reload) {
       loadUsers();
     }

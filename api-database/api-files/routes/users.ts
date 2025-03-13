@@ -1,7 +1,7 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { queryUsersParamsSchema, createUserSchema, getUserSchema, testSchema, getUserByCardNumSchema } from "../validators/schemas.js";
-import { like, SQL, or, desc, asc, eq, and, count } from "drizzle-orm";
+import { SQL, or, desc, asc, eq, and, count, ilike } from "drizzle-orm";
 import { users } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
@@ -30,7 +30,7 @@ userRoutes.get("/users", zValidator("query", queryUsersParamsSchema), async (c) 
 
     if (search) {
         whereClause.push(
-            or(like(users.name, `%${search}%`), like(users.JHED, `%${search}%`))
+            or(ilike(users.name, `%${search}%`), ilike(users.JHED, `%${search}%`))
         );
     }
 

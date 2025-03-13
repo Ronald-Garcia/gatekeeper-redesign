@@ -3,7 +3,7 @@ import { openPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 import Searchbar from "../general/searchbar.tsx";
 import AddBudgetCodeDialog from "../BudgetCodes/add-budgetCode-dialogue.jsx";
-import { resetActiveSearch } from "@/data/store.ts";
+import { resetSearch } from "@/data/store.ts";
 
 /*
 Admin dashboard component
@@ -12,7 +12,7 @@ Displays BudgetCodes or Users based on routing.
 const BudgetActions = () => {
 
   const handleClickOnViewUsers = () => {
-    resetActiveSearch();
+    resetSearch();
     openPage($router, "users");
   }
   

@@ -175,12 +175,20 @@ export function setMachinesTypes(typeList: MachineType[]) {
 
 // *** SERACH STORES ***
 
+//The "local" search for a user, aka state control of the search bar.
+export const $localSearch = atom<string>("")
+export function setLocalSearch(newLocalSearch: string) {
+  $localSearch.set(newLocalSearch)
+}
+
 // The active search for a user, budget code, machine, etc entered into the main search bar.
 export const $activeSearch = atom<string>("")
 export function setActiveSearch(newSearch: string) {
   $activeSearch.set(newSearch)
 }
-// Version of set that sets the active search to nothing.
-export function resetActiveSearch() {
+
+// Reset both the search bar and active search.
+export function resetSearch() {
+  $localSearch.set("")
   $activeSearch.set("")
 }
