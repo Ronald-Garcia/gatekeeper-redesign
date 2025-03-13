@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run cypress tests
+      - name: Run cypress tests 
         run: |
           npm install -g pnpm
           npm install
