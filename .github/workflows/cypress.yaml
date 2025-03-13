@@ -19,12 +19,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Pnpm install root directory, run local host api
+      - name: Install pnpm in root
         run: |
           npm install -g pnpm
           npm install
           pnpm install
+          
+      - name: Pnpm install root directory, run local host api
+        run: |
           cd api-database/
           npm install -g pnpm
           npm install
@@ -34,6 +36,7 @@ jobs:
 
       - name: Run local host apweb
         run: |
+          pnpm install
           cd web/
           npm install -g pnpm
           npm install
