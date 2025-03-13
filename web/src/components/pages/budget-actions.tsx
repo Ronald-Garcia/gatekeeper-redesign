@@ -1,7 +1,7 @@
 import { Button } from "../ui/button";
 import { openPage } from "@nanostores/router";
 import { $router } from "@/data/router";
-import Searchbar from "../ui/searchBar.jsx";
+import Searchbar from "../general/searchbar.tsx";
 import AddBudgetCodeDialog from "../BudgetCodes/add-budgetCode-dialogue.jsx";
 
 /*
