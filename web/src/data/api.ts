@@ -63,6 +63,7 @@ export const getAllUsers = async (
 
   const { message, data }: { message: string; data: User[] } =
     await response.json();
+    console.log(data);
 
   return { message, data };
 };

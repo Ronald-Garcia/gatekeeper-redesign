@@ -34,16 +34,13 @@ describe('Add user tests', () => {
         })
       }
     })
-    
-    // Set up interception of user post request for later.
-    cy.intercept('POST', '**/users*', (req) => {}).as("createUser");
 
     //Get the current length of users.
     //const usersLength = cy.get('[data-cy=users-component]').get(length)
     // Get add user button and click it. Assert form shows up.
     cy.get('[data-cy="add-user-button"]').click()
     // Fill out the form.
-    cy.get('[data-cy = "enter-student-name"]').type("THE_TESTING_USER_43")
+    cy.get('[data-cy = "enter-student-name"]').type("THE_TESTING_USER_44")
     cy.get('[data-cy = "enter-cardnum"]').type(`${test_user_cardnum}`)
     cy.get('[data-cy = "enter-jhed"]').type("aaaae4")
     cy.get('[data-cy = "enter-grad-year"]').type("2030")
@@ -51,17 +48,10 @@ describe('Add user tests', () => {
     // Confirm
     cy.get('[data-cy = "user-add-confirm"]').click()
     
-    //Make intercept of the creation request, then read the response.
-    cy.wait('@createUser').then((interception) => {
-      console.log(interception.response);
-      if (interception.response.statusCode !== 201){
-        cy.contains("Did not successfully create user").should('not.exist')
-      }
-      else {
-        assert.equal(interception.response.statusCode, 201)
-        assert.equal(interception.response.body.message, "User has been created")
-      }
-    })   
+    // Search for component, confirm it is there.
+    cy.get('[data-cy = "searchbar"]').type("THE_TESTING_USER_44\n");
+    cy.get(`[data-cy = ${test_user_cardnum.substring(0,15)}]`).should("be.visible");
+  
   })
 })
 

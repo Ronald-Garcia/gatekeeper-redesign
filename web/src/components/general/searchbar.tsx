@@ -47,6 +47,7 @@ const Searchbar =  () => {
     return (
         <div>
         <input
+            data-cy = "searchbar"
             type="text"
             value={localSearch}
             placeholder="Search"
