@@ -89,10 +89,10 @@ const AddUserDialog = () => {
     }
 
   return (
-    <div data-cy = "user-add-dialog" >
+    <div data-cy = "user-dialog" >
     <Dialog open={open} onOpenChange={handleOpenClose}>
       <DialogTrigger asChild>
-          <Button className="jhu-blue-button add-button h-[40px]" variant={"ghost"} size="default">
+          <Button data-cy="add-user-button" className="jhu-blue-button add-button h-[40px]" variant={"ghost"} size="default">
               Add User
           </Button>
       </DialogTrigger>
