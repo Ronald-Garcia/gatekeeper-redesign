@@ -10,6 +10,10 @@ jobs:
         uses: actions/checkout@v4
       - name: Install dependencies in web and api database
         run: |
+          npm install -g pnpm
+          npm install
+          pnpm install
+
           cd web/
           npm install -g pnpm
           npm install

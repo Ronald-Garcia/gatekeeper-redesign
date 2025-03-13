@@ -6,7 +6,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-  DialogOverlay,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -14,17 +13,11 @@ import { Input } from "../ui/input";
 import { User } from "@/data/types/user";
 import useQueryUsers from "@/hooks/use-query-users";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-
-
-
-//prop for handling state of the dialogue
-type AddUserDialogProp = {
-  setShowAddUser: React.Dispatch<React.SetStateAction<boolean>>;
-};
+import { DialogClose, DialogTrigger } from "@radix-ui/react-dialog";
 
  
 // function that handles state of the dialogue, error handling from api
-const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
+const AddUserDialog = () => {
   const { addNewUser } = useMutationUsers();
   const [name, setName] = useState("");
   const { loadUsers } = useQueryUsers(false);
@@ -35,10 +28,16 @@ const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
   const [admin, setAdmin] = useState(0);
   const [year, setYear] = useState("");
 
+  const [open, setOpen] = useState(false);
+
+  const handleOpenClose = () => {
+    setOpen(!open);    
+  }
+
+
 
   //async function with editing logic, including error handling
   const handleAddUser = async () => {
-
 
     const newUser: User = {
       name,
@@ -48,18 +47,21 @@ const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
       graduationYear: parseInt(year),
       id: -1}
     
-    await addNewUser(newUser); //use hooks to handle state of training
+    // Get that user so we can do some error checking
+    // set open here incase we want to not close for error handle in future.
+    const response = await addNewUser(newUser); //use hooks to handle state of training
+    // If the created user is undefined, there was a problem.
+    setOpen(false);
+    if (response) {
+      //TODO error handling.
+    }
     loadUsers();
-    setShowAddUser(false); //make the dialogue disappear
-
   };
 
 
    const handleOnChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
       setName(e.target.value);
     }
-
-
 
     const handleOnChangeCardNum = (e: React.ChangeEvent<HTMLInputElement>) => {
       setCardNum(e.target.value);
@@ -85,14 +87,15 @@ const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
         setAdmin(0);
       }
     }
-  
-  
-  
 
   return (
-    <div data-cy = "user-add-dialog" >
-    <Dialog open={true} onOpenChange={setShowAddUser}>
-      <DialogOverlay />
+    <div data-cy = "user-dialog" >
+    <Dialog open={open} onOpenChange={handleOpenClose}>
+      <DialogTrigger asChild>
+          <Button data-cy="add-user-button" className="jhu-blue-button add-button h-[40px]" variant={"ghost"} size="default">
+              Add User
+          </Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add New User</DialogTitle>
@@ -107,17 +110,12 @@ const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
           data-cy = "enter-student-name"
         >
         </Input>
-        
         </div>
-       
-      
-       
         <div className="Swipe Card to Fill JCard ID">
         <Input
           onChange={handleOnChangeCardNum}
           placeholder="Card Number"
           data-cy = "enter-cardnum"
-
         >
         </Input>
     
@@ -128,7 +126,6 @@ const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
           onChange={handleOnChangeJhed}
           placeholder="jhed"
           data-cy = "enter-jhed"
-
         >
         </Input>
     
@@ -143,7 +140,7 @@ const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
         </Input>
         </div>
         
-        <div className="Is Admin Checkbox">
+        <div className="is-admin-question">
           <div className="flex gap-2">
             Is this user an Administrator?
           </div>
@@ -159,10 +156,13 @@ const AddUserDialog = ({ setShowAddUser }: AddUserDialogProp) => {
           </div>
         </RadioGroup>
 
-
         <DialogFooter>
-          <Button data-cy = "user-add-cancel" onClick={() => setShowAddUser(false)}>Cancel</Button>
-          <Button data-cy = "user-add-confirm" onClick={handleAddUser}>Save Changes</Button>
+          <DialogClose asChild>
+            <Button className = "jhu-white-button" variant={"ghost"} data-cy = "user-add-cancel" >Cancel</Button>
+          </DialogClose>
+          
+            <Button className = "jhu-blue-button" variant={"ghost"} data-cy = "user-add-confirm" onClick={handleAddUser}>Save Changes</Button>
+
         </DialogFooter>
       </DialogContent>
     </Dialog>

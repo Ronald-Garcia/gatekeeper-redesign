@@ -26,18 +26,16 @@ jobs:
           npm install -g pnpm
           npm install
           pnpm install
-          npm install -g wait-on
           pnpm dev &
-
-      - name: Run local host apweb
+      - name: Run local host web
         run: |
           cd web/
           npm install -g pnpm
-          npm install
           npm install --save-dev cypress
+          npm install
           pnpm install
-          pnpm dev &
-
+          npm install -g wait-on 
+          pnpm dev & wait-on http://localhost:5173/
       - name: Run cypress tests
         run: |
           cd web/

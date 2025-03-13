@@ -40,6 +40,9 @@ function useQueryUsers(reload: boolean) {
       }
 
       let curMachine: Machine | "kiosk" | undefined
+      // Call python refers to calling the machine api backend. If we are not
+      // on a machine, aka we are online, don't call the machine-api, since it 
+      // does not exist. Just default to kiosk
       if (callPython){
         curMachine = await getSavedMachine();
       } else {

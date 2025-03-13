@@ -5,7 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-  DialogOverlay,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -13,35 +13,33 @@ import { Input } from "../ui/input";
 import { useState } from "react";
 import { BudgetCode } from "@/data/types/budgetCode";
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
-
-
-
-
-//prop for handling state of the dialogue
-type EditBudgetCodeDialogProp = {
-  setShowAddBudgetCode: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
+import { DialogClose } from "@radix-ui/react-dialog";
  
 // function that handles state of the dialogue, error handling from api
-const AddBudgetCodeDialog = ({ setShowAddBudgetCode }: EditBudgetCodeDialogProp) => {
+const AddBudgetCodeDialog = () => {
   const { addNewBudgetCode } = useMutationBudgetCodes();
   const { loadBudgets } = useQueryBudgets(false);
   const [budgetCode, setbudgetCode] = useState("");
   const [name, setName] = useState("");
 
+  // This is dialog component state management
+  const [open, setOpen] = useState(false);
+  const handleOpenClose = () => {
+    setOpen(!open);    
+  }
+
   //async function with editing logic, including error handling
+  // set open here incase we want to not close for error handle in future.
   const handleAddBudgetCode = async () => {
-    
     const newCode: BudgetCode = {
-      budgetCode: budgetCode,
+      code: budgetCode,
       id: -1,
       name: name
     }
+    setOpen(false);
 
     addNewBudgetCode(newCode);
     loadBudgets();
-    setShowAddBudgetCode(false);
   };
 
   
@@ -55,8 +53,13 @@ const AddBudgetCodeDialog = ({ setShowAddBudgetCode }: EditBudgetCodeDialogProp)
 
 
   return (
-    <Dialog open={true} onOpenChange={setShowAddBudgetCode}>
-      <DialogOverlay />
+    <div data-cy = "budget-code-add-dialog" >
+    <Dialog open={open} onOpenChange={handleOpenClose}>
+      <DialogTrigger asChild>
+          <Button className="jhu-blue-button add-button h-[40px]" variant={"ghost"} size="default">
+              Add Budget Code
+          </Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add New BudgetCode</DialogTitle>
@@ -64,32 +67,30 @@ const AddBudgetCodeDialog = ({ setShowAddBudgetCode }: EditBudgetCodeDialogProp)
         <Label htmlFor="content" className="text-sm">
           Please fill out with the new budget code information: 
         </Label>
-       
         <div className="space-y-4">
         <Input
           onChange={handleOnChangeName}
           placeholder="Enter Name"
         >
         </Input>
-        
         </div>
-
         <div className="space-y-4">
         <Input
           onChange={handleOnChangeCode}
           placeholder="Enter Budget Code"
         >
         </Input>
-        
         </div>
-       
-      
         <DialogFooter>
-          <Button onClick={() => setShowAddBudgetCode(false)}>Cancel</Button>
-          <Button onClick={handleAddBudgetCode}>Save Changes</Button>
+          <DialogClose asChild>
+            <Button className = "jhu-white-button" variant={"ghost"} data-cy = "budget-code-add-cancel" >Cancel</Button>
+          </DialogClose>
+            <Button className = "jhu-blue-button" variant={"ghost"} data-cy = "budget-code-add-confirm" onClick={handleAddBudgetCode}>Save Changes</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
+    
+    </div>
   );
 };
 

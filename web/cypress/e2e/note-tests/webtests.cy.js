@@ -5,15 +5,17 @@
 const API_DB_URL = "http://localhost:3000"
 
 
-describe('User tests', () => {
+describe('Add user tests', () => {
   let test_user_cardnum = "8987816946561711"
   beforeEach(() => {
     //Before each test, go to our locally running app and use the testing carNum "1234567890777777"
     cy.visit('http://localhost:5173/kiosk')
     cy.get('[data-cy="cardnum-input"]').type(`;1234567890777777;`)
     cy.get('[data-cy="cardnum-input"]').type("\n")
-    // Also, lets make sure to the user we are about to make does not exist by deleting them
-    
+  })
+
+  it('Add a user and have it show up on the dashboard', () => {
+    // Let's make sure to the user we are about to make does not exist by deleting them
     cy.request({
       url: `http://localhost:3000/users/${test_user_cardnum}`,
       failOnStatusCode: false,
@@ -32,9 +34,7 @@ describe('User tests', () => {
         })
       }
     })
-  })
-
-  it('Add a user and have it show up on the dashboard', () => {
+    
     // Set up interception of user post request for later.
     cy.intercept('POST', '**/users*', (req) => {}).as("createUser");
 
