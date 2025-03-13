@@ -182,7 +182,7 @@ export const createUser = async (user: User): Promise<{
       ...user
     })
   });
-
+  console.log(response)
 
   if (!response.ok) {
     const { message }: { message: string } = await response.json();

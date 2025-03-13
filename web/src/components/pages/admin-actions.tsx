@@ -4,7 +4,7 @@ import { useStore } from "@nanostores/react";
 import { useState } from "react";
 import { redirectPage } from "@nanostores/router";
 import { $selected } from "@/data/store";
-import AddUserDialog from "../Users/add-user-dialogue";
+import AddUserDialog from "../Users/add-user-dialog";
 import AddBudgetCodeDialog from "../BudgetCodes/add-budgetCode-dialogue";
 import AddMachineTypeDialog from "../machine_types/add-machine-type-dialog";
 
@@ -38,7 +38,7 @@ const AdminActions = () => {
   };
 
   {showAddUser && (
-    <AddUserDialog  setShowAddUser={handleCloseAddUser} />
+    <AddUserDialog />
   )}
   
   {showAddBudgetCode && (
@@ -46,7 +46,7 @@ const AdminActions = () => {
   )}
   
   {showAddMachineType && (
-    <AddMachineTypeDialog  setShowAddMachineType={handleCloseAddMachineType} />
+    <AddMachineTypeDialog />
   )}
 
   const router = useStore($router);

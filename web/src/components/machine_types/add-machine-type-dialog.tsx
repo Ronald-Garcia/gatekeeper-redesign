@@ -6,51 +6,49 @@ import {
   DialogTitle,
   DialogFooter,
   DialogOverlay,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "../ui/input";
 import useMutationMachines from "@/hooks/use-mutation-machines";
-
-
-
-//prop for handling state of the dialogue
-type AddUserDialogProp = {
-  setShowAddMachineType: React.Dispatch<React.SetStateAction<boolean>>;
-};
+import { DialogTrigger } from "@radix-ui/react-dialog";
 
  
 /*
 AddMachineTypeDialog: Dialog that prompts user to create a new machientype 
 @param setShowAddMachineType: function that controls the state of a flag, that is switched off after user is done interacting with the form. 
 */
-const AddMachineTypeDialog = ({ setShowAddMachineType }: AddUserDialogProp) => {
+const AddMachineTypeDialog = () => {
   const { addMachineType } = useMutationMachines();
   const [name, setName] = useState("");
 
+  const [open, setOpen] = useState(false);
+
+  const handleOpenClose = () => {
+    setOpen(!open);    
+  }
+
   //async function with editing logic, including error handling
   const handleAddMachineType = async () => {
-
-
-    
     await addMachineType(name); //use hooks to handle state of machine type
-    setShowAddMachineType(false); //make the dialogue disappear
   };
-
 
    const handleOnChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
       setName(e.target.value);
     }
-
-
   
     // jsx elements 
   return (
-    <Dialog open={true} onOpenChange={setShowAddMachineType}>
-      <DialogOverlay />
+    <Dialog open={open} onOpenChange={handleOpenClose}>
+      <DialogTrigger asChild>
+          <Button className="jhu-blue-button add-button h-[40px]" variant={"ghost"} size="default">
+              Add Machine
+          </Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add New MachineType</DialogTitle>
+          <DialogTitle>Add New Machine Type</DialogTitle>
         </DialogHeader>
         <Label htmlFor="content" className="text-sm">
           Please fill out form with new Machine Type: 
@@ -58,15 +56,21 @@ const AddMachineTypeDialog = ({ setShowAddMachineType }: AddUserDialogProp) => {
         <div className="space-y-4">
         <Input
           onChange={handleOnChangeName}
-          placeholder="Enter MachineType"
+          placeholder="Enter Machine Type"
         >
         </Input>
         
         </div>
        
         <DialogFooter>
-          <Button onClick={() => setShowAddMachineType(false)}>Cancel</Button>
-          <Button onClick={handleAddMachineType}>Save Changes</Button>
+          <DialogClose asChild>
+              <Button type="button" variant="ghost">
+                  Close
+              </Button>
+            </DialogClose>
+            <DialogClose asChild>
+          <Button className = "jhu-blue-button" variant="ghost" onClick={handleAddMachineType}>Save Changes</Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -97,6 +97,12 @@
   background-color: #002d72;
 }
 
+.jhu-white-button{
+  color: black;
+  background-color: white;
+  outline:  #002d72;
+}
+
 /*404 page styling*/
 .not-found-page {
   display: flex;
