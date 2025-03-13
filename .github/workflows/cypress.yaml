@@ -41,7 +41,7 @@ jobs:
           npm install -g pnpm
           npm install
           npm install --save-dev cypress
-          pnpm install
+          pnpm install --no-frozen-lockfile
           pnpm dev &
 
       - name: Run cypress tests
