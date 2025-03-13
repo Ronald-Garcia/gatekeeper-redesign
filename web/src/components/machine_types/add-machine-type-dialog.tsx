@@ -5,7 +5,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-  DialogOverlay,
   DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -30,8 +29,10 @@ const AddMachineTypeDialog = () => {
   }
 
   //async function with editing logic, including error handling
+  // set open here incase we want to not close for error handle in future.
   const handleAddMachineType = async () => {
     await addMachineType(name); //use hooks to handle state of machine type
+    setOpen(false)
   };
 
    const handleOnChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,9 +69,7 @@ const AddMachineTypeDialog = () => {
                   Close
               </Button>
             </DialogClose>
-            <DialogClose asChild>
           <Button className = "jhu-blue-button" variant="ghost" onClick={handleAddMachineType}>Save Changes</Button>
-          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>

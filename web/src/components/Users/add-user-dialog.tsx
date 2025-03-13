@@ -48,10 +48,12 @@ const AddUserDialog = () => {
       id: -1}
     
     // Get that user so we can do some error checking
+    // set open here incase we want to not close for error handle in future.
     const response = await addNewUser(newUser); //use hooks to handle state of training
     // If the created user is undefined, there was a problem.
+    setOpen(false);
     if (response) {
-
+      //TODO error handling.
     }
     loadUsers();
   };
@@ -124,7 +126,6 @@ const AddUserDialog = () => {
           onChange={handleOnChangeJhed}
           placeholder="jhed"
           data-cy = "enter-jhed"
-
         >
         </Input>
     
@@ -156,12 +157,12 @@ const AddUserDialog = () => {
         </RadioGroup>
 
         <DialogFooter>
-          <DialogClose>
+          <DialogClose asChild>
             <Button className = "jhu-white-button" variant={"ghost"} data-cy = "user-add-cancel" >Cancel</Button>
           </DialogClose>
-          <DialogClose>
+          
             <Button className = "jhu-blue-button" variant={"ghost"} data-cy = "user-add-confirm" onClick={handleAddUser}>Save Changes</Button>
-          </DialogClose>
+
         </DialogFooter>
       </DialogContent>
     </Dialog>
