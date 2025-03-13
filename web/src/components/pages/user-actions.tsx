@@ -5,7 +5,7 @@ import AddUserDialog from "../Users/add-user-dialog";
 import { Button } from "../ui/button";
 import { openPage } from "@nanostores/router";
 import { $router } from "@/data/router";
-import Searchbar from "../ui/searchBar";
+import Searchbar from "../ui/searchBar.jsx";
 import AddMachineTypeDialog from "../machine_types/add-machine-type-dialog";
 
 /*
