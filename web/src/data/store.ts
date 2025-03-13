@@ -129,7 +129,7 @@ export function deleteBudgetCodeById(id: number) {
 
 export function deleteBudgetCodeByNum(codeNum: string) {
   $codes.set(
-    $codes.get().filter((code: BudgetCode) => code.budgetCode !== codeNum),
+    $codes.get().filter((code: BudgetCode) => code.code !== codeNum),
   );
 }
 
@@ -173,3 +173,14 @@ export function setMachinesTypes(typeList: MachineType[]) {
   $machine_types.set(typeList);
 }
 
+// *** SERACH STORES ***
+
+// The active search for a user, budget code, machine, etc entered into the main search bar.
+export const $activeSearch = atom<string>("")
+export function setActiveSearch(newSearch: string) {
+  $activeSearch.set(newSearch)
+}
+// Version of set that sets the active search to nothing.
+export function resetActiveSearch() {
+  $activeSearch.set("")
+}

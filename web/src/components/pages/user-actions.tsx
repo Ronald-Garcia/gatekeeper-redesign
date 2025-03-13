@@ -1,8 +1,8 @@
 import UserInfo from "../Users/selected-info";
 import { useStore } from "@nanostores/react";
-import { $selected } from "@/data/store";
+import { $selected, resetActiveSearch } from "@/data/store";
 import AddUserDialog from "../Users/add-user-dialog";
-import { Button } from "../ui/button";
+import { Button } from "../ui/button"; 
 import { openPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 import Searchbar from "../general/searchbar.tsx";
@@ -15,6 +15,7 @@ Displays BudgetCodes or Users based on routing.
 const UsersActions = () => {
 
   const handleClickOnViewBudgetCodes = () => {
+    resetActiveSearch();
     openPage($router, "budgetCodes");
   }
 
@@ -33,14 +34,14 @@ const UsersActions = () => {
             onClick={handleClickOnViewBudgetCodes}>
               View Budget Codes
           </Button>
-      <div className="flex items-center justify-center">
+      <div className="admin-actions">
           <div className="relative w-full max-w-lg">
                 <Searchbar/>
           </div>
-            <div>
+          <div className="admin-buttons">
             <AddUserDialog/>
             </div>
-            <div>
+            <div className="admin-buttons">
             <AddMachineTypeDialog/>
             </div>
           </div>

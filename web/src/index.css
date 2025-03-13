@@ -103,6 +103,37 @@
   outline:  #002d72;
 }
 
+/*Admin dashboard syling*/
+
+
+/*Search Styling*/
+
+.admin-actions{
+  display: flex;
+  align-items: flex-start ;
+  justify-content: center;
+}
+
+.admin-buttons{
+  padding-top: 10.8px;
+  padding-left: 4px;
+}
+
+.search-query-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f0f0f0;
+  padding: 12.8px;
+  padding-left: 48px;
+  border-radius: 50px;
+  margin: 5px 0;
+}
+
+.search-query {
+  font-size: 16px;
+}
+
 /*404 page styling*/
 .not-found-page {
   display: flex;
