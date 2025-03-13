@@ -22,6 +22,10 @@ jobs:
 
       - name: Run cypress tests
         run: |
+          npm install -g pnpm
+          npm install
+          pnpm install
+
           cd web/
           npm install -g pnpm
           npm install
@@ -33,6 +37,9 @@ jobs:
 
       - name: Install dependencies in web and api database
         run: |
+            npm install -g pnpm
+            npm install
+            pnpm install
             cd web/
             npm install -g pnpm
             npm install

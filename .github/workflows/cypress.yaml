@@ -20,8 +20,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Run local host api
+      - name: Pnpm install root directory, run local host api
         run: |
+          npm install -g pnpm
+          npm install
+          pnpm install
           cd api-database/
           npm install -g pnpm
           npm install
