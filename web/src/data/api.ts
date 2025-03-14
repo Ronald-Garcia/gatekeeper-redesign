@@ -331,7 +331,7 @@ export const getAllBudgetsOfUser = async (user_id: number): Promise<{
   message: string;
   data: BudgetCode[];
 }> => {
-  const response = await fetch(`${API_DB_URL}/budget-codes/${user_id}`, {
+  const response = await fetch(`${API_DB_URL}/user-budgets/${user_id}`, {
     credentials: "include",
   });
 

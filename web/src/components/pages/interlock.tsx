@@ -35,7 +35,7 @@ const Interlock = () => {
                         <CardTitle className="text-2xl font-bold">
                             Welcome, {curUser.name}.
                         </CardTitle>
-                        <CardDescription className="italic text-xl">
+                        <CardDescription className="text-xl italic">
                             {"Select the budget code to be applied."}
                         </CardDescription>
                     </CardHeader>
