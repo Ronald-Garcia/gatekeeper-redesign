@@ -26,7 +26,9 @@ export const budgetCodesRoutes = new Hono<Context>();
  * @query sort         sort by name or code, ascending or descending.
  * @returns page of data.
  */
-budgetCodesRoutes.get("/budget-codes", adminGuard, zValidator("query", queryBudgetCodesParamsSchema), async (c) => {
+budgetCodesRoutes.get("/budget-codes",
+    // adminGuard, 
+     zValidator("query", queryBudgetCodesParamsSchema), async (c) => {
     const { page = 1, limit = 20, search, sort } = c.req.valid("query");
 
     const whereClause: (SQL | undefined)[] = [];
@@ -90,7 +92,9 @@ budgetCodesRoutes.get("/budget-codes", adminGuard, zValidator("query", queryBudg
  * @body code the code of the budget code.
  * @returns the newly created budget code.
  */
-budgetCodesRoutes.post("/budget-codes", adminGuard,zValidator("json", createBudgetCode), async (c)=>{
+budgetCodesRoutes.post("/budget-codes", 
+   // adminGuard,
+    zValidator("json", createBudgetCode), async (c)=>{
 
     const { name, code } = c.req.valid("json");
 
@@ -116,7 +120,9 @@ budgetCodesRoutes.post("/budget-codes", adminGuard,zValidator("json", createBudg
  * @param id the database ID of the budget code to delete.
  * @returns the budget code that was deleted.
  */
-budgetCodesRoutes.delete("/budget-codes/:id", adminGuard,zValidator("param", deleteBudgetCodeSchema), async (c)=>{
+budgetCodesRoutes.delete("/budget-codes/:id", 
+   // adminGuard,
+    zValidator("param", deleteBudgetCodeSchema), async (c)=>{
     const { id } = c.req.valid("param");
 
     const [deletedBudgetCode] = await db
