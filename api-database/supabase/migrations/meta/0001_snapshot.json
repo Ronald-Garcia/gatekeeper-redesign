@@ -1,6 +1,6 @@
 {
-  "id": "4b77acef-adb2-44e6-847d-e9144ec40056",
-  "prevId": "374e3516-3eec-4d3a-965f-8212541895f6",
+  "id": "dad820f2-5755-45eb-acc5-becae5d7020f",
+  "prevId": "2a7d0aad-f1f4-4e72-9449-4f05c01d8087",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -14,8 +14,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "budgetCode": {
-          "name": "budgetCode",
+        "code": {
+          "name": "code",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -35,6 +35,95 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.financial_statements_table": {
+      "name": "financial_statements_table",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "budgetCode": {
+          "name": "budgetCode",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "machineId": {
+          "name": "machineId",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "startTime": {
+          "name": "startTime",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "endTime": {
+          "name": "endTime",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "financial_statements_table_userId_users_table_id_fk": {
+          "name": "financial_statements_table_userId_users_table_id_fk",
+          "tableFrom": "financial_statements_table",
+          "tableTo": "users_table",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "financial_statements_table_budgetCode_budgetCodes_id_fk": {
+          "name": "financial_statements_table_budgetCode_budgetCodes_id_fk",
+          "tableFrom": "financial_statements_table",
+          "tableTo": "budgetCodes",
+          "columnsFrom": [
+            "budgetCode"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "financial_statements_table_machineId_machines_table_id_fk": {
+          "name": "financial_statements_table_machineId_machines_table_id_fk",
+          "tableFrom": "financial_statements_table",
+          "tableTo": "machines_table",
+          "columnsFrom": [
+            "machineId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.machine_type": {
       "name": "machine_type",
       "schema": "",
@@ -45,8 +134,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "type": {
-          "name": "type",
+        "name": {
+          "name": "name",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -56,11 +145,11 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "machine_type_type_unique": {
-          "name": "machine_type_type_unique",
+        "machine_type_name_unique": {
+          "name": "machine_type_name_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "type"
+            "name"
           ]
         }
       },
@@ -105,6 +194,51 @@
           "tableTo": "machine_type",
           "columnsFrom": [
             "machineTypeId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.sessions": {
+      "name": "sessions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "sessions_user_id_users_table_id_fk": {
+          "name": "sessions_user_id_users_table_id_fk",
+          "tableFrom": "sessions",
+          "tableTo": "users_table",
+          "columnsFrom": [
+            "user_id"
           ],
           "columnsTo": [
             "id"

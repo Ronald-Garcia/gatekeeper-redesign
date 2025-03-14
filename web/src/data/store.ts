@@ -52,7 +52,6 @@ export function setSelectedBudgetCode(bcs: BudgetCode[]) {
 const defaultUser: User = {
   name: "test",
   cardNum: "-1",
-  lastDigitOfCardNum: -1,
   isAdmin: 0,
   graduationYear: 2020,
   JHED: "ttest01",
@@ -156,7 +155,7 @@ export function deleteBudgetCodeById(id: number) {
 
 export function deleteBudgetCodeByNum(codeNum: string) {
   $codes.set(
-    $codes.get().filter((code: BudgetCode) => code.budgetCode !== codeNum),
+    $codes.get().filter((code: BudgetCode) => code.code !== codeNum),
   );
 }
 
@@ -200,3 +199,22 @@ export function setMachinesTypes(typeList: MachineType[]) {
   $machine_types.set(typeList);
 }
 
+// *** SERACH STORES ***
+
+//The "local" search for a user, aka state control of the search bar.
+export const $localSearch = atom<string>("")
+export function setLocalSearch(newLocalSearch: string) {
+  $localSearch.set(newLocalSearch)
+}
+
+// The active search for a user, budget code, machine, etc entered into the main search bar.
+export const $activeSearch = atom<string>("")
+export function setActiveSearch(newSearch: string) {
+  $activeSearch.set(newSearch)
+}
+
+// Reset both the search bar and active search.
+export function resetSearch() {
+  $localSearch.set("")
+  $activeSearch.set("")
+}

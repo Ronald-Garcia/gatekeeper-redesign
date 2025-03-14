@@ -10,16 +10,22 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 import useQueryMachines from "./use-query-machines";
 import { Machine } from "@/data/types/machine";
+import { SortType } from "@/data/types/sort";
 
 function useQueryUsers(reload: boolean) {
   const users = useStore($users);
   const { getSavedMachine } = useQueryMachines(false);
 
-  const loadUsers = async () => {
+  const loadUsers = async (
+    sort: SortType = "name_asc",
+    page: number = 1,
+    limit: number = 10,
+    search: string = ""
+  ) => {
     try {
       const {
         data: fetchedUsers
-      } = await getAllUsers();
+      } = await getAllUsers(sort,page,limit,search);
       setUsers(fetchedUsers);
     }  catch (e) {
         //get message from api response, put it on a toast
@@ -30,7 +36,7 @@ function useQueryUsers(reload: boolean) {
       }
     };
 
-  const validateUser = async (cardNum: number, isKiosk:number): Promise<"machine_login" | "users" | "start_page" | "interlock">  => {
+  const validateUser = async (cardNum: number, callPython:number): Promise<"machine_login" | "users" | "start_page" | "interlock">  => {
     try {
       const {
         data
@@ -40,7 +46,10 @@ function useQueryUsers(reload: boolean) {
       }
 
       let curMachine: Machine | "kiosk" | undefined
-      if (!isKiosk){
+      // Call python refers to calling the machine api backend. If we are not
+      // on a machine, aka we are online, don't call the machine-api, since it 
+      // does not exist. Just default to kiosk
+      if (callPython){
         curMachine = await getSavedMachine();
       } else {
         curMachine = "kiosk";
@@ -81,6 +90,7 @@ function useQueryUsers(reload: boolean) {
   }
 
   useEffect(() => {
+    // Check if there is active search. If yes, use load users with that search
     if (reload) {
       loadUsers();
     }

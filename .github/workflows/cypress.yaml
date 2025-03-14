@@ -1,8 +1,19 @@
 name: Cypress Tests
 
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_WEB_ID }}
+  VITE_API_DB_URL: http://localhost:3000
+  VITE_API_MACHINE_URL: http://localhost:5000
+  VITE_BASE_URL: http://localhost:5173
+  DATABASE_URL: ${{ secrets.DATABASE_CREDENTIALS }}
+
+
+
 on: push
       
 jobs:
+  
   cypress-run:
     runs-on: ubuntu-24.04
     steps:
@@ -15,17 +26,17 @@ jobs:
           npm install -g pnpm
           npm install
           pnpm install
-          npm install -g wait-on
-          pnpm dev & wait-on http://localhost:3000
-
-
-      - name: Run cypress tests
+          pnpm dev &
+      - name: Run local host web
         run: |
           cd web/
           npm install -g pnpm
-          npm install
           npm install --save-dev cypress
+          npm install
           pnpm install
-          npm install -g wait-on
-          pnpm dev & wait-on http://localhost:5173
+          npm install -g wait-on 
+          pnpm dev & wait-on http://localhost:5173/
+      - name: Run cypress tests
+        run: |
+          cd web/
           npx cypress run

@@ -7,12 +7,15 @@ import { db } from "../db";
 import { budgetCodes, userBudgetCodeTable, users } from "../db/schema";
 import { HTTPException } from "hono/http-exception";
 import { validateUserParamSchema } from "../validators/trainingSchema";
+import { Context } from "../lib/context";
+import { adminGuard } from "../middleware/adminGuard";
 
 
-export const userBudgetCodeRelationRoute = new Hono();
+export const userBudgetCodeRelationRoute = new Hono<Context>();
 
 
-userBudgetCodeRelationRoute.get("/user-budgets/:id",
+userBudgetCodeRelationRoute.get("/user-budgets/:id", 
+    //adminGuard,
     zValidator("query", queryUserBudgetsSchema),
     zValidator("param", validateUserParamSchema),
     async (c) => {
@@ -76,6 +79,7 @@ userBudgetCodeRelationRoute.get("/user-budgets/:id",
 )
 
 userBudgetCodeRelationRoute.post("/user-budgets", 
+    //adminGuard,
     zValidator("json", createUserBudgetSchema),
     async (c) => {
         const { userId, budgetCodeId } = c.req.valid("json");
@@ -99,6 +103,7 @@ userBudgetCodeRelationRoute.post("/user-budgets",
 )
 
 userBudgetCodeRelationRoute.delete("/user-budgets/:userId/:budgetCodeId", 
+    //adminGuard,
     zValidator("param", deleteUserBudgetSchema),
     async (c) => {
         const {userId, budgetCodeId} = c.req.valid("param");
