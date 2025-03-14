@@ -117,3 +117,5 @@ userBudgetCodeRelationRoute.delete("/user-budgets/:userId/:budgetCodeId",
         })
     }
 )
+
+userBudgetCodeRelationRoute.patch

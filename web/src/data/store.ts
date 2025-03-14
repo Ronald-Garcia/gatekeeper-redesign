@@ -9,6 +9,7 @@ export const $users = atom<User[]>([]);
 export const $codes = atom<BudgetCode[]>([]);
 export const $machines = atom<Machine[]>([]);
 export const $machine_types = atom<MachineType[]>([]);
+export const $selected_budget_codes = atom<BudgetCode[]>([]);
 
 
 type Selected = User | BudgetCode;
@@ -22,6 +23,31 @@ export function clearItem() {
   $selected.set(null);
 }
 
+export function addSelectedBudgetCode(bc: BudgetCode) {
+  $selected_budget_codes.set([...$selected_budget_codes.get(), bc ]);
+}
+
+export function removeSelectedBudgetCode(bc: BudgetCode) {
+  $selected_budget_codes.set($selected_budget_codes.get().filter(b => b.id !== bc.id));
+}
+
+export function clearSelectedBudgetCode() {
+  $selected_budget_codes.set([]);
+}
+
+export function toggleSelectedBudgetCode(bc: BudgetCode) {
+  const sbc = $selected_budget_codes.get().find(b => b.id === bc.id);
+
+  if (sbc) {
+    removeSelectedBudgetCode(bc);
+  } else {
+    addSelectedBudgetCode(bc);
+  }
+}
+
+export function setSelectedBudgetCode(bcs: BudgetCode[]) {
+  $selected_budget_codes.set(bcs);
+}
 
 const defaultUser: User = {
   name: "test",
