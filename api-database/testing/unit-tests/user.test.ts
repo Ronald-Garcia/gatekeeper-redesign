@@ -3,9 +3,12 @@ import { userRoutes } from '../../api-files/routes/users.js';
 import { db } from '../../api-files/db/index.js';
 import { users } from '../../api-files/db/schema.js';
 import { like } from 'drizzle-orm';
+import { Context } from '../../api-files/lib/context.js';
+import { auth } from '../../api-files/middleware/auth.js';
 
 // Create a new Hono instance and mount the user routes
-const app = new Hono();
+const app = new Hono<Context>();
+app.use("/*", auth);
 app.route('/', userRoutes);
 
 // Add an error handler so that errors are returned as JSON, will not work without this

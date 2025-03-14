@@ -12,6 +12,7 @@ import { machineTypeRoutes } from "./routes/machineTypes.js";
 import { userBudgetCodeRelationRoute } from "./routes/userBudgetCodeRelations.js";
 import { Context } from "./lib/context.js";
 import { auth } from "./middleware/auth.js";
+import authRoutes from "./routes/auth.js";
 
 
 const app = new Hono<Context>();
@@ -47,6 +48,7 @@ app.route("/", trainingRoutes);
 app.route("/", machineTypeRoutes);
 app.route("/", machineRoutes);
 app.route("/", userBudgetCodeRelationRoute);
+app.route("/", authRoutes);
 
 app.onError((err, c) => {
   console.error(`${err}`);

@@ -14,7 +14,7 @@ export const lucia = new Lucia(adapter, {
       sameSite: "none",
     },
   },
-  sessionExpiresIn: new TimeSpan(3, "m"), 
+  sessionExpiresIn: new TimeSpan(3, "m"),
 });
 
 declare module "lucia" {

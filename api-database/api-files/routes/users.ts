@@ -8,6 +8,7 @@ import { HTTPException} from "hono/http-exception";
 import { lucia } from "../db/auth.js";
 import { authGuard } from "../middleware/authGuard.js";
 import { adminGuard } from "../middleware/adminGuard.js";
+import { Context } from "../lib/context.js";
 
 /**
  * Routes for budget code operations.
@@ -15,8 +16,7 @@ import { adminGuard } from "../middleware/adminGuard.js";
  * @post    /users       creates a new user in the database.
  * @delete  /users/:id   deletes a budget code.
  */
-export const userRoutes = new Hono();
-
+export const userRoutes = new Hono<Context>();
 
 /**
  * Queries all users stored in the database.

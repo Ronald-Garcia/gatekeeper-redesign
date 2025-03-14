@@ -106,7 +106,7 @@ export const userBudgetCodeTable = pgTable("user_budget_code_table",{
 export const sessions = pgTable("sessions", {
   id: text("id").primaryKey(), // Lucia expects a string ID
   userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-  expires_at: timestamp({ precision: 3, withTimezone: true }),
+  expiresAt: timestamp({ precision: 3, withTimezone: true }),
 });
 
 
