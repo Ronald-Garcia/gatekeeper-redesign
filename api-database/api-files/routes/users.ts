@@ -26,7 +26,9 @@ export const userRoutes = new Hono();
  * @query sort         sort by name, jhed, or year, ascending or descending.
  * @returns page of data.
  */
-userRoutes.get("/users", adminGuard, zValidator("query", queryUsersParamsSchema), async (c) => {
+userRoutes.get("/users",
+    // adminGuard,
+     zValidator("query", queryUsersParamsSchema), async (c) => {
     const { page = 1, limit = 20, sort, search } = c.req.valid("query");
 
     const whereClause: (SQL | undefined)[] = [];
