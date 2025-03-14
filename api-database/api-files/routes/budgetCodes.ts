@@ -92,6 +92,8 @@ budgetCodesRoutes.post("/budget-codes", zValidator("json", createBudgetCode), as
 
     const { name, code } = c.req.valid("json");
 
+    
+
     //Insertion of new Budget Code
     const [newBudgetCode] = await db
         .insert(budgetCodes)

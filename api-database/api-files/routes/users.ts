@@ -118,8 +118,19 @@ userRoutes.post("/users", zValidator("json", createUserSchema), async (c)=>{
     .where(eq(users.cardNum, cardNum))
 
     //If there is a user with that card number.
-    if(userCheck){
-        throw new HTTPException(409, { message: "User with this card number already exists." });
+    if (userCheck) {
+
+        if (userCheck.active === 1) {
+            throw new HTTPException(409, { message: "User with this card number already exists." });
+        }
+        
+        const [newUser] = await db.update(users).set({ active: 1 }).where(eq(users.id, userCheck.id)).returning();
+
+        return c.json({
+            success: true,
+            message: "User has been created",
+            data: newUser
+        }, 201);
     }
 
     const newUser = await db
@@ -130,7 +141,8 @@ userRoutes.post("/users", zValidator("json", createUserSchema), async (c)=>{
             cardNum,
             JHED,
             isAdmin,
-            graduationYear
+            graduationYear,
+            active: 1
         })
         .returning();
 
@@ -160,7 +172,7 @@ userRoutes.get("/users/:cardNum", zValidator("param",getUserByCardNumSchema), as
     
     // Check if exists. If not, throw error.
     // Also, do a check to see if this is an old jcard scan attempt. If yes, deny.
-    if (!user || user.lastDigitOfCardNum > lastDigitOfCardNum) {    
+    if (!user || user.lastDigitOfCardNum > lastDigitOfCardNum || user.active === 0) {    
         throw new HTTPException(404, { message: "User not found" });
     }
 
@@ -202,10 +214,13 @@ userRoutes.delete(
             throw new HTTPException(404, { message: "User not found" });
         }
 
+
+
         // if (no session) throw another error.
         // For now, no auth, just replace.
         const deletedUser = await db
-        .delete(users)
+        .update(users)
+        .set({active: 0})
         .where(eq(users.id, id))
         .returning()
 
