@@ -1,6 +1,9 @@
 name: Jest
 
-on: push
+on: 
+  workflow_call:
+  push:
+
 
 jobs:
   deploy:

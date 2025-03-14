@@ -12,49 +12,17 @@ on:
       - testing
       
 jobs:
+
+  call-workflow-cypress-testing:
+    uses: ./.github/workflows/cypress.yaml
+  call-workflow-jest-testing:
+    uses: ./.github/workflows/jest.yml
   deploy:
     if: github.repository == 'cs421sp25-homework/team-10'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Run local host api
-        run: |
-          cd api-database/
-          npm install -g pnpm
-          npm install
-          pnpm install
-          pnpm dev &
-      - name: Run local host web
-        run: |
-          cd web/
-          npm install -g pnpm
-          npm install --save-dev cypress
-          npm install
-          pnpm install
-          npm install -g wait-on 
-          pnpm dev & wait-on http://localhost:5173/
-      - name: Run cypress tests
-        run: |
-          cd web/
-          npx cypress run
   
-      - name: Install dependencies in web and api database
-        run: |
-          npm install -g pnpm
-          npm install
-          pnpm install
-
-          cd web/
-          npm install -g pnpm
-          npm install
-          pnpm install
-          cd ..
-          cd api-database
-          npm install -g pnpm
-          npm install
-          pnpm install
-
       - name: Install jest
         run: npm install
       - name: Run Jest tests
