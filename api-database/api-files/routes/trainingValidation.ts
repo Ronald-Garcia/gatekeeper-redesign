@@ -6,7 +6,8 @@ import { db } from "../db/index.js";
 import { HTTPException } from "hono/http-exception"
 import { createTrainingSchema, getTrainingFromMachineSchema, getTrainingSchema, queryTrainingsParamsSchema, validateUserParamSchema } from "../validators/trainingSchema.js";
 import { Context } from "../lib/context.js";
-
+import { authGuard } from "../middleware/authGuard.js";
+import { adminGuard } from "../middleware/adminGuard.js";
 
 
 /**
@@ -62,7 +63,7 @@ trainingRoutes.get(
     const machineRelation = await db
         .select()
         .from(userMachineType)
-        .where(and(eq(userMachineType.userId, userId),  eq(userMachineType.machineTypeId, machineType.id)))
+        .where(and(eq(userMachineType.userId, userId), eq(userMachineType.id, machineType.id)))
     
     if (!machineRelation || machineRelation.length === 0 ) {
         throw new HTTPException(401, { message: "User not authorized to use machine" });
@@ -70,11 +71,11 @@ trainingRoutes.get(
 
     
     return c.json({
-        success: true,
-        message: "Training session created successfully"
-      });
-    }
-  );
+      success: true,
+      message: "Training validated"
+    });
+  }
+);
 
 
 /**
