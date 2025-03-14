@@ -50,16 +50,19 @@ const Interlock = () => {
                         <ToggleGroup type="single">
                             {userBudgets.map((code) => {
                                 return (
+                                    <div>
                                     <ToggleGroupItem
+                                        className={code.name}
                                         key={"val" + code.id} 
                                         value={"val" + code.id} 
                                         variant="outline"
                                         onClick={async () => {setToggled(!toggled)}}> 
-                                         
                                     </ToggleGroupItem>
+                                    
+                                    </div>
                                 );
                             })}
-                            <div>hi</div>
+                            <div>Potato</div>
                         </ToggleGroup>
 
                     </CardContent>
