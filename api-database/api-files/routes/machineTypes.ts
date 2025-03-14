@@ -5,6 +5,9 @@ import { machineTypes } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { HTTPException } from "hono/http-exception"
 import { createMachineTypeSchema, getMachineTypeSchema, queryTypesParamsSchema, updateMachineTypeSchema } from "../validators/machineTypeSchema.js";
+import { Context } from "../lib/context.js";
+import { adminGuard } from "../middleware/adminGuard.js";
+import { authGuard } from "../middleware/authGuard.js";
 
 /**
  * Routes for machine type operations.
@@ -13,7 +16,7 @@ import { createMachineTypeSchema, getMachineTypeSchema, queryTypesParamsSchema, 
  * @delete  /machine-types/:id   deletes a machine type.
  * @patch   /machine-types/:id   updates a machine type.
  */
-export const machineTypeRoutes = new Hono();
+export const machineTypeRoutes = new Hono<Context>();
 
 /**
  * Queries all machine types stored in the database.
@@ -24,7 +27,7 @@ export const machineTypeRoutes = new Hono();
  * @returns page of data.
  */
 machineTypeRoutes.get(
-    "/machine-types",
+    "/machine-types", authGuard,
     zValidator("query", queryTypesParamsSchema),
     async (c) => {
     const { page = 1, limit = 20, sort, search } = c.req.valid("query");
@@ -85,7 +88,7 @@ machineTypeRoutes.get(
  * @body name the name of the machine type.
  * @returns the newly created machine type.
  */
-machineTypeRoutes.post("/machine-types",
+machineTypeRoutes.post("/machine-types", authGuard,
     zValidator("json", createMachineTypeSchema),
      async (c)=>{
 
@@ -121,7 +124,7 @@ machineTypeRoutes.post("/machine-types",
  * @param id the database ID of the machine type.
  * @returns the deleted machine type.
  */
-machineTypeRoutes.delete("/machine-types/:id",
+machineTypeRoutes.delete("/machine-types/:id", authGuard,
     zValidator("param", getMachineTypeSchema),
     async (c)=>{
 
@@ -150,7 +153,7 @@ machineTypeRoutes.delete("/machine-types/:id",
  * @body name   the new name of the machine type.
  * @returns the updated machine type.
  */
-machineTypeRoutes.patch("/machine-types/:id",
+machineTypeRoutes.patch("/machine-types/:id", adminGuard,
     zValidator("param", getMachineTypeSchema),
     zValidator("json", updateMachineTypeSchema),
      async (c)=>{

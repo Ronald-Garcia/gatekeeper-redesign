@@ -5,6 +5,9 @@ import { like, SQL, or, desc, asc, eq, and, count } from "drizzle-orm";
 import { users } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
+import { lucia } from "../db/auth.js";
+import { authGuard } from "../middleware/authGuard.js";
+import { adminGuard } from "../middleware/adminGuard.js";
 
 /**
  * Routes for budget code operations.
@@ -23,7 +26,7 @@ export const userRoutes = new Hono();
  * @query sort         sort by name, jhed, or year, ascending or descending.
  * @returns page of data.
  */
-userRoutes.get("/users", zValidator("query", queryUsersParamsSchema), async (c) => {
+userRoutes.get("/users", adminGuard, zValidator("query", queryUsersParamsSchema), async (c) => {
     const { page = 1, limit = 20, sort, search } = c.req.valid("query");
 
     const whereClause: (SQL | undefined)[] = [];
@@ -106,7 +109,7 @@ userRoutes.get("/users", zValidator("query", queryUsersParamsSchema), async (c) 
  * @body isAdmin            whether or not the user is an admin.
  * @returns the newly created user.
  */
-userRoutes.post("/users", zValidator("json", createUserSchema), async (c)=>{
+userRoutes.post("/users", adminGuard, zValidator("json", createUserSchema), async (c)=>{
 
     const { name, cardNum, JHED, graduationYear, isAdmin } = c.req.valid("json");
 
@@ -146,7 +149,8 @@ userRoutes.post("/users", zValidator("json", createUserSchema), async (c)=>{
  * @param cardNum the card number of the user.
  * @returns the user.
  */
-userRoutes.get("/users/:cardNum", zValidator("param",getUserByCardNumSchema), async(c) => {
+userRoutes.get("/users/:cardNum", 
+     zValidator("param",getUserByCardNumSchema), async(c) => {
     //Given you have a well formed card number, check if that card num exists in user table.
     const { cardNum } = c.req.valid("param");
 
@@ -173,11 +177,18 @@ userRoutes.get("/users/:cardNum", zValidator("param",getUserByCardNumSchema), as
             .returning();
     }
 
-    return c.json({
+     // Create a session using Lucia.
+      const session = await lucia.createSession(user.id, {});
+      // Create a session cookie.
+      const sessionCookie = lucia.createSessionCookie(session.id);
+      // Set the cookie in the response headers.
+      c.header("Set-Cookie", sessionCookie.serialize(), { append: true });
+      
+      return c.json({
         success: true,
         message: "User has been validated in",
-        data: user
-    })
+        data:user
+      });
 })
 
 /**
@@ -187,7 +198,7 @@ userRoutes.get("/users/:cardNum", zValidator("param",getUserByCardNumSchema), as
  */
 userRoutes.delete(
     "/users/:id", 
-    //authGuard,
+    adminGuard,
     zValidator("param", getUserSchema),
     async (c)=>{
                 

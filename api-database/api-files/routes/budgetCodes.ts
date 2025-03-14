@@ -5,6 +5,8 @@ import { like, SQL, or, desc, asc, eq, and, count } from "drizzle-orm";
 import { budgetCodes } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
+import { Context } from "../lib/context.js";
+import { adminGuard } from "../middleware/adminGuard.js";
 
 
 /**
@@ -13,7 +15,7 @@ import { HTTPException} from "hono/http-exception";
  * @post    /budget-codes       creates a new budget code in the database.
  * @delete  /budget-codes/:id   deletes a budget code.
  */
-export const budgetCodesRoutes = new Hono();
+export const budgetCodesRoutes = new Hono<Context>();
 
 
 /**
@@ -24,7 +26,7 @@ export const budgetCodesRoutes = new Hono();
  * @query sort         sort by name or code, ascending or descending.
  * @returns page of data.
  */
-budgetCodesRoutes.get("/budget-codes", zValidator("query", queryBudgetCodesParamsSchema), async (c) => {
+budgetCodesRoutes.get("/budget-codes", adminGuard, zValidator("query", queryBudgetCodesParamsSchema), async (c) => {
     const { page = 1, limit = 20, search, sort } = c.req.valid("query");
 
     const whereClause: (SQL | undefined)[] = [];
@@ -88,7 +90,7 @@ budgetCodesRoutes.get("/budget-codes", zValidator("query", queryBudgetCodesParam
  * @body code the code of the budget code.
  * @returns the newly created budget code.
  */
-budgetCodesRoutes.post("/budget-codes", zValidator("json", createBudgetCode), async (c)=>{
+budgetCodesRoutes.post("/budget-codes", adminGuard,zValidator("json", createBudgetCode), async (c)=>{
 
     const { name, code } = c.req.valid("json");
 
@@ -114,7 +116,7 @@ budgetCodesRoutes.post("/budget-codes", zValidator("json", createBudgetCode), as
  * @param id the database ID of the budget code to delete.
  * @returns the budget code that was deleted.
  */
-budgetCodesRoutes.delete("/budget-codes/:id", zValidator("param", deleteBudgetCodeSchema), async (c)=>{
+budgetCodesRoutes.delete("/budget-codes/:id", adminGuard,zValidator("param", deleteBudgetCodeSchema), async (c)=>{
     const { id } = c.req.valid("param");
 
     const [deletedBudgetCode] = await db
