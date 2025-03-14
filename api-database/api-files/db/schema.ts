@@ -1,6 +1,5 @@
 
-import { int } from "drizzle-orm/mysql-core";
-import { integer, pgTable, serial, text } from "drizzle-orm/pg-core";
+import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 
 
@@ -107,5 +106,5 @@ export const userBudgetCodeTable = pgTable("user_budget_code_table",{
 export const sessions = pgTable("sessions", {
   id: text("id").primaryKey(), // Lucia expects a string ID
   userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-  expiresAt: integer("expires_at").notNull(),
+  expiresAt: timestamp("expires_at", { mode: "date" }).notNull(),
 });
