@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1740633406225,
-      "tag": "0000_medical_husk",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1741662233402,
-      "tag": "0001_elite_eddie_brock",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1741727810202,
-      "tag": "0002_sudden_stone_men",
+      "when": 1741916913929,
+      "tag": "0000_volatile_the_professor",
       "breakpoints": true
     }
   ]

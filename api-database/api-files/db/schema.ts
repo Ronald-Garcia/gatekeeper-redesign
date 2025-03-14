@@ -109,3 +109,13 @@ export const sessions = pgTable("sessions", {
   userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   expiresAt: integer("expires_at").notNull(),
 });
+
+
+export const financialStatementsTable = pgTable("financial_statements_table", {
+  id: serial().primaryKey(),
+  userId: serial().notNull().references(() => users.id, {onDelete: "no action"}),
+  budgetCode: serial().notNull().references(() => budgetCodes.id, {onDelete: "no action"}),
+  machineId: serial().notNull().references(() => machines.id, {onDelete: "no action"}),
+  startTime: integer().notNull(),
+  endTime: integer().notNull(),
+});
