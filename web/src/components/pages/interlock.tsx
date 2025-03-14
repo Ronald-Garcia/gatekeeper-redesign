@@ -8,6 +8,7 @@ import { BudgetCode } from "@/data/types/budgetCode";
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
 import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
+import { turnOnMachine } from "@/data/api";
 
 /*
 Display to use on gates when a user logs in. Displays BudgetCodes a user has associated with his account. 
@@ -22,6 +23,12 @@ const Interlock = () => {
         clearCurrentUser();
         redirectPage($router, "start_page");
     }
+
+    const handleStartClick = () => {
+        turnOnMachine()
+    }
+
+    const [toggled, setToggled] = useState(false);
 
     useEffect(() => {
         getBudgetsOfUser(curUser.id, setUserBudgets);
@@ -47,14 +54,19 @@ const Interlock = () => {
                                         key={"val" + code.id} 
                                         value={"val" + code.id} 
                                         variant="outline"
-                                        onClick={async () => {
-                                        }}> {code.name} </ToggleGroupItem>
+                                        onClick={async () => {setToggled(!toggled)}}> 
+                                         
+                                    </ToggleGroupItem>
                                 );
                             })}
+                            <div>hi</div>
                         </ToggleGroup>
 
                     </CardContent>
                     <CardFooter className="flex justify-end space-x-4">
+                        {toggled && 
+                        <Button className="text-xl jhu-blue-button" variant="ghost" onClick={handleStartClick}>Start</Button>
+                        }
                         <Button variant="secondary" onClick={handleCancel} className="text-xl"> Cancel </Button>
                     </CardFooter>
                 </Card>
