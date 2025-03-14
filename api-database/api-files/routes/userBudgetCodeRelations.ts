@@ -1,6 +1,6 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { createUserBudgetSchema, deleteUserBudgetSchema, queryUserBudgetsSchema } from "../validators/userBudgetCodeRelationSchemas";
+import { createUserBudgetSchema, deleteUserBudgetSchema, queryUserBudgetsSchema, replaceUserBudgetSchema } from "../validators/userBudgetCodeRelationSchemas";
 import { getUserSchema, queryBudgetCodesParamsSchema } from "../validators/schemas";
 import { and, asc, count, desc, eq, exists, ilike, SQL } from "drizzle-orm";
 import { db } from "../db";
@@ -116,4 +116,38 @@ userBudgetCodeRelationRoute.delete("/user-budgets/:userId/:budgetCodeId",
             data: userBudgetRelation
         })
     }
+)
+
+userBudgetCodeRelationRoute.patch("/user-budgets/:id",
+        zValidator("param", getUserSchema),
+        zValidator("json", replaceUserBudgetSchema),
+        async (c) => {
+            const { budget_code } = c.req.valid("json");
+            const { id } = c.req.valid("param");
+
+            const [user_ent] = await db.select().from(users).where(eq(users.id, id));
+            if (!user_ent) {
+                throw new HTTPException(404, { message: "No user found."});
+            }
+
+            await db.delete(userBudgetCodeTable).where(eq(userBudgetCodeTable.userId, id));
+
+
+            const bcs = await db.insert(userBudgetCodeTable).values(budget_code.map(bc => {
+                return {
+                    userId: id,
+                    budgetCodeId: bc
+                }
+            }));
+
+            if (budget_code !== bcs) {
+                throw new HTTPException(400, { message: "Unsuccessful in replacing all budget codes"});
+            }
+
+            return c.json({
+                success: true,
+                message: "Successfully replaced budget codes of user.",
+                data: bcs
+            })
+        }
 )
