@@ -27,7 +27,7 @@ export const trainingRoutes = new Hono<Context>();
  */
 trainingRoutes.get(
     "/trainings/:userId/:machineId", 
-    //authGuard,
+    authGuard,
     zValidator(
         "param",
         getTrainingFromMachineSchema),
@@ -63,15 +63,19 @@ trainingRoutes.get(
     const machineRelation = await db
         .select()
         .from(userMachineType)
-        .where(and(eq(userMachineType.userId, userId), eq(userMachineType.id, machineType.id)))
+        .where(and(eq(userMachineType.userId, userId),  eq(userMachineType.machineTypeId, machineType.id)))
     
-    if (!machineRelation) {
+    if (!machineRelation || machineRelation.length === 0 ) {
         throw new HTTPException(401, { message: "User not authorized to use machine" });
     }
 
-    //TODO give back a session for the user. Artic.
-    throw new HTTPException(501, { message: "Have not implemented sessions for users yet." });
-})
+    
+    return c.json({
+        success: true,
+        message: "Training session created successfully"
+      });
+    }
+  );
 
 
 /**
@@ -86,7 +90,7 @@ trainingRoutes.get(
 trainingRoutes.get(
     "/trainings/:id",
     zValidator("param", validateUserParamSchema), 
-    //authGuard,
+    authGuard,
     zValidator("query", queryTrainingsParamsSchema),
     async (c) => {
     const { id } = c.req.valid("param")
@@ -165,7 +169,7 @@ trainingRoutes.get(
  * @returns the newly created training.
  */
 trainingRoutes.post("/trainings", 
-    //adminGuard,
+    adminGuard,
     zValidator("json", createTrainingSchema),
      async (c)=>{
 
@@ -204,7 +208,7 @@ trainingRoutes.post("/trainings",
  * @returns the deleted training.
  */
 trainingRoutes.delete("/trainings", 
-    //adminGuard,
+    adminGuard,
     zValidator("json", getTrainingSchema),
      async (c)=>{
 
