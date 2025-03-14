@@ -9,7 +9,8 @@ import { createUser,
     removeUser, 
     editUser, 
     getUser,
-    createUserBudgetCode} from "@/data/api";
+    createUserBudgetCode,
+    replaceBudgetsOfUser} from "@/data/api";
 
 
 
@@ -57,6 +58,19 @@ function useMutationUsers() {
         //get message from api response, put it on a toast
         const errorMessage = (e as Error).message;
         toast.error("Sorry! There was an error creating budget code relation 🙁", {
+          description: errorMessage  
+        });
+      }
+    };
+
+  const setUserBudgetCodes = async (user_id: number, budget_codes: number[]) => {
+    try {
+      await replaceBudgetsOfUser(user_id, budget_codes);
+
+    } catch (e) {
+        //get message from api response, put it on a toast
+        const errorMessage = (e as Error).message;
+        toast.error("Sorry! There was an error creating budget code relations 🙁", {
           description: errorMessage  
         });
       }
@@ -136,8 +150,9 @@ function useMutationUsers() {
     updateUser,
     giveBudgetCode,
     //banUserById,
-    fetchUser
-  }
+    fetchUser,
+    setUserBudgetCodes
+  };
 }
 
 

@@ -12,8 +12,9 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "../ui/scroll-area";
 import { useStore } from "@nanostores/react";
-import { $codes } from "@/data/store";
+import { $budget_code_queue, $codes, setBudgetCodeQueue, toggleBudgetCodeQueue } from "@/data/store";
 import useQueryBudgetCodes from "@/hooks/use-query-budgetCodes";
+import { BudgetCode } from "@/data/types/budgetCode";
 
 //prop for handling state of the dialogue
 type EditBudgetCodeDialogProp = {
@@ -23,25 +24,28 @@ type EditBudgetCodeDialogProp = {
 
 // function that handles state of the dialogue, error handling from api
 const EditBudgetCodeDialog = ({ userId, setShowEditBudgetCode }: EditBudgetCodeDialogProp) => {
-    const [budgetCode, setBudgetCode] = useState(-1);
+
+    const budgetCodeQueue = useStore($budget_code_queue);
+    const [curBudgets, setCurBudgets] = useState<BudgetCode[]>([]);
     //ADD WHEN ROUTES FIXED
-    const { giveBudgetCode} = useMutationUsers();
-   const codesList = useStore($codes);
+    const { setUserBudgetCodes } = useMutationUsers();
+    const { getBudgetsOfUser } = useQueryBudgetCodes(true);
+    
+    const codesList = useStore($codes);
   
     //async function with editing logic, including error handling
     const handleEditBudgetCode = async () => {
-      console.log(budgetCode)
       //ADD WHEN ROUTES FIXED
-      await giveBudgetCode(userId, budgetCode); //use hooks to handle state of budget code
+      await setUserBudgetCodes(userId, budgetCodeQueue); //use hooks to handle state of budget code
       setShowEditBudgetCode(false); //make the dialogue disappear
     };
   
-    useQueryBudgetCodes(true);
   
     useEffect(() => {
-      console.log(codesList);
-    }, [codesList]);
-
+      getBudgetsOfUser(userId, setCurBudgets).then(() => {
+        setBudgetCodeQueue(curBudgets.map(b => b.id));
+      })
+    }, [])
     return (
         <Dialog open={true} onOpenChange={setShowEditBudgetCode}>
           <DialogOverlay />
@@ -57,9 +61,9 @@ const EditBudgetCodeDialog = ({ userId, setShowEditBudgetCode }: EditBudgetCodeD
             {
         codesList.map((type) => (
         
-                <div key={type.id} onClick={() => setBudgetCode(type.id) }
+                <div key={type.id} onClick={() => toggleBudgetCodeQueue(type.id) }
                 className={`flex flex-col justify-between items-center py-4 max-h-[15vh] text-sm text-clip transition-colors border-y-2 border-solid border-stone-300 hover:bg-stone-100 hover:border-stone-500 cursor-pointer ${
-                budgetCode === type.id ? "bg-blue-300 border-blue-600" : ""
+                budgetCodeQueue.some(id => id === type.id) ? "bg-blue-300 border-blue-600" : ""
                 }`}
             >
                 <p>{type.name}</p>

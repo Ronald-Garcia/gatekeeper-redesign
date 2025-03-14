@@ -140,7 +140,7 @@ userBudgetCodeRelationRoute.patch("/user-budgets/:id",
                 }
             }));
 
-            if (budget_code !== bcs) {
+            if (budget_code.length !== bcs.length) {
                 throw new HTTPException(400, { message: "Unsuccessful in replacing all budget codes"});
             }
 

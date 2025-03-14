@@ -9,6 +9,33 @@ export const $users = atom<User[]>([]);
 export const $codes = atom<BudgetCode[]>([]);
 export const $machines = atom<Machine[]>([]);
 export const $machine_types = atom<MachineType[]>([]);
+export const $budget_code_queue = atom<number[]>([]);
+
+export function setBudgetCodeQueue(bcs: number[]) {
+  $budget_code_queue.set(bcs);
+}
+
+export function addBudgetCodeQueue(bc: number) {
+  $budget_code_queue.set([...$budget_code_queue.get(), bc]);
+}
+
+export function removeBudgetCodeQueue(bc: number) {
+  $budget_code_queue.set($budget_code_queue.get().filter(b => b !== bc));
+}
+
+export function clearBudgetCodeQueue() {
+  $budget_code_queue.set([]);
+}
+
+export function toggleBudgetCodeQueue(bc: number) {
+  const bcs =  $budget_code_queue.get();
+  const hasBc = bcs.some(b => b === bc);
+  if (hasBc) {
+    removeBudgetCodeQueue(bc);
+  } else {
+    addBudgetCodeQueue(bc);
+  }
+}
 
 
 type Selected = User | BudgetCode;
