@@ -121,7 +121,7 @@ describe('User Routes', () => {
 
       const newUserRes = {
         name: "John Doe",
-        cardNum: testCardNum.substring(0, testCardNum.length - 1), // unique 15-digit test card number
+        cardNum: testCardNum.substring(0, testCardNum.length - 1), 
         lastDigitOfCardNum: Number.parseInt(testCardNum.at(testCardNum.length - 1) as string),
         JHED: "johndoe",
         isAdmin: 0,
