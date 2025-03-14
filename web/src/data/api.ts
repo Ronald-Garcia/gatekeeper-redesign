@@ -209,14 +209,10 @@ export const validateTraining = async (user_id: number, machine_id: number): Pro
   data: boolean
 }> => {
   
-  const response = await fetch(`${API_DB_URL}/trainings`,{
-    method: "POST",
+  const response = await fetch(`${API_DB_URL}/trainings/${user_id}/${machine_id}`,{
+    method: "GET",
     credentials: "include",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      user_id,
-      machine_id
-    })
+    headers: {"Content-Type": "application/json"}
   });
 
   if (!response.ok) {
