@@ -1,7 +1,7 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { queryBudgetCodesParamsSchema, createBudgetCode, deleteBudgetCodeSchema } from "../validators/schemas.js";
-import { like, SQL, or, desc, asc, eq, and, count } from "drizzle-orm";
+import { SQL, desc, asc, eq, and, count, ilike } from "drizzle-orm";
 import { budgetCodes } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
@@ -32,7 +32,7 @@ budgetCodesRoutes.get("/budget-codes", adminGuard, zValidator("query", queryBudg
     const whereClause: (SQL | undefined)[] = [];
 
     if (search) {
-        whereClause.push(like(budgetCodes.name, `%${search}%`));
+        whereClause.push(ilike(budgetCodes.name, `%${search}%`));
     }
 
         const orderByClause: SQL[] = [];
@@ -129,7 +129,7 @@ budgetCodesRoutes.delete("/budget-codes/:id", adminGuard,zValidator("param", del
     }
 
     return c.json({
-        sucess:true,
+        success:true,
         message:"Deleted budget code",
         data:deletedBudgetCode
     }, 200)

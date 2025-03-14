@@ -171,11 +171,11 @@ machineTypeRoutes.patch("/machine-types/:id", adminGuard,
         throw new HTTPException(404, { message: "Machine Type not found" });
     }
 
-    const updatedMachineType = await db
+    const [updatedMachineType] = await db
     .update(machineTypes)
     .set({ name })
     .where(eq(machineTypes.id, id))
-    .returning()
+    .returning();
 
     return c.json({
         success: true,

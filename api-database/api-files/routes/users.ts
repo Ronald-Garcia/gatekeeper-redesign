@@ -1,7 +1,7 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { queryUsersParamsSchema, createUserSchema, getUserSchema, testSchema, getUserByCardNumSchema } from "../validators/schemas.js";
-import { like, SQL, or, desc, asc, eq, and, count } from "drizzle-orm";
+import { SQL, or, desc, asc, eq, and, count, ilike } from "drizzle-orm";
 import { users } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
@@ -33,7 +33,7 @@ userRoutes.get("/users", adminGuard, zValidator("query", queryUsersParamsSchema)
 
     if (search) {
         whereClause.push(
-            or(like(users.name, `%${search}%`), like(users.JHED, `%${search}%`))
+            or(ilike(users.name, `%${search}%`), ilike(users.JHED, `%${search}%`))
         );
     }
 
@@ -113,12 +113,15 @@ userRoutes.post("/users", adminGuard, zValidator("json", createUserSchema), asyn
 
     const { name, cardNum, JHED, graduationYear, isAdmin } = c.req.valid("json");
 
+    const cardNumTrunc = cardNum.substring(0, cardNum.length - 1);
+
+
     const lastDigitOfCardNum = Number.parseInt(cardNum.charAt(cardNum.length - 1));
     //First, check if a user with that card number exists. If they do, send back an error.
     const [userCheck] = await db
     .select()
     .from(users)
-    .where(eq(users.cardNum, cardNum))
+    .where(eq(users.cardNum, cardNumTrunc))
 
     //If there is a user with that card number.
     if(userCheck){
@@ -130,7 +133,7 @@ userRoutes.post("/users", adminGuard, zValidator("json", createUserSchema), asyn
         .values({
             name:name,
             lastDigitOfCardNum,
-            cardNum,
+            cardNum: cardNumTrunc,
             JHED,
             isAdmin,
             graduationYear

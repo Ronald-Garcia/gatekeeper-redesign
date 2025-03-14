@@ -39,7 +39,7 @@ describe('MachineType Routes', () => {
 
   describe('POST /machine-types', () => {
     test("creates a new machine type", async () => {
-      const newType = { machineType: "TEST_NEW_TYPE" };
+      const newType = { name: "TEST_NEW_TYPE" };
       const response = await app.request('/machine-types', {
         method: 'POST',
         headers: new Headers({ 'Content-Type': 'application/json' }),
@@ -55,7 +55,7 @@ describe('MachineType Routes', () => {
     });
 
     test("returns 409 if machine type already exists", async () => {
-      const duplicateType = { machineType: "TEST_NEW_TYPE" };
+      const duplicateType = { name: "TEST_NEW_TYPE" };
       const response = await app.request('/machine-types', {
         method: 'POST',
         headers: new Headers({ 'Content-Type': 'application/json' }),
@@ -68,7 +68,7 @@ describe('MachineType Routes', () => {
     });
   });
 
-  describe('DELETE /machine-types/:machineTypeId', () => {
+  describe('DELETE /machine-types/:id', () => {
     test("deletes an existing machine type", async () => {
       const response = await app.request(`/machine-types/${testMachineTypeId}`, {
         method: 'DELETE',
@@ -92,20 +92,21 @@ describe('MachineType Routes', () => {
     });
   });
 
-  describe('PATCH /machine-types/:machineType', () => {
+  describe('PATCH /machine-types/:id', () => {
     beforeAll(async () => {
       //Insert a machine type for updating.
       const [inserted] = await db
         .insert(machineTypes)
-        .values({ type: "TEST_UPDATE_TYPE" })
+        .values({ name: "TEST_UPDATE_TYPE" })
         .returning();
-      updateTestType = inserted.type;
+      updateTestType = inserted.name;
+      testMachineTypeId = inserted.id;
     });
   
     test("updates an existing machine type", async () => {
       const uniqueValue = `TEST_UPDATED_TYPE_${Date.now()}`;
-      const updatePayload = { updateType: uniqueValue };
-      const response = await app.request(`/machine-types/${updateTestType}`, {
+      const updatePayload = { name: uniqueValue };
+      const response = await app.request(`/machine-types/${testMachineTypeId}`, {
         method: 'PATCH',
         headers: new Headers({ 'Content-Type': 'application/json' }),
         body: JSON.stringify(updatePayload),
@@ -118,15 +119,15 @@ describe('MachineType Routes', () => {
       const body = await response.json();
       //assert properties
       expect(body).toHaveProperty('success', true);
-      expect(body).toHaveProperty('message', "Deck updated successfully");
+      expect(body).toHaveProperty('message', "Machine type updated successfully");
       expect(body).toHaveProperty('data');
-      expect(body.data[0].type).toEqual(uniqueValue);
+      expect(body.data.name).toEqual(uniqueValue);
     });
   
 
     test("returns 404 when updating a non-existent machine type", async () => {
-      const updatePayload = { updateType: "DOES_NOT_EXIST" };
-      const response = await app.request(`/machine-types/NON_EXISTENT_TYPE`, {
+      const updatePayload = { name: "DOES_NOT_EXIST" };
+      const response = await app.request(`/machine-types/999999999`, {
         method: 'PATCH',
         headers: new Headers({ 'Content-Type': 'application/json' }),
         body: JSON.stringify(updatePayload),
@@ -149,7 +150,7 @@ afterAll(async () => {
   // Delete the machine type inserted for the PATCH tests.
   await db
     .delete(machineTypes)
-    .where(ilike(machineTypes.type, 'TEST_UPDATE_TYPE'))
+    .where(ilike(machineTypes.name, 'TEST_UPDATE_TYPE'))
     .execute();
   await (db.$client as any).end();
 });
