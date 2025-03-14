@@ -27,7 +27,8 @@ export const machineTypeRoutes = new Hono<Context>();
  * @returns page of data.
  */
 machineTypeRoutes.get(
-    "/machine-types", authGuard,
+    "/machine-types", 
+    //authGuard,
     zValidator("query", queryTypesParamsSchema),
     async (c) => {
     const { page = 1, limit = 20, sort, search } = c.req.valid("query");
@@ -88,7 +89,8 @@ machineTypeRoutes.get(
  * @body name the name of the machine type.
  * @returns the newly created machine type.
  */
-machineTypeRoutes.post("/machine-types", authGuard,
+machineTypeRoutes.post("/machine-types", 
+    //authGuard,
     zValidator("json", createMachineTypeSchema),
      async (c)=>{
 
@@ -124,7 +126,8 @@ machineTypeRoutes.post("/machine-types", authGuard,
  * @param id the database ID of the machine type.
  * @returns the deleted machine type.
  */
-machineTypeRoutes.delete("/machine-types/:id", authGuard,
+machineTypeRoutes.delete("/machine-types/:id", 
+    //authGuard,
     zValidator("param", getMachineTypeSchema),
     async (c)=>{
 
@@ -153,7 +156,8 @@ machineTypeRoutes.delete("/machine-types/:id", authGuard,
  * @body name   the new name of the machine type.
  * @returns the updated machine type.
  */
-machineTypeRoutes.patch("/machine-types/:id", adminGuard,
+machineTypeRoutes.patch("/machine-types/:id", 
+    //adminGuard,
     zValidator("param", getMachineTypeSchema),
     zValidator("json", updateMachineTypeSchema),
      async (c)=>{

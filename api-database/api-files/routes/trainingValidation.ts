@@ -5,6 +5,9 @@ import { machines, machineTypes, userMachineType, users } from "../db/schema.js"
 import { db } from "../db/index.js";
 import { HTTPException } from "hono/http-exception"
 import { createTrainingSchema, getTrainingFromMachineSchema, getTrainingSchema, queryTrainingsParamsSchema, validateUserParamSchema } from "../validators/trainingSchema.js";
+import { Context } from "../lib/context.js";
+import { authGuard } from "../middleware/authGuard.js";
+import { adminGuard } from "../middleware/adminGuard.js";
 
 
 /**
@@ -14,7 +17,7 @@ import { createTrainingSchema, getTrainingFromMachineSchema, getTrainingSchema, 
  * @post    /trainings/                     create a new training.
  * @delete  /trainings/                     delete a training.
  */
-export const trainingRoutes = new Hono();
+export const trainingRoutes = new Hono<Context>();
 
 /**
  * Get a particular training between a user and a machine.
@@ -23,7 +26,8 @@ export const trainingRoutes = new Hono();
  * @returns the relation.
  */
 trainingRoutes.get(
-    "/trainings/:userId/:machineId",
+    "/trainings/:userId/:machineId", 
+    //authGuard,
     zValidator(
         "param",
         getTrainingFromMachineSchema),
@@ -81,7 +85,8 @@ trainingRoutes.get(
  */
 trainingRoutes.get(
     "/trainings/:id",
-    zValidator("param", validateUserParamSchema),
+    zValidator("param", validateUserParamSchema), 
+    //authGuard,
     zValidator("query", queryTrainingsParamsSchema),
     async (c) => {
     const { id } = c.req.valid("param")
@@ -159,7 +164,8 @@ trainingRoutes.get(
  * @body machineTypeId  the database ID of the machine type.
  * @returns the newly created training.
  */
-trainingRoutes.post("/trainings",
+trainingRoutes.post("/trainings", 
+    //adminGuard,
     zValidator("json", createTrainingSchema),
      async (c)=>{
 
@@ -197,7 +203,8 @@ trainingRoutes.post("/trainings",
  * @body machineTypeId the database ID of the machine type.
  * @returns the deleted training.
  */
-trainingRoutes.delete("/trainings",
+trainingRoutes.delete("/trainings", 
+    //adminGuard,
     zValidator("json", getTrainingSchema),
      async (c)=>{
 

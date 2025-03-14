@@ -5,6 +5,9 @@ import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
 import { createMachineSchema, getMachineSchema, queryMachinesSchema, validateMachineIdSchema } from "../validators/machineSchema.js";
 import { machines, machineTypes } from "../db/schema.js";
+import { Context } from "../lib/context.js";
+import { adminGuard } from "../middleware/adminGuard.js";
+import { authGuard } from "../middleware/authGuard.js";
 
 
 
@@ -15,7 +18,7 @@ import { machines, machineTypes } from "../db/schema.js";
  * @post    /machines           creates a new machine in the database.
  * @delete  /machines/:id       deletes a machine.
  */
-export const machineRoutes = new Hono();
+export const machineRoutes = new Hono<Context>();
 
 
 /**
@@ -27,7 +30,9 @@ export const machineRoutes = new Hono();
  * @query sort         sort by name or type, ascending or descending.
  * @returns page of data.
  */
-machineRoutes.get("/machines", zValidator("query", queryMachinesSchema), async (c) => {
+machineRoutes.get("/machines",
+    // authGuard,  
+     zValidator("query", queryMachinesSchema), async (c) => {
     const { page = 1, limit = 20, search, sort, type } = c.req.valid("query");
 
     const whereClause: (SQL | undefined)[] = [];
@@ -97,7 +102,9 @@ machineRoutes.get("/machines", zValidator("query", queryMachinesSchema), async (
  * @param id the database ID of the machine
  * @returns the machine.
  */
-machineRoutes.get("/machines/:id", zValidator("param", getMachineSchema), async (c) => {
+machineRoutes.get("/machines/:id",
+    // authGuard, 
+     zValidator("param", getMachineSchema), async (c) => {
 
     const { id } = c.req.valid("param");
 
@@ -125,7 +132,9 @@ machineRoutes.get("/machines/:id", zValidator("param", getMachineSchema), async 
  * @body hourlyRate     the rate of the machine.
  * @returns the newly created machine.
  */
-machineRoutes.post("/machines", zValidator("json", createMachineSchema), async (c)=>{
+machineRoutes.post("/machines", 
+    //adminGuard,
+    zValidator("json", createMachineSchema), async (c)=>{
 
     const { name, machineTypeId, hourlyRate } = c.req.valid("json");
     //Check if machine type actually exists exists
@@ -163,7 +172,8 @@ machineRoutes.post("/machines", zValidator("json", createMachineSchema), async (
  * @body hourlyRate     the new rate of the machine.
  * @returns the newly updated machine.
  */
-machineRoutes.patch("/machines/:id",
+machineRoutes.patch("/machines/:id", 
+//adminGuard,
 zValidator("param", validateMachineIdSchema),
 zValidator("json", createMachineSchema),
 async (c)=>{
@@ -213,7 +223,8 @@ async (c)=>{
  * @param id the database ID of the machine.
  * @returns the deleted machine.
  */
-machineRoutes.delete("/machines/:id",
+machineRoutes.delete("/machines/:id", 
+    //adminGuard,
     zValidator("param", validateMachineIdSchema),
      async (c)=>{
 

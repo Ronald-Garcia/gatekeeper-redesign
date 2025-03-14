@@ -109,7 +109,9 @@ userRoutes.get("/users", adminGuard, zValidator("query", queryUsersParamsSchema)
  * @body isAdmin            whether or not the user is an admin.
  * @returns the newly created user.
  */
-userRoutes.post("/users", adminGuard, zValidator("json", createUserSchema), async (c)=>{
+userRoutes.post("/users", 
+     //adminGuard,
+     zValidator("json", createUserSchema), async (c)=>{
 
     const { name, cardNum, JHED, graduationYear, isAdmin } = c.req.valid("json");
 
@@ -201,7 +203,7 @@ userRoutes.get("/users/:cardNum",
  */
 userRoutes.delete(
     "/users/:id", 
-    adminGuard,
+    //adminGuard,
     zValidator("param", getUserSchema),
     async (c)=>{
                 

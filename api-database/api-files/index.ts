@@ -10,9 +10,12 @@ import { machineRoutes } from "./routes/machines.js";
 import { trainingRoutes } from "./routes/trainingValidation.js";
 import { machineTypeRoutes } from "./routes/machineTypes.js";
 import { userBudgetCodeRelationRoute } from "./routes/userBudgetCodeRelations.js";
+import { Context } from "./lib/context.js";
+import { auth } from "./middleware/auth.js";
 
 
-const app = new Hono();
+const app = new Hono<Context>();
+
 
 app.use(logger());
 app.use(
@@ -34,6 +37,9 @@ app.use(
 app.get("/hello/:name", (c) => {
 	return c.text(`Hello, ${c.req.param("name")}!`);
 });
+
+//session info for all routes
+app.use("/*", auth);
 
 app.route("/", userRoutes);
 app.route("/", budgetCodesRoutes);
