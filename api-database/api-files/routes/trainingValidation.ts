@@ -6,8 +6,7 @@ import { db } from "../db/index.js";
 import { HTTPException } from "hono/http-exception"
 import { createTrainingSchema, getTrainingFromMachineSchema, getTrainingSchema, queryTrainingsParamsSchema, validateUserParamSchema } from "../validators/trainingSchema.js";
 import { Context } from "../lib/context.js";
-import { authGuard } from "../middleware/authGuard.js";
-import { adminGuard } from "../middleware/adminGuard.js";
+
 
 
 /**
