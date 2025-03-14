@@ -101,12 +101,12 @@ export const userBudgetCodeTable = pgTable("user_budget_code_table",{
  * The table that defines sessions.
  * @primary id           the database ID of the association.
  * @foreign userId       the database ID of the user in the association.
- * @integer sessions     the flag that determines session expiration.
+ * @integer expiresAt     the flag that determines session expiration.
  */
 export const sessions = pgTable("sessions", {
   id: text("id").primaryKey(), // Lucia expects a string ID
   userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-  expiresAt: timestamp("expires_at", { mode: "date" }).notNull(),
+  expiresAt: timestamp("expires_at").notNull(),
 });
 
 
