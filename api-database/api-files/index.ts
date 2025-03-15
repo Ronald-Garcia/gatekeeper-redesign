@@ -11,7 +11,7 @@ import { trainingRoutes } from "./routes/trainingValidation.js";
 import { machineTypeRoutes } from "./routes/machineTypes.js";
 import { financialStatementRoutes } from "./routes/financialStatements.js";
 import { userBudgetCodeRelationRoute } from "./routes/userBudgetCodeRelations.js";
-import { Context } from "./lib/context.js";
+import type { Context } from "./lib/context.js";
 import { auth } from "./middleware/auth.js";
 import authRoutes from "./routes/auth.js";
 
@@ -56,7 +56,7 @@ app.onError((err, c) => {
   console.error(`${err}`);
 
   if (err instanceof HTTPException) {
-    return err.getResponse();
+    return c.json({ message: err.message }, err.status);
   }
 
   return c.json({ message: "An unexpected error occurred!" }, 500);

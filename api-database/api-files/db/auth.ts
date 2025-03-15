@@ -9,7 +9,7 @@ export const lucia = new Lucia(adapter, {
   sessionCookie: {
     attributes: {
       secure: process.env.NODE_ENV === "production",
-      sameSite: "none",
+      sameSite: "lax",
     },
   },
   sessionExpiresIn: new TimeSpan(3, "m"),
