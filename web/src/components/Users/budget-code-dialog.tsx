@@ -70,6 +70,7 @@ const EditBudgetCodeDialog = ({ userId, setShowEditBudgetCode }: EditBudgetCodeD
                       ? "bg-blue-300 border-blue-600"
                       : ""
                   }`}
+                  defaultChecked={budgetCodeQueue.some(id => id === type.id)}
                 >
                   <p>{type.name}</p>
                 </ToggleGroupItem>
