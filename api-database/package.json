@@ -4,10 +4,8 @@
 	"scripts": {
 		"start": "vercel dev",
 		"deploy": "vercel",
-
 		"dev": "tsx watch api-files/server.ts",
 		"prettier": "prettier --write \"src/**/*.ts\" --config \".prettierrc.json\"",
-	
 		"db:generate": "drizzle-kit generate",
 		"db:push": "drizzle-kit push",
 		"db:migrate": "drizzle-kit migrate",
@@ -17,20 +15,24 @@
 	"dependencies": {
 		"@hono/node-server": "^1.13.8",
 		"@hono/zod-validator": "^0.4.3",
+		"@lucia-auth/adapter-drizzle": "^1.1.0",
 		"@vercel/blob": "^0.27.1",
 		"@vercel/postgres": "^0.10.0",
 		"dotenv": "16.4.7",
 		"drizzle-kit": "^0.30.4",
 		"drizzle-orm": "^0.39.3",
 		"hono": "^4.7.1",
+		"lucia": "^3.2.2",
 		"pg": "^8.13.3",
 		"pnpm": "^10.4.0",
 		"postgres": "^3.4.5",
+		"supertest": "^7.0.0",
 		"zod": "^3.24.2"
 	},
 	"devDependencies": {
 		"@types/node": "^20.11.17",
 		"@types/pg": "^8.11.11",
+		"@types/supertest": "^6.0.2",
 		"prettier": "3.5.1",
 		"tsx": "^4.7.1",
 		"vercel": "^32.4.1"

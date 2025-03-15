@@ -9,9 +9,12 @@ import { budgetCodesRoutes } from "../api-files/routes/budgetCodes.js";
 import { machineRoutes } from "../api-files/routes/machines.js";
 import { trainingRoutes } from "../api-files/routes/trainingValidation.js";
 import { machineTypeRoutes } from "../api-files/routes/machineTypes.js";
+import authRoutes from "../api-files/routes/auth.js";
+import { auth } from "../api-files/middleware/auth.js";
+import { Context } from "../api-files/lib/context.js";
 
 
-const app = new Hono();
+const app = new Hono<Context>();
 
 app.use(logger());
 app.use(
@@ -27,18 +30,22 @@ app.use(
 
 
  app.get("/", (c) => {
-	return c.text("Hello, Vercel!!!!");
+	return c.text("Hello, Vercel");
 });
 
 app.get("/hello/:name", (c) => {
 	return c.text(`Hello, ${c.req.param("name")}!`);
 });
 
+//session info for all routes
+app.use("/*", auth);
+
 app.route("/", userRoutes);
 app.route("/", budgetCodesRoutes);
 app.route("/", trainingRoutes);
 app.route("/", machineTypeRoutes);
 app.route("/", machineRoutes);
+app.route("/", authRoutes);
 
 app.onError((err, c) => {
   console.error(`${err}`);

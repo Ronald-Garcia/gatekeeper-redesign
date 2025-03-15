@@ -1,0 +1,19 @@
+{
+    "message": "Success",
+    "data": [
+        {"id":19,"name":"slkasdlkmsdklm","cardNum":"012345678912347","lastDigitOfCardNum":0,"JHED":"ssdd","isAdmin":1,"graduationYear":2023},
+        {"id":21,"name":"potato","cardNum":"123456789012344","lastDigitOfCardNum":0,"JHED":"sddd","isAdmin":0,"graduationYear":2025},
+        {"id":23,"name":"RON THE SWAN","cardNum":"631064500415115","lastDigitOfCardNum":1,"JHED":"ckolisk1","isAdmin":1,"graduationYear":2026},
+        {"id":24,"name":"potato","cardNum":"123456789012311","lastDigitOfCardNum":0,"JHED":"111","isAdmin":1,"graduationYear":2024},
+        {"id":27,"name":"os","cardNum":"012345678902584","lastDigitOfCardNum":0,"JHED":"omuionz","isAdmin":1,"graduationYear":2024},
+        {"id":28,"name":"oscar new","cardNum":"012345678914702","lastDigitOfCardNum":0,"JHED":"sdnew","isAdmin":1,"graduationYear":2025},
+        {"id":29,"name":"test1","cardNum":"123456789077777","lastDigitOfCardNum":7,"JHED":"test1","isAdmin":1,"graduationYear":2023},
+        {"id":31,"name":"aa","cardNum":"123456789012343","lastDigitOfCardNum":0,"JHED":"aaaa","isAdmin":1,"graduationYear":2025},
+        {"id":32,"name":"qwerfgh","cardNum":"123456789012345","lastDigitOfCardNum":0,"JHED":"cwiuebig","isAdmin":0,"graduationYear":2025},
+        {"id":33,"name":"ksdngn","cardNum":"123456789012346","lastDigitOfCardNum":6,"JHED":"kla3","isAdmin":1,"graduationYear":2025},
+        {"id":34,"name":"Ronald Cameron","cardNum":"123456789014444","lastDigitOfCardNum":4,"JHED":"roncam","isAdmin":1,"graduationYear":2024},
+        {"id":35,"name":"John Doe","cardNum":"111111111111111","lastDigitOfCardNum":1,"JHED":"johndoe","isAdmin":0,"graduationYear":2023}
+    ]
+}
+  
+

@@ -1,5 +1,12 @@
 export type BudgetCode = {
     id: number;
-    budgetCode: string;
+    code: string;
     name: string;
+}
+
+
+export type UserBudgetCodeRelation = {
+    id: number;
+    budgetCodeId: string;
+    userId: string;
 }

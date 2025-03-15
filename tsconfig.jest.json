@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+      "target": "ESNext",
+      "module": "ESNext",
+      "moduleResolution": "node",
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "strict": true,
+      "allowJs": true,
+      "types": ["jest", "node"]
+    },
+    "include":  [
+        "api-database/testing/unit-tests/**/*"
+      ],
+  }
+  

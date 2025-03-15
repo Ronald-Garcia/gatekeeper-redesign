@@ -4,9 +4,11 @@ import StartPage from "../pages/start-page";
 import { $router } from "@/data/router";
 import { useStore } from "@nanostores/react";
 import { adminCurrentUser, validCurrentMachine, validCurrentUser } from "@/data/store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { redirectPage } from "@nanostores/router";
 import Interlock from "../pages/interlock";
+import KioskStartPage from "../pages/kiosk-start-page";
+import ErrorPage from "./errorPage";
 
 /*
 Body component of the application
@@ -17,33 +19,42 @@ const Body = () => {
   
   const router = useStore($router);
 
-  if (!router) {
-    return (
-      <>
-        <div>
-        </div>
-      </>
-    )
-  }
+  const [kiosk, setIsKiosk] = useState(false)
 
   //validate user when using the application, else rerouted to start page
   useEffect(() => {
-    if (!validCurrentMachine() && !validCurrentUser()) {
+    // This is our error page, don't want to make calls.
+    if (!router) {
+
+    }
+    // kiosk gets special treatment to avoid machine stuff.
+    else if (router.route === "kiosk" || kiosk) {
+      setIsKiosk(true)
+    }
+    else if (!validCurrentMachine() && !validCurrentUser()) {
       redirectPage($router, "start_page");
       //check if user is admin and current machine is valid
     } else if (adminCurrentUser() && !validCurrentMachine()) {
       redirectPage($router, "machine_login");
     } 
   }, []);
+
+  if (!router) {
+    return (
+        <ErrorPage/>
+    )
+  }
   
 // following pages are only acessible to admin users
-  return (
+  else return (
 
     <>
     
       {router.route === "machine_login" && <MachineLogin></MachineLogin>}
 
       {(router.route === "users" || router.route === "budgetCodes") && <AdminDashboard></AdminDashboard>}
+
+      {router.route === "kiosk" && <KioskStartPage></KioskStartPage>}
 
       {router.route === "start_page" && <StartPage></StartPage>}
 

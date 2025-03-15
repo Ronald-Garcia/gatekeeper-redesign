@@ -69,10 +69,10 @@ export default function UserActions({ userId, setIsActive}: UserActionsProps) {
 
   return (
 
-    <>
+    <div data-cy = "user-actions" >
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="absolute top-2 right-2 deck-actions">
+        <Button variant="ghost"  data-cy={`user-trigger-${userId}`} className="absolute top-2 right-2 deck-actions">
           ...
         </Button>
       </DropdownMenuTrigger>
@@ -83,10 +83,10 @@ export default function UserActions({ userId, setIsActive}: UserActionsProps) {
         <DropdownMenuItem onClick={handleBudgetCode}>
           Budget Code
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleDelete} className="delete-text-red">
+        <DropdownMenuItem onClick={handleDelete} className="delete-text-red" data-cy="user-delete">
           Delete
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleTimeout} className="delete-text-red">
+        <DropdownMenuItem onClick={handleTimeout} className="delete-text-red" data-cy="user-timeout">
           Timeout
         </DropdownMenuItem>
       </DropdownMenuContent>
@@ -109,6 +109,6 @@ export default function UserActions({ userId, setIsActive}: UserActionsProps) {
   <BanUserDialog userId={userId} setShowBanUser={handleCloseTimeout} />
 )}
 
-</>
+</div>
   );
 }
