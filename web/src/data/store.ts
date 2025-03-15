@@ -50,19 +50,19 @@ export function clearItem() {
 }
 
 export function addSelectedBudgetCode(bc: BudgetCode) {
-  $selected_budget_codes.set([...$selected_budget_codes.get(), bc ]);
+  $budget_code_queue.set([...$budget_code_queue.get(), bc ]);
 }
 
 export function removeSelectedBudgetCode(bc: BudgetCode) {
-  $selected_budget_codes.set($selected_budget_codes.get().filter(b => b.id !== bc.id));
+  $budget_code_queue.set($budget_code_queue.get().filter(b => b.id !== bc.id));
 }
 
 export function clearSelectedBudgetCode() {
-  $selected_budget_codes.set([]);
+  $budget_code_queue.set([]);
 }
 
 export function toggleSelectedBudgetCode(bc: BudgetCode) {
-  const sbc = $selected_budget_codes.get().find(b => b.id === bc.id);
+  const sbc = $budget_code_queue.get().find(b => b.id === bc.id);
 
   if (sbc) {
     removeSelectedBudgetCode(bc);
@@ -72,7 +72,7 @@ export function toggleSelectedBudgetCode(bc: BudgetCode) {
 }
 
 export function setSelectedBudgetCode(bcs: BudgetCode[]) {
-  $selected_budget_codes.set(bcs);
+  $budget_code_queue.set(bcs);
 }
 
 const defaultUser: User = {
