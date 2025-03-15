@@ -34,9 +34,9 @@ function useMutationUsers() {
 
   const addNewUser = async (user: User) => {
     try {    
-      const { data } : { message: string, data: User } = await createUser(user);
-      addUser(data);
-      return data;
+      const response : { message: string, data: User } = await createUser(user);
+      addUser(response.data);
+      return response;
     }
       //get message from api response, put it on a toast
       catch (e) {

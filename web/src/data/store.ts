@@ -10,7 +10,7 @@ export const $users = atom<User[]>([]);
 export const $codes = atom<BudgetCode[]>([]);
 export const $machines = atom<Machine[]>([]);
 export const $machine_types = atom<MachineType[]>([]);
-export const $statements = atom<financialStatement[]>([]);
+export const $selected_budget_codes = atom<BudgetCode[]>([]);
 
 
 type Selected = User | BudgetCode;
@@ -24,11 +24,35 @@ export function clearItem() {
   $selected.set(null);
 }
 
+export function addSelectedBudgetCode(bc: BudgetCode) {
+  $selected_budget_codes.set([...$selected_budget_codes.get(), bc ]);
+}
+
+export function removeSelectedBudgetCode(bc: BudgetCode) {
+  $selected_budget_codes.set($selected_budget_codes.get().filter(b => b.id !== bc.id));
+}
+
+export function clearSelectedBudgetCode() {
+  $selected_budget_codes.set([]);
+}
+
+export function toggleSelectedBudgetCode(bc: BudgetCode) {
+  const sbc = $selected_budget_codes.get().find(b => b.id === bc.id);
+
+  if (sbc) {
+    removeSelectedBudgetCode(bc);
+  } else {
+    addSelectedBudgetCode(bc);
+  }
+}
+
+export function setSelectedBudgetCode(bcs: BudgetCode[]) {
+  $selected_budget_codes.set(bcs);
+}
 
 const defaultUser: User = {
   name: "test",
   cardNum: "-1",
-  lastDigitOfCardNum: -1,
   isAdmin: 0,
   graduationYear: 2020,
   JHED: "ttest01",
@@ -132,7 +156,7 @@ export function deleteBudgetCodeById(id: number) {
 
 export function deleteBudgetCodeByNum(codeNum: string) {
   $codes.set(
-    $codes.get().filter((code: BudgetCode) => code.budgetCode !== codeNum),
+    $codes.get().filter((code: BudgetCode) => code.code !== codeNum),
   );
 }
 
@@ -176,8 +200,22 @@ export function setMachinesTypes(typeList: MachineType[]) {
   $machine_types.set(typeList);
 }
 
+// *** SERACH STORES ***
 
-//financial statement functions
-export function setFinancialStatements(statementList: financialStatement[]) {
-  $statements.set(statementList);
+//The "local" search for a user, aka state control of the search bar.
+export const $localSearch = atom<string>("")
+export function setLocalSearch(newLocalSearch: string) {
+  $localSearch.set(newLocalSearch)
+}
+
+// The active search for a user, budget code, machine, etc entered into the main search bar.
+export const $activeSearch = atom<string>("")
+export function setActiveSearch(newSearch: string) {
+  $activeSearch.set(newSearch)
+}
+
+// Reset both the search bar and active search.
+export function resetSearch() {
+  $localSearch.set("")
+  $activeSearch.set("")
 }

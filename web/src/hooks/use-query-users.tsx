@@ -10,16 +10,22 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 import useQueryMachines from "./use-query-machines";
 import { Machine } from "@/data/types/machine";
+import { SortType } from "@/data/types/sort";
 
 function useQueryUsers(reload: boolean) {
   const users = useStore($users);
   const { getSavedMachine } = useQueryMachines(false);
 
-  const loadUsers = async () => {
+  const loadUsers = async (
+    sort: SortType = "name_asc",
+    page: number = 1,
+    limit: number = 10,
+    search: string = ""
+  ) => {
     try {
       const {
         data: fetchedUsers
-      } = await getAllUsers();
+      } = await getAllUsers(sort,page,limit,search);
       setUsers(fetchedUsers);
     }  catch (e) {
         //get message from api response, put it on a toast
@@ -30,7 +36,7 @@ function useQueryUsers(reload: boolean) {
       }
     };
 
-  const validateUser = async (cardNum: number, isKiosk:number): Promise<"machine_login" | "users" | "start_page" | "interlock">  => {
+  const validateUser = async (cardNum: number, callPython:number): Promise<"machine_login" | "users" | "start_page" | "interlock">  => {
     try {
       const {
         data
@@ -40,21 +46,27 @@ function useQueryUsers(reload: boolean) {
       }
 
       let curMachine: Machine | "kiosk" | undefined
-      if (!isKiosk){
+      // Call python refers to calling the machine api backend. If we are not
+      // on a machine, aka we are online, don't call the machine-api, since it 
+      // does not exist. Just default to kiosk
+      if (callPython){
         curMachine = await getSavedMachine();
       } else {
         curMachine = "kiosk";
       }
 
+      //If there is no env file and they are admin, let them choose a machine.
       if (!curMachine) {
         if (data.isAdmin) {
           return "machine_login"
         }
 
+        //Otherwise, throw an error.
         clearCurrentUser();
         throw new Error("This interlock is not set-up! Please contact an admin to set-up this interlock.");
       }
 
+      //If the machine is a kiosk and user is admin, let them access.
       if (curMachine === "kiosk" && data.isAdmin) {
         return "users";
       } else if (curMachine === "kiosk") {
@@ -62,16 +74,19 @@ function useQueryUsers(reload: boolean) {
         throw new Error("This machine is only accessible for admins!");
       }
 
-
+      //Otherwise, we have a machine, and need to validate them.
       const { data: ableToUse } = await validateTraining(data.id, curMachine.id);
 
       setCurrentUser(data);
       if (!ableToUse) {
         throw new Error("User does not have access to this machine!");
       }
-      const ret = curMachine.type.name === "kiosk" ? "users" : "interlock";
+
+      // If here, we have a non kiosk machine and are able to use it. Redirect to interlock
+      const ret = "interlock";
       return ret;
-    } catch (e) {
+
+    } catch (e) { //If there was an error anywhere, redirect to the start page.
       const errorMessage = (e as Error).message;
         toast.error("Sorry! There was an error 🙁", {
           description: errorMessage  
@@ -81,6 +96,7 @@ function useQueryUsers(reload: boolean) {
   }
 
   useEffect(() => {
+    // Check if there is active search. If yes, use load users with that search
     if (reload) {
       loadUsers();
     }

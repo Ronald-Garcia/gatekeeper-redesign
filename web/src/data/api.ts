@@ -4,8 +4,27 @@ import { Training } from "./types/training";
 import { BudgetCode } from "./types/budgetCode"; 
 import { Machine } from "./types/machine";
 import { MachineType } from "./types/machineType";
-import { SortType } from "./types/sort";
-import { financialStatement } from "./types/financialStatement";
+import { SortBudgetType, SortType } from "./types/sort";
+
+/**
+ * Turns on the machine.
+ * @returns {Promise<boolean>} returns true if the response message starts with "s".
+ * @throws {Error} If the response is not ok, throws error with the response message.
+ */
+
+export const turnOffMachine = async (): Promise<boolean> => {
+  const response = await fetch(`${API_MACHINE_URL}/turn-off`, {
+    method: "POST",
+    credentials: "include",
+  });
+  const { message }: { message: string } = await response.json();
+
+  if (!response.ok) {
+    throw new Error(message);
+  }
+
+  return message.startsWith("s");
+};
 
 /**
  * Turns on the machine.
@@ -87,7 +106,6 @@ export const editUser = async (user: User): Promise<{
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       name: user.name,
-      lastDigitOfCardNum: user.lastDigitOfCardNum,
       graduationYear: user.graduationYear,
       isAdmin: user.isAdmin
     }),
@@ -185,7 +203,6 @@ export const createUser = async (user: User): Promise<{
     })
   });
 
-
   if (!response.ok) {
     const { message }: { message: string } = await response.json();
     throw new Error(message);
@@ -210,14 +227,10 @@ export const validateTraining = async (user_id: number, machine_id: number): Pro
   data: boolean
 }> => {
   
-  const response = await fetch(`${API_DB_URL}/trainings`,{
-    method: "POST",
+  const response = await fetch(`${API_DB_URL}/trainings/${user_id}/${machine_id}`,{
+    method: "GET",
     credentials: "include",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      user_id,
-      machine_id
-    })
+    headers: {"Content-Type": "application/json"}
   });
 
   if (!response.ok) {
@@ -301,11 +314,16 @@ BudgetCode API functions
  * @returns {Promise<{message: string; data: BudgetCode[]}>} A promise that resolves with a message and an array of budget codes.
  * @throws {Error} If the response is not ok, throws an error with the response message.
  */
-export const getAllBudgets = async (): Promise<{
+export const getAllBudgets = async (
+  sort: SortBudgetType = "name_asc",
+  page: number = 1,
+  limit: number = 10,
+  search: string = ""
+): Promise<{
   message: string;
   data: BudgetCode[];
 }> => {
-  const response = await fetch(`${API_DB_URL}/budget-codes`, {
+  const response = await fetch(`${API_DB_URL}/budget-codes?search=${search}&limit=${limit}&page=${page}&sort=${sort}`, {
     credentials: "include",
   });
 
@@ -331,7 +349,7 @@ export const getAllBudgetsOfUser = async (user_id: number): Promise<{
   message: string;
   data: BudgetCode[];
 }> => {
-  const response = await fetch(`${API_DB_URL}/budget-codes/${user_id}`, {
+  const response = await fetch(`${API_DB_URL}/user-budgets/${user_id}`, {
     credentials: "include",
   });
 

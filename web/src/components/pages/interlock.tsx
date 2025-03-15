@@ -8,6 +8,7 @@ import { BudgetCode } from "@/data/types/budgetCode";
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
 import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
+import { turnOffMachine, turnOnMachine } from "@/data/api";
 
 /*
 Display to use on gates when a user logs in. Displays BudgetCodes a user has associated with his account. 
@@ -20,8 +21,15 @@ const Interlock = () => {
     
     const handleCancel = () => {
         clearCurrentUser();
+        turnOffMachine()
         redirectPage($router, "start_page");
     }
+
+    const handleStartClick = () => {
+        turnOnMachine()
+    }
+
+    const [toggled, setToggled] = useState(false);
 
     useEffect(() => {
         getBudgetsOfUser(curUser.id, setUserBudgets);
@@ -35,7 +43,7 @@ const Interlock = () => {
                         <CardTitle className="text-2xl font-bold">
                             Welcome, {curUser.name}.
                         </CardTitle>
-                        <CardDescription className="italic text-xl">
+                        <CardDescription className="text-xl italic">
                             {"Select the budget code to be applied."}
                         </CardDescription>
                     </CardHeader>
@@ -43,18 +51,26 @@ const Interlock = () => {
                         <ToggleGroup type="single">
                             {userBudgets.map((code) => {
                                 return (
+                                    <div>
                                     <ToggleGroupItem
+                                        className={code.name}
                                         key={"val" + code.id} 
                                         value={"val" + code.id} 
                                         variant="outline"
-                                        onClick={async () => {
-                                        }}> {code.name} </ToggleGroupItem>
+                                        onClick={async () => {setToggled(!toggled)}}> 
+                                    </ToggleGroupItem>
+                                    
+                                    </div>
                                 );
                             })}
+                            <div>Potato</div>
                         </ToggleGroup>
 
                     </CardContent>
                     <CardFooter className="flex justify-end space-x-4">
+                        {toggled && 
+                        <Button className="text-xl jhu-blue-button" variant="ghost" onClick={handleStartClick}>Start</Button>
+                        }
                         <Button variant="secondary" onClick={handleCancel} className="text-xl"> Cancel </Button>
                     </CardFooter>
                 </Card>
