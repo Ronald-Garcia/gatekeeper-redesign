@@ -132,7 +132,7 @@ userRoutes.post("/users",
         throw new HTTPException(409, { message: "User with this card number already exists." });
     }
 
-    const newUser = await db
+    const [newUser] = await db
         .insert(users)
         .values({
             name:name,

@@ -72,7 +72,7 @@ export default function UserActions({ userId, setIsActive}: UserActionsProps) {
     <div data-cy = "user-actions" >
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost"  data-cy="user-trigger" className="absolute top-2 right-2 deck-actions">
+        <Button variant="ghost"  data-cy={`user-trigger-${userId}`} className="absolute top-2 right-2 deck-actions">
           ...
         </Button>
       </DropdownMenuTrigger>
