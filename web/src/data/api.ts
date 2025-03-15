@@ -5,6 +5,7 @@ import { BudgetCode } from "./types/budgetCode";
 import { Machine } from "./types/machine";
 import { MachineType } from "./types/machineType";
 import { SortBudgetType, SortType } from "./types/sort";
+import { financialStatement } from "./types/financialStatement";
 
 /**
  * Turns on the machine.
@@ -13,7 +14,8 @@ import { SortBudgetType, SortType } from "./types/sort";
  */
 
 export const turnOffMachine = async (): Promise<boolean> => {
-  const response = await fetch(`${API_MACHINE_URL}/turn-off`, {
+  const response = await fetch(`${API_MACHINE_URL}/turn-off`, 
+    {
     method: "POST",
     credentials: "include",
   });
@@ -862,3 +864,32 @@ export const createUserBudgetCode = async (user_id: number, budget_code_id: numb
 
 
 }
+
+/*
+Financial statement API functions 
+*/
+
+/**
+ * Retrieves all financial statements.
+ * @returns {Promise<{message: string; data: financialStatement[]}>} A promise that resolves with a message and an array of financial statements.
+ * @throws {Error} If the response is not ok, throws an error with the response message.
+ */
+export const getFinancialStatements = async (): Promise<{
+  message: string;
+  data: financialStatement[];
+}> => {
+  const response = await fetch(`${API_DB_URL}/fin-statements`, {
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string; data: financialStatement[] } =
+    await response.json();
+
+  return { message, data };
+};

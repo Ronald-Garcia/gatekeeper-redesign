@@ -3,6 +3,7 @@ import { atom, map } from "nanostores";
 import { BudgetCode } from "./types/budgetCode"; 
 import { Machine } from "./types/machine";
 import { MachineType } from "./types/machineType";
+import { financialStatement } from "./types/financialStatement";
 
 
 export const $users = atom<User[]>([]);
@@ -36,6 +37,7 @@ export function toggleBudgetCodeQueue(bc: number) {
     addBudgetCodeQueue(bc);
   }
 }
+export const $statements = atom<financialStatement[]>([]);
 
 
 type Selected = User | BudgetCode;
@@ -243,4 +245,8 @@ export function setActiveSearch(newSearch: string) {
 export function resetSearch() {
   $localSearch.set("")
   $activeSearch.set("")
+}
+
+export function setFinancialStatements(statements: financialStatement[]) {
+  $statements.set(statements);
 }

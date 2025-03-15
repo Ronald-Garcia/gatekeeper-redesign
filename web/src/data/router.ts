@@ -8,5 +8,5 @@ export const $router = createRouter({
   users: `${BASE_URL}users`,
   budgetCodes: `${BASE_URL}budgets`,
   kiosk: `${BASE_URL}kiosk`,
-
+  financial_statements: `${BASE_URL}statements`,
 });
