@@ -11,7 +11,7 @@ import { trainingRoutes } from "./routes/trainingValidation.js";
 import { machineTypeRoutes } from "./routes/machineTypes.js";
 import { financialStatementRoutes } from "./routes/financialStatements.js";
 import { userBudgetCodeRelationRoute } from "./routes/userBudgetCodeRelations.js";
-import { Context } from "./lib/context.js";
+import type { Context } from "./lib/context.js";
 import { auth } from "./middleware/auth.js";
 import authRoutes from "./routes/auth.js";
 
