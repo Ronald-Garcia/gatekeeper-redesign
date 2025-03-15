@@ -118,3 +118,6 @@ export const financialStatementsTable = pgTable("financial_statements_table", {
   startTime: integer().notNull(),
   endTime: integer().notNull(),
 });
+
+
+

@@ -12,6 +12,26 @@ import { SortBudgetType, SortType } from "./types/sort";
  * @throws {Error} If the response is not ok, throws error with the response message.
  */
 
+export const turnOffMachine = async (): Promise<boolean> => {
+  const response = await fetch(`${API_MACHINE_URL}/turn-off`, {
+    method: "POST",
+    credentials: "include",
+  });
+  const { message }: { message: string } = await response.json();
+
+  if (!response.ok) {
+    throw new Error(message);
+  }
+
+  return message.startsWith("s");
+};
+
+/**
+ * Turns on the machine.
+ * @returns {Promise<boolean>} returns true if the response message starts with "s".
+ * @throws {Error} If the response is not ok, throws error with the response message.
+ */
+
 export const turnOnMachine = async (): Promise<boolean> => {
   const response = await fetch(`${API_MACHINE_URL}/turn-on`, {
     method: "POST",
@@ -63,7 +83,6 @@ export const getAllUsers = async (
 
   const { message, data }: { message: string; data: User[] } =
     await response.json();
-    console.log(data);
 
   return { message, data };
 };
@@ -183,7 +202,6 @@ export const createUser = async (user: User): Promise<{
       ...user
     })
   });
-  console.log(response)
 
   if (!response.ok) {
     const { message }: { message: string } = await response.json();
@@ -209,14 +227,10 @@ export const validateTraining = async (user_id: number, machine_id: number): Pro
   data: boolean
 }> => {
   
-  const response = await fetch(`${API_DB_URL}/trainings`,{
-    method: "POST",
+  const response = await fetch(`${API_DB_URL}/trainings/${user_id}/${machine_id}`,{
+    method: "GET",
     credentials: "include",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      user_id,
-      machine_id
-    })
+    headers: {"Content-Type": "application/json"}
   });
 
   if (!response.ok) {
@@ -335,7 +349,7 @@ export const getAllBudgetsOfUser = async (user_id: number): Promise<{
   message: string;
   data: BudgetCode[];
 }> => {
-  const response = await fetch(`${API_DB_URL}/budget-codes/${user_id}`, {
+  const response = await fetch(`${API_DB_URL}/user-budgets/${user_id}`, {
     credentials: "include",
   });
 

@@ -65,13 +65,13 @@ userBudgetCodeRelationRoute.get("/user-budgets/:id",
                
                return c.json({
                    sucess:true,
-                   data: allCodes.map(c => c.user_budget_code_table),
+                   data: allCodes.map(c => c.budgetCodes),
                    meta: {
                        page,
                        limit,
                        total: totalCount,
                        },
-                   message:"Fetched user routes"
+                   message:"Fetched user budget codes"
                    }); 
 
     }
@@ -122,3 +122,5 @@ userBudgetCodeRelationRoute.delete("/user-budgets/:userId/:budgetCodeId",
         })
     }
 )
+
+userBudgetCodeRelationRoute.patch

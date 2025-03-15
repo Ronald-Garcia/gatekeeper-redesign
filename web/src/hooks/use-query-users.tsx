@@ -55,15 +55,18 @@ function useQueryUsers(reload: boolean) {
         curMachine = "kiosk";
       }
 
+      //If there is no env file and they are admin, let them choose a machine.
       if (!curMachine) {
         if (data.isAdmin) {
           return "machine_login"
         }
 
+        //Otherwise, throw an error.
         clearCurrentUser();
         throw new Error("This interlock is not set-up! Please contact an admin to set-up this interlock.");
       }
 
+      //If the machine is a kiosk and user is admin, let them access.
       if (curMachine === "kiosk" && data.isAdmin) {
         return "users";
       } else if (curMachine === "kiosk") {
@@ -71,16 +74,19 @@ function useQueryUsers(reload: boolean) {
         throw new Error("This machine is only accessible for admins!");
       }
 
-
+      //Otherwise, we have a machine, and need to validate them.
       const { data: ableToUse } = await validateTraining(data.id, curMachine.id);
 
       setCurrentUser(data);
       if (!ableToUse) {
         throw new Error("User does not have access to this machine!");
       }
-      const ret = curMachine.type.name === "kiosk" ? "users" : "interlock";
+
+      // If here, we have a non kiosk machine and are able to use it. Redirect to interlock
+      const ret = "interlock";
       return ret;
-    } catch (e) {
+
+    } catch (e) { //If there was an error anywhere, redirect to the start page.
       const errorMessage = (e as Error).message;
         toast.error("Sorry! There was an error 🙁", {
           description: errorMessage  

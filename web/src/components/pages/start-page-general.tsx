@@ -36,14 +36,8 @@ const StartPageGeneral = ({callPythonServer}: startPageProps) => {
       validateUser(Number.parseInt(newCardNum), callPython).then(s => {        
         redirectPage($router, s);
       });
-
     }
-
-    
-    
   }
-
-  
 
   return (
     <>
