@@ -11,7 +11,6 @@ def hello_world():
     }
 @app.route("/turn-on", methods=['POST'])
 def turn_on():
-    print("Pulse received! Turning on GPIO20")
     if led.is_lit:
         return {
             "success": False,
