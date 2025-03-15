@@ -9,10 +9,15 @@ import { budgetCodesRoutes } from "./routes/budgetCodes.js";
 import { machineRoutes } from "./routes/machines.js";
 import { trainingRoutes } from "./routes/trainingValidation.js";
 import { machineTypeRoutes } from "./routes/machineTypes.js";
+import { financialStatementRoutes } from "./routes/financialStatements.js";
 import { userBudgetCodeRelationRoute } from "./routes/userBudgetCodeRelations.js";
+import { Context } from "./lib/context.js";
+import { auth } from "./middleware/auth.js";
+import authRoutes from "./routes/auth.js";
 
 
-const app = new Hono();
+const app = new Hono<Context>();
+
 
 app.use(logger());
 app.use(
@@ -35,12 +40,17 @@ app.get("/hello/:name", (c) => {
 	return c.text(`Hello, ${c.req.param("name")}!`);
 });
 
+//session info for all routes
+app.use("/*", auth);
+
 app.route("/", userRoutes);
 app.route("/", budgetCodesRoutes);
 app.route("/", trainingRoutes);
 app.route("/", machineTypeRoutes);
 app.route("/", machineRoutes);
+app.route("/", financialStatementRoutes);
 app.route("/", userBudgetCodeRelationRoute);
+app.route("/", authRoutes);
 
 app.onError((err, c) => {
   console.error(`${err}`);

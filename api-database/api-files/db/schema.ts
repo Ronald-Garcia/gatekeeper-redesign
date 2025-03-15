@@ -1,6 +1,5 @@
 
-import { int } from "drizzle-orm/mysql-core";
-import { integer, pgTable, serial, text } from "drizzle-orm/pg-core";
+import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 
 
@@ -97,3 +96,28 @@ export const userBudgetCodeTable = pgTable("user_budget_code_table",{
   userId: serial().notNull().references(() => users.id, {onDelete: "cascade"}),
   budgetCodeId: serial().notNull().references(()=> budgetCodes.id, {onDelete:"cascade"})
 });
+
+/**
+ * The table that defines sessions.
+ * @primary id           the database ID of the association.
+ * @foreign userId       the database ID of the user in the association.
+ * @integer expiresAt     the flag that determines session expiration.
+ */
+export const sessions = pgTable("sessions", {
+  id: text("id").primaryKey(), // Lucia expects a string ID
+  userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  expiresAt: timestamp({ precision: 3, withTimezone: true }),
+});
+
+
+export const financialStatementsTable = pgTable("financial_statements_table", {
+  id: serial().primaryKey(),
+  userId: serial().notNull().references(() => users.id, {onDelete: "no action"}),
+  budgetCode: serial().notNull().references(() => budgetCodes.id, {onDelete: "no action"}),
+  machineId: serial().notNull().references(() => machines.id, {onDelete: "no action"}),
+  startTime: integer().notNull(),
+  endTime: integer().notNull(),
+});
+
+
+

@@ -39,7 +39,7 @@ export default function UserInfo() {
     <>
         <div>
         <p>{selection.name} </p>
-        <p>{selection.budgetCode} </p>
+        <p>{selection.code} </p>
         <p>{selection.id} </p>
         </div>
         </>

@@ -3,6 +3,7 @@ import { $codes,
   setBudgetCodes,
  } from "@/data/store";
 import { BudgetCode } from "@/data/types/budgetCode";
+import { SortBudgetType } from "@/data/types/sort";
 import { useStore } from "@nanostores/react";
 import { useEffect } from "react";
 import { toast } from "sonner";
@@ -10,11 +11,16 @@ import { toast } from "sonner";
 function useQueryBudgets(reload: boolean) {
   const codes = useStore($codes);
 
-  const loadBudgets = async () => {
+  const loadBudgets = async (
+  sort: SortBudgetType = "name_asc",
+  page: number = 1,
+  limit: number = 10,
+  search: string = ""
+  ) => {
     try {
       const {
         data: fetchedBudgetCodes
-      } = await getAllBudgets();
+      } = await getAllBudgets(sort, page, limit, search);
       setBudgetCodes(fetchedBudgetCodes);
     }  catch (e) {
         //get message from api response, put it on a toast

@@ -19,3 +19,7 @@ export const createUserBudgetSchema = z.object({
 })
 
 export const deleteUserBudgetSchema = createUserBudgetSchema;
+
+export const replaceUserBudgetSchema = z.object({
+    budgetCodes: z.array(z.coerce.number().positive().int())
+});
