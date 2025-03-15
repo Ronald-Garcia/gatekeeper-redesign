@@ -5,6 +5,7 @@ import { BudgetCode } from "./types/budgetCode";
 import { Machine } from "./types/machine";
 import { MachineType } from "./types/machineType";
 import { SortBudgetType, SortType } from "./types/sort";
+import { financialStatement } from "./types/financialStatement";
 
 /**
  * Turns on the machine.

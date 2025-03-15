@@ -18,6 +18,11 @@ const UsersActions = () => {
     resetSearch();
     openPage($router, "budgetCodes");
   }
+  
+  const sendFinancialStatements = () => {
+    resetSearch();
+    openPage($router, "financial_statements");
+  }
 
   const selection = useStore($selected);
   
@@ -33,6 +38,10 @@ const UsersActions = () => {
           <Button  className="size-"
             onClick={handleClickOnViewBudgetCodes}>
               View Budget Codes
+          </Button>
+          <Button  className="size-"
+            onClick={sendFinancialStatements}>
+              Send Financial Statements
           </Button>
       <div className="admin-actions">
           <div className="relative w-full max-w-lg">

@@ -11,6 +11,7 @@ export const $codes = atom<BudgetCode[]>([]);
 export const $machines = atom<Machine[]>([]);
 export const $machine_types = atom<MachineType[]>([]);
 export const $selected_budget_codes = atom<BudgetCode[]>([]);
+export const $statements = atom<financialStatement[]>([]);
 
 
 type Selected = User | BudgetCode;
@@ -218,4 +219,8 @@ export function setActiveSearch(newSearch: string) {
 export function resetSearch() {
   $localSearch.set("")
   $activeSearch.set("")
+}
+
+export function setFinancialStatements(statements: financialStatement[]) {
+  $statements.set(statements);
 }

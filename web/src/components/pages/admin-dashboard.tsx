@@ -4,7 +4,7 @@ import { useStore } from "@nanostores/react";
 import BudgetCodes from "../BudgetCodes/budgetCodes";
 import UsersActions from "./user-actions";
 import BudgetActions from "./budget-actions";
-
+import FinancialStatements from "../financialStatements/financialStatements";
 
 
 /*
@@ -29,7 +29,13 @@ const AdminDashboard = () => {
       <UsersComponent/>
     </div>
     )
-  } else {
+  } else if (router.route === "financial_statements"){
+    return (<div>
+      
+      <FinancialStatements/>
+    </div>);
+  }
+  else {
     return(
     <div>
       <BudgetActions/>
