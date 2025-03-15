@@ -18,7 +18,7 @@ const UsersActions = () => {
     resetSearch();
     openPage($router, "budgetCodes");
   }
-  
+
   const sendFinancialStatements = () => {
     resetSearch();
     openPage($router, "financial_statements");
