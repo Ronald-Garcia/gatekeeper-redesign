@@ -30,7 +30,6 @@ const EditBudgetCodeDialog = ({ userId, setShowEditBudgetCode }: EditBudgetCodeD
   
     //async function with editing logic, including error handling
     const handleEditBudgetCode = async () => {
-      console.log(budgetCode)
       //ADD WHEN ROUTES FIXED
       await giveBudgetCode(userId, budgetCode); //use hooks to handle state of budget code
       setShowEditBudgetCode(false); //make the dialogue disappear
@@ -39,7 +38,6 @@ const EditBudgetCodeDialog = ({ userId, setShowEditBudgetCode }: EditBudgetCodeD
     useQueryBudgetCodes(true);
   
     useEffect(() => {
-      console.log(codesList);
     }, [codesList]);
 
     return (
