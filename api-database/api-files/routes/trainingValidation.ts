@@ -63,7 +63,7 @@ trainingRoutes.get(
     const machineRelation = await db
         .select()
         .from(userMachineType)
-        .where(and(eq(userMachineType.userId, userId), eq(userMachineType.id, machineType.id)))
+        .where(and(eq(userMachineType.userId, userId), eq(userMachineType.machineTypeId, machineType.id)))
     
     if (!machineRelation || machineRelation.length === 0 ) {
         throw new HTTPException(401, { message: "User not authorized to use machine" });

@@ -15,6 +15,7 @@ export const lucia = new Lucia(adapter, {
     },
   },
   sessionExpiresIn: new TimeSpan(3, "m"),
+  getUserAttributes: (userRow) => ({ ...userRow })
 });
 
 declare module "lucia" {

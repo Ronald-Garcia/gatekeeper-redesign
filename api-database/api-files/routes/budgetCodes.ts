@@ -27,7 +27,7 @@ export const budgetCodesRoutes = new Hono<Context>();
  * @returns page of data.
  */
 budgetCodesRoutes.get("/budget-codes",
-    // adminGuard, 
+     adminGuard, 
      zValidator("query", queryBudgetCodesParamsSchema), async (c) => {
     const { page = 1, limit = 20, search, sort } = c.req.valid("query");
 
@@ -93,7 +93,7 @@ budgetCodesRoutes.get("/budget-codes",
  * @returns the newly created budget code.
  */
 budgetCodesRoutes.post("/budget-codes", 
-   // adminGuard,
+    adminGuard,
     zValidator("json", createBudgetCode), async (c)=>{
 
     const { name, code } = c.req.valid("json");
@@ -121,7 +121,7 @@ budgetCodesRoutes.post("/budget-codes",
  * @returns the budget code that was deleted.
  */
 budgetCodesRoutes.delete("/budget-codes/:id", 
-   // adminGuard,
+    adminGuard,
     zValidator("param", deleteBudgetCodeSchema), async (c)=>{
     const { id } = c.req.valid("param");
 
