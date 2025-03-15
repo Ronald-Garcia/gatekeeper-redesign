@@ -13,7 +13,8 @@ import { SortBudgetType, SortType } from "./types/sort";
  */
 
 export const turnOffMachine = async (): Promise<boolean> => {
-  const response = await fetch(`${API_MACHINE_URL}/turn-off`, {
+  const response = await fetch(`${API_MACHINE_URL}/turn-off`, 
+    {
     method: "POST",
     credentials: "include",
   });
@@ -168,6 +169,8 @@ export const getUser = async (cardNum: number): Promise<{
   }
 
   const response = await fetch(`${API_DB_URL}/users/${cardNums}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     credentials: "include",
   });
 

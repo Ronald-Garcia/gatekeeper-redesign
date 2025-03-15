@@ -6,8 +6,6 @@ import { sessions, users } from "./schema";
 const adapter = new DrizzlePostgreSQLAdapter(db as any, sessions as any, users as any);
 
 export const lucia = new Lucia(adapter, {
-
-
   sessionCookie: {
     attributes: {
       secure: process.env.NODE_ENV === "production",
@@ -17,7 +15,6 @@ export const lucia = new Lucia(adapter, {
   sessionExpiresIn: new TimeSpan(3, "m"),
   getUserAttributes: (userRow) => ({ ...userRow })
 });
-
 declare module "lucia" {
   interface Register {
     Lucia: typeof lucia;
