@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import useMutationUsers from "@/hooks/user-mutation-hooks";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import {
   Dialog,
   DialogContent,
@@ -57,20 +58,24 @@ const EditBudgetCodeDialog = ({ userId, setShowEditBudgetCode }: EditBudgetCodeD
               Please select the title of your budget code
             </Label>
             <div className="space-y-4">
-                <ScrollArea>
-            {
-        codesList.map((type) => (
-        
-                <div key={type.id} onClick={() => toggleBudgetCodeQueue(type.id) }
-                className={`flex flex-col justify-between items-center py-4 max-h-[15vh] text-sm text-clip transition-colors border-y-2 border-solid border-stone-300 hover:bg-stone-100 hover:border-stone-500 cursor-pointer ${
-                budgetCodeQueue.some(id => id === type.id) ? "bg-blue-300 border-blue-600" : ""
-                }`}
-            >
-                <p>{type.name}</p>
-                </div>
-            ))
-            }
-            </ScrollArea>  
+            <ScrollArea>
+            <ToggleGroup type="multiple">
+              {codesList.map((type) => (
+                <ToggleGroupItem
+                  key={type.id}
+                  value={type.id.toString()}
+                  onClick={() => toggleBudgetCodeQueue(type.id)}
+                  className={`flex flex-col justify-between items-center py-4 max-h-[15vh] text-sm text-clip transition-colors border-y-2 border-solid border-stone-300 hover:bg-stone-100 hover:border-stone-500 cursor-pointer ${
+                    budgetCodeQueue.some(id => id === type.id)
+                      ? "bg-blue-300 border-blue-600"
+                      : ""
+                  }`}
+                >
+                  <p>{type.name}</p>
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
+          </ScrollArea>  
             </div>
             <DialogFooter>
               <Button onClick={() => setShowEditBudgetCode(false)}>Cancel</Button>
