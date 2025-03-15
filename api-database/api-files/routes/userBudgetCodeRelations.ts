@@ -71,7 +71,7 @@ userBudgetCodeRelationRoute.get("/user-budgets/:id",
                        limit,
                        total: totalCount,
                        },
-                   message:"Fetched user routes"
+                   message:"Fetched user budget codes"
                    }); 
 
     }

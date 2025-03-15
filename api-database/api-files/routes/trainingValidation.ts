@@ -63,15 +63,19 @@ trainingRoutes.get(
     const machineRelation = await db
         .select()
         .from(userMachineType)
-        .where(and(eq(userMachineType.userId, userId), eq(userMachineType.id, machineType.id)))
-    
-    if (!machineRelation) {
+        .where(and(eq(userMachineType.userId, userId), eq(userMachineType.machineTypeId, machineType.id)))
+
+    if (!machineRelation || machineRelation.length === 0 ) {
         throw new HTTPException(401, { message: "User not authorized to use machine" });
     }
 
-    //TODO give back a session for the user. Artic.
-    throw new HTTPException(501, { message: "Have not implemented sessions for users yet." });
-})
+    
+    return c.json({
+      success: true,
+      message: "Training validated"
+    });
+  }
+);
 
 
 /**
