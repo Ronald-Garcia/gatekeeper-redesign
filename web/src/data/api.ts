@@ -12,6 +12,26 @@ import { SortBudgetType, SortType } from "./types/sort";
  * @throws {Error} If the response is not ok, throws error with the response message.
  */
 
+export const turnOffMachine = async (): Promise<boolean> => {
+  const response = await fetch(`${API_MACHINE_URL}/turn-off`, {
+    method: "POST",
+    credentials: "include",
+  });
+  const { message }: { message: string } = await response.json();
+
+  if (!response.ok) {
+    throw new Error(message);
+  }
+
+  return message.startsWith("s");
+};
+
+/**
+ * Turns on the machine.
+ * @returns {Promise<boolean>} returns true if the response message starts with "s".
+ * @throws {Error} If the response is not ok, throws error with the response message.
+ */
+
 export const turnOnMachine = async (): Promise<boolean> => {
   const response = await fetch(`${API_MACHINE_URL}/turn-on`, {
     method: "POST",
