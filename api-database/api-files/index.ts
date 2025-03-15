@@ -56,7 +56,7 @@ app.onError((err, c) => {
   console.error(`${err}`);
 
   if (err instanceof HTTPException) {
-    return c.json({ message: err.getResponse() }, err.status);
+    return c.json({ message: err.message }, err.status);
   }
 
   return c.json({ message: "An unexpected error occurred!" }, 500);
