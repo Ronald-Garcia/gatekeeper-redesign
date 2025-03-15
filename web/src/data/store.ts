@@ -49,31 +49,31 @@ export function clearItem() {
   $selected.set(null);
 }
 
-export function addSelectedBudgetCode(bc: BudgetCode) {
-  $budget_code_queue.set([...$budget_code_queue.get(), bc ]);
-}
+// export function addSelectedBudgetCode(bc: number) {
+//   $budget_code_queue.set([...$budget_code_queue.get(), bc ]);
+// }
 
-export function removeSelectedBudgetCode(bc: BudgetCode) {
-  $budget_code_queue.set($budget_code_queue.get().filter(b => b.id !== bc.id));
-}
+// export function removeSelectedBudgetCode(bc: number) {
+//   $budget_code_queue.set($budget_code_queue.get().filter(b => b !== bc));
+// }
 
-export function clearSelectedBudgetCode() {
-  $budget_code_queue.set([]);
-}
+// export function clearSelectedBudgetCode() {
+//   $budget_code_queue.set([]);
+// }
 
-export function toggleSelectedBudgetCode(bc: BudgetCode) {
-  const sbc = $budget_code_queue.get().find(b => b.id === bc.id);
+// export function toggleSelectedBudgetCode(bc: number) {
+//   const sbc = $budget_code_queue.get().find(b => b === bc);
 
-  if (sbc) {
-    removeSelectedBudgetCode(bc);
-  } else {
-    addSelectedBudgetCode(bc);
-  }
-}
+//   if (sbc) {
+//     removeSelectedBudgetCode(bc);
+//   } else {
+//     addSelectedBudgetCode(bc);
+//   }
+// }
 
-export function setSelectedBudgetCode(bcs: BudgetCode[]) {
-  $budget_code_queue.set(bcs);
-}
+// export function setSelectedBudgetCode(bcs: number[]) {
+//   $budget_code_queue.set(bcs);
+// }
 
 const defaultUser: User = {
   name: "test",

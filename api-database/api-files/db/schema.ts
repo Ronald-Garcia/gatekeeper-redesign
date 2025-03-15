@@ -28,7 +28,7 @@ export const users = pgTable("users_table", {
   JHED: text().notNull(),
   isAdmin: integer().notNull(),
   graduationYear: integer(), //This is optional because some users like Rich do not have grad year.
-  active: integer().notNull()
+  active: integer().notNull().default(1)
 });
 
 /**

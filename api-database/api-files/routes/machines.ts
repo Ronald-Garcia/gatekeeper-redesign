@@ -178,14 +178,9 @@ zValidator("param", validateMachineIdSchema),
 zValidator("json", createMachineSchema),
 async (c)=>{
 
-    console.log("hi ",c);
-
     const { id } = c.req.valid("param")
     const { name, machineTypeId, hourlyRate } = c.req.valid("json");
     // Check if machine exists first, throw 404 if not.
-
-
-    console.log("hi2 ",c);
 
     const  [machine_ent]  = await db
     .select()
@@ -195,8 +190,6 @@ async (c)=>{
     if (!machine_ent) {
         throw new HTTPException(404, { message: "Machine not found" });
     }
-
-    console.log("hi3",c);
 
     if (machineTypeId) {
         //Check if machine type actually exists, if provided.
@@ -210,8 +203,6 @@ async (c)=>{
         }
     }
 
-    console.log("hi3",c);
-
     //Updating of machine
 
     const updatedMachine = await db
@@ -219,8 +210,6 @@ async (c)=>{
         .set({name,machineTypeId,hourlyRate })
         .where(eq(machines.id, id))
         .returning();
-
-    console.log("hi4",c);
 
     return c.json({
         sucess:true,
