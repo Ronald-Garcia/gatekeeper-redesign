@@ -1,12 +1,10 @@
 # Source for original workflow creator: https://www.youtube.com/watch?v=gIHBVpJhmEk
-name: Deploy web to Vercel
+name: Testing and deployment
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_WEB_ID }}
 on:
   workflow_dispatch:
-  release:
-    types: [published]
       
 jobs:
 

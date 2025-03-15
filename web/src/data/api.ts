@@ -174,6 +174,7 @@ export const getUser = async (cardNum: number): Promise<{
     headers: { "Content-Type": "application/json" },
     credentials: "include",
   });
+  console.log(response)
 
   if (!response.ok) {
     const { message }: { message: string } = await response.json();
