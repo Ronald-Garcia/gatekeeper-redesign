@@ -64,7 +64,7 @@ trainingRoutes.get(
         .select()
         .from(userMachineType)
         .where(and(eq(userMachineType.userId, userId), eq(userMachineType.machineTypeId, machineType.id)))
-
+    
     if (!machineRelation || machineRelation.length === 0 ) {
         throw new HTTPException(401, { message: "User not authorized to use machine" });
     }

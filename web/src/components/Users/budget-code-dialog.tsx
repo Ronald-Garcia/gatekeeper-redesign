@@ -47,7 +47,7 @@ const EditBudgetCodeDialog = ({ userId, setShowEditBudgetCode }: EditBudgetCodeD
     useQueryBudgetCodes(true);
   
     useEffect(() => {
-      getBudgetsOfUser(userId, setUserBudgetCodes).then(res => {
+      getBudgetsOfUser(userId, setUserBudgetCodes).then(_ => {
         setSelectedBudgetCode(userBudgetCodes);
       });
     }, []);

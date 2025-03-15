@@ -6,7 +6,6 @@ import { users } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
 import { lucia } from "../db/auth.js";
-import { authGuard } from "../middleware/authGuard.js";
 import { adminGuard } from "../middleware/adminGuard.js";
 import { Context } from "../lib/context.js";
 
@@ -27,7 +26,7 @@ export const userRoutes = new Hono<Context>();
  * @returns page of data.
  */
 userRoutes.get("/users",
-    // adminGuard,
+     adminGuard,
      zValidator("query", queryUsersParamsSchema), async (c) => {
     const { page = 1, limit = 20, sort, search } = c.req.valid("query");
 
@@ -112,7 +111,7 @@ userRoutes.get("/users",
  * @returns the newly created user.
  */
 userRoutes.post("/users", 
-     //adminGuard,
+     adminGuard,
      zValidator("json", createUserSchema), async (c)=>{
 
     const { name, cardNum, JHED, graduationYear, isAdmin } = c.req.valid("json");
@@ -205,7 +204,7 @@ userRoutes.get("/users/:cardNum",
  */
 userRoutes.delete(
     "/users/:id", 
-    //adminGuard,
+    adminGuard,
     zValidator("param", getUserSchema),
     async (c)=>{
                 

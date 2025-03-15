@@ -8,7 +8,7 @@ import { BudgetCode } from "@/data/types/budgetCode";
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
 import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
-import { turnOnMachine } from "@/data/api";
+import { turnOffMachine, turnOnMachine } from "@/data/api";
 
 /*
 Display to use on gates when a user logs in. Displays BudgetCodes a user has associated with his account. 
@@ -21,6 +21,7 @@ const Interlock = () => {
     
     const handleCancel = () => {
         clearCurrentUser();
+        turnOffMachine()
         redirectPage($router, "start_page");
     }
 
