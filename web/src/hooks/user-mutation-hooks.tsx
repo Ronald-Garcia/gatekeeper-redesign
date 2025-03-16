@@ -76,6 +76,19 @@ function useMutationUsers() {
       }
     };
 
+    const setUserTrainings = async (user_id: number, machine_types: number[]) => {
+      try {
+        await replaceBudgetsOfUser(user_id, machine_types);
+  
+      } catch (e) {
+          //get message from api response, put it on a toast
+          const errorMessage = (e as Error).message;
+          toast.error("Sorry! There was an error creating trainings 🙁", {
+            description: errorMessage  
+          });
+        }
+      };
+
 
   //function that handles state of deck
   const giveTraining = async (user_id: number, machine_id: number) => {
@@ -151,7 +164,8 @@ function useMutationUsers() {
     giveBudgetCode,
     //banUserById,
     fetchUser,
-    setUserBudgetCodes
+    setUserBudgetCodes,
+    setUserTrainings
   };
 }
 
