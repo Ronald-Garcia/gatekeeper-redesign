@@ -2,20 +2,21 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { createUserBudgetSchema, deleteUserBudgetSchema, queryUserBudgetsSchema, replaceUserBudgetSchema } from "../validators/userBudgetCodeRelationSchemas";
 import { getUserSchema, queryBudgetCodesParamsSchema } from "../validators/schemas";
-import { and, asc, count, desc, eq, exists, ilike, SQL } from "drizzle-orm";
+import { and, asc, count, desc, eq, exists, ilike, inArray, SQL } from "drizzle-orm";
 import { db } from "../db";
 import { budgetCodes, userBudgetCodeTable, users } from "../db/schema";
 import { HTTPException } from "hono/http-exception";
 import { validateUserParamSchema } from "../validators/trainingSchema";
 import { Context } from "../lib/context";
 import { adminGuard } from "../middleware/adminGuard";
+import { authGuard } from "../middleware/authGuard";
 
 
 export const userBudgetCodeRelationRoute = new Hono<Context>();
 
 
 userBudgetCodeRelationRoute.get("/user-budgets/:id", 
-    //adminGuard,
+    authGuard,
     zValidator("query", queryUserBudgetsSchema),
     zValidator("param", validateUserParamSchema),
     async (c) => {
@@ -66,7 +67,7 @@ userBudgetCodeRelationRoute.get("/user-budgets/:id",
                  ]);
                
                return c.json({
-                   sucess:true,
+                   success:true,
                    data: allCodes.map(c => c.budgetCodes),
                    meta: {
                        page,
@@ -81,7 +82,7 @@ userBudgetCodeRelationRoute.get("/user-budgets/:id",
 )
 
 userBudgetCodeRelationRoute.post("/user-budgets", 
-    //adminGuard,
+    adminGuard,
     zValidator("json", createUserBudgetSchema),
     async (c) => {
         const { userId, budgetCodeId } = c.req.valid("json");
@@ -100,12 +101,12 @@ userBudgetCodeRelationRoute.post("/user-budgets",
             success: true,
             message: "User-budget relation added successfully.",
             data: ubc
-        })
+        },201)
     }
 )
 
 userBudgetCodeRelationRoute.delete("/user-budgets/:userId/:budgetCodeId", 
-    //adminGuard,
+    adminGuard,
     zValidator("param", deleteUserBudgetSchema),
     async (c) => {
         const {userId, budgetCodeId} = c.req.valid("param");
@@ -126,6 +127,7 @@ userBudgetCodeRelationRoute.delete("/user-budgets/:userId/:budgetCodeId",
 )
 
 userBudgetCodeRelationRoute.patch("/user-budgets/:id",
+        adminGuard,
         zValidator("param", getUserSchema),
         zValidator("json", replaceUserBudgetSchema),
         async (c) => {
@@ -136,6 +138,13 @@ userBudgetCodeRelationRoute.patch("/user-budgets/:id",
             if (!user_ent) {
                 throw new HTTPException(404, { message: "No user found."});
             }
+
+            const validCodes = await db.select().from(budgetCodes)
+            .where(inArray(budgetCodes.id, budget_code));
+        if (validCodes.length !== budget_code.length) {
+            throw new HTTPException(400, { message: "Unsuccessful in replacing all budget codes" });
+        }
+
 
             await db.delete(userBudgetCodeTable).where(eq(userBudgetCodeTable.userId, id));
 
@@ -150,10 +159,7 @@ userBudgetCodeRelationRoute.patch("/user-budgets/:id",
             console.log(bcs);
 
 
-            if (budget_code.length !== bcs.length) {
-                throw new HTTPException(400, { message: "Unsuccessful in replacing all budget codes"});
-            }
-
+        
             return c.json({
                 success: true,
                 message: "Successfully replaced budget codes of user.",

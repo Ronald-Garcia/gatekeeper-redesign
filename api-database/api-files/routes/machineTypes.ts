@@ -71,7 +71,7 @@ machineTypeRoutes.get(
           ]);
         
         return c.json({
-            sucess:true,
+            success:true,
             data: allTypes,
             meta: {
                 page,
@@ -114,7 +114,7 @@ machineTypeRoutes.post("/machine-types",
         .returning();
 
     return c.json({
-        sucess:true,
+        success:true,
         message:"Created a new machine type",
         data: newMachineType
     }, 201);
@@ -144,7 +144,7 @@ machineTypeRoutes.delete("/machine-types/:id",
         }
 
         return c.json({
-            sucess:true,
+            success:true,
             message:"Deleted a machine type",
             data: type
         }, 200);

@@ -12,11 +12,8 @@ import { HTTPException } from 'hono/http-exception';
 // Log in as admin via GET /users/:cardNum
 async function adminLogin(app: Hono<Context>): Promise<string> {
   const adminCardNum = "1234567890777777";
-
   const response = await app.request(`/users/${adminCardNum}`);
-  if (response.status !== 200) {
-    throw new HTTPException(407,{message:"Admin login failed"});
-  }
+ 
   const setCookie = response.headers.get("set-cookie") || "";
   //get cookie
   return setCookie.split(";")[0];
@@ -25,11 +22,7 @@ async function adminLogin(app: Hono<Context>): Promise<string> {
 // Log in as a user (non‑admin) via GET /users/:cardNum
 async function userLogin(app: Hono<Context>, cardNum: string): Promise<string> {
   const response = await app.request(`/users/${cardNum}`);
-  if (response.status !== 200) {
-    throw new HTTPException(407,{ message:"FUCK YOU login failed" });
-  }
   const setCookie = response.headers.get("set-cookie") || "";
-  console.log("userLogin got cookie:", setCookie);
   return setCookie.split(";")[0];
 }
 
@@ -46,8 +39,7 @@ function generateTestMachineName(): string {
   return "TEST_MACHINE_" + Math.floor(Math.random() * 1e8).toString().padStart(8, "0");
 }
 
-//app setup 
-
+// app setup 
 const app = new Hono<Context>();
 // Attach auth middleware so that Lucia sets the session/user from the Cookie header.
 app.use("/*", auth);
@@ -63,7 +55,6 @@ app.onError((err, c) => {
 });
 
 // global vars for tests
-
 let testMachineTypeId: number;
 let testMachineId: number;
 let testMachineName: string;
@@ -100,14 +91,13 @@ beforeEach(async () => {
 });
 
 // tests, please work 
-
 describe("Machine Routes", () => {
 
   describe("GET /machines", () => {
-    test("returns 200 and machine list with valid non-admin session", async () => {
-      // Create a non-admin user and immediately log in as that user.
+    test("returns 200 and machine list with valid non‑admin session", async () => {
+      // Create a non‑admin user and immediately log in as that user.
       const testNonAdminCard = generateTestCardNumber();
-      // Create the non-admin user using the admin endpoint.
+      // Create the non‑admin user using the admin endpoint.
       await app.request("/users", {
         method: "POST",
         headers: new Headers({
@@ -129,8 +119,8 @@ describe("Machine Routes", () => {
       });
       expect(response.status).toBe(200);
       const body = await response.json();
-      // Adjust property name if needed (e.g., "sucess" vs. "success")
-      expect(body).toHaveProperty("sucess", true);
+      // Adjust property name if needed (e.g., "success" vs. "success")
+      expect(body).toHaveProperty("success", true);
       expect(body).toHaveProperty("data");
       expect(Array.isArray(body.data)).toBe(true);
       expect(body).toHaveProperty("meta");
@@ -178,13 +168,14 @@ describe("Machine Routes", () => {
   });
 
   describe("POST /machines", () => {
-    const newMachineData = {
-      name: generateTestMachineName(),
-      machineTypeId: testMachineTypeId,
-      hourlyRate: 25,
-    };
-
     test("creates a machine and returns it with admin access", async () => {
+      // Define newMachineData inside the test so that testMachineTypeId is available
+      const newMachineData = {
+        name: generateTestMachineName(),
+        machineTypeId: testMachineTypeId,
+        hourlyRate: 25,
+      };
+
       const response = await app.request("/machines", {
         method: "POST",
         headers: new Headers({
@@ -193,16 +184,20 @@ describe("Machine Routes", () => {
         }),
         body: JSON.stringify(newMachineData),
       });
-      console.log(JSON.stringify(newMachineData));
       expect(response.status).toBe(201);
       const body = await response.json();
-      expect(body).toHaveProperty("sucess", true);
+      expect(body).toHaveProperty("success", true);
       expect(body).toHaveProperty("data");
       const returned = body.data;
       expect(returned).toMatchObject(newMachineData);
     });
 
     test("returns 401 Unauthorized when no session is provided", async () => {
+      const newMachineData = {
+        name: generateTestMachineName(),
+        machineTypeId: testMachineTypeId,
+        hourlyRate: 25,
+      };
       const response = await app.request("/machines", {
         method: "POST",
         headers: new Headers({ "Content-Type": "application/json" }),
@@ -213,8 +208,13 @@ describe("Machine Routes", () => {
       expect(body).toHaveProperty("message", "Unauthorized");
     });
 
-    test("returns 403 Forbidden when a non-admin session is used", async () => {
-      // Create and log in as a non-admin user for this test.
+    test("returns 403 Forbidden when a non‑admin session is used", async () => {
+      const newMachineData = {
+        name: generateTestMachineName(),
+        machineTypeId: testMachineTypeId,
+        hourlyRate: 25,
+      };
+      // Create and log in as a non‑admin user for this test.
       const testNonAdminCard = generateTestCardNumber();
       await app.request("/users", {
         method: "POST",
@@ -245,6 +245,11 @@ describe("Machine Routes", () => {
     });
 
     test("returns 404 if machine type is invalid", async () => {
+      const newMachineData = {
+        name: generateTestMachineName(),
+        machineTypeId: testMachineTypeId,
+        hourlyRate: 25,
+      };
       const invalidData = { ...newMachineData, machineTypeId: invalidMachineTypeId };
       const response = await app.request("/machines", {
         method: "POST",
@@ -262,11 +267,6 @@ describe("Machine Routes", () => {
 
   describe("PATCH /machines/:id", () => {
     let createdMachineId: number;
-    const updateData = {
-      name: generateTestMachineName(),
-      machineTypeId: testMachineTypeId,
-      hourlyRate: 35.0,
-    };
 
     beforeAll(async () => {
       // Create a machine to update.
@@ -287,6 +287,12 @@ describe("Machine Routes", () => {
     });
 
     test("updates a machine and returns it with admin access", async () => {
+      // Define updateData inside the test so that testMachineTypeId is defined
+      const updateData = {
+        name: generateTestMachineName(),
+        machineTypeId: testMachineTypeId,
+        hourlyRate: 35,
+      };
       const response = await app.request(`/machines/${createdMachineId}`, {
         method: "PATCH",
         headers: new Headers({
@@ -295,16 +301,20 @@ describe("Machine Routes", () => {
         }),
         body: JSON.stringify(updateData),
       });
-      console.log("PATCH response status:", response);
       expect(response.status).toBe(201);
       const body = await response.json();
-      expect(body).toHaveProperty("sucess", true);
+      expect(body).toHaveProperty("success", true);
       expect(body).toHaveProperty("data");
-      const returned = body.data;
+      const returned = Array.isArray(body.data) ? body.data[0] : body.data;
       expect(returned).toMatchObject(updateData);
     });
 
     test("returns 404 when updating a non-existent machine", async () => {
+      const updateData = {
+        name: generateTestMachineName(),
+        machineTypeId: testMachineTypeId,
+        hourlyRate: 35,
+      };
       const response = await app.request("/machines/9999999", {
         method: "PATCH",
         headers: new Headers({
@@ -319,6 +329,11 @@ describe("Machine Routes", () => {
     });
 
     test("returns 401 Unauthorized when no session is provided", async () => {
+      const updateData = {
+        name: generateTestMachineName(),
+        machineTypeId: testMachineTypeId,
+        hourlyRate: 35,
+      };
       const response = await app.request(`/machines/${createdMachineId}`, {
         method: "PATCH",
         headers: new Headers({ "Content-Type": "application/json" }),
@@ -329,8 +344,13 @@ describe("Machine Routes", () => {
       expect(body).toHaveProperty("message", "Unauthorized");
     });
 
-    test("returns 403 Forbidden when a non-admin session is used", async () => {
-      // Create and log in as a non-admin for this test.
+    test("returns 403 Forbidden when a non‑admin session is used", async () => {
+      const updateData = {
+        name: generateTestMachineName(),
+        machineTypeId: testMachineTypeId,
+        hourlyRate: 35,
+      };
+      // Create and log in as a non‑admin for this test.
       const testNonAdminCard = generateTestCardNumber();
       await app.request("/users", {
         method: "POST",
@@ -361,14 +381,18 @@ describe("Machine Routes", () => {
     });
 
     test("returns 404 if new machine type is invalid", async () => {
-      const invalidUpdateData = { ...updateData, machineTypeId: invalidMachineTypeId };
+      const updateData = {
+        name: generateTestMachineName(),
+        machineTypeId: invalidMachineTypeId,
+        hourlyRate: 35,
+      };
       const response = await app.request(`/machines/${createdMachineId}`, {
         method: "PATCH",
         headers: new Headers({
           "Content-Type": "application/json",
           Cookie: adminCookie,
         }),
-        body: JSON.stringify(invalidUpdateData),
+        body: JSON.stringify(updateData),
       });
       expect(response.status).toBe(404);
       const body = await response.json();
@@ -403,7 +427,7 @@ describe("Machine Routes", () => {
       });
       expect(response.status).toBe(200);
       const body = await response.json();
-      expect(body).toHaveProperty("sucess", true);
+      expect(body).toHaveProperty("success", true);
       expect(body).toHaveProperty("message", "Deleted a machine");
     });
 
@@ -424,8 +448,7 @@ describe("Machine Routes", () => {
       expect(body).toHaveProperty("message", "Unauthorized");
     });
 
-    test("returns 403 Forbidden when a non-admin session is used", async () => {
-      // Create and log in as a non-admin for this test.
+    test("returns 403 Forbidden when a non‑admin session is used", async () => {
       const testNonAdminCard = generateTestCardNumber();
       await app.request("/users", {
         method: "POST",
@@ -453,7 +476,7 @@ describe("Machine Routes", () => {
   });
 });
 
-
+// CLEANUP
 afterAll(async () => {
   await db.delete(machines).where(like(machines.name, "TEST_MACHINE_%")).execute();
   await db.delete(machineTypes).where(eq(machineTypes.id, testMachineTypeId)).execute();

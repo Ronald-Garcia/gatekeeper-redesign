@@ -1,4 +1,3 @@
-// api-database/testing/unit-tests/trainingValidation.test.ts
 import { Hono } from 'hono';
 import { trainingRoutes } from '../../api-files/routes/trainingValidation.js';
 import { userRoutes } from '../../api-files/routes/users.js';
@@ -75,10 +74,11 @@ beforeAll(async () => {
     .returning();
   testUserId = insertedUser.id;
 
-  // Insert a test machine type.
+  // Insert a test machine type with a unique name to avoid duplicate errors.
+  const uniqueTypeName = 'TEST_TRAINING_TYPE_' + Date.now();
   const [insertedType] = await db
     .insert(machineTypes)
-    .values({ name: 'TEST_TRAINING_TYPE' })
+    .values({ name: uniqueTypeName })
     .returning();
   testMachineTypeId = insertedType.id;
 
@@ -132,6 +132,7 @@ describe('Training Routes', () => {
       await db.delete(userMachineType).where(eq(userMachineType.userId, testUserId)).execute();
       const url = `/trainings/${testUserId}/${testMachineId}`;
       const response = await app.request(url, { method: 'GET', headers: new Headers({ Cookie: adminCookie }) });
+      console.log("this", response);
       expect(response.status).toBe(401);
       const text = await response.text();
       expect(text).toContain('User not authorized to use machine');
@@ -144,7 +145,8 @@ describe('Training Routes', () => {
       const response = await app.request(url, { method: 'GET', headers: new Headers({ Cookie: adminCookie }) });
       expect(response.status).toBe(200);
       const body = await response.json();
-      expect(body).toHaveProperty('sucess', true);
+      // Ensure property name "success" is used.
+      expect(body).toHaveProperty('success', true);
       expect(body).toHaveProperty('data');
       expect(Array.isArray(body.data)).toBe(true);
       expect(body).toHaveProperty('meta');
@@ -175,8 +177,9 @@ describe('Training Routes', () => {
       });
       expect(response.status).toBe(201);
       const body = await response.json();
-      expect(body).toHaveProperty('sucess', true);
+      expect(body).toHaveProperty('success', true);
       expect(body).toHaveProperty('data');
+      // If the returned data is an array, use the first element.
       const returned = Array.isArray(body.data) ? body.data[0] : body.data;
       expect(returned).toMatchObject(newTraining);
     });
@@ -199,7 +202,7 @@ describe('Training Routes', () => {
       });
       expect(deleteResponse.status).toBe(200);
       const deleteBody = await deleteResponse.json();
-      expect(deleteBody).toHaveProperty('sucess', true);
+      expect(deleteBody).toHaveProperty('success', true);
       expect(deleteBody).toHaveProperty('message');
     });
   });
@@ -251,9 +254,8 @@ describe('Training Routes - Guard Errors', () => {
   });
 });
 
-/* 
-  Clean up test data: Delete the test user, machine type, machine, and associated training relations.
-*/
+//Clean up test data: Delete the test user, machine type, machine, and associated training relations.
+
 afterAll(async () => {
   await db.delete(userMachineType).where(eq(userMachineType.userId, testUserId)).execute();
   await db.delete(users).where(eq(users.id, testUserId)).execute();

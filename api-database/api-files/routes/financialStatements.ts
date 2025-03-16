@@ -4,11 +4,13 @@ import { createStatementSchema, queryFinStatementParamsSchema } from "../validat
 import { like, SQL, or, desc, asc, eq, and, count } from "drizzle-orm";
 import { financialStatementsTable, users } from "../db/schema.js";
 import { db } from "../db/index.js";
+import { adminGuard } from "../middleware/adminGuard.js";
 
 export const financialStatementRoutes = new Hono();
 
 // getting all financial statements
 financialStatementRoutes.get("/fin-statements",
+    adminGuard,
     zValidator("query", queryFinStatementParamsSchema),
     async (c) => {
     const { page = 1, limit = 20, sort } = c.req.valid("query");
@@ -58,6 +60,7 @@ financialStatementRoutes.get("/fin-statements",
 
 // adding a new financial statement
 financialStatementRoutes.post("/fin-statements",
+    adminGuard,
     zValidator("json", createStatementSchema),
     async (c)=>{
 
