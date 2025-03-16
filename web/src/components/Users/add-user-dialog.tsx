@@ -48,7 +48,7 @@ const AddUserDialog = () => {
       name,
       JHED: jhed,
       isAdmin: admin,
-      cardNum:cardNum,
+      cardNum:cardNum.substring(0, 16),
       graduationYear: parseInt(year),
       id: -1}
     
