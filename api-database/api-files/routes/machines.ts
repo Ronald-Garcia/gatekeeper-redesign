@@ -86,7 +86,7 @@ machineRoutes.get("/machines",
       ]);
     
     return c.json({
-        sucess:true,
+        success:true,
         data: allMachines.map(data => data.machines_table),
         meta: {
             page,
@@ -158,7 +158,7 @@ machineRoutes.post("/machines",
         .returning();
 
     return c.json({
-        sucess:true,
+        success:true,
         message:"Created a machine",
         data: newMachine
     }, 201);
@@ -212,7 +212,7 @@ async (c)=>{
         .returning();
 
     return c.json({
-        sucess:true,
+        success:true,
         message:"Updated a machine",
         data: updatedMachine
     }, 201);
@@ -247,7 +247,7 @@ machineRoutes.delete("/machines/:id",
         .returning();
 
     return c.json({
-        sucess:true,
+        success:true,
         message:"Deleted a machine",
         data: deletedMachine
     }, 200);

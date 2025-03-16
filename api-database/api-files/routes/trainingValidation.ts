@@ -27,7 +27,7 @@ export const trainingRoutes = new Hono<Context>();
  */
 trainingRoutes.get(
     "/trainings/:userId/:machineId", 
-    //authGuard,
+    authGuard,
     zValidator(
         "param",
         getTrainingFromMachineSchema),
@@ -90,7 +90,7 @@ trainingRoutes.get(
 trainingRoutes.get(
     "/trainings/:id",
     zValidator("param", validateUserParamSchema), 
-    //authGuard,
+    authGuard,
     zValidator("query", queryTrainingsParamsSchema),
     async (c) => {
     const { id } = c.req.valid("param")
@@ -150,7 +150,7 @@ trainingRoutes.get(
               ]);    
         }
         return c.json({
-            sucess:true,
+            success:true,
             data: allTrainings,
             meta: {
                 page,
@@ -169,7 +169,7 @@ trainingRoutes.get(
  * @returns the newly created training.
  */
 trainingRoutes.post("/trainings", 
-    //adminGuard,
+    adminGuard,
     zValidator("json", createTrainingSchema),
      async (c)=>{
 
@@ -194,7 +194,7 @@ trainingRoutes.post("/trainings",
         .returning();
 
     return c.json({
-        sucess:true,
+        success:true,
         data:newTraining,
         message:"Created training"
     }, 201)
@@ -208,7 +208,7 @@ trainingRoutes.post("/trainings",
  * @returns the deleted training.
  */
 trainingRoutes.delete("/trainings", 
-    //adminGuard,
+    adminGuard,
     zValidator("json", getTrainingSchema),
      async (c)=>{
 
@@ -230,7 +230,7 @@ trainingRoutes.delete("/trainings",
         .returning();
 
     return c.json({
-        sucess:true,
+        success:true,
         data:deletedTraining,
         message:"Deleted training"
     }, 200);
