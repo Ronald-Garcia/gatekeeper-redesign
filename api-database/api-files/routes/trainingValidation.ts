@@ -110,7 +110,7 @@ trainingRoutes.get(
 
         const userTrainings = await db.select().from(userMachineType).where(eq(userMachineType.userId, id));
 
-        whereClause.push(and(...userTrainings.map(u => eq(machineTypes.id, u.machineTypeId))));
+        whereClause.push(or(...userTrainings.map(u => eq(machineTypes.id, u.machineTypeId))));
         // Get into searching
         if (search) {
             whereClause.push(
@@ -131,13 +131,23 @@ trainingRoutes.get(
     
         const offset = (page - 1) * limit;
     
-        let [allTrainings, totalCount] = [[], 0];
-
-        if (userTrainings.length !== 0) {
-            const [allTrainings, [{ totalCount }]] = await Promise.all([
+        if (userTrainings.length === 0) {
+            return c.json({
+                success: true,
+                data: [],
+                meta: {
+                    page,
+                    limit,
+                    total: 0,
+                },
+                message: "Fetched user trainings"
+            })
+        }
+        
+        const [allTrainings, [{ totalCount }]] = await Promise.all([
                 db
                 .select()
-                .from(userMachineType)
+                .from(machineTypes)
                 .where(and(...whereClause))
                 .orderBy(...orderByClause)
                 .limit(limit)
@@ -146,10 +156,9 @@ trainingRoutes.get(
                   //This gets user count from database.
                 db
                   .select({ totalCount: count() })
-                  .from(userMachineType)
+                  .from(machineTypes)
                   .where(and(...whereClause)),
               ]);    
-        }
         return c.json({
             success:true,
             data: allTrainings,
@@ -251,8 +260,7 @@ trainingRoutes.patch("/trainings/:id",
                 throw new HTTPException(404, { message: "No user found."});
             }
 
-            const validTypes = await db.select().from(machineTypes)
-            .where(inArray(machineTypes.id, machine_types));
+            const validTypes = await db.select().from(machineTypes).where(inArray(machineTypes.id, machine_types));
         if (validTypes.length !== machine_types.length) {
             throw new HTTPException(400, { message: "Unsuccessful in replacing all machine-types codes" });
         }
@@ -264,7 +272,7 @@ trainingRoutes.patch("/trainings/:id",
             const bcs = await db.insert(userMachineType).values(machine_types.map(bc => {
                 return {
                     userId: id,
-                    budgetCodeId: bc
+                    machineTypeId: bc
                 }
             })).returning();
         

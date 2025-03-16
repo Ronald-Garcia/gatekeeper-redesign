@@ -10,7 +10,8 @@ import { createUser,
     editUser, 
     getUser,
     createUserBudgetCode,
-    replaceBudgetsOfUser} from "@/data/api";
+    replaceBudgetsOfUser,
+    replaceTrainingsOfUser} from "@/data/api";
 
 
 
@@ -78,7 +79,7 @@ function useMutationUsers() {
 
     const setUserTrainings = async (user_id: number, machine_types: number[]) => {
       try {
-        await replaceBudgetsOfUser(user_id, machine_types);
+        await replaceTrainingsOfUser(user_id, machine_types);
   
       } catch (e) {
           //get message from api response, put it on a toast
