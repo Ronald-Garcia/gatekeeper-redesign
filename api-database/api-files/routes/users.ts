@@ -17,6 +17,12 @@ import { Context } from "../lib/context.js";
  */
 export const userRoutes = new Hono<Context>();
 
+// This function adds the last number of the user to the user number returned.
+export function appendLastNum (entry:User): User{
+    entry.cardNum = entry.cardNum + entry.lastDigitOfCardNum
+    return entry;
+}
+
 /**
  * Queries all users stored in the database.
  * @query page         the page to query.
@@ -87,6 +93,7 @@ userRoutes.get("/users",
           .where(and(...whereClause)),
       ]);
     
+    allUsers.every(appendLastNum)
     return c.json(
     {
     success:true,
@@ -142,6 +149,8 @@ userRoutes.post("/users",
             graduationYear
         })
         .returning();
+
+    appendLastNum(newUser);
 
     return c.json({
         success: true,

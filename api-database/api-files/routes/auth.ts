@@ -7,6 +7,7 @@ import { getUserByCardNumSchema } from "../validators/schemas";
 import { db } from "../db";
 import { users } from "../db/schema";
 import { and, eq } from "drizzle-orm";
+import { appendLastNum } from "./users";
 
 
 const authRoutes = new Hono<Context>();
@@ -62,6 +63,8 @@ authRoutes.post("/users/:cardNum",
    const sessionCookie = lucia.createSessionCookie(session.id);
    // Set the cookie in the response headers.
    c.header("Set-Cookie", sessionCookie.serialize(), { append: true });
+   
+   appendLastNum(user);
    
    return c.json({
      success: true,
