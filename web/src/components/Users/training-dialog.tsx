@@ -53,21 +53,26 @@ const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogP
           Please select the title of your training
         </Label>
         <div className="space-y-4">
-            <ScrollArea>
-
-        {
-    machineList.map((type) => (
-     
-            <div key={type.id} data-cy="machine-option" onClick={() => setTraining(type.id) }
-            className={`flex flex-col justify-between items-center py-4 max-h-[15vh] text-sm text-clip transition-colors border-y-2 border-solid border-stone-300 hover:bg-stone-100 hover:border-stone-500 cursor-pointer ${
-              training === type.id ? "bg-blue-300 border-blue-600" : ""
-            }`}
-          >
-            <p>{type.name}</p>
-            </div>
-         ))
-           }
-          </ScrollArea>
+        <ToggleGroup type="multiple" className="flex-col">
+              {codesList.map((type) => (
+                <ToggleGroupItem
+                  key={type.id}
+                  value={type.id.toString()}
+                  onClick={() => toggleBudgetCodeQueue(type.id)}
+                  className={`flex flex-col justify-between items-center py-4 max-h-[15vh] text-sm text-clip transition-colors border-y-2 border-solid border-stone-300 hover:bg-stone-100 hover:border-stone-500 cursor-pointer ${
+                    budgetCodeQueue.some(b => b === type.id) ?
+                    "data-[state=on]" :
+                    "data-[state=off]"
+                  }` }
+                  data-state={budgetCodeQueue.some(b=> b===type.id) ? "on" : "off"}
+                  aria-pressed={budgetCodeQueue.some(b=> b===type.id)}
+                >
+                  <p>{type.name}</p>
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
+          </ScrollArea>  
+          
     
         </div>
         <DialogFooter>

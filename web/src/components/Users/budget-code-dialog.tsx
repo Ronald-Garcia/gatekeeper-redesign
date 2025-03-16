@@ -62,7 +62,7 @@ const EditBudgetCodeDialog = ({ userId, setShowEditBudgetCode }: EditBudgetCodeD
             </Label>
             <div className="space-y-4">
             <ScrollArea>
-            <ToggleGroup type="multiple">
+            <ToggleGroup type="multiple" className="flex-col">
               {codesList.map((type) => (
                 <ToggleGroupItem
                   key={type.id}

@@ -14,6 +14,9 @@ export const getTrainingFromMachineSchema = z.object({
     machineId: z.coerce.number().int().positive()
 })
 
+export const replaceTrainingSchema = z.object({
+    machine_types: z.array(z.coerce.number().positive().int())
+})
 
 export const validateUserParamSchema = z.object({
     id: z

@@ -11,6 +11,7 @@ export const $codes = atom<BudgetCode[]>([]);
 export const $machines = atom<Machine[]>([]);
 export const $machine_types = atom<MachineType[]>([]);
 export const $budget_code_queue = atom<number[]>([]);
+export const $training_queue = atom<number[]>([]);
 
 export function setBudgetCodeQueue(bcs: number[]) {
   $budget_code_queue.set(bcs);
@@ -35,6 +36,33 @@ export function toggleBudgetCodeQueue(bc: number) {
     removeBudgetCodeQueue(bc);
   } else {
     addBudgetCodeQueue(bc);
+  }
+}
+
+
+export function setTrainingQueue(bcs: number[]) {
+  $training_queue.set(bcs);
+}
+
+export function addTrainingQueue(bc: number) {
+  $training_queue.set([...$training_queue.get(), bc]);
+}
+
+export function removeTrainingQueue(bc: number) {
+  $training_queue.set($training_queue.get().filter(b => b !== bc));
+}
+
+export function clearTrainingQueue() {
+  $training_queue.set([]);
+}
+
+export function toggleTrainingQueue(bc: number) {
+  const bcs =  $training_queue.get();
+  const hasBc = bcs.some(b => b === bc);
+  if (hasBc) {
+    removeTrainingQueue(bc);
+  } else {
+    addTrainingQueue(bc);
   }
 }
 export const $statements = atom<financialStatement[]>([]);
