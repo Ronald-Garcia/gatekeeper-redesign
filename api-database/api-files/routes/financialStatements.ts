@@ -30,10 +30,7 @@ financialStatementRoutes.get("/fin-statements",
 
     const [allFinancialStatements, [{ totalCount }]] = await Promise.all([
         db
-        .select({
-            id: financialStatementsTable.userId,
-            budgetCode: financialStatementsTable.budgetCode
-        })
+        .select()
           .from(financialStatementsTable)
           .orderBy(...orderByClause)
           .limit(limit)
