@@ -250,12 +250,12 @@ export const validateTraining = async (user_id: number, machine_id: number): Pro
 /**
  * Retrieves all training sessions for a specific user.
  * @param {number} user_id - The ID of the user.
- * @returns {Promise<{message: string, data: Training[]}>} A promise that resolves with a message and an array of trainings.
+ * @returns {Promise<{message: string, data: MachineType[]}>} A promise that resolves with a message and an array of trainings.
  * @throws {Error} If the response is not ok, throws an error with the response message.
  */
 export const getAllTrainingsOfUser = async (user_id: number): Promise<{
   message: string,
-  data: Training[]
+  data: MachineType[]
 }> => {
   const response = await fetch(`${API_DB_URL}/trainings/${user_id}`, {
     credentials: "include",
@@ -267,7 +267,7 @@ export const getAllTrainingsOfUser = async (user_id: number): Promise<{
     throw new Error(message);
   }
 
-  const { message, data }: { message: string; data: Training[] } =
+  const { message, data }: { message: string; data: MachineType[] } =
     await response.json();
 
   return { message, data };
@@ -364,16 +364,15 @@ export const getAllBudgetsOfUser = async (user_id: number): Promise<{
 
   const { message, data }: { message: string; data: BudgetCode[] } =
     await response.json();
-
   return { message, data };
 };
 
 export const replaceBudgetsOfUser = async (user_id: number, budget_code_ids: number[]): Promise<boolean> => {
-  const response = await fetch(`${API_DB_URL}/budget-codes/${user_id}`, {
+  const response = await fetch(`${API_DB_URL}/user-budgets/${user_id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      budget_code_ids,
+      budget_code: budget_code_ids,
     }),
     credentials: "include"
   });
@@ -387,6 +386,25 @@ export const replaceBudgetsOfUser = async (user_id: number, budget_code_ids: num
   return true;
 }
 
+
+export const replaceTrainingsOfUser = async (user_id: number, machine_type_ids: number[]): Promise<boolean> => {
+  const response = await fetch(`${API_DB_URL}/trainings/${user_id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      machine_types: machine_type_ids,
+    }),
+    credentials: "include"
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+
+    throw new Error(message);
+  }
+
+  return true;
+}
 
 
 /**

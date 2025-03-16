@@ -44,6 +44,8 @@ userBudgetCodeRelationRoute.get("/user-budgets/:id",
                 orderByClause.push(asc(budgetCodes.name));
                 break;
         }
+
+        whereClause.push(eq(userBudgetCodeTable.userId, id));
     
         const offset = (page - 1) * limit;
         
@@ -124,8 +126,6 @@ userBudgetCodeRelationRoute.delete("/user-budgets/:userId/:budgetCodeId",
     }
 )
 
-userBudgetCodeRelationRoute.patch
-
 userBudgetCodeRelationRoute.patch("/user-budgets/:id",
         adminGuard,
         zValidator("param", getUserSchema),
@@ -148,13 +148,16 @@ userBudgetCodeRelationRoute.patch("/user-budgets/:id",
 
             await db.delete(userBudgetCodeTable).where(eq(userBudgetCodeTable.userId, id));
 
+            console.log(budget_code);
 
             const bcs = await db.insert(userBudgetCodeTable).values(budget_code.map(bc => {
                 return {
                     userId: id,
                     budgetCodeId: bc
                 }
-            })) .returning();
+            })).returning();
+            console.log(bcs);
+
 
         
             return c.json({

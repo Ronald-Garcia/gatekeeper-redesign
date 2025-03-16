@@ -1,6 +1,7 @@
-import { fetchCurrentMachine, getAllMachines, getMachine, getMachineTypes } from "@/data/api";
+import { fetchCurrentMachine, getAllMachines, getAllTrainingsOfUser, getMachine, getMachineTypes } from "@/data/api";
 import { setCurrentMachine, setKiosk, setMachines, setMachinesTypes} from "@/data/store";
 import { Machine } from "@/data/types/machine";
+import { MachineType } from "@/data/types/machineType";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
@@ -61,6 +62,22 @@ function useQueryMachines(reload: boolean) {
           };
     
 
+    const getTrainingsOfUser = async (userId: number, setTypes: React.Dispatch<React.SetStateAction<MachineType[]>>)
+        :Promise<MachineType[] | undefined> => {
+          try {
+            const {
+              data: types
+            } = await getAllTrainingsOfUser(userId);
+            setTypes(types);
+            return types;
+          } catch (e) {
+            const errorMessage = (e as Error).message;
+            toast.error("Sorry! There was an error fetching Machine Types  🙁", {
+              description: errorMessage  
+            });
+          }
+        }
+
 
     useEffect(()=> {
         if (reload) {
@@ -69,7 +86,7 @@ function useQueryMachines(reload: boolean) {
         }
     }, [])
 
-    return { getSavedMachine, loadMachines, loadMachineTypes}
+    return { getSavedMachine, loadMachines, loadMachineTypes, getTrainingsOfUser }
 
 
 }

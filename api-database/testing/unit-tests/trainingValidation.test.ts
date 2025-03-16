@@ -211,7 +211,9 @@ describe('Training Routes', () => {
 describe('Training Routes - Guard Errors', () => {
   test('returns 401 when no session is provided', async () => {
     const response = await app.request('/trainings/999999?page=1&limit=20', { method: 'GET' });
+
     expect(response.status).toBe(401);
+    // const body = await response.json();
     const body = await response.json();
     expect(body).toHaveProperty('message', 'Unauthorized');
   });

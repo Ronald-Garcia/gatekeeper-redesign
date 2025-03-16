@@ -1,13 +1,14 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { and, asc, count, desc, eq, ilike, like, or, SQL } from "drizzle-orm";
+import { and, asc, count, desc, eq, ilike, inArray, like, or, SQL } from "drizzle-orm";
 import { machines, machineTypes, userMachineType, users } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { HTTPException } from "hono/http-exception"
-import { createTrainingSchema, getTrainingFromMachineSchema, getTrainingSchema, queryTrainingsParamsSchema, validateUserParamSchema } from "../validators/trainingSchema.js";
+import { createTrainingSchema, getTrainingFromMachineSchema, getTrainingSchema, queryTrainingsParamsSchema, replaceTrainingSchema, validateUserParamSchema } from "../validators/trainingSchema.js";
 import { Context } from "../lib/context.js";
 import { authGuard } from "../middleware/authGuard.js";
 import { adminGuard } from "../middleware/adminGuard.js";
+import { getUserSchema } from "../validators/schemas.js";
 
 
 /**
@@ -109,7 +110,7 @@ trainingRoutes.get(
 
         const userTrainings = await db.select().from(userMachineType).where(eq(userMachineType.userId, id));
 
-        whereClause.push(and(...userTrainings.map(u => eq(machineTypes.id, u.machineTypeId))));
+        whereClause.push(or(...userTrainings.map(u => eq(machineTypes.id, u.machineTypeId))));
         // Get into searching
         if (search) {
             whereClause.push(
@@ -130,13 +131,23 @@ trainingRoutes.get(
     
         const offset = (page - 1) * limit;
     
-        let [allTrainings, totalCount] = [[], 0];
-
-        if (userTrainings.length !== 0) {
-            const [allTrainings, [{ totalCount }]] = await Promise.all([
+        if (userTrainings.length === 0) {
+            return c.json({
+                success: true,
+                data: [],
+                meta: {
+                    page,
+                    limit,
+                    total: 0,
+                },
+                message: "Fetched user trainings"
+            })
+        }
+        
+        const [allTrainings, [{ totalCount }]] = await Promise.all([
                 db
                 .select()
-                .from(userMachineType)
+                .from(machineTypes)
                 .where(and(...whereClause))
                 .orderBy(...orderByClause)
                 .limit(limit)
@@ -145,10 +156,9 @@ trainingRoutes.get(
                   //This gets user count from database.
                 db
                   .select({ totalCount: count() })
-                  .from(userMachineType)
+                  .from(machineTypes)
                   .where(and(...whereClause)),
               ]);    
-        }
         return c.json({
             success:true,
             data: allTrainings,
@@ -235,3 +245,41 @@ trainingRoutes.delete("/trainings",
         message:"Deleted training"
     }, 200);
 })
+
+
+trainingRoutes.patch("/trainings/:id",
+        adminGuard,
+        zValidator("param", getUserSchema),
+        zValidator("json", replaceTrainingSchema),
+        async (c) => {
+            const { machine_types } = c.req.valid("json");
+            const { id } = c.req.valid("param");
+
+            const [user_ent] = await db.select().from(users).where(eq(users.id, id));
+            if (!user_ent) {
+                throw new HTTPException(404, { message: "No user found."});
+            }
+
+            const validTypes = await db.select().from(machineTypes).where(inArray(machineTypes.id, machine_types));
+        if (validTypes.length !== machine_types.length) {
+            throw new HTTPException(400, { message: "Unsuccessful in replacing all machine-types codes" });
+        }
+
+
+            await db.delete(userMachineType).where(eq(userMachineType.userId, id));
+
+
+            const bcs = await db.insert(userMachineType).values(machine_types.map(bc => {
+                return {
+                    userId: id,
+                    machineTypeId: bc
+                }
+            })).returning();
+        
+            return c.json({
+                success: true,
+                message: "Successfully replaced trainings of user.",
+                data: bcs
+            })
+        }
+)

@@ -10,7 +10,8 @@ import { createUser,
     editUser, 
     getUser,
     createUserBudgetCode,
-    replaceBudgetsOfUser} from "@/data/api";
+    replaceBudgetsOfUser,
+    replaceTrainingsOfUser} from "@/data/api";
 
 
 
@@ -75,6 +76,19 @@ function useMutationUsers() {
         });
       }
     };
+
+    const setUserTrainings = async (user_id: number, machine_types: number[]) => {
+      try {
+        await replaceTrainingsOfUser(user_id, machine_types);
+  
+      } catch (e) {
+          //get message from api response, put it on a toast
+          const errorMessage = (e as Error).message;
+          toast.error("Sorry! There was an error creating trainings 🙁", {
+            description: errorMessage  
+          });
+        }
+      };
 
 
   //function that handles state of deck
@@ -151,7 +165,8 @@ function useMutationUsers() {
     giveBudgetCode,
     //banUserById,
     fetchUser,
-    setUserBudgetCodes
+    setUserBudgetCodes,
+    setUserTrainings
   };
 }
 

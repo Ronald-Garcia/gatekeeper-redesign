@@ -96,6 +96,7 @@ describe('User Routes (with auth/admin guard enabled)', () => {
         JHED: "roncam",
         isAdmin: 1,
         graduationYear: 2024,
+        active: 1
       };
 
       const response = await app.request('/users', {

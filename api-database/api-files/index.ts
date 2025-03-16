@@ -14,10 +14,10 @@ import { userBudgetCodeRelationRoute } from "./routes/userBudgetCodeRelations.js
 import type { Context } from "./lib/context.js";
 import { auth } from "./middleware/auth.js";
 import authRoutes from "./routes/auth.js";
+import { emailRoutes } from "./routes/emails.js";
 
 
 const app = new Hono<Context>();
-
 
 app.use(logger());
 app.use(
@@ -51,6 +51,7 @@ app.route("/", machineRoutes);
 app.route("/", financialStatementRoutes);
 app.route("/", userBudgetCodeRelationRoute);
 app.route("/", authRoutes);
+app.route("/", emailRoutes);
 
 app.onError((err, c) => {
   console.error(`${err}`);
