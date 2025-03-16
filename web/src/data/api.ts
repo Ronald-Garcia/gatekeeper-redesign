@@ -170,8 +170,6 @@ export const getUser = async (cardNum: number): Promise<{
   }
 
   const response = await fetch(`${API_DB_URL}/users/${cardNums}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
     credentials: "include",
   });
   console.log(response)
