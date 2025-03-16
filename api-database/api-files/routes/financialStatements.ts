@@ -42,7 +42,7 @@ financialStatementRoutes.get("/fin-statements",
       ]);
     
     return c.json({
-        sucess:true,
+        success:true,
         data: allFinancialStatements,
         meta: {
             page,
@@ -61,7 +61,7 @@ financialStatementRoutes.post("/fin-statements",
     zValidator("json", createStatementSchema),
     async (c)=>{
 
-    const { userId, budgetCode, machineId, startTime, endTime } = c.req.valid("json");
+    const { userId, budgetCode, machineId, dateAdded, timeSpent } = c.req.valid("json");
 
     //Insertion of new Budget Code
     const [newFinStatement] = await db
@@ -70,13 +70,13 @@ financialStatementRoutes.post("/fin-statements",
             userId,
             budgetCode,
             machineId,
-            startTime,
-            endTime
+            dateAdded,
+            timeSpent
         })
         .returning();
 
     return c.json({
-        sucess:true,
+        success:true,
         message:"Created new financial statement code",
         data:newFinStatement
     }, 201);

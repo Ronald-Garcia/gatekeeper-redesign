@@ -117,8 +117,8 @@ export const financialStatementsTable = pgTable("financial_statements_table", {
   userId: serial().notNull().references(() => users.id, {onDelete: "no action"}),
   budgetCode: serial().notNull().references(() => budgetCodes.id, {onDelete: "no action"}),
   machineId: serial().notNull().references(() => machines.id, {onDelete: "no action"}),
-  startTime: integer().notNull(),
-  endTime: integer().notNull(),
+  dateAdded:  timestamp({ precision: 3, withTimezone: true }).notNull(),
+  timeSpent: integer().notNull(),
 });
 
 
