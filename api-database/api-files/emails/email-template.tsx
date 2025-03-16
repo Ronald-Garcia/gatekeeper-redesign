@@ -21,17 +21,18 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
     <div>
       {data.map(d => {
         return (<div>
-          {d.id}
+          <h1>{d.id}</h1>
+          <hr></hr>
 
-          {d.userId}
+          <p>User: {d.userId}</p>
           
-          {d.machineId}
+          <p>Machine: {d.machineId}</p>
 
-          {d.budgetCode}
+          <p>Budget Code: {d.budgetCode}</p>
           
-          {d.startTime}
+          <p>Start time: {d.startTime}</p>
 
-          {d.endTime}
+          <p>End time: {d.endTime}</p>
         </div>)
       })}
     </div>

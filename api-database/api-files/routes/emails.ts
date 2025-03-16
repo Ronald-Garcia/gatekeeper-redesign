@@ -22,7 +22,7 @@ emailRoutes.post("/statement-email/:email",
     const { data, error } = await resend.emails.send({
         from: 'Acme <onboarding@resend.dev>',
         to: [email],
-        subject: 'hello world',
+        subject: 'Financial Statements',
         react: await EmailTemplate({ data: statements}),
       });
     
@@ -30,5 +30,9 @@ emailRoutes.post("/statement-email/:email",
         return c.json(error, 400);
       }
     
-      return c.json(data);
+      return c.json({
+        success: true,
+        data,
+        message: "Successfully sent an email"
+    });
 });

@@ -3,6 +3,6 @@ export type financialStatement = {
     userId: number;
     budgetCode: string;
     machineId: number;
-    startTime: Date;
-    endTime: Date;
+    startTime: number;
+    endTime: number;
 }
