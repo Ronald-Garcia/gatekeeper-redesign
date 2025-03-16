@@ -7,6 +7,8 @@ import { openPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 import Searchbar from "../general/searchbar.tsx";
 import AddMachineTypeDialog from "../machine_types/add-machine-type-dialog";
+import { Dialog, DialogTrigger } from "../ui/dialog.tsx";
+import SendFinancialStatementsDialog from "../financialStatements/send-financial-statements-dialog.tsx";
 
 /*
 Admin dashboard component
@@ -27,6 +29,8 @@ const UsersActions = () => {
   const selection = useStore($selected);
   
   return (
+    <Dialog>
+
     <div>
       {/*Adding forms*/}
         {selection &&  (
@@ -39,10 +43,11 @@ const UsersActions = () => {
             onClick={handleClickOnViewBudgetCodes}>
               View Budget Codes
           </Button>
-          <Button  className="size-"
-            onClick={sendFinancialStatements}>
-              Send Financial Statements
-          </Button>
+          <DialogTrigger asChild>
+            <Button  className="size-">
+                Send Financial Statements
+            </Button>
+          </DialogTrigger>
       <div className="admin-actions">
           <div className="relative w-full max-w-lg">
                 <Searchbar/>
@@ -57,7 +62,13 @@ const UsersActions = () => {
         </div>
       </div>
     </div>
-  )
+
+    <SendFinancialStatementsDialog></SendFinancialStatementsDialog>
+    </Dialog>
+
+  
+
+  ) 
 };
 
 export default UsersActions;

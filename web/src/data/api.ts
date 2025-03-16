@@ -911,3 +911,19 @@ export const getFinancialStatements = async (): Promise<{
 
   return { message, data };
 };
+
+export const sendEmail = async (email: string): Promise<boolean> => {
+
+  const response = await fetch(`${API_DB_URL}/statement-email/${email}`, {
+    method: "POST",
+    credentials: "include"
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+
+    throw new Error(message);
+  }
+
+  return true;
+}
