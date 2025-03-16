@@ -33,15 +33,15 @@ import {
   
     return (
   
-      <div data-cy="budget-code-actions">
+      <div data-cy={`budget-code-actions-${budgetcodeId}`}>
       <DropdownMenu >
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="absolute top-2 right-2 deck-actions" data-cy="budget-code-trigger" >
+          <Button variant="ghost" className="absolute top-2 right-2 deck-actions" data-cy={`budget-code-trigger-${budgetcodeId}`} >
             ...
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem onClick={handleDelete} className="delete-text-red" data-cy="budget-code-delete" >
+          <DropdownMenuItem onClick={handleDelete} className="delete-text-red" data-cy={`budget-code-delete-${budgetcodeId}`} >
             Delete
           </DropdownMenuItem>
         </DropdownMenuContent>

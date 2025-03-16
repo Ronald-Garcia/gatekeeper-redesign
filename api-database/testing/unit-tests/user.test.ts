@@ -6,11 +6,9 @@ import { like } from 'drizzle-orm';
 import { Context } from '../../api-files/lib/context.js';
 import { auth } from '../../api-files/middleware/auth.js';
 
-
 // helper function to login as admin for tests 
 async function adminLogin(app: Hono<Context>): Promise<string> {
   const adminCardNum = "1234567890777777";
-
   const response = await app.request(`/users/${adminCardNum}`);
   if (response.status !== 200) {
     throw new Error("Admin login failed");
@@ -44,7 +42,7 @@ app.onError((err, c) => {
   return c.json({ message: 'Internal Server Error' }, 500);
 });
 
-//variable to hold adminCookie
+// variable to hold adminCookie
 let adminCookie = "";
 
 beforeAll(async () => {
@@ -112,12 +110,12 @@ describe('User Routes (with auth/admin guard enabled)', () => {
       const bodyResponse = await response.json();
       expect(bodyResponse).toHaveProperty('success', true);
       expect(bodyResponse).toHaveProperty('data');
-      //check user matches 
-      expect(bodyResponse.data[0]).toMatchObject(expectedUser);
+      // The route returns an object (not an array) for POST.
+      expect(bodyResponse.data).toMatchObject(expectedUser);
     });
 
     test('returns 409 when a user with the same card number already exists (admin access)', async () => {
-      //Use a fixed test card number for this duplicate test.
+      // Use a fixed test card number for this duplicate test.
       const duplicateCardNum = generateTestCardNumber();
       const duplicateUser = {
         name: "Test User",
@@ -127,7 +125,7 @@ describe('User Routes (with auth/admin guard enabled)', () => {
         graduationYear: 2024,
       };
 
-      //First creation should succeed.
+      // First creation should succeed.
       await app.request('/users', {
         method: 'POST',
         headers: new Headers({
@@ -137,7 +135,7 @@ describe('User Routes (with auth/admin guard enabled)', () => {
         body: JSON.stringify(duplicateUser),
       });
 
-      //create duplicate user
+      // Create duplicate user
       const response = await app.request('/users', {
         method: 'POST',
         headers: new Headers({
@@ -185,7 +183,7 @@ describe('User Routes (with auth/admin guard enabled)', () => {
         body: JSON.stringify(newUser),
       });
 
-      //get user by card number
+      // Get user by card number.
       const response = await app.request(`/users/${newUser.cardNum}`, {
         headers: new Headers({ Cookie: adminCookie }),
       });
@@ -229,8 +227,8 @@ describe('User Routes (with auth/admin guard enabled)', () => {
         body: JSON.stringify(newUser),
       });
       const postBody = await postResponse.json();
-      // created user is the first element in data 
-      const userId = postBody.data[0].id;
+      // created user is returned as an object.
+      const userId = postBody.data.id;
       if (!userId) {
         throw new Error("No user ID found in POST response");
       }
@@ -257,9 +255,6 @@ describe('User Routes (with auth/admin guard enabled)', () => {
   });
 });
 
-/* 
-  Guard Errors Tests
-*/
 describe('Guard Errors', () => {
   test('returns 401 when no session is provided', async () => {
     // Make a request without any cookie.
@@ -280,7 +275,7 @@ describe('Guard Errors', () => {
       graduationYear: 2025,
     };
 
-    //Create the non-admin user.
+    // Create the non-admin user.
     await app.request('/users', {
       method: 'POST',
       headers: new Headers({
@@ -289,21 +284,23 @@ describe('Guard Errors', () => {
       }),
       body: JSON.stringify(nonAdminUser),
     });
-    //Simulate non-admin login.
+    // Simulate non-admin login.
     const nonAdminLoginResponse = await app.request(`/users/${nonAdminUser.cardNum}`);
     const nonAdminCookie = nonAdminLoginResponse.headers.get("set-cookie")?.split(";")[0] || "";
 
-    //Attempt to access an admin-protected route using the non-admin cookie.
+    // Attempt to access an admin-protected route using the non-admin cookie.
     const response = await app.request('/users?page=1&limit=20', {
       headers: new Headers({ Cookie: nonAdminCookie }),
     });
     expect(response.status).toBe(403);
-    const body = await response.json();
-    expect(body).toHaveProperty('message', 'Forbidden: Admins only');
+    const bodyResp = await response.json();
+    expect(bodyResp).toHaveProperty('message', 'Forbidden: Admins only');
   });
 });
 
-// cleanup after tests 
+/* 
+  Clean up test data: Delete the test user, etc.
+*/
 afterAll(async () => {
   await db
     .delete(users)

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import useMutationUsers from "@/hooks/user-mutation-hooks";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import {
   Dialog,
   DialogContent,
@@ -12,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "../ui/scroll-area";
 import { useStore } from "@nanostores/react";
-import { $codes, $selected_budget_codes, setSelectedBudgetCode, toggleSelectedBudgetCode } from "@/data/store";
+import { $budget_code_queue, $codes, setBudgetCodeQueue, toggleBudgetCodeQueue } from "@/data/store";
 import useQueryBudgetCodes from "@/hooks/use-query-budgetCodes";
 import { BudgetCode } from "@/data/types/budgetCode";
 
@@ -24,34 +25,28 @@ type EditBudgetCodeDialogProp = {
 
 // function that handles state of the dialogue, error handling from api
 const EditBudgetCodeDialog = ({ userId, setShowEditBudgetCode }: EditBudgetCodeDialogProp) => {
+
+    const budgetCodeQueue = useStore($budget_code_queue);
+    const [curBudgets, setCurBudgets] = useState<BudgetCode[]>([]);
     //ADD WHEN ROUTES FIXED
-    const selectedBudgetCodes = useStore($selected_budget_codes);
-    const [userBudgetCodes, setUserBudgetCodes] = useState<BudgetCode[]>([]); 
-
-    const { getBudgetsOfUser } = useQueryBudgetCodes(false);
-
-
-    const { giveBudgetCode } = useMutationUsers();
+    const { setUserBudgetCodes } = useMutationUsers();
+    const { getBudgetsOfUser } = useQueryBudgetCodes(true);
+    
     const codesList = useStore($codes);
   
     //async function with editing logic, including error handling
     const handleEditBudgetCode = async () => {
-
       //ADD WHEN ROUTES FIXED
-      selectedBudgetCodes.forEach(async bc => await giveBudgetCode(userId, bc.id));
-
-      //use hooks to handle state of budget code
+      await setUserBudgetCodes(userId, budgetCodeQueue); //use hooks to handle state of budget code
       setShowEditBudgetCode(false); //make the dialogue disappear
     };
   
-    useQueryBudgetCodes(true);
   
     useEffect(() => {
-      getBudgetsOfUser(userId, setUserBudgetCodes).then(_ => {
-        setSelectedBudgetCode(userBudgetCodes);
-      });
-    }, []);
-
+      getBudgetsOfUser(userId, setCurBudgets).then(() => {
+        setBudgetCodeQueue(curBudgets.map(b => b.id));
+      })
+    }, [])
     return (
         <Dialog open={true} onOpenChange={setShowEditBudgetCode}>
           <DialogOverlay />
@@ -63,21 +58,25 @@ const EditBudgetCodeDialog = ({ userId, setShowEditBudgetCode }: EditBudgetCodeD
               Please select the title of your budget code
             </Label>
             <div className="space-y-4">
-                <ScrollArea>
-            {codesList.map((type) => {             
-              return (
-                <div key={type.id} onClick={() => {
-                  toggleSelectedBudgetCode(type)
-                 }}
-                className={`flex flex-col justify-between items-center py-4 max-h-[15vh] text-sm text-clip transition-colors border-y-2 border-solid border-stone-300 hover:bg-stone-100 hover:border-stone-500 cursor-pointer ${
-                  userBudgetCodes.some(bc => bc.id === type.id) ? "bg-blue-300 border-blue-600" : ""
-                }`}
-            >
-                <p>{type.name}</p>
-                </div>
-              )
-        })}
-            </ScrollArea>  
+            <ScrollArea>
+            <ToggleGroup type="multiple">
+              {codesList.map((type) => (
+                <ToggleGroupItem
+                  key={type.id}
+                  value={type.id.toString()}
+                  onClick={() => toggleBudgetCodeQueue(type.id)}
+                  className={`flex flex-col justify-between items-center py-4 max-h-[15vh] text-sm text-clip transition-colors border-y-2 border-solid border-stone-300 hover:bg-stone-100 hover:border-stone-500 cursor-pointer ${
+                    budgetCodeQueue.some(id => id === type.id)
+                      ? "bg-blue-300 border-blue-600"
+                      : ""
+                  }`}
+                  defaultChecked={budgetCodeQueue.some(id => id === type.id)}
+                >
+                  <p>{type.name}</p>
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
+          </ScrollArea>  
             </div>
             <DialogFooter>
               <Button onClick={() => setShowEditBudgetCode(false)}>Cancel</Button>

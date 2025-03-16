@@ -1,6 +1,6 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { queryUsersParamsSchema, createUserSchema, getUserSchema, testSchema, getUserByCardNumSchema } from "../validators/schemas.js";
+import { queryUsersParamsSchema, createUserSchema, getUserSchema, getUserByCardNumSchema } from "../validators/schemas.js";
 import { SQL, or, desc, asc, eq, and, count, ilike } from "drizzle-orm";
 import { users } from "../db/schema.js";
 import { db } from "../db/index.js";
@@ -8,6 +8,7 @@ import { HTTPException} from "hono/http-exception";
 import { lucia } from "../db/auth.js";
 import { adminGuard } from "../middleware/adminGuard.js";
 import { Context } from "../lib/context.js";
+import {User} from "../lib/types.js";
 
 /**
  * Routes for budget code operations.
@@ -18,8 +19,9 @@ import { Context } from "../lib/context.js";
 export const userRoutes = new Hono<Context>();
 
 // This function adds the last number of the user to the user number returned.
+// To be used when we want to not return last digit card num field anymore, so for now does nothing.
 export function appendLastNum (entry:User): User{
-    entry.cardNum = entry.cardNum + entry.lastDigitOfCardNum
+    //entry.cardNum = entry.cardNum + entry.lastDigitOfCardNum
     return entry;
 }
 
@@ -37,6 +39,11 @@ userRoutes.get("/users",
     const { page = 1, limit = 20, sort, search } = c.req.valid("query");
 
     const whereClause: (SQL | undefined)[] = [];
+
+    //Update where clause to not inlcude inactive users.
+    whereClause.push(
+        eq(users.active, 1)
+    );
 
     if (search) {
         whereClause.push(
@@ -134,8 +141,19 @@ userRoutes.post("/users",
     .where(eq(users.cardNum, cardNumTrunc))
 
     //If there is a user with that card number.
-    if(userCheck){
-        throw new HTTPException(409, { message: "User with this card number already exists." });
+    if (userCheck) {
+
+        if (userCheck.active === 1) {
+            throw new HTTPException(409, { message: "User with this card number already exists." });
+        }
+        
+        const [newUser] = await db.update(users).set({ active: 1 }).where(eq(users.id, userCheck.id)).returning();
+
+        return c.json({
+            success: true,
+            message: "User has been created",
+            data: newUser
+        }, 201);
     }
 
     const [newUser] = await db
@@ -146,7 +164,8 @@ userRoutes.post("/users",
             cardNum: cardNumTrunc,
             JHED,
             isAdmin,
-            graduationYear
+            graduationYear,
+            active: 1
         })
         .returning();
 
@@ -160,6 +179,50 @@ userRoutes.post("/users",
 })
 
 
+userRoutes.get("/users/:cardNum", 
+    zValidator("param",getUserByCardNumSchema), async(c) => {
+   //Given you have a well formed card number, check if that card num exists in user table.
+   const { cardNum } = c.req.valid("param");
+  
+   const cardNumTrunc = cardNum.substring(0, cardNum.length - 1);
+  
+   const lastDigitOfCardNum = Number.parseInt(cardNum.charAt(cardNum.length - 1));
+   let [user] = await db
+       .select()
+       .from(users)
+       .where(and(eq(users.cardNum, cardNumTrunc), eq(users.lastDigitOfCardNum, lastDigitOfCardNum)));
+   
+   // Check if exists. If not, throw error.
+   // Also, do a check to see if this is an old jcard scan attempt. If yes, deny.
+   if (!user || user.lastDigitOfCardNum > lastDigitOfCardNum) {    
+       throw new HTTPException(404, { message: "User not found" });
+   }
+  
+   // Check for a more recent jcard num. In this case, we will update the last digit with the new digit
+   if (user.lastDigitOfCardNum > lastDigitOfCardNum) {
+       [user] = await db
+           .update(users)
+           .set({lastDigitOfCardNum})
+           .where(eq(users.id, user.id))
+           .returning();
+   }
+  
+    // Create a session using Lucia.
+     const session = await lucia.createSession(user.id, {});
+     // Create a session cookie.
+     const sessionCookie = lucia.createSessionCookie(session.id);
+     // Set the cookie in the response headers.
+     c.header("Set-Cookie", sessionCookie.serialize(), { append: true });
+     
+     appendLastNum(user);
+     
+     return c.json({
+       success: true,
+       message: "User has been validated in",
+       data:user
+     });
+  })
+  
 
 /**
  * Delete a user by id.
@@ -183,10 +246,13 @@ userRoutes.delete(
             throw new HTTPException(404, { message: "User not found" });
         }
 
+
+
         // if (no session) throw another error.
         // For now, no auth, just replace.
         const deletedUser = await db
-        .delete(users)
+        .update(users)
+        .set({active: 0})
         .where(eq(users.id, id))
         .returning()
 

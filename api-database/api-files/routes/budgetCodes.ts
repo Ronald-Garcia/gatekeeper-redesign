@@ -98,6 +98,8 @@ budgetCodesRoutes.post("/budget-codes",
 
     const { name, code } = c.req.valid("json");
 
+    
+
     //Insertion of new Budget Code
     const [newBudgetCode] = await db
         .insert(budgetCodes)

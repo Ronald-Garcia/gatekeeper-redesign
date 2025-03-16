@@ -16,7 +16,7 @@ export default function BudgetCodes() {
 
         <div className="max-h-[20vh]">
         {codeList.length === 0 ? (
-        <p> No budget codes!  </p>
+        <p data-cy = "no-codes"> No budget codes!  </p>
       ) : (
         codeList.map((budgetCode) => (
           <BudgetCodeComponent key={budgetCode.id} budgetcode={budgetCode} />

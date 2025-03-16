@@ -33,7 +33,7 @@ const ActiveSearchDisplay = () => {
     return(
     <div className="search-query-container">
         <span className="search-query" >{activeSearch}</span>
-            <Button variant={"ghost"} onClick={deleteSearch}>
+            <Button data-cy="clear-search-button" variant={"ghost"} onClick={deleteSearch}>
                 <CrossCircledIcon/>
             </Button>
     </div>

@@ -71,6 +71,7 @@ const AddBudgetCodeDialog = () => {
         <Input
           onChange={handleOnChangeName}
           placeholder="Enter Name"
+          data-cy="enter-budget-name"
         >
         </Input>
         </div>
@@ -78,6 +79,7 @@ const AddBudgetCodeDialog = () => {
         <Input
           onChange={handleOnChangeCode}
           placeholder="Enter Budget Code"
+          data-cy="enter-budget-code"
         >
         </Input>
         </div>

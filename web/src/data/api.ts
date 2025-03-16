@@ -368,6 +368,26 @@ export const getAllBudgetsOfUser = async (user_id: number): Promise<{
   return { message, data };
 };
 
+export const replaceBudgetsOfUser = async (user_id: number, budget_code_ids: number[]): Promise<boolean> => {
+  const response = await fetch(`${API_DB_URL}/budget-codes/${user_id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      budget_code_ids,
+    }),
+    credentials: "include"
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+
+    throw new Error(message);
+  }
+
+  return true;
+}
+
+
 
 /**
  * Creates a new budget code.

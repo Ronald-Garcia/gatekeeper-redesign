@@ -35,7 +35,7 @@ const UsersActions = () => {
 
       <div data-cy="admin-dashboard">
         <div>
-          <Button  className="size-"
+          <Button  data-cy="view-budget-codes" className="size-"
             onClick={handleClickOnViewBudgetCodes}>
               View Budget Codes
           </Button>

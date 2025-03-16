@@ -10,7 +10,33 @@ export const $users = atom<User[]>([]);
 export const $codes = atom<BudgetCode[]>([]);
 export const $machines = atom<Machine[]>([]);
 export const $machine_types = atom<MachineType[]>([]);
-export const $selected_budget_codes = atom<BudgetCode[]>([]);
+export const $budget_code_queue = atom<number[]>([]);
+
+export function setBudgetCodeQueue(bcs: number[]) {
+  $budget_code_queue.set(bcs);
+}
+
+export function addBudgetCodeQueue(bc: number) {
+  $budget_code_queue.set([...$budget_code_queue.get(), bc]);
+}
+
+export function removeBudgetCodeQueue(bc: number) {
+  $budget_code_queue.set($budget_code_queue.get().filter(b => b !== bc));
+}
+
+export function clearBudgetCodeQueue() {
+  $budget_code_queue.set([]);
+}
+
+export function toggleBudgetCodeQueue(bc: number) {
+  const bcs =  $budget_code_queue.get();
+  const hasBc = bcs.some(b => b === bc);
+  if (hasBc) {
+    removeBudgetCodeQueue(bc);
+  } else {
+    addBudgetCodeQueue(bc);
+  }
+}
 export const $statements = atom<financialStatement[]>([]);
 
 
@@ -25,31 +51,31 @@ export function clearItem() {
   $selected.set(null);
 }
 
-export function addSelectedBudgetCode(bc: BudgetCode) {
-  $selected_budget_codes.set([...$selected_budget_codes.get(), bc ]);
-}
+// export function addSelectedBudgetCode(bc: number) {
+//   $budget_code_queue.set([...$budget_code_queue.get(), bc ]);
+// }
 
-export function removeSelectedBudgetCode(bc: BudgetCode) {
-  $selected_budget_codes.set($selected_budget_codes.get().filter(b => b.id !== bc.id));
-}
+// export function removeSelectedBudgetCode(bc: number) {
+//   $budget_code_queue.set($budget_code_queue.get().filter(b => b !== bc));
+// }
 
-export function clearSelectedBudgetCode() {
-  $selected_budget_codes.set([]);
-}
+// export function clearSelectedBudgetCode() {
+//   $budget_code_queue.set([]);
+// }
 
-export function toggleSelectedBudgetCode(bc: BudgetCode) {
-  const sbc = $selected_budget_codes.get().find(b => b.id === bc.id);
+// export function toggleSelectedBudgetCode(bc: number) {
+//   const sbc = $budget_code_queue.get().find(b => b === bc);
 
-  if (sbc) {
-    removeSelectedBudgetCode(bc);
-  } else {
-    addSelectedBudgetCode(bc);
-  }
-}
+//   if (sbc) {
+//     removeSelectedBudgetCode(bc);
+//   } else {
+//     addSelectedBudgetCode(bc);
+//   }
+// }
 
-export function setSelectedBudgetCode(bcs: BudgetCode[]) {
-  $selected_budget_codes.set(bcs);
-}
+// export function setSelectedBudgetCode(bcs: number[]) {
+//   $budget_code_queue.set(bcs);
+// }
 
 const defaultUser: User = {
   name: "test",

@@ -18,6 +18,7 @@ import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
  * @text    JHED                the JHED identifier of the user
  * @integer isAdmin             the flag that determines whether or not the user is an admin
  * @integer graduationYear      the graduation year of the user (optional, as admins do not have a graduation year)
+ * @active  active              the flag that determines whether or not the user account is active.
  */
 export const users = pgTable("users_table", {
   id: serial().primaryKey(),
@@ -26,7 +27,8 @@ export const users = pgTable("users_table", {
   lastDigitOfCardNum: integer().notNull(),
   JHED: text().notNull(),
   isAdmin: integer().notNull(),
-  graduationYear: integer() //This is optional because some users like Rich do not have grad year.
+  graduationYear: integer(), //This is optional because some users like Rich do not have grad year.
+  active: integer().notNull().default(1)
 });
 
 /**
