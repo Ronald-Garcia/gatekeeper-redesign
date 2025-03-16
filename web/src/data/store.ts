@@ -4,7 +4,7 @@ import { BudgetCode } from "./types/budgetCode";
 import { Machine } from "./types/machine";
 import { MachineType } from "./types/machineType";
 import { financialStatement } from "./types/financialStatement";
-
+import { logger } from "@nanostores/logger"
 
 export const $users = atom<User[]>([]);
 export const $codes = atom<BudgetCode[]>([]);
@@ -250,3 +250,5 @@ export function resetSearch() {
 export function setFinancialStatements(statements: financialStatement[]) {
   $statements.set(statements);
 }
+
+logger({ $budget_code_queue })

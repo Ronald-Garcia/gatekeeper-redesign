@@ -132,7 +132,6 @@ describe('Training Routes', () => {
       await db.delete(userMachineType).where(eq(userMachineType.userId, testUserId)).execute();
       const url = `/trainings/${testUserId}/${testMachineId}`;
       const response = await app.request(url, { method: 'GET', headers: new Headers({ Cookie: adminCookie }) });
-      console.log("this",response);
       expect(response.status).toBe(401);
       const text = await response.text();
       expect(text).toContain('User not authorized to use machine');
@@ -209,7 +208,9 @@ describe('Training Routes', () => {
 describe('Training Routes - Guard Errors', () => {
   test('returns 401 when no session is provided', async () => {
     const response = await app.request('/trainings/999999?page=1&limit=20', { method: 'GET' });
+
     expect(response.status).toBe(401);
+    // const body = await response.json();
     const body = await response.json();
     expect(body).toHaveProperty('message', 'Unauthorized');
   });

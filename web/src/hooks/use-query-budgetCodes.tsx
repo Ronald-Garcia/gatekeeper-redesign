@@ -31,14 +31,14 @@ function useQueryBudgets(reload: boolean) {
       }
     };
 
-    const getBudgetsOfUser = async (userId: number, setBudgets: React.Dispatch<React.SetStateAction<BudgetCode[]>>) => {
+    const getBudgetsOfUser = async (userId: number, setBudgets: React.Dispatch<React.SetStateAction<BudgetCode[]>>)
+    :Promise<BudgetCode[] | undefined> => {
       try {
         const {
           data: budgets
         } = await getAllBudgetsOfUser(userId);
-
         setBudgets(budgets);
-        
+        return budgets;
       } catch (e) {
         const errorMessage = (e as Error).message;
         toast.error("Sorry! There was an error fetching Budget Codes  🙁", {

@@ -363,16 +363,15 @@ export const getAllBudgetsOfUser = async (user_id: number): Promise<{
 
   const { message, data }: { message: string; data: BudgetCode[] } =
     await response.json();
-
   return { message, data };
 };
 
 export const replaceBudgetsOfUser = async (user_id: number, budget_code_ids: number[]): Promise<boolean> => {
-  const response = await fetch(`${API_DB_URL}/budget-codes/${user_id}`, {
+  const response = await fetch(`${API_DB_URL}/user-budgets/${user_id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      budget_code_ids,
+      budget_code: budget_code_ids,
     }),
     credentials: "include"
   });

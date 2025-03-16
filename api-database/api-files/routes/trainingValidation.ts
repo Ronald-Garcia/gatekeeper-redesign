@@ -27,7 +27,7 @@ export const trainingRoutes = new Hono<Context>();
  */
 trainingRoutes.get(
     "/trainings/:userId/:machineId", 
-    //authGuard,
+    adminGuard,
     zValidator(
         "param",
         getTrainingFromMachineSchema),
@@ -91,6 +91,7 @@ trainingRoutes.get(
     "/trainings/:id",
     zValidator("param", validateUserParamSchema), 
     //authGuard,
+    adminGuard,
     zValidator("query", queryTrainingsParamsSchema),
     async (c) => {
     const { id } = c.req.valid("param")
@@ -169,7 +170,7 @@ trainingRoutes.get(
  * @returns the newly created training.
  */
 trainingRoutes.post("/trainings", 
-    //adminGuard,
+    adminGuard,
     zValidator("json", createTrainingSchema),
      async (c)=>{
 
@@ -208,7 +209,7 @@ trainingRoutes.post("/trainings",
  * @returns the deleted training.
  */
 trainingRoutes.delete("/trainings", 
-    //adminGuard,
+    adminGuard,
     zValidator("json", getTrainingSchema),
      async (c)=>{
 

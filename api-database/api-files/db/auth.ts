@@ -12,7 +12,7 @@ export const lucia = new Lucia(adapter, {
       sameSite: "lax",
     },
   },
-  sessionExpiresIn: new TimeSpan(3, "m"),
+  sessionExpiresIn: new TimeSpan(30, "m"),
   getUserAttributes: (userRow) => ({ ...userRow })
 });
 declare module "lucia" {

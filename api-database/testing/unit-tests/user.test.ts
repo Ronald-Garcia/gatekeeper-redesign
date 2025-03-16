@@ -98,6 +98,7 @@ describe('User Routes (with auth/admin guard enabled)', () => {
         JHED: "roncam",
         isAdmin: 1,
         graduationYear: 2024,
+        active: 1
       };
 
       const response = await app.request('/users', {
@@ -113,7 +114,7 @@ describe('User Routes (with auth/admin guard enabled)', () => {
       expect(bodyResponse).toHaveProperty('success', true);
       expect(bodyResponse).toHaveProperty('data');
       //check user matches 
-      expect(bodyResponse.data[0]).toMatchObject(expectedUser);
+      expect(bodyResponse.data).toMatchObject(expectedUser);
     });
 
     test('returns 409 when a user with the same card number already exists (admin access)', async () => {
@@ -230,7 +231,7 @@ describe('User Routes (with auth/admin guard enabled)', () => {
       });
       const postBody = await postResponse.json();
       // created user is the first element in data 
-      const userId = postBody.data[0].id;
+      const userId = postBody.data.id;
       if (!userId) {
         throw new Error("No user ID found in POST response");
       }

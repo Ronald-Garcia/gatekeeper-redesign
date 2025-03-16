@@ -43,6 +43,8 @@ userBudgetCodeRelationRoute.get("/user-budgets/:id",
                 orderByClause.push(asc(budgetCodes.name));
                 break;
         }
+
+        whereClause.push(eq(userBudgetCodeTable.userId, id));
     
         const offset = (page - 1) * limit;
         
@@ -123,8 +125,6 @@ userBudgetCodeRelationRoute.delete("/user-budgets/:userId/:budgetCodeId",
     }
 )
 
-userBudgetCodeRelationRoute.patch
-
 userBudgetCodeRelationRoute.patch("/user-budgets/:id",
         zValidator("param", getUserSchema),
         zValidator("json", replaceUserBudgetSchema),
@@ -139,13 +139,16 @@ userBudgetCodeRelationRoute.patch("/user-budgets/:id",
 
             await db.delete(userBudgetCodeTable).where(eq(userBudgetCodeTable.userId, id));
 
+            console.log(budget_code);
 
             const bcs = await db.insert(userBudgetCodeTable).values(budget_code.map(bc => {
                 return {
                     userId: id,
                     budgetCodeId: bc
                 }
-            }));
+            })).returning();
+            console.log(bcs);
+
 
             if (budget_code.length !== bcs.length) {
                 throw new HTTPException(400, { message: "Unsuccessful in replacing all budget codes"});

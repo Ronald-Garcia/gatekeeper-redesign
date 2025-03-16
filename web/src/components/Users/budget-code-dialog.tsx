@@ -41,10 +41,13 @@ const EditBudgetCodeDialog = ({ userId, setShowEditBudgetCode }: EditBudgetCodeD
       setShowEditBudgetCode(false); //make the dialogue disappear
     };
   
-  
     useEffect(() => {
-      getBudgetsOfUser(userId, setCurBudgets).then(() => {
-        setBudgetCodeQueue(curBudgets.map(b => b.id));
+      getBudgetsOfUser(userId, setCurBudgets).then((res) => {
+        if (res === undefined) {
+          setBudgetCodeQueue([]);
+          return;
+        }
+        setBudgetCodeQueue(res.map(b => b.id));
       })
     }, [])
     return (
@@ -66,11 +69,12 @@ const EditBudgetCodeDialog = ({ userId, setShowEditBudgetCode }: EditBudgetCodeD
                   value={type.id.toString()}
                   onClick={() => toggleBudgetCodeQueue(type.id)}
                   className={`flex flex-col justify-between items-center py-4 max-h-[15vh] text-sm text-clip transition-colors border-y-2 border-solid border-stone-300 hover:bg-stone-100 hover:border-stone-500 cursor-pointer ${
-                    budgetCodeQueue.some(id => id === type.id)
-                      ? "bg-blue-300 border-blue-600"
-                      : ""
-                  }`}
-                  defaultChecked={budgetCodeQueue.some(id => id === type.id)}
+                    budgetCodeQueue.some(b => b === type.id) ?
+                    "data-[state=on]" :
+                    "data-[state=off]"
+                  }` }
+                  data-state={budgetCodeQueue.some(b=> b===type.id) ? "on" : "off"}
+                  aria-pressed={budgetCodeQueue.some(b=> b===type.id)}
                 >
                   <p>{type.name}</p>
                 </ToggleGroupItem>

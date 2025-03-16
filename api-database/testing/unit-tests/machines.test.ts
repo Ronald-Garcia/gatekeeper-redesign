@@ -26,7 +26,7 @@ async function adminLogin(app: Hono<Context>): Promise<string> {
 async function userLogin(app: Hono<Context>, cardNum: string): Promise<string> {
   const response = await app.request(`/users/${cardNum}`);
   if (response.status !== 200) {
-    throw new HTTPException(407,{message:"FUCK YOU login failed"});
+    throw new HTTPException(407,{ message:"FUCK YOU login failed" });
   }
   const setCookie = response.headers.get("set-cookie") || "";
   console.log("userLogin got cookie:", setCookie);
@@ -56,7 +56,6 @@ app.route("/", machineRoutes);
 
 // Error handler so that errors are returned as JSON.
 app.onError((err, c) => {
-  console.log("THIS IS hte error",err,c);
   if (err instanceof Error && "status" in err) {
     return c.json({ message: err.message }, (err as any).status || 400);
   }
