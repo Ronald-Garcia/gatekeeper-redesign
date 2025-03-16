@@ -39,11 +39,16 @@ const AddUserDialog = () => {
   //async function with editing logic, including error handling
   const handleAddUser = async () => {
 
+
+    if (cardNum.length === 18 ) {
+      setCardNum(c => c.substring(1, 17));
+    }
+
     const newUser: User = {
       name,
       JHED: jhed,
       isAdmin: admin,
-      cardNum:cardNum.substring(1, 17),
+      cardNum:cardNum,
       graduationYear: parseInt(year),
       id: -1}
     

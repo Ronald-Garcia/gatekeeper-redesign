@@ -2,11 +2,11 @@ import { useStore } from "@nanostores/react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
-import { $currentUser, clearCurrentUser } from "@/data/store";
+import { $currentBudget, $currentUser, clearCurrentBudget, clearCurrentUser, setCurrentBudget, validCurrentBudget } from "@/data/store";
 import { useEffect, useState } from "react";
 import { BudgetCode } from "@/data/types/budgetCode";
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
-import { redirectPage } from "@nanostores/router";
+import { openPage, redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 import { turnOffMachine, turnOnMachine } from "@/data/api";
 
@@ -16,6 +16,7 @@ Display to use on gates when a user logs in. Displays BudgetCodes a user has ass
 const Interlock = () => {
 
     const curUser = useStore($currentUser);
+    const curBudget = useStore($currentBudget);
     const { getBudgetsOfUser } = useQueryBudgets(false);
     const [userBudgets, setUserBudgets] = useState<BudgetCode[]>([]);
     
@@ -26,13 +27,18 @@ const Interlock = () => {
     }
 
     const handleStartClick = () => {
-        turnOnMachine()
+
+
+        turnOnMachine().then(res => {
+            if (res) {
+                openPage($router, "timer");
+            }
+        })
+
     }
-
-    const [toggled, setToggled] = useState(false);
-
     useEffect(() => {
         getBudgetsOfUser(curUser.id, setUserBudgets);
+        clearCurrentBudget();
     }, [])
 
     return (
@@ -48,7 +54,7 @@ const Interlock = () => {
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <ToggleGroup type="single">
+                        <ToggleGroup type="single" className="flex-col">
                             {userBudgets.map((code) => {
                                 return (
                                     <div>
@@ -57,19 +63,26 @@ const Interlock = () => {
                                         key={"val" + code.id} 
                                         value={"val" + code.id} 
                                         variant="outline"
-                                        onClick={async () => {setToggled(!toggled)}}> 
+                                        onClick={async () => {
+                                            if (curBudget === code) {
+                                                clearCurrentBudget();
+                                            } else {
+                                                setCurrentBudget(code);
+                                            }
+                                        }}> 
+
+                                        {code.name}
                                     </ToggleGroupItem>
                                     
                                     </div>
                                 );
                             })}
-                            <div>Potato</div>
                         </ToggleGroup>
 
                     </CardContent>
                     <CardFooter className="flex justify-end space-x-4">
-                        {toggled && 
-                        <Button className="text-xl jhu-blue-button" variant="ghost" onClick={handleStartClick}>Start</Button>
+                        { 
+                        <Button className="text-xl jhu-blue-button" variant="ghost" disabled={!validCurrentBudget()} onClick={handleStartClick}>Start</Button>
                         }
                         <Button variant="secondary" onClick={handleCancel} className="text-xl"> Cancel </Button>
                     </CardFooter>

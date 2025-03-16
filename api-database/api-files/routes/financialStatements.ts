@@ -61,7 +61,7 @@ financialStatementRoutes.post("/fin-statements",
     zValidator("json", createStatementSchema),
     async (c)=>{
 
-    const { userId, budgetCode, machineId, startTime, endTime } = c.req.valid("json");
+    const { userId, budgetCode, machineId, timeSpent } = c.req.valid("json");
 
     //Insertion of new Budget Code
     const [newFinStatement] = await db
@@ -70,8 +70,8 @@ financialStatementRoutes.post("/fin-statements",
             userId,
             budgetCode,
             machineId,
-            startTime,
-            endTime
+            timeSpent,
+            dateAdded: new Date()
         })
         .returning();
 

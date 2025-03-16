@@ -10,8 +10,8 @@ interface FinancialStatementType {
   userId: number,
   budgetCode: number,
   machineId: number,
-  startTime: number,
-  endTime: number,
+  dateAdded: Date,
+  timeSpent: number,
 }
 
 export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
@@ -30,9 +30,9 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
 
           <p>Budget Code: {d.budgetCode}</p>
           
-          <p>Start time: {d.startTime}</p>
+          <p>Start time: {d.dateAdded.getTime()}</p>
 
-          <p>End time: {d.endTime}</p>
+          <p>End time: {d.timeSpent}</p>
         </div>)
       })}
     </div>
