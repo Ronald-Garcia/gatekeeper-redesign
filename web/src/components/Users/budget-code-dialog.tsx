@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import useMutationUsers from "@/hooks/user-mutation-hooks";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import {
@@ -15,7 +15,6 @@ import { ScrollArea } from "../ui/scroll-area";
 import { useStore } from "@nanostores/react";
 import { $budget_code_queue, $codes, setBudgetCodeQueue, toggleBudgetCodeQueue } from "@/data/store";
 import useQueryBudgetCodes from "@/hooks/use-query-budgetCodes";
-import { BudgetCode } from "@/data/types/budgetCode";
 
 //prop for handling state of the dialogue
 type EditBudgetCodeDialogProp = {
@@ -27,7 +26,6 @@ type EditBudgetCodeDialogProp = {
 const EditBudgetCodeDialog = ({ userId, setShowEditBudgetCode }: EditBudgetCodeDialogProp) => {
 
     const budgetCodeQueue = useStore($budget_code_queue);
-    const [curBudgets, setCurBudgets] = useState<BudgetCode[]>([]);
     //ADD WHEN ROUTES FIXED
     const { setUserBudgetCodes } = useMutationUsers();
     const { getBudgetsOfUser } = useQueryBudgetCodes(true);
@@ -42,7 +40,7 @@ const EditBudgetCodeDialog = ({ userId, setShowEditBudgetCode }: EditBudgetCodeD
     };
   
     useEffect(() => {
-      getBudgetsOfUser(userId, setCurBudgets).then((res) => {
+      getBudgetsOfUser(userId).then((res) => {
         if (res === undefined) {
           setBudgetCodeQueue([]);
           return;

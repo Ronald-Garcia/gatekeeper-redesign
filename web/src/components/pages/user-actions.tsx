@@ -21,10 +21,10 @@ const UsersActions = () => {
     openPage($router, "budgetCodes");
   }
 
-  const sendFinancialStatements = () => {
-    resetSearch();
-    openPage($router, "financial_statements");
-  }
+//  const sendFinancialStatements = () => {
+//    resetSearch();
+//    openPage($router, "financial_statements");
+//  }
 
   const selection = useStore($selected);
   

@@ -1,8 +1,7 @@
 import { Resend } from "resend";
-import { EmailTemplate } from "../emails/email-template.js";
+import { EmailTemplate } from "../emails/email-template.jsx";
 import { Hono } from "hono";
 import { Context } from "../lib/context.js";
-import React from "react";
 import { zValidator } from "@hono/zod-validator";
 import { sendEmailSchema } from "../validators/emailSchemas.js";
 import { db } from "../db/index.js";

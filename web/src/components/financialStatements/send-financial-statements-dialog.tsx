@@ -1,6 +1,6 @@
 import useMutationEmails from "@/hooks/use-mutation-emails";
 import { Button } from "../ui/button";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
+import { DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog"
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useEffect, useState } from "react";
@@ -51,7 +51,7 @@ const SendFinancialStatementsDialog = () => {
 
                 </div>
 
-                <p className="italic text-sm">Right now, waiting on Resend to allow for other domains. Can only send to account owner</p>
+                <p className="text-sm italic">Right now, waiting on Resend to allow for other domains. Can only send to account owner</p>
 
                 <DialogFooter>
 

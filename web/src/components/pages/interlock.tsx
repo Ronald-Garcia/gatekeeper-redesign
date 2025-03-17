@@ -18,7 +18,7 @@ const Interlock = () => {
     const curUser = useStore($currentUser);
     const curBudget = useStore($currentBudget);
     const { getBudgetsOfUser } = useQueryBudgets(false);
-    const [userBudgets, setUserBudgets] = useState<BudgetCode[]>([]);
+    const [userBudgets] = useState<BudgetCode[]>([]);
     
     const handleCancel = () => {
         clearCurrentUser();
@@ -37,7 +37,7 @@ const Interlock = () => {
 
     }
     useEffect(() => {
-        getBudgetsOfUser(curUser.id, setUserBudgets);
+        getBudgetsOfUser(curUser.id);
         clearCurrentBudget();
     }, [])
 

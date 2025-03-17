@@ -4,7 +4,6 @@ import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { userRoutes } from "../api-files/routes/users.js";
 import { handle } from "hono/vercel";
-import { budgetCodes } from "../api-files/db/schema.js";
 import { budgetCodesRoutes } from "../api-files/routes/budgetCodes.js";
 import { machineRoutes } from "../api-files/routes/machines.js";
 import { trainingRoutes } from "../api-files/routes/trainingValidation.js";
@@ -12,6 +11,9 @@ import { machineTypeRoutes } from "../api-files/routes/machineTypes.js";
 import authRoutes from "../api-files/routes/auth.js";
 import { auth } from "../api-files/middleware/auth.js";
 import { Context } from "../api-files/lib/context.js";
+import { financialStatementRoutes } from "../api-files/routes/financialStatements.js";
+import { userBudgetCodeRelationRoute } from "../api-files/routes/userBudgetCodeRelations.js";
+import { emailRoutes } from "../api-files/routes/emails.js";
 
 
 const app = new Hono<Context>();
@@ -45,7 +47,10 @@ app.route("/", budgetCodesRoutes);
 app.route("/", trainingRoutes);
 app.route("/", machineTypeRoutes);
 app.route("/", machineRoutes);
+app.route("/", financialStatementRoutes);
+app.route("/", userBudgetCodeRelationRoute);
 app.route("/", authRoutes);
+//app.route("/", emailRoutes);
 
 app.onError((err, c) => {
   console.error(`${err}`);

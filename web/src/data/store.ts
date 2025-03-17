@@ -301,3 +301,12 @@ export function setFinancialStatements(statements: financialStatement[]) {
 }
 
 logger({ $budget_code_queue })
+export const $curbudgets = atom<BudgetCode[]>([])
+export function setCurBudgets(newBudgetCodes: BudgetCode[]) {
+  $curbudgets.set(newBudgetCodes)
+}
+
+export const $curtrainings = atom<MachineType[]>([])
+export function setCurTrainings(newTrainings: MachineType[]) {
+  $curtrainings.set(newTrainings)
+}

@@ -4,7 +4,6 @@ import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { userRoutes } from "./routes/users.js";
 import { handle } from "hono/vercel";
-import { budgetCodes } from "./db/schema.js";
 import { budgetCodesRoutes } from "./routes/budgetCodes.js";
 import { machineRoutes } from "./routes/machines.js";
 import { trainingRoutes } from "./routes/trainingValidation.js";

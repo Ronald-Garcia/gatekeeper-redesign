@@ -36,9 +36,11 @@ const AddBudgetCodeDialog = () => {
       id: -1,
       name: name
     }
+    const response = await addNewBudgetCode(newCode);
     setOpen(false);
-
-    addNewBudgetCode(newCode);
+    if (response) {
+      //TODO error handling.
+    }
     loadBudgets();
   };
 

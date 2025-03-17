@@ -1,13 +1,13 @@
 import { Hono } from "hono";
-import { lucia } from "../db/auth";
+import { lucia } from "../db/auth.js";
 import { HTTPException } from "hono/http-exception";
-import { Context } from "../lib/context";
+import { Context } from "../lib/context.js";
 import { zValidator } from "@hono/zod-validator";
-import { getUserByCardNumSchema } from "../validators/schemas";
-import { db } from "../db";
-import { users } from "../db/schema";
+import { getUserByCardNumSchema } from "../validators/schemas.js";
+import { db } from "../db/index.js";
+import { users } from "../db/schema.js";
 import { and, eq } from "drizzle-orm";
-import { appendLastNum } from "./users";
+import { appendLastNum } from "./users.js";
 
 
 const authRoutes = new Hono<Context>();
