@@ -13,10 +13,11 @@ import BudgetCodeDialog from "./budget-code-dialog";
 
 type UserActionsProps = {
   userId: number;
+  userNumber:string;
   setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function UserActions({ userId, setIsActive}: UserActionsProps) {
+export default function UserActions({ userId, userNumber, setIsActive}: UserActionsProps) {
    const [ShowEditTraining, setShowEditTraining] = useState(false);
    const [ShowEditBudgetCode, setShowBudgetCode] = useState(false);
    const [ShowDeleteUser, setShowDeleteUser] = useState(false);
@@ -72,7 +73,7 @@ export default function UserActions({ userId, setIsActive}: UserActionsProps) {
     <div data-cy = "user-actions" >
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost"  data-cy={`user-trigger-${userId}`} className="absolute top-2 right-2 deck-actions">
+        <Button variant="ghost"  data-cy={`user-trigger-${userNumber}`} className="absolute top-2 right-2 deck-actions">
           ...
         </Button>
       </DropdownMenuTrigger>
@@ -80,7 +81,7 @@ export default function UserActions({ userId, setIsActive}: UserActionsProps) {
         <DropdownMenuItem onClick={handleTraining}>
           Training
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleBudgetCode}>
+        <DropdownMenuItem data-cy={`user-budget-code-${userNumber}`} onClick={handleBudgetCode}>
           Budget Code
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleDelete} className="delete-text-red" data-cy="user-delete">

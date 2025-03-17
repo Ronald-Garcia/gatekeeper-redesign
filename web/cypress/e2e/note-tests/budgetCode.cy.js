@@ -27,10 +27,7 @@ describe('Add Budget Code tests', () => {
       if (req.status === 200) {
         // Get the specific budget code id, then delete it.
         const foundBudget = req.body.data;
-        console.log("foundBudget");
-        console.log(foundBudget.id);
         const budgetId = foundBudget.id;
-        console.log(`/budgetcodes/${budgetId}`);
         cy.request({
           method: 'DELETE',
           url: `${API_DB_URL}/budgetcodes/${budgetId}`,

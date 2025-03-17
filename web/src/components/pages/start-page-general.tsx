@@ -52,7 +52,6 @@ const StartPageGeneral = ({callPythonServer}: startPageProps) => {
           className="size-"
           onClick={async () => {
             const did_it_work = await turnOnMachine();
-            console.log(did_it_work);
           }}
         >
           JHUOAuth
