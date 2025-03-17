@@ -99,7 +99,7 @@ budgetCodesRoutes.post("/budget-codes",
     const { name, code } = c.req.valid("json");
 
     //Check if there is a duplicate.
-    const budgetCodeCheck = await db
+    const [budgetCodeCheck] = await db
     .select()
     .from(budgetCodes)
     .where(eq(budgetCodes.code, code))
