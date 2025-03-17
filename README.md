@@ -66,6 +66,11 @@ To activate the created environment use the following command:
 conda activate machine-api.yml
 python server.py
 ```
+#### Automated Testing Dependencies
+
+- [Babel](https://babeljs.io/) - 7.26.10
+- [Jest](https://jestjs.io/) - 29.7.0
+- [Cypress](https://www.cypress.io/) - 14.1.0
 
 
 
@@ -105,24 +110,75 @@ For web enter pnpm install and then type pnpm dev and that will run web locally.
 
 ### Usage Specifications
 
-#### Log In
+#### Admin Dashboard
+##### Log In
 
 Copy and paste the following into the input box: 
 
 ;1234567890777777;
 
 
-#### Newly Added User
+##### Newly Added User
 
-If testing newly added users, make sure to put a random chaarcter in the begginning and end of the card number as this mimics what the scanner will input when a card is scanned. 
+If testing newly added users, make sure to put a random charcter in the beginning and at the end of the card number as this mimics what the scanner will input when a card is scanned. 
 
-#### Creating a User 
+##### Creating a User 
 
 When creating a user, keep in mind that card numbers must be 16 digits and mark the checkbox if the user is an admin, which for the purposes of iteration 1 should be marked to test the user stories implented with this user.
 
-#### Creating a BudgetCode
+##### Creating a BudgetCode
 
 When creating a BudgetCode, keep in mind that the code must be 8 characters long. 
+
+#### Interlock
+
+To run the interlock side of the program (what is mounted on each machine), we must first simulate being a machine
+
+##### Machine API
+
+The machine API is how the program detects which machine the current instance of the program sees. Before reseting this data, make sure that your user has access to all machines and is an admin. To reset it entirely, 
+
+```shell
+cd api-machine
+
+rm .env # this is the machine data
+
+```
+
+Then, go on the web app and log in with the card number. It will prompt you to select a machine for this system (as it does not recognize one as being stored). Choose a machine, and you will be taken to the interlock page. From here,
+
+
+
+## Automated Testing
+
+### Front End 
+
+#### End-2-End & Component Testing
+To run the automated front-end tests, run 
+
+```shell
+
+cd web
+
+npx cypress run # this runs them on the console
+
+npx cypress open # this runs them on the browser
+```
+
+This will go through all the testing suites for each component.
+
+### Back End
+
+To run the back-end tests, we used Jest. To run the testing suites,
+
+```shell
+
+pnpm test # this should be done in the parent directory of the project
+
+```
+
+This will display the results of all the testing suites in the console.
+
 
 ## Contributing
 Refer to the [Contributing Guidelines](./CONTRIBUTING.md) for information on how to contribute to the project.

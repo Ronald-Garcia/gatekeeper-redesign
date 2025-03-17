@@ -18,7 +18,7 @@ const MachineSelectDialog = ({ machine }: MachineSelectDialogProps) => {
     const handleOk = () => {
         saveMachine(machine).then(() => {
             if (validCurrentMachine()) {
-                redirectPage($router, "users");
+                redirectPage($router, "interlock");
             }
         })
     }
