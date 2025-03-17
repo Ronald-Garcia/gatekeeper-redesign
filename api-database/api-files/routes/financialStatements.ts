@@ -42,7 +42,7 @@ financialStatementRoutes.get("/fin-statements",
       ]);
     
     return c.json({
-        sucess:true,
+        success:true,
         data: allFinancialStatements,
         meta: {
             page,
@@ -76,7 +76,7 @@ financialStatementRoutes.post("/fin-statements",
         .returning();
 
     return c.json({
-        sucess:true,
+        success:true,
         message:"Created new financial statement code",
         data:newFinStatement
     }, 201);
