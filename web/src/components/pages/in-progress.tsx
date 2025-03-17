@@ -3,6 +3,8 @@ import Timer from "./timer";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "@/components/ui/button";
 import useMutationStatements from "@/hooks/use-mutation-financial-statements";
+import { openPage } from "@nanostores/router";
+import { $router } from "@/data/router";
 
 const InProgress = () => {
 
@@ -22,6 +24,7 @@ const InProgress = () => {
     
     const onSubmit = async () => {
         await createStatement(time);
+        openPage($router, "start_page")
     }
     return (
         <>
@@ -35,12 +38,15 @@ const InProgress = () => {
                         </CardDescription>
                     </CardHeader>
                 <CardContent>
-                    <div className="flex justify-center font-bold text-5xl">
+                    <div data-cy="timer" 
+                        
+                        className="flex justify-center font-bold text-5xl">
                         <Timer time={time}></Timer>
                     </div>
                     </CardContent>
                     <CardFooter 
                         className="justify-center"
+                        data-cy="submit"
                         onClick={onSubmit}>
                         <Button>
                             Tap when finished!

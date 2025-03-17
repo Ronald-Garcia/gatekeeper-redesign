@@ -44,7 +44,7 @@ const UsersActions = () => {
               View Budget Codes
           </Button>
           <DialogTrigger asChild>
-            <Button  className="size-">
+            <Button data-cy="financial-statement-dialog"  className="size-">
                 Send Financial Statements
             </Button>
           </DialogTrigger>

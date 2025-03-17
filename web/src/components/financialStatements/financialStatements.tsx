@@ -14,7 +14,7 @@ export default function FinancialStatements() {
   return (
     <ScrollArea>
 
-        <div className="max-h-[20vh]">
+        <div data-cy="financial-stament-components" className="max-h-[20vh]">
         {statementList.length === 0 ? (
         <p> No statements available!  </p>
       ) : (

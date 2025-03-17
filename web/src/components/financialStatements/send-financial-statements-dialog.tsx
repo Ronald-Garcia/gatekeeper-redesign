@@ -56,17 +56,17 @@ const SendFinancialStatementsDialog = () => {
                 <DialogFooter>
 
                     <DialogClose asChild>
-                        <Button variant={"secondary"} onClick={() => openPage($router, "financial_statements")}>
+                        <Button data-cy = "view-financial-staments" variant={"secondary"} onClick={() => openPage($router, "financial_statements")}>
                             ...Or see them here!
                         </Button>
                     </DialogClose>
                     <DialogClose asChild>
-                        <Button variant={"secondary"}>
+                        <Button data-cy= "close-financial-statements" variant={"secondary"}>
                             Close
                         </Button>
                     </DialogClose>
                     <DialogClose asChild>
-                        <Button
+                        <Button data-cy = "email-financial-statements"
                             onClick={handleSendEmail}>
                             Send statements
                         </Button>

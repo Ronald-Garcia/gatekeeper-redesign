@@ -1,6 +1,8 @@
 from flask import Flask, request
 # import gpiozero
 from flask_cors import CORS, cross_origin
+import os
+
 app = Flask(__name__)
 
 
@@ -85,5 +87,22 @@ def whoami_get():
         "message": message,
         "data": machine_id
     }
+
+@app.route("/clear", methods=['DELETE'])
+def clear_data():
+    if os.path.exists(".env"):
+        os.remove(".env")
+        return {
+            "success": True,
+            "message": "Successfully cleared machine data"
+        }
+    else: 
+        return {
+            "success": False,
+            "message": "No machine data found!"
+        }
+
+
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)

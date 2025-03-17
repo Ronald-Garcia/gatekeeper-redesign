@@ -31,10 +31,7 @@ const app = new Hono<Context>();
 app.use("/*", auth);
 app.route('/', userRoutes);
 
-/* 
-  Add an error handler so that errors are returned as JSON, 
-  will not work without this.
-*/
+// error handler
 app.onError((err, c) => {
   if (err instanceof Error && 'status' in err) {
     return c.json({ message: err.message }, (err as any).status || 400);
@@ -50,14 +47,11 @@ beforeAll(async () => {
   adminCookie = await adminLogin(app);
 });
 
-/* 
- User Route tests
-*/
+//User Route tests
+
 describe('User Routes (with auth/admin guard enabled)', () => {
 
-  /* 
-    Tests for GET /users route.
-  */
+
   describe('GET /users', () => {
     test('returns an array of users with correct meta info (admin access)', async () => {
       const response = await app.request('/users?page=1&limit=20', {
@@ -75,9 +69,6 @@ describe('User Routes (with auth/admin guard enabled)', () => {
     });
   });
 
-  /* 
-    Tests for POST /users route.
-  */
   describe('POST /users', () => {
     test('creates a user and returns it in the response (admin access)', async () => {
       const testCardNum = generateTestCardNumber();
@@ -151,9 +142,6 @@ describe('User Routes (with auth/admin guard enabled)', () => {
     });
   });
 
-  /* 
-    Tests for GET /users/:cardNum route.
-  */
   describe('GET /users/:cardNum', () => {
     test('returns a user if one exists (admin access)', async () => {
       const testCardNum = generateTestCardNumber();
@@ -205,9 +193,7 @@ describe('User Routes (with auth/admin guard enabled)', () => {
     });
   });
 
-  /* 
-    Tests for DELETE /users/:userId route.
-  */
+ //delete tests
   describe('DELETE /users/:userId', () => {
     test('deletes a user if it exists (admin access)', async () => {
       const newUser = {
@@ -299,9 +285,7 @@ describe('Guard Errors', () => {
   });
 });
 
-/* 
-  Clean up test data: Delete the test user, etc.
-*/
+// cleanup database
 afterAll(async () => {
   await db
     .delete(users)
