@@ -98,7 +98,14 @@ budgetCodesRoutes.post("/budget-codes",
 
     const { name, code } = c.req.valid("json");
 
-    
+    //Check if there is a duplicate.
+    const budgetCodeCheck = await db
+    .select()
+    .from(budgetCodes)
+    .where(eq(budgetCodes.code, code))
+    if (budgetCodeCheck) {
+        throw new HTTPException(409, {message:"Budget code already exists"})
+    }
 
     //Insertion of new Budget Code
     const [newBudgetCode] = await db

@@ -53,7 +53,7 @@ export const machines = pgTable("machines_table", {
  */
 export const budgetCodes = pgTable("budgetCodes" , {
   id: serial().primaryKey(),
-  code: text().notNull(),
+  code: text().notNull().unique(),
   name: text().notNull(),
 })
 
