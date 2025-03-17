@@ -87,6 +87,18 @@ userBudgetCodeRelationRoute.post("/user-budgets",
     async (c) => {
         const { userId, budgetCodeId } = c.req.valid("json");
 
+        // Check if we have the relation already.
+        const [ubcCheck] = await db
+        .select()
+        .from(userBudgetCodeTable)
+        .where(and(eq(userBudgetCodeTable.userId, userId), eq(userBudgetCodeTable.budgetCodeId, budgetCodeId)))
+        
+        //If this guy already exists, throw an error
+        if (ubcCheck) {
+            throw new HTTPException(409, {message: "User already has that budget code."})
+        }
+
+        //Otherwise, regular insertion.
         const [ ubc ] = await db.insert(userBudgetCodeTable)
             .values({
                 userId,
