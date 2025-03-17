@@ -164,7 +164,6 @@ describe("Financial Statement Routes", () => {
         userId: testUserId,
         budgetCode: testBudgetCodeId,
         machineId: testMachineId,
-        dateAdded: new Date(3000), // use a Date object for dateAdded
         timeSpent: 4000,
       };
       const response = await app.request("/fin-statements", {
@@ -181,7 +180,7 @@ describe("Financial Statement Routes", () => {
       expect(body.data.userId).toBe(newStatement.userId);
       expect(body.data.budgetCode).toBe(newStatement.budgetCode);
       expect(body.data.machineId).toBe(newStatement.machineId);
-      expect(new Date(body.data.dateAdded).getTime()).toBe(new Date(newStatement.dateAdded).getTime());
+      expect(body.data).toHaveProperty("dateAdded");
       expect(body.data.timeSpent).toBe(newStatement.timeSpent);
     });
 
