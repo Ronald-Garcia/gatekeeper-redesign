@@ -68,7 +68,7 @@ beforeAll(async () => {
   // Insert a test machine type.
   const [insertedType] = await db
     .insert(machineTypes)
-    .values({ name: "TEST_MACHINE_TYPE" })
+    .values({ name: generateTestMachineName() })
     .returning();
   testMachineTypeId = insertedType.id;
 
