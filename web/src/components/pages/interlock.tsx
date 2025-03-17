@@ -54,7 +54,7 @@ const Interlock = () => {
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <ToggleGroup type="single" className="flex-col">
+                        <ToggleGroup data-cy="toggle-budget" type="single" className="flex-col">
                             {userBudgets.map((code) => {
                                 return (
                                     <div>
@@ -82,7 +82,7 @@ const Interlock = () => {
                     </CardContent>
                     <CardFooter className="flex justify-end space-x-4">
                         { 
-                        <Button className="text-xl jhu-blue-button" variant="ghost" disabled={!validCurrentBudget()} onClick={handleStartClick}>Start</Button>
+                        <Button data-cy="start-button" className="text-xl jhu-blue-button" variant="ghost" disabled={!validCurrentBudget()} onClick={handleStartClick}>Start</Button>
                         }
                         <Button variant="secondary" onClick={handleCancel} className="text-xl"> Cancel </Button>
                     </CardFooter>

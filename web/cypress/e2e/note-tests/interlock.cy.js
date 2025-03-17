@@ -10,7 +10,7 @@ const userWithoutAccessCard = "0123456789222222";
 describe("Interlock Page E2E", () => {
   beforeEach(() => {
 
-    cy.visit(`${WEB_URL}/interlock`);
+    cy.visit(`${WEB_URL}`);
   });
 
   context("User with machine access", () => {
@@ -18,24 +18,37 @@ describe("Interlock Page E2E", () => {
 
       cy.get('[data-cy="cardnum-input"]')
         .clear()
-        .type(`;${userWithAccessCard};{enter}`);
-      cy.url().should("include", "/interlock");
+        .type(`;${userWithAccessCard};{enter}`)
+        .then(() => {
+          cy.url().should("include", "/interlock");
+          
+          // Ensure that budget code exist
+          cy.get('[data-cy="toggle-budget"]')
+          .should("exist")
+          .and("have.length.greaterThan", 0);
 
-      // Ensure that budget code exist
-      cy.get('[data-cy="toggle-budget"]')
-        .should("exist")
-        .and("have.length.greaterThan", 0);
+          //First available budget code.
+          cy.get('[data-cy="toggle-budget"]').first().click();
+          // ensure start is not disabled
+          cy.get('[data-cy="start-button"]').should("not.be.disabled");
 
-      //First available budget code.
-      cy.get('[data-cy="toggle-budget"]').first().click();
-      // ensure start is not disabled
-      cy.get('[data-cy="start-button"]').should("not.be.disabled");
+          //click start
+          cy.get('[data-cy="start-button"]').click();
 
-      //click start
-      cy.get('[data-cy="start-button"]').click();
+          //verify redirection to timer, aka machine turned on 
+          cy.url().should("include", "/timer");
 
-      //verify redirection to timer, aka machine turned on 
-      cy.url().should("include", "/timer");
+          cy.get('[data-cy="timer"]').should("have.value", "00:00:00");
+
+          setTimeout(() => {
+            cy.get('[data-cy="timer"]').should("have.value", "00:00:01");
+          }, 1000);
+
+          cy.get('[data-cy="submit"]').click()
+
+          cy.url().should("not.include", "/timer");
+        });
+
     });
   });
 
