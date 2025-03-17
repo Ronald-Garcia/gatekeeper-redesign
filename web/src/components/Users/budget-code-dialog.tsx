@@ -51,7 +51,7 @@ const EditBudgetCodeDialog = ({ userId, setShowEditBudgetCode }: EditBudgetCodeD
       })
     }, [])
     return (
-        <Dialog open={true} onOpenChange={setShowEditBudgetCode}>
+        <Dialog open={true}  onOpenChange={setShowEditBudgetCode}>
           <DialogOverlay />
           <DialogContent>
             <DialogHeader>
@@ -65,6 +65,7 @@ const EditBudgetCodeDialog = ({ userId, setShowEditBudgetCode }: EditBudgetCodeD
             <ToggleGroup type="multiple" className="flex-col">
               {codesList.map((type) => (
                 <ToggleGroupItem
+                  data-cy={`toggle-budget-code-${type.code}`}
                   key={type.id}
                   value={type.id.toString()}
                   onClick={() => toggleBudgetCodeQueue(type.id)}
@@ -83,8 +84,8 @@ const EditBudgetCodeDialog = ({ userId, setShowEditBudgetCode }: EditBudgetCodeD
           </ScrollArea>  
             </div>
             <DialogFooter>
-              <Button onClick={() => setShowEditBudgetCode(false)}>Cancel</Button>
-              <Button onClick={handleEditBudgetCode}>Save Changes</Button>
+              <Button data-cy = "add-budget-code-save" onClick={() => setShowEditBudgetCode(false)}>Cancel</Button>
+              <Button data-cy = "add-budget-code-delete" onClick={handleEditBudgetCode}>Save Changes</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

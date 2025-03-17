@@ -27,8 +27,8 @@ dist-ssr
 *.sw?
 
 #cypress
-cypress/screenshots
-cypress/screenshots/*
+*/cypress/screenshots
+*/cypress/screenshots/*
 
 # Environment variables
 .env
