@@ -1,1 +1,0 @@
-ALTER TABLE "sessions" ALTER COLUMN "expires_at" SET DATA TYPE timestamp;

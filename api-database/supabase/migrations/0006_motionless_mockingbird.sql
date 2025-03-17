@@ -1,1 +1,0 @@
-ALTER TABLE "sessions" ALTER COLUMN "expiresAt" SET DEFAULT now();

@@ -9,4 +9,5 @@ export const $router = createRouter({
   budgetCodes: `${BASE_URL}budgets`,
   kiosk: `${BASE_URL}kiosk`,
   financial_statements: `${BASE_URL}statements`,
+  timer: `${BASE_URL}timer`
 });

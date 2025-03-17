@@ -1,14 +1,13 @@
 from flask import Flask, request
-import gpiozero
-import gpiozero
+# import gpiozero
 from flask_cors import CORS, cross_origin
 app = Flask(__name__)
 
 
-led = gpiozero.LED(20)
+# led = gpiozero.LED(20)
 
 
-led = gpiozero.LED(20)
+# led = gpiozero.LED(20)
 cors = CORS(app, supports_credentials=True);
 @app.route("/", methods=['GET'])
 def hello_world():
@@ -18,36 +17,28 @@ def hello_world():
 @app.route("/turn-on", methods=['POST'])
 def turn_on():
 
-    if led.is_lit:
-        return {
-            "success": False,
-            "message": "Machine is currently already on!"
-        }
+    # if led.is_lit:
+        # return {
+            # "success": False,
+            # "message": "Machine is currently already on!"
+        # }
 
-    led.on()
+    # led.on()
 
     print("Pulse received! Turning on GPIO20")
 
-    if led.is_lit:
-        return {
-            "success": False,
-            "message": "Machine is currently already on!"
-        }
-    led.on()
-    print("Pulse received! Turning on GPIO20")
     return {
-        "success": True,
         "success": True,
         "message": "s: Success!"
     }
 @app.route("/turn-off", methods=['POST'])
 def turn_off():
-    if not led.is_lit:
-        return {
-            "success": False,
-            "message": "Machine is currently already off!"
-        }
-    led.off()
+    # if not led.is_lit:
+    #     return {
+    #         "success": False,
+    #         "message": "Machine is currently already off!"
+    #     }
+    # led.off()
     print("Pulse received! Turning off GPIO20")
     return {
         "success": True,

@@ -7,10 +7,8 @@ export const createStatementSchema = z.object({
       .coerce.number().int().positive(),
     machineId: z
       .coerce.number().int().positive(),
-    dateAdded: z
-      .coerce.date(),
     timeSpent: z
-      .coerce.number().int().positive()
+      .coerce.number().int().positive(),
 });
 
 export const queryFinStatementParamsSchema = z.object({

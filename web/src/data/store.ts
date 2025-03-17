@@ -13,6 +13,7 @@ export const $machine_types = atom<MachineType[]>([]);
 export const $budget_code_queue = atom<number[]>([]);
 export const $training_queue = atom<number[]>([]);
 
+
 export function setBudgetCodeQueue(bcs: number[]) {
   $budget_code_queue.set(bcs);
 }
@@ -120,6 +121,13 @@ const defaultMachine: Machine = {
   type: { id: -1, name: "invalid"},
   hourlyRate: 0
 }
+
+const defaultBudget: BudgetCode = {
+  id: -1, 
+  name: "invalid",
+  code: "invalid"
+}
+
 export const $kiosk = atom<boolean>(false);
 
 export function setKiosk(isKiosk: boolean) {
@@ -128,9 +136,22 @@ export function setKiosk(isKiosk: boolean) {
 
 export const $currentUser = map<User>(defaultUser);
 export const $currentMachine = map<Machine>(defaultMachine);
+export const $currentBudget = map<BudgetCode>(defaultBudget);
 
 export function validCurrentUser() {
   return $currentUser.get() !== defaultUser;
+}
+
+export function validCurrentBudget() {
+  return $currentBudget.get() !== defaultBudget;
+}
+
+export function setCurrentBudget(budget: BudgetCode) {
+  $currentBudget.set(budget);
+}
+
+export function clearCurrentBudget() {
+  $currentBudget.set(defaultBudget)
 }
 
 export function adminCurrentUser() {

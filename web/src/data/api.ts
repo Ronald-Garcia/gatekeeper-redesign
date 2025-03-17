@@ -912,6 +912,34 @@ export const getFinancialStatements = async (): Promise<{
   return { message, data };
 };
 
+export const createFinancialStatements = async (userId: number, machineId: number, budgetCode: number, timeSpent: number ): Promise<{
+  message: string,
+  data: financialStatement
+}> => {
+  const response = await fetch(`${API_DB_URL}/fin-statements`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    credentials: "include",
+    body: JSON.stringify({
+      userId,
+      machineId,
+      budgetCode,
+      timeSpent
+    })
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string; data: financialStatement } =
+    await response.json();
+
+  return { message, data };
+}
+
 export const sendEmail = async (email: string): Promise<boolean> => {
 
   const response = await fetch(`${API_DB_URL}/statement-email/${email}`, {

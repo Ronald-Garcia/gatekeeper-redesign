@@ -9,6 +9,7 @@ import { redirectPage } from "@nanostores/router";
 import Interlock from "../pages/interlock";
 import KioskStartPage from "../pages/kiosk-start-page";
 import ErrorPage from "./errorPage";
+import InProgress from "../pages/in-progress";
 
 /*
 Body component of the application
@@ -59,6 +60,8 @@ const Body = () => {
       {router.route === "start_page" && <StartPage></StartPage>}
 
       {router.route === "interlock" && <Interlock></Interlock>}
+
+      {router.route === "timer" && <InProgress></InProgress>}
 
     </>
   )  
