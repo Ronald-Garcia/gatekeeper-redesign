@@ -145,7 +145,13 @@ rm .env # this is the machine data
 
 ```
 
-Then, go on the web app and log in with the card number. It will prompt you to select a machine for this system (as it does not recognize one as being stored). Choose a machine, and you will be taken to the interlock page. From here,
+##### Web app
+
+Then, go on the web app and log in with the card number. It will prompt you to select a machine for this system (as it does not recognize one as being stored). Choose a machine, and you will be taken to the interlock page. From here, you can select a budget code and press start. A `turn-on` request should be sent to the machine API. A timer should also display. When the finish button is pressed, a financial statement is created and the page goes back to the start page.
+
+##### Financial Statements
+
+Then, to view the financial statements, reconfigure the machine as a kiosk (with a similar process to before). Then, when in the admin dashboard, a button at the top titled "Send Financial Statements" will opena  dialog that allows for an email to be sent of all the financial statements. Currently, because of the Resend API, only the account owners email can be a receiver. To view them in the dashboard, a button is on the dialog. A list of all financial statements can be seen.
 
 
 
