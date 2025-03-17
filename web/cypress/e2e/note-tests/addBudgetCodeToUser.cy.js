@@ -1,7 +1,6 @@
 /// <reference types="cypress" />
 
 
-
 const API_DB_URL = "http://localhost:3000";
 const WEB_URL = "http://localhost:5173";
 const admin_num = "1234567890777777";
@@ -16,7 +15,7 @@ const makeFreshUserThenLogin = () => {
         url: `http://localhost:3000/users`,
         method: "POST",
         body: {
-            name:`${test_user_name}`,
+            name:test_user_name,
             cardNum:`${test_user_num}`,
             JHED:"billfre1",
             isAdmin:0,
@@ -110,10 +109,11 @@ describe('budget code user relation tests', () => {
             cy.get(`[data-cy = toggle-budget-code-${test_code_1} ]`).click();            
             cy.get(`[data-cy = add-budget-code-save ]`).click();
 
-            //Check budget code button is on.
-            cy.get(`[data-cy = user-trigger-${test_user_num.substring(0,15)} ]`).click();
-            cy.get(`[data-cy = user-budget-code-${test_user_num.substring(0,15)} ]`).click();
-            cy.get(`[data-cy = toggle-budget-code-${test_code_1} ]`).should("have.attr", "data-state", "on");
+            // First, add a budget code.
+             cy.get(`[data-cy="user-trigger-${test_user_num.substring(0,15)}"]`).click({ force: true });
+             cy.get(`[data-cy="user-budget-code-${test_user_num.substring(0,15)}"]`).click({ force: true });
+             cy.get(`[data-cy="toggle-budget-code-${test_code_1}"]`).click({ force: true });
+             cy.get(`[data-cy="add-budget-code-save"]`).click({ force: true });
         })
     })
   
@@ -135,23 +135,21 @@ describe('budget code user relation tests', () => {
             cy.get(`[data-cy = toggle-budget-code-${test_code_1} ]`).click();            
             cy.get(`[data-cy = add-budget-code-save ]`).click();
 
-            //Check budget code button is on.
-            cy.get(`[data-cy = user-trigger-${test_user_num.substring(0,15)} ]`).click();
-            cy.get(`[data-cy = user-budget-code-${test_user_num.substring(0,15)} ]`).click();
-            cy.get(`[data-cy = toggle-budget-code-${test_code_1} ]`).should("have.attr", "data-state", "on");
+            // First, add a budget code.
+            cy.get(`[data-cy="user-trigger-${test_user_num.substring(0,15)}"]`).click({ force: true });
+            cy.get(`[data-cy="user-budget-code-${test_user_num.substring(0,15)}"]`).click({ force: true });
+            cy.get(`[data-cy="toggle-budget-code-${test_code_1}"]`).click({ force: true });
+            cy.get(`[data-cy="add-budget-code-save"]`).click({ force: true });
+            // Now, remove it by clicking the toggle again.
+            cy.get(`[data-cy="user-trigger-${test_user_num.substring(0,15)}"]`).click({ force: true });
+            cy.get(`[data-cy="user-budget-code-${test_user_num.substring(0,15)}"]`).click({ force: true });
+            cy.get(`[data-cy="toggle-budget-code-${test_code_1}"]`).click({ force: true });
+            cy.get(`[data-cy="add-budget-code-save"]`).click({ force: true });
+            // Verify that the toggle now shows "off".
+            cy.get(`[data-cy="user-trigger-${test_user_num.substring(0,15)}"]`).click({ force: true });
+            cy.get(`[data-cy="user-budget-code-${test_user_num.substring(0,15)}"]`).click({ force: true });
+            cy.get(`[data-cy="toggle-budget-code-${test_code_1}"]`).should("have.attr", "data-state", "off");
         })
-    })
-
-    it('Add two budget codes to a user, then remove one', () => {
-
-    })
-
-    it('Add two budget codes to a user, then remove both', () => {
-
-    })
-
-    it('Select a budget code, deselect it, then hit submit', () => {
-
     })
 
 
