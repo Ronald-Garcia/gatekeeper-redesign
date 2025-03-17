@@ -7,10 +7,7 @@ import { eq, like } from 'drizzle-orm';
 import { Context } from '../../api-files/lib/context.js';
 import { auth } from '../../api-files/middleware/auth.js';
 
-/* 
-  Helper to simulate an admin login using the test admin card number.
-  We assume that GET /users/:cardNum (without an admin guard) creates a session and sets a cookie.
-*/
+// simulate login
 async function adminLogin(app: Hono<Context>): Promise<string> {
   const adminCardNum = "1234567890777777";
   const response = await app.request(`/users/${adminCardNum}`);
@@ -21,28 +18,19 @@ async function adminLogin(app: Hono<Context>): Promise<string> {
   return setCookie.split(";")[0];
 }
 
-/* 
-  Helper to generate a unique 15-digit card number for tests that always starts with "999"
-  (999 + 12 random digits, makes it easier to clean up test data)
-*/
+// create unique id with easy deletion afterwards
 function generateTestCardNumber(): string {
   const randomPart = Math.floor(Math.random() * 1e13).toString().padStart(13, '0');
   return "999" + randomPart;
 }
 
-/* 
-  Create a new Hono instance and mount both the user and training routes.
-  Mounting userRoutes makes the admin login endpoint available.
-*/
+// hono app setup
 const app = new Hono<Context>();
 app.use("/*", auth);
 app.route('/', userRoutes);
 app.route('/', trainingRoutes);
 
-/* 
-  Add an error handler so that errors are returned as JSON,
-  which is required for testing.
-*/
+// error handler to handle errors form tests
 app.onError((err, c) => {
   if (err instanceof Error && 'status' in err) {
     return c.json({ message: err.message }, (err as any).status || 400);

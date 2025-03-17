@@ -19,9 +19,7 @@ async function adminLogin(app: Hono<Context>): Promise<string> {
   return setCookie.split(";")[0];
 }
 
-/* 
-  Helper to generate a unique machine type name.
-*/
+// generate machine type names 
 function generateTestMachineTypeName(): string {
   return "TEST_MACHINE_TYPE_" + Math.floor(Math.random() * 1e8).toString().padStart(8, "0");
 }

@@ -296,8 +296,7 @@ describe("User Budget Code Relation Routes", () => {
     });
 
     test("returns 400 if we fail to insert all budget codes (simulate mismatch)", async () => {
-    //if (budget_code.length !== bcs.length) throw new HTTPException(400,...)`
-      // We'll cause a mismatch by passing an invalid ID that can't be inserted?
+
     
       const updatePayload = { budget_code: [testBudgetCodeId, 99999999] }; // invalid budget code ID
       const res = await app.request(`/user-budgets/${userIdForBudgets}`, {
