@@ -30,7 +30,7 @@ const SendFinancialStatementsDialog = () => {
 
         <DialogContent>
             <DialogHeader>
-                <DialogTitle>
+                <DialogTitle data-cy="financial-statements-title">
                     Send Financial Statements                
                 </DialogTitle>    
                 <DialogDescription>
@@ -45,6 +45,7 @@ const SendFinancialStatementsDialog = () => {
                 <Input
                     defaultValue={"rgarci47@jhu.edu"}
                     disabled
+                    data-cy="financial-statements-email"
                     onChange={e => setEmail(e.target.value)}
                 >
                 </Input>
@@ -56,7 +57,7 @@ const SendFinancialStatementsDialog = () => {
                 <DialogFooter>
 
                     <DialogClose asChild>
-                        <Button data-cy = "view-financial-staments" variant={"secondary"} onClick={() => openPage($router, "financial_statements")}>
+                        <Button data-cy = "view-financial-statements" variant={"secondary"} onClick={() => openPage($router, "financial_statements")}>
                             ...Or see them here!
                         </Button>
                     </DialogClose>

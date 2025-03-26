@@ -160,6 +160,16 @@ userBudgetCodeRelationRoute.patch("/user-budgets/:id",
 
             await db.delete(userBudgetCodeTable).where(eq(userBudgetCodeTable.userId, id));
 
+            if (validCodes.length === 0) {
+                return c.json({
+                    success: true,
+                    message: "Successfully replaced budget codes of user.",
+                    data: []
+                })
+            }
+    
+
+
             const bcs = await db.insert(userBudgetCodeTable).values(budget_code.map(bc => {
                 return {
                     userId: id,

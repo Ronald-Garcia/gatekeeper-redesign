@@ -25,16 +25,19 @@ describe("Create a financial statements", () => {
         cy.get('[data-cy="admin-dashboard"]').should("be.visible");
     
         // click financial statemnt button 
-        cy.get('[data-cy="financial-statements-nav"]').click();
+        cy.get('[data-cy="financial-statements-dialog"]').click();
     
+        cy.get('[data-cy="financial-statements-title"]').should("be.visible");
+
+        cy.get('[data-cy="close-financial-statements"]').click();
+        cy.get('[data-cy="financial-statements-title"]').should("not.exist");
+
+
+        // click financial statemnt button 
+        cy.get('[data-cy="financial-statements-dialog"]').click();
+        cy.get('[data-cy="view-financial-statements"]').click();
+
         //redirection to financial staemtns 
-        cy.url().should("include", "/financial_statements");
-    
-        //There's none for now
-        cy.contains("No statements available!").should("be.visible");
-    
-        //send the email 
-        cy.get('[data-cy="send-statements-button"]').click();
-    
+        cy.url().should("include", "/statements");
       });
     });

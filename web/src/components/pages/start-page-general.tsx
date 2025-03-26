@@ -12,6 +12,7 @@ import { $router } from "@/data/router";
 type startPageProps = {
     callPythonServer:boolean
 }
+
 const StartPageGeneral = ({callPythonServer}: startPageProps) => {
     var callPython:number = 0;
     if (callPythonServer){
@@ -33,6 +34,7 @@ const StartPageGeneral = ({callPythonServer}: startPageProps) => {
 
       const newCardNum = cardNum.substring(1, cardNum.length - 1);
       
+      e.currentTarget.value = "";
       validateUser(Number.parseInt(newCardNum), callPython).then(s => {        
         redirectPage($router, s);
       });

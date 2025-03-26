@@ -5,6 +5,7 @@ import BudgetCodes from "../BudgetCodes/budgetCodes";
 import UsersActions from "./user-actions";
 import BudgetActions from "./budget-actions";
 import FinancialStatements from "../financialStatements/financialStatements";
+import FinancialActions from "./financial-actions";
 
 
 /*
@@ -31,7 +32,7 @@ const AdminDashboard = () => {
     )
   } else if (router.route === "financial_statements"){
     return (<div>
-      
+      <FinancialActions/>
       <FinancialStatements/>
     </div>);
   }
