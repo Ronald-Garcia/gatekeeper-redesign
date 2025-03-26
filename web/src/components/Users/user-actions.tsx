@@ -4,7 +4,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button"; 
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import DeleteUserDialog from "./delete-user-dialogue";
 import BanUserDialog from "./ban-user-dialog";
@@ -13,33 +13,32 @@ import BudgetCodeDialog from "./budget-code-dialog";
 
 type UserActionsProps = {
   userId: number;
-  userNumber:string;
+  userNumber: string;
   setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function UserActions({ userId, userNumber, setIsActive}: UserActionsProps) {
-   const [ShowEditTraining, setShowEditTraining] = useState(false);
-   const [ShowEditBudgetCode, setShowBudgetCode] = useState(false);
-   const [ShowDeleteUser, setShowDeleteUser] = useState(false);
-   const [ShowTimeoutUser, setShowTimeoutUser] = useState(false);
-
+export default function UserActions({ userId, userNumber, setIsActive }: UserActionsProps) {
+  const [showEditTraining, setShowEditTraining] = useState(false);
+  const [showEditBudgetCode, setShowBudgetCode] = useState(false);
+  const [showDeleteUser, setShowDeleteUser] = useState(false);
+  const [showTimeoutUser, setShowTimeoutUser] = useState(false);
 
   const handleTraining = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowEditTraining(true);
-    setIsActive(true);    
+    setIsActive(true);
   };
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowDeleteUser(true);
-    setIsActive(true);   
+    setIsActive(true);
   };
 
   const handleTimeout = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowTimeoutUser(true);
-    setIsActive(true);   
+    setIsActive(true);
   };
 
   const handleBudgetCode = (e: React.MouseEvent) => {
@@ -48,15 +47,12 @@ export default function UserActions({ userId, userNumber, setIsActive}: UserActi
     setIsActive(true);
   };
 
-
   const handleCloseDelete = () => {
     setShowDeleteUser(false);
-   
   };
 
   const handleCloseTimeout = () => {
     setShowTimeoutUser(false);
-
   };
 
   const handleCloseTraining = () => {
@@ -67,9 +63,7 @@ export default function UserActions({ userId, userNumber, setIsActive}: UserActi
     setShowBudgetCode(false);
   };
 
-
   return (
-
     <div data-cy = "user-actions" >
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -93,20 +87,20 @@ export default function UserActions({ userId, userNumber, setIsActive}: UserActi
       </DropdownMenuContent>
     </DropdownMenu>
 
-{ShowEditTraining && (
+{showEditTraining && (
   <TrainingDialog userId={userId} setShowEditTraining={handleCloseTraining} />
 )}
-{ShowEditBudgetCode && (
+{showEditBudgetCode && (
   <BudgetCodeDialog userId={userId} setShowEditBudgetCode={handleCloseBudgetCode} />
 )}
-{ShowDeleteUser && (
+{showDeleteUser && (
   <DeleteUserDialog
     userId={userId}
     setShowDeleteUser={handleCloseDelete}
   />
 )}
 
-{ShowTimeoutUser && (
+{showTimeoutUser && (
   <BanUserDialog userId={userId} setShowBanUser={handleCloseTimeout} />
 )}
 

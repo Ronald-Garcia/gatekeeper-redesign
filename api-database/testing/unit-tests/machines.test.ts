@@ -39,6 +39,11 @@ function generateTestMachineName(): string {
   return "TEST_MACHINE_" + Math.floor(Math.random() * 1e8).toString().padStart(8, "0");
 }
 
+// Generate a unique machine name
+function generateTestMachineTypeName(): string {
+  return "TEST_MACHINE_TYPE_" + Math.floor(Math.random() * 1e8).toString().padStart(8, "0");
+}
+
 // app setup 
 const app = new Hono<Context>();
 // Attach auth middleware so that Lucia sets the session/user from the Cookie header.
@@ -68,7 +73,7 @@ beforeAll(async () => {
   // Insert a test machine type.
   const [insertedType] = await db
     .insert(machineTypes)
-    .values({ name: "TEST_MACHINE_TYPE" })
+    .values({ name: generateTestMachineTypeName() })
     .returning();
   testMachineTypeId = insertedType.id;
 

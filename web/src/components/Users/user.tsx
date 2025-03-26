@@ -1,30 +1,37 @@
 import { User } from "@/data/types/user";
 import UserActions from "./user-actions";
 import { useState } from "react";
-import {  selectItem } from "@/data/store";
-
-
+import { selectItem } from "@/data/store";
 
 /* 
 User component for each individual user to be used on the list 
 @param user: user whose info is going to be displayed when mapping through user list. 
 */
 export default function UserComponent({ user }: { user: User }) {
-   const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(false);
 
-
-   function selectUser() {
+  function selectUser() {
     if (!isActive) {
       selectItem(user);
-     }
-   }
+    }
+  }
 
   return (
     <>
-      <div data-cy = {user.cardNum}  className="relative flex flex-col justify-between items-center py-4 max-h-[15vh] text-sm text-clip hover:bg-stone-100 transition-colors border-y-2 border-solid border-stone-300 hover:border-stone-500" onClick={selectUser}>
-        <UserActions  userId={user.id} userNumber={user.cardNum} setIsActive={setIsActive}></UserActions>
-        <p>{user.name} </p>
-        <p>{user.graduationYear} </p>
+      <div
+        data-cy={user.cardNum}
+        className="relative flex items-center gap-6 p-4 rounded-lg hover:bg-stone-100 transition-all border border-stone-200 hover:border-stone-400 shadow-sm"
+        onClick={selectUser}
+      >
+        <div className="flex-1">
+          <h3 className="font-medium text-base">{user.name}</h3>
+          <p className="text-sm text-gray-600">Class of {user.graduationYear}</p>
+        </div>
+        <UserActions
+          userId={user.id}
+          userNumber={user.cardNum}
+          setIsActive={setIsActive}
+        />
       </div>
     </>
   );
