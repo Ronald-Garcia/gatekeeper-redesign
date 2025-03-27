@@ -8,6 +8,7 @@ import { budgetCodes, financialStatementsTable, machines, users } from "../db/sc
 import { transporter } from "../emails/index.js";
 import writeXlsxFile from "write-excel-file/node";
 import { between, eq } from "drizzle-orm";
+import { adminGuard } from "../middleware/adminGuard.js";
 
 export const emailRoutes = new Hono<Context>();
 
@@ -30,6 +31,7 @@ type StatementType = {
 emailRoutes.post("/statement-email/:email", 
     zValidator("json", getTimeSchema),
     zValidator("param", sendEmailSchema),
+    adminGuard,
     async (c) => {
 
       let success = true;
