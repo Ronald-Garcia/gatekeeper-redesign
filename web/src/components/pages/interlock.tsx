@@ -2,9 +2,8 @@ import { useStore } from "@nanostores/react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
-import { $currentBudget, $currentUser, clearCurrentBudget, clearCurrentUser, setCurrentBudget, validCurrentBudget } from "@/data/store";
-import { useEffect, useState } from "react";
-import { BudgetCode } from "@/data/types/budgetCode";
+import { $curbudgets, $currentBudget, $currentUser, clearCurrentBudget, clearCurrentUser, setCurrentBudget, validCurrentBudget } from "@/data/store";
+import { useEffect } from "react";
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
 import { openPage, redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
@@ -18,7 +17,7 @@ const Interlock = () => {
     const curUser = useStore($currentUser);
     const curBudget = useStore($currentBudget);
     const { getBudgetsOfUser } = useQueryBudgets(false);
-    const [userBudgets, setUserBudgets] = useState<BudgetCode[]>([]);
+    const userBudgets = useStore($curbudgets);
     
     const handleCancel = () => {
         clearCurrentUser();
@@ -37,7 +36,7 @@ const Interlock = () => {
 
     }
     useEffect(() => {
-        getBudgetsOfUser(curUser.id, setUserBudgets);
+        getBudgetsOfUser(curUser.id);
         clearCurrentBudget();
     }, [])
 

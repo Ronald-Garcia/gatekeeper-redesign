@@ -1,15 +1,15 @@
 import { Lucia, TimeSpan } from "lucia";
 import { DrizzlePostgreSQLAdapter } from "@lucia-auth/adapter-drizzle";
-import { db } from "./index";  
-import { sessions, users } from "./schema";
+import { db } from "./index.js";  
+import { sessions, users } from "./schema.js";
 
 const adapter = new DrizzlePostgreSQLAdapter(db as any, sessions as any, users as any);
 
 export const lucia = new Lucia(adapter, {
   sessionCookie: {
     attributes: {
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
     },
   },
   sessionExpiresIn: new TimeSpan(60, "m"),

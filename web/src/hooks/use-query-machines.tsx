@@ -1,5 +1,5 @@
 import { fetchCurrentMachine, getAllMachines, getAllTrainingsOfUser, getMachine, getMachineTypes } from "@/data/api";
-import { setCurrentMachine, setKiosk, setMachines, setMachinesTypes} from "@/data/store";
+import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes} from "@/data/store";
 import { Machine } from "@/data/types/machine";
 import { MachineType } from "@/data/types/machineType";
 import { useEffect } from "react";
@@ -62,13 +62,14 @@ function useQueryMachines(reload: boolean) {
           };
     
 
-    const getTrainingsOfUser = async (userId: number, setTypes: React.Dispatch<React.SetStateAction<MachineType[]>>)
+    const getTrainingsOfUser = async (userId: number)
         :Promise<MachineType[] | undefined> => {
           try {
             const {
               data: types
             } = await getAllTrainingsOfUser(userId);
-            setTypes(types);
+            //Do we need this? Same with other.
+            setCurTrainings(types);
             return types;
           } catch (e) {
             const errorMessage = (e as Error).message;

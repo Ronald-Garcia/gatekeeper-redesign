@@ -1,6 +1,6 @@
 import useMutationEmails from "@/hooks/use-mutation-emails";
 import { Button } from "../ui/button";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
+import { DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog"
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useEffect, useState } from "react";
@@ -30,7 +30,7 @@ const SendFinancialStatementsDialog = () => {
 
         <DialogContent>
             <DialogHeader>
-                <DialogTitle>
+                <DialogTitle data-cy="financial-statements-title">
                     Send Financial Statements                
                 </DialogTitle>    
                 <DialogDescription>
@@ -45,18 +45,19 @@ const SendFinancialStatementsDialog = () => {
                 <Input
                     defaultValue={"rgarci47@jhu.edu"}
                     disabled
+                    data-cy="financial-statements-email"
                     onChange={e => setEmail(e.target.value)}
                 >
                 </Input>
 
                 </div>
 
-                <p className="italic text-sm">Right now, waiting on Resend to allow for other domains. Can only send to account owner</p>
+                <p className="text-sm italic">Right now, waiting on Resend to allow for other domains. Can only send to account owner</p>
 
                 <DialogFooter>
 
                     <DialogClose asChild>
-                        <Button data-cy = "view-financial-staments" variant={"secondary"} onClick={() => openPage($router, "financial_statements")}>
+                        <Button data-cy = "view-financial-statements" variant={"secondary"} onClick={() => openPage($router, "financial_statements")}>
                             ...Or see them here!
                         </Button>
                     </DialogClose>

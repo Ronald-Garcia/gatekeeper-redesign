@@ -9,6 +9,7 @@ import Searchbar from "../general/searchbar.tsx";
 import AddMachineTypeDialog from "../machine_types/add-machine-type-dialog";
 import { Dialog, DialogTrigger } from "../ui/dialog.tsx";
 import SendFinancialStatementsDialog from "../financialStatements/send-financial-statements-dialog.tsx";
+import ErrorPage from "../layout/errorPage.tsx";
 
 /*
 Admin dashboard component
@@ -16,14 +17,20 @@ Displays BudgetCodes or Users based on routing.
 */
 const UsersActions = () => {
 
+  const router = useStore($router);
+
   const handleClickOnViewBudgetCodes = () => {
     resetSearch();
     openPage($router, "budgetCodes");
   }
 
-  const sendFinancialStatements = () => {
-    resetSearch();
-    openPage($router, "financial_statements");
+//  const sendFinancialStatements = () => {
+//    resetSearch();
+//    openPage($router, "financial_statements");
+//  }
+
+  if (!router) {
+    return <ErrorPage></ErrorPage>
   }
 
   const selection = useStore($selected);
@@ -39,12 +46,14 @@ const UsersActions = () => {
 
       <div data-cy="admin-dashboard">
         <div>
-          <Button  data-cy="view-budget-codes" className="size-"
+          <Button  data-cy="view-budget-codes" className="transition-all"
+            disabled={router.route === "budgetCodes"}
             onClick={handleClickOnViewBudgetCodes}>
               View Budget Codes
           </Button>
           <DialogTrigger asChild>
-            <Button data-cy="financial-statement-dialog"  className="size-">
+            <Button data-cy="financial-statements-dialog"  className="transition-all"
+              disabled={router.route === "financial_statements"}>
                 Send Financial Statements
             </Button>
           </DialogTrigger>

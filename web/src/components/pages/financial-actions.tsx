@@ -2,24 +2,27 @@ import { Button } from "../ui/button";
 import { openPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 import Searchbar from "../general/searchbar.tsx";
-import AddBudgetCodeDialog from "../BudgetCodes/add-budgetCode-dialogue.jsx";
 import { resetSearch } from "@/data/store.ts";
-import { Dialog, DialogTrigger } from "../ui/dialog.tsx";
 
 /*
 Admin dashboard component
 Displays BudgetCodes or Users based on routing. 
 */
-const BudgetActions = () => {
+const FinancialActions = () => {
 
   const handleClickOnViewUsers = () => {
     resetSearch();
     openPage($router, "users");
   }
+  const handleClickOnViewBudgetCodes = () => {
+    resetSearch();
+    openPage($router, "budgetCodes");
+  }
+
   
   return (
     <div>
-      <Dialog>
+        
 
       <div data-cy="admin-dashboard">
         <div>
@@ -27,27 +30,21 @@ const BudgetActions = () => {
             onClick={handleClickOnViewUsers}>
               View Users
           </Button>
+          <Button  data-cy="view-budget-codes" className="transition-all"
+            onClick={handleClickOnViewBudgetCodes}>
+              View Budget Codes
+          </Button>
 
-          <DialogTrigger asChild>
-            <Button data-cy="financial-statements-dialog"  className="transition-all">
-                Send Financial Statements
-            </Button>
-          </DialogTrigger>
 
       <div className="admin-actions">
           <div className="relative w-full max-w-lg">
-                <Searchbar/>
-          </div>
-            <div className="admin-buttons">
-            <AddBudgetCodeDialog/>
-            </div>
+            <Searchbar/>
           </div>
         </div>
+        </div>
       </div>
-      </Dialog>
-
     </div>
   )
 };
 
-export default BudgetActions;
+export default FinancialActions;

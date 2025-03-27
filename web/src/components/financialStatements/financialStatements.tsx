@@ -12,6 +12,7 @@ export default function FinancialStatements() {
 
 
   return (
+    <div>
     <ScrollArea>
 
         <div data-cy="financial-stament-components" className="max-h-[20vh]">
@@ -32,5 +33,6 @@ export default function FinancialStatements() {
 
         </div>
     </ScrollArea>
+    </div>
   );
 }

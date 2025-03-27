@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import useMutationUsers from "@/hooks/user-mutation-hooks";
 import {
   Dialog,
@@ -15,7 +15,6 @@ import { useStore } from "@nanostores/react";
 import { $machine_types, $training_queue, setTrainingQueue, toggleTrainingQueue } from "@/data/store";
 import useQueryMachines from "@/hooks/use-query-machines";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
-import { MachineType } from "@/data/types/machineType";
 
 
 
@@ -29,7 +28,6 @@ type EditTrainingDialogProp = {
 // function that handles state of the dialogue, error handling from api
 const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogProp) => {
   const trainingQueue = useStore($training_queue);
-    const [curTrainings, setCurTrainings] = useState<MachineType[]>([]);
     //ADD WHEN ROUTES FIXED
     const { setUserTrainings } = useMutationUsers();
     const { getTrainingsOfUser } = useQueryMachines(true);
@@ -44,7 +42,7 @@ const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogP
     };
   
     useEffect(() => {
-      getTrainingsOfUser(userId, setCurTrainings).then((res) => {
+      getTrainingsOfUser(userId).then((res) => {
         if (res === undefined) {
           setTrainingQueue([]);
           return;

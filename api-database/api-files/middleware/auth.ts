@@ -1,5 +1,5 @@
 import type { Context, Next } from "hono";
-import { lucia } from "../db/auth";
+import { lucia } from "../db/auth.js";
 
 export const auth = async (c: Context, next: Next) => {
   const cookie = c.req.header("Cookie") ?? "";
