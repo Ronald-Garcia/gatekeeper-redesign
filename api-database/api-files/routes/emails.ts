@@ -32,8 +32,8 @@ emailRoutes.post("/statement-email/:email",
     zValidator("param", sendEmailSchema),
     async (c) => {
 
-      let success = false;
-      let message = "";
+      let success = true;
+      let message = "Successfully sent an email";
 
       const { email } = c.req.valid("param");
       const { startDate, endDate } = c.req.valid("json");
@@ -91,6 +91,9 @@ emailRoutes.post("/statement-email/:email",
         buffer: true
       })
 
+
+
+
       transporter.sendMail({
           to: email,
           subject: "Financial Statements",
@@ -106,7 +109,7 @@ emailRoutes.post("/statement-email/:email",
         console.log(err);
         success = false;
         message = "Failed to send an email";
-      });
+      })
     
     
       return c.json({
