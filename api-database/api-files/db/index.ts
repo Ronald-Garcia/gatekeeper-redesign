@@ -5,7 +5,7 @@ import postgres from 'postgres';
 config({ path: '.env' }); // or .env.local
 
 // the connection string of the postgresql database
-const connectionString = "postgresql://postgres.wccelsyverzgugwhzobu:wse-interlock@aws-0-us-east-1.pooler.supabase.com:6543/postgres"
+const connectionString = process.env.TEST_DATABASE_URL || process.env.PROD_DB_URL!
 if (!connectionString) {
     console.log(connectionString);
     throw Error("null connection string");
