@@ -5,4 +5,5 @@ export type Machine = {
     name: string;
     type: MachineType,
     hourlyRate: number;
+    active: number;
 }
