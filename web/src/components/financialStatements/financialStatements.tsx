@@ -21,12 +21,12 @@ export default function FinancialStatements() {
       ) : (
         statementList.map((statement) => (
           <div className="relative flex flex-col justify-between items-center py-4 max-h-[15vh] text-sm text-clip hover:bg-stone-100 transition-colors border-y-2 border-solid border-stone-300 hover:border-stone-500">
-            <p>{statement.id}</p>
-            <p>{statement.userId}</p>
-            <p>{statement.budgetCode}</p>
-            <p>{statement.machineId}</p>
-            <p>{statement.startTime}</p>
-            <p>{statement.endTime}</p>
+            <p>{statement.user.name}</p>
+            <p>{statement.user.JHED}</p>
+            <p>{statement.budgetCode.name}</p>
+            <p>{statement.machine.name}</p>
+            <p>{statement.dateAdded.toLocaleDateString()}</p>
+            <p>{statement.timeSpent}</p>
           </div>
         ))
       )}

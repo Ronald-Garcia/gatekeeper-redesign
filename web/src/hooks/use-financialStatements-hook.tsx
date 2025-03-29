@@ -1,5 +1,6 @@
 import { getFinancialStatements } from "@/data/api";
 import {
+  $date_range,
   $statements, 
   setFinancialStatements,
  } from "@/data/store";
@@ -10,12 +11,13 @@ import { toast } from "sonner";
 
 function useQueryStatements(reload: boolean) {
   const statements = useStore($statements);
-
+  const dateRange = useStore($date_range);
+  
   const loadFinancialStatements = async () => {
     try {
       const {
         data: fetchedFinancialStatements
-      } = await getFinancialStatements();
+      } = await getFinancialStatements(dateRange!.to as Date, dateRange!.from as Date);
       setFinancialStatements(fetchedFinancialStatements);
     }  catch (e) {
         //get message from api response, put it on a toast

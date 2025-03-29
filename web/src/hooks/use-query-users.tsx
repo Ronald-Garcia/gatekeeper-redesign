@@ -12,9 +12,11 @@ import useQueryMachines from "./use-query-machines";
 import { Machine } from "@/data/types/machine";
 import { SortType } from "@/data/types/sort";
 import { $router } from "@/data/router";
+import { $router } from "@/data/router";
 
 function useQueryUsers(reload: boolean) {
   const users = useStore($users);
+  const router = useStore($router);
   const router = useStore($router);
   const { getSavedMachine } = useQueryMachines(false);
 
@@ -38,6 +40,7 @@ function useQueryUsers(reload: boolean) {
       }
     };
 
+  const validateUser = async (cardNum: number, callPython:number): Promise<"machine_login" | "users" | "start_page" | "interlock" | "kiosk">  => {
   const validateUser = async (cardNum: number, callPython:number): Promise<"machine_login" | "users" | "start_page" | "interlock" | "kiosk">  => {
     try {
       const {
@@ -98,10 +101,13 @@ function useQueryUsers(reload: boolean) {
     } catch (e) { //If there was an error anywhere, redirect to the start page.
       clearCurrentUser();
 
+      clearCurrentUser();
+
       const errorMessage = (e as Error).message;
         toast.error("Sorry! There was an error 🙁", {
           description: errorMessage  
         });
+      return (router!.route as "start_page" | "kiosk");
       return (router!.route as "start_page" | "kiosk");
     }
   }

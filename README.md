@@ -22,7 +22,7 @@ pnpm install
 pnpm dev
 
 cd ../api-machine
-conda activate machine-api
+conda activate machine_api
 python server.py
 
 ```
@@ -63,7 +63,7 @@ conda env create -f machine-api.yml
 To activate the created environment use the following command:
 
 ```shell
-conda activate machine-api.yml
+conda activate machine-api
 python server.py
 ```
 #### Automated Testing Dependencies
