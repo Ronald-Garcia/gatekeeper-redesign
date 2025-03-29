@@ -63,7 +63,7 @@ conda env create -f machine-api.yml
 To activate the created environment use the following command:
 
 ```shell
-conda activate machine-api.yml
+conda activate machine-api
 python server.py
 ```
 #### Automated Testing Dependencies
