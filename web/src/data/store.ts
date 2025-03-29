@@ -14,6 +14,15 @@ export const $machine_types = atom<MachineType[]>([]);
 export const $budget_code_queue = atom<number[]>([]);
 export const $training_queue = atom<number[]>([]);
 export const $date_range = atom<DateRange | undefined>(undefined);
+export const $date = atom<Date | undefined>(undefined);
+
+export function setDate(date: Date | undefined) {
+  $date.set(date);
+}
+
+export function resetDate() {
+  $date.set(undefined);
+}
 
 export function setDateRange(dateRange: DateRange | undefined) {
   $date_range.set(dateRange);

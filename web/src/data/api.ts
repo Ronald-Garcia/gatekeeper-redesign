@@ -962,3 +962,16 @@ export const sendEmail = async (email: string, to: Date, from: Date): Promise<bo
 
   return true;
 }
+
+export const automateEmail = async (email: string, date: Date): Promise<boolean> => {
+
+  const response = await fetch(`${API_DB_URL}/statement-email/${email}`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    credentials: "include",
+    body: JSON.stringify({
+      date
+    })
+  });
+  
+}

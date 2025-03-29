@@ -10,6 +10,7 @@ import AddMachineTypeDialog from "../machine_types/add-machine-type-dialog";
 import { Dialog, DialogTrigger } from "../ui/dialog.tsx";
 import SendFinancialStatementsDialog from "../financialStatements/send-financial-statements-dialog.tsx";
 import ErrorPage from "../layout/errorPage.tsx";
+import StatementDialog from "../financialStatements/statements-dialog.tsx";
 
 /*
 Admin dashboard component
@@ -72,7 +73,7 @@ const UsersActions = () => {
       </div>
     </div>
 
-    <SendFinancialStatementsDialog></SendFinancialStatementsDialog>
+    <StatementDialog></StatementDialog>
     </Dialog>
 
   

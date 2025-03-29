@@ -68,7 +68,6 @@ const SendFinancialStatementsDialog = () => {
 
     return (
         <>
-        <DialogContent>
             <DialogHeader>
                 <DialogTitle data-cy="financial-statements-title">
                     Send Financial Statements                
@@ -76,6 +75,7 @@ const SendFinancialStatementsDialog = () => {
                 <DialogDescription>
                     Please input the email to send the statements to.    
                 </DialogDescription>    
+                </DialogHeader>
 
                 <div className="flex flex-col space-y-3 p-2">
                     
@@ -127,8 +127,6 @@ const SendFinancialStatementsDialog = () => {
                         </Button>
                     </DialogClose>
                 </DialogFooter>
-            </DialogHeader>
-            </DialogContent>
         </>
     )
 }
