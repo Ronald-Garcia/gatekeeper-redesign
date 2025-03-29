@@ -22,7 +22,7 @@ pnpm install
 pnpm dev
 
 cd ../api-machine
-conda activate machine-api
+conda activate machine_api
 python server.py
 
 ```
