@@ -9,6 +9,10 @@ import writeXlsxFile from "write-excel-file/node";
 import { between, eq } from "drizzle-orm";
 import { adminGuard } from "../middleware/adminGuard.js";
 
+/**
+ * Routes for email operations.
+ * @post    /statement-email/:email    sends financial statements via email for a date range.
+ */
 export const emailRoutes = new Hono<Context>();
 
 type StatementType = {
@@ -27,6 +31,13 @@ type StatementType = {
   timeSpent: number
 }
 
+/**
+ * Sends financial statements via email for a specified date range.
+ * @param email        the email address to send statements to
+ * @body startDate     the start date for the statements
+ * @body endDate       the end date for the statements
+ * @returns the financial statements data and email send status
+ */
 emailRoutes.post("/statement-email/:email", 
     zValidator("json", getTimeSchema),
     zValidator("param", sendEmailSchema),
@@ -38,6 +49,8 @@ emailRoutes.post("/statement-email/:email",
 
       const { email } = c.req.valid("param");
       const { startDate, endDate } = c.req.valid("json");
+
+      // query the financial statements table for the specified date range with the user, budget code, and machine information
       const statements = await db.select({
         user: {
           JHED: users.JHED
@@ -91,10 +104,8 @@ emailRoutes.post("/statement-email/:email",
         schema: excelSchema,
         buffer: true
       })
-
-
-
-
+      
+      // send the email with the financial statements
       transporter.sendMail({
           to: email,
           subject: "Financial Statements",
@@ -111,7 +122,6 @@ emailRoutes.post("/statement-email/:email",
         success = false;
         message = "Failed to send an email";
       })
-    
     
       return c.json({
         success: success,
