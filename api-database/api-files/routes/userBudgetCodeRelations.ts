@@ -10,6 +10,7 @@ import { validateUserParamSchema } from "../validators/trainingSchema.js";
 import { Context } from "../lib/context.js";
 import { adminGuard } from "../middleware/adminGuard.js";
 import { authGuard } from "../middleware/authGuard.js";
+import { inactivateGraduatedUsers } from "../middleware/gradYearRemoval.js";
 
 
 export const userBudgetCodeRelationRoute = new Hono<Context>();
@@ -17,6 +18,7 @@ export const userBudgetCodeRelationRoute = new Hono<Context>();
 
 userBudgetCodeRelationRoute.get("/user-budgets/:id", 
     authGuard,
+    inactivateGraduatedUsers,
     zValidator("query", queryUserBudgetsSchema),
     zValidator("param", validateUserParamSchema),
     async (c) => {
@@ -28,7 +30,7 @@ userBudgetCodeRelationRoute.get("/user-budgets/:id",
         const  [user_ent]  = await db
             .select()
             .from(users)
-            .where(eq(users.id, id));
+            .where(and(eq(users.id, id), eq(users.active, 1)));
 
         if (!user_ent) {
             throw new HTTPException(404, { message: "User not found" });
