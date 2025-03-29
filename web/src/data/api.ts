@@ -560,7 +560,7 @@ export const banUser = async (id: number, ban: number): Promise<{
  */
 export const fetchCurrentMachine = async (): Promise<{
     message: string,
-    data: number
+    data: number | null
   }> => {
   let response;
   try {
@@ -568,9 +568,7 @@ export const fetchCurrentMachine = async (): Promise<{
       credentials: "include"
     })
   } catch { //Catching a disconnect / lack of connection. Assumes kiosk.
-    return {
-      message: "Failed to connect to python server, assume kiosk",
-      data:-1}
+    throw new Error("Failed to connect to machine api! Please ensure the machine is running.");
   }
 
   if (response === undefined) {
@@ -581,7 +579,7 @@ export const fetchCurrentMachine = async (): Promise<{
     throw new Error(message);
   }
 
-  const { message, data}: { message: string, data: number } = await response.json();
+  const { message, data}: { message: string, data: number | null } = await response.json();
 
   return { message, data };
 }

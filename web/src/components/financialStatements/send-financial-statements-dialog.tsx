@@ -77,7 +77,7 @@ const SendFinancialStatementsDialog = () => {
                 </DialogDescription>    
                 </DialogHeader>
 
-                <div className="flex flex-col space-y-3 p-2">
+                <div className="flex flex-col space-y-3 p-[20px]">
                     
                     <div className="flex flex-row space-x-3">
                         <Label className="self-center">

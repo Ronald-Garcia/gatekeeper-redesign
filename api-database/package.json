@@ -18,6 +18,7 @@
 		"@lucia-auth/adapter-drizzle": "^1.1.0",
 		"@vercel/blob": "^0.27.1",
 		"@vercel/postgres": "^0.10.0",
+		"bree": "^9.2.4",
 		"dotenv": "16.4.7",
 		"drizzle-kit": "^0.30.4",
 		"drizzle-orm": "^0.39.3",
