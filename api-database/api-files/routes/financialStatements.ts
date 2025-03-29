@@ -19,10 +19,10 @@ financialStatementRoutes.get("/fin-statements",
     
         switch (sort) {
             case "type_desc":
-                orderByClause.push(desc(financialStatementsTable.userId));
+                orderByClause.push(desc(financialStatementsTable.dateAdded));
                 break;
             case "type_asc":
-                orderByClause.push(asc(financialStatementsTable.userId));
+                orderByClause.push(asc(financialStatementsTable.dateAdded));
                 break;
         }
 
@@ -75,6 +75,7 @@ financialStatementRoutes.get("/fin-statements",
         .where(and(...whereClause))
         .limit(limit)
         .offset(offset)
+        .groupBy(financialStatementsTable.dateAdded)
         .orderBy(...orderByClause)
       ]);
     

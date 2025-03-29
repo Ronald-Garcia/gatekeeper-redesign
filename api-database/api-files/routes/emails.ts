@@ -1,4 +1,3 @@
-import { Resend } from "resend";
 import { Hono } from "hono";
 import { Context } from "../lib/context.js";
 import { zValidator } from "@hono/zod-validator";
