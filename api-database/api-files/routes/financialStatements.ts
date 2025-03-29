@@ -1,8 +1,8 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { createStatementSchema, queryFinStatementParamsSchema } from "../validators/financialStatementSchemas.js";
-import { like, SQL, or, desc, asc, eq, and, count } from "drizzle-orm";
-import { financialStatementsTable, users } from "../db/schema.js";
+import { like, SQL, or, desc, asc, eq, and, count, between, gte, lte } from "drizzle-orm";
+import { budgetCodes, financialStatementsTable, machines, users } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { adminGuard } from "../middleware/adminGuard.js";
 
@@ -13,7 +13,7 @@ financialStatementRoutes.get("/fin-statements",
     adminGuard,
     zValidator("query", queryFinStatementParamsSchema),
     async (c) => {
-    const { page = 1, limit = 20, sort } = c.req.valid("query");
+    const { page = 1, limit = 20, sort, to, from } = c.req.valid("query");
 
         const orderByClause: SQL[] = [];
     
@@ -26,19 +26,56 @@ financialStatementRoutes.get("/fin-statements",
                 break;
         }
 
+        const whereClause: SQL[] = [];
+
+        if (from) {
+            whereClause.push(gte(financialStatementsTable.dateAdded, from));
+        }
+
+        if (to) {
+            whereClause.push(lte(financialStatementsTable.dateAdded, to));
+        }
+        
+
+        
     const offset = (page - 1) * limit;
 
     const [allFinancialStatements, [{ totalCount }]] = await Promise.all([
-        db
-        .select()
-          .from(financialStatementsTable)
-          .orderBy(...orderByClause)
-          .limit(limit)
-          .offset(offset),
+         await db.select({
+            user: {
+                name: users.name,
+                JHED: users.JHED,
+
+            },
+            budgetCode: {
+              name: budgetCodes.name,
+              code: budgetCodes.code
+            },
+            machine: {
+              name: machines.name,
+              hourlyRate: machines.hourlyRate
+            },
+            dateAdded: financialStatementsTable.dateAdded,
+            timeSpent: financialStatementsTable.timeSpent
+          }).from(financialStatementsTable)
+                                          .innerJoin(users, eq(users.id, financialStatementsTable.userId))
+                                          .innerJoin(budgetCodes, eq(budgetCodes.id, financialStatementsTable.budgetCode))
+                                          .innerJoin(machines, eq(machines.id, financialStatementsTable.machineId))
+                                          .where(and(...whereClause))
+                                          .limit(limit)
+                                          .offset(offset)
+                                          .orderBy(...orderByClause),
 
         db
           .select({ totalCount: count() })
           .from(financialStatementsTable)
+          .innerJoin(users, eq(users.id, financialStatementsTable.userId))
+        .innerJoin(budgetCodes, eq(budgetCodes.id, financialStatementsTable.budgetCode))
+        .innerJoin(machines, eq(machines.id, financialStatementsTable.machineId))
+        .where(and(...whereClause))
+        .limit(limit)
+        .offset(offset)
+        .orderBy(...orderByClause)
       ]);
     
     return c.json({
