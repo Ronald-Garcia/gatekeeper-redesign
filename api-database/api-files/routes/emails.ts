@@ -1,37 +1,131 @@
-import { Resend } from "resend";
-import { EmailTemplate } from "../emails/email-template.jsx";
 import { Hono } from "hono";
 import { Context } from "../lib/context.js";
 import { zValidator } from "@hono/zod-validator";
-import { sendEmailSchema } from "../validators/emailSchemas.js";
+import { getTimeSchema, sendEmailSchema } from "../validators/emailSchemas.js";
 import { db } from "../db/index.js";
-import { financialStatementsTable } from "../db/schema.js";
-const resend = new Resend(process.env.RESEND);
+import { budgetCodes, financialStatementsTable, machines, users } from "../db/schema.js";
+import { transporter } from "../emails/index.js";
+import writeXlsxFile from "write-excel-file/node";
+import { between, eq } from "drizzle-orm";
+import { adminGuard } from "../middleware/adminGuard.js";
+
+/**
+ * Routes for email operations.
+ * @post    /statement-email/:email    sends financial statements via email for a date range.
+ */
 export const emailRoutes = new Hono<Context>();
 
+type StatementType = {
+  user: {
+    JHED: string
+  },
+  budgetCode: {
+    name: string,
+    code: string
+  },
+  machine: {
+    name: string,
+    hourlyRate: number
+  },
+  dateAdded: Date,
+  timeSpent: number
+}
 
+/**
+ * Sends financial statements via email for a specified date range.
+ * @param email        the email address to send statements to
+ * @body startDate     the start date for the statements
+ * @body endDate       the end date for the statements
+ * @returns the financial statements data and email send status
+ */
 emailRoutes.post("/statement-email/:email", 
+    zValidator("json", getTimeSchema),
     zValidator("param", sendEmailSchema),
+    adminGuard,
     async (c) => {
 
-    const { email } = c.req.valid("param");
+      let success = true;
+      let message = "Successfully sent an email";
 
-    const statements = await db.select().from(financialStatementsTable);
+      const { email } = c.req.valid("param");
+      const { startDate, endDate } = c.req.valid("json");
 
-    const { data, error } = await resend.emails.send({
-        from: 'Acme <onboarding@resend.dev>',
-        to: [email],
-        subject: 'Financial Statements',
-        react: await EmailTemplate({ data: statements}),
-      });
-    
-      if (error) {
-        return c.json(error, 400);
-      }
+      // query the financial statements table for the specified date range with the user, budget code, and machine information
+      const statements = await db.select({
+        user: {
+          JHED: users.JHED
+        },
+        budgetCode: {
+          name: budgetCodes.name,
+          code: budgetCodes.code
+        },
+        machine: {
+          name: machines.name,
+          hourlyRate: machines.hourlyRate
+        },
+        dateAdded: financialStatementsTable.dateAdded,
+        timeSpent: financialStatementsTable.timeSpent
+      }).from(financialStatementsTable)
+                                      .innerJoin(users, eq(users.id, financialStatementsTable.userId))
+                                      .innerJoin(budgetCodes, eq(budgetCodes.id, financialStatementsTable.budgetCode))
+                                      .innerJoin(machines, eq(machines.id, financialStatementsTable.machineId))
+                                      .where(between(financialStatementsTable.dateAdded, startDate, endDate));
+
+      const excelSchema = [
+        {
+          column: "Charge",
+          type: Number,
+          value: (s: StatementType) => Math.round(s.timeSpent/60 / 15) * s.machine.hourlyRate
+        },
+        {
+          column: "Receiver Type",
+          type: String,
+          value: (s: StatementType) => s.budgetCode.code.length === 10 ? "CC" : "IO"
+        },
+        {
+          column: "Budget",
+          type: String,
+          value: (s: StatementType) => s.budgetCode.code
+        },
+        {
+          column: "Text",
+          type: String,
+          value: (s: StatementType) => [s.user.JHED, s.budgetCode.name, s.dateAdded.toLocaleString()].join(", ")
+        },
+        {
+          column: "Date",
+          type: String,
+          value: (s: StatementType) => s.dateAdded.toLocaleString()
+        }
+
+      ]
+
+      const file = await writeXlsxFile(statements, {
+        schema: excelSchema,
+        buffer: true
+      })
+      
+      // send the email with the financial statements
+      transporter.sendMail({
+          to: email,
+          subject: "Financial Statements",
+          html: "<h1>Financial Statements</h1>",
+          attachments: [{
+            filename: "statement.xlsx",
+            content: file
+          }]
+      }).then(() => {
+        success = true;
+        message = "Successfully sent an email";
+      }).catch((err) => {
+        console.log(err);
+        success = false;
+        message = "Failed to send an email";
+      })
     
       return c.json({
-        success: true,
-        data,
-        message: "Successfully sent an email"
+        success: success,
+        data: statements,
+        message: message
     });
 });

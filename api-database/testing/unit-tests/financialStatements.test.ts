@@ -12,6 +12,7 @@ import {
 import { eq } from "drizzle-orm";
 import { Context } from "../../api-files/lib/context.js";
 import { auth } from "../../api-files/middleware/auth.js";
+import { emailRoutes } from "../../api-files/routes/emails.js";
 
 
 
@@ -41,6 +42,7 @@ const app = new Hono<Context>();
 app.use("/*", auth);
 app.route("/", userRoutes);
 app.route("/", financialStatementRoutes);
+app.route("/", emailRoutes);
 app.onError((err, c) => {
   return c.json(
     { message: err instanceof Error ? err.message : "Internal Server Error" },
@@ -136,8 +138,8 @@ describe("Financial Statement Routes", () => {
         "/fin-statements?page=1&limit=20&sort=type_asc",
         { method: "GET", headers: { Cookie: adminCookie } }
       );
-      expect(response.status).toBe(200);
       const body = await response.json();
+      expect(response.status).toBe(200);
       expect(body).toHaveProperty("success", true);
       expect(body).toHaveProperty("data");
       expect(Array.isArray(body.data)).toBe(true);
@@ -237,6 +239,23 @@ describe("Financial Statement Routes", () => {
       expect(response.status).toBe(403);
       const bodyRes = await response.json();
       expect(bodyRes).toHaveProperty("message", "Forbidden: Admins only");
+    });
+  });
+
+  describe("POST /statement-email", () => {
+    test("returns 200 and a list of financial statements with pagination (admin access)", async () => {
+      const response = await app.request("/statement-email/wseinterlocks@gmail.com", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Cookie: adminCookie },
+        body: JSON.stringify({
+          startDate: "2025-01-01",
+          endDate: (new Date()).toLocaleDateString(),
+        }),
+      });
+      expect(response.status).toBe(200);
+      const body = await response.json();
+      expect(body).toHaveProperty("success", true);
+      expect(body).toHaveProperty("message", "Successfully sent an email");
     });
   });
 });

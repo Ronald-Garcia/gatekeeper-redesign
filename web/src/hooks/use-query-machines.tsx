@@ -1,5 +1,5 @@
 import { fetchCurrentMachine, getAllMachines, getAllTrainingsOfUser, getMachine, getMachineTypes } from "@/data/api";
-import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes} from "@/data/store";
+import { setCurrentMachine, setCurTrainings, setMachines, setMachinesTypes} from "@/data/store";
 import { Machine } from "@/data/types/machine";
 import { MachineType } from "@/data/types/machineType";
 import { useEffect } from "react";
@@ -13,9 +13,8 @@ function useQueryMachines(reload: boolean) {
         
         try {
             const { data } = await fetchCurrentMachine();
-            if (data === -1) {
-                setKiosk(true);
-                return "kiosk";
+            if (data === null) {
+              return undefined;
             }
             const { data: machine } = await getMachine(data);
             setCurrentMachine(machine);

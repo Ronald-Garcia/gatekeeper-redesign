@@ -5,6 +5,7 @@ import { Machine } from "./types/machine";
 import { MachineType } from "./types/machineType";
 import { financialStatement } from "./types/financialStatement";
 import { logger } from "@nanostores/logger"
+import { DateRange } from "react-day-picker";
 
 export const $users = atom<User[]>([]);
 export const $codes = atom<BudgetCode[]>([]);
@@ -12,7 +13,24 @@ export const $machines = atom<Machine[]>([]);
 export const $machine_types = atom<MachineType[]>([]);
 export const $budget_code_queue = atom<number[]>([]);
 export const $training_queue = atom<number[]>([]);
+export const $date_range = atom<DateRange | undefined>(undefined);
+export const $date = atom<Date | undefined>(undefined);
 
+export function setDate(date: Date | undefined) {
+  $date.set(date);
+}
+
+export function resetDate() {
+  $date.set(undefined);
+}
+
+export function setDateRange(dateRange: DateRange | undefined) {
+  $date_range.set(dateRange);
+}
+
+export function resetDateRange() {
+  $date_range.set(undefined);
+}
 
 export function setBudgetCodeQueue(bcs: number[]) {
   $budget_code_queue.set(bcs);
@@ -48,6 +66,8 @@ export function setTrainingQueue(bcs: number[]) {
 export function addTrainingQueue(bc: number) {
   $training_queue.set([...$training_queue.get(), bc]);
 }
+
+
 
 export function removeTrainingQueue(bc: number) {
   $training_queue.set($training_queue.get().filter(b => b !== bc));
