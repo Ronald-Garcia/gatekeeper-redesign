@@ -12,11 +12,9 @@ import useQueryMachines from "./use-query-machines";
 import { Machine } from "@/data/types/machine";
 import { SortType } from "@/data/types/sort";
 import { $router } from "@/data/router";
-import { $router } from "@/data/router";
 
 function useQueryUsers(reload: boolean) {
   const users = useStore($users);
-  const router = useStore($router);
   const router = useStore($router);
   const { getSavedMachine } = useQueryMachines(false);
 
@@ -40,7 +38,6 @@ function useQueryUsers(reload: boolean) {
       }
     };
 
-  const validateUser = async (cardNum: number, callPython:number): Promise<"machine_login" | "users" | "start_page" | "interlock" | "kiosk">  => {
   const validateUser = async (cardNum: number, callPython:number): Promise<"machine_login" | "users" | "start_page" | "interlock" | "kiosk">  => {
     try {
       const {

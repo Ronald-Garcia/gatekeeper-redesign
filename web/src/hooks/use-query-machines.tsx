@@ -1,6 +1,5 @@
 import { fetchCurrentMachine, getAllMachines, getAllTrainingsOfUser, getMachine, getMachineTypes } from "@/data/api";
 import { setCurrentMachine, setCurTrainings, setMachines, setMachinesTypes} from "@/data/store";
-import { setCurrentMachine, setCurTrainings, setMachines, setMachinesTypes} from "@/data/store";
 import { Machine } from "@/data/types/machine";
 import { MachineType } from "@/data/types/machineType";
 import { useEffect } from "react";
