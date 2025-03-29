@@ -37,11 +37,16 @@ export const turnOffMachine = async (): Promise<boolean> => {
 export const turnOnMachine = async (): Promise<boolean> => {
   const response = await fetch(`${API_MACHINE_URL}/turn-on`, {
     method: "POST",
+    headers: {"Content-Type": "application/json"},
     credentials: "include",
   });
+  console.log("after response await")
+  console.log(response);
   const { message }: { message: string } = await response.json();
-
+  console.log("print response")
+  console.log(response.ok)
   if (!response.ok) {
+    console.log(response)
     throw new Error(message);
   }
 
