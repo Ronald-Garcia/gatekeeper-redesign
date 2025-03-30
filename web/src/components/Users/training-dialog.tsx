@@ -61,6 +61,7 @@ const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogP
         <Label htmlFor="content" className="text-sm">
           Please select the title of your training
         </Label>
+        
         <div className="space-y-4">
           <ScrollArea>
         <ToggleGroup type="multiple" className="flex-col">
@@ -82,9 +83,8 @@ const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogP
               ))}
             </ToggleGroup>
           </ScrollArea>  
-          
-    
         </div>
+
         <DialogFooter>
           <Button data-cy = "user-traning-cancel"  onClick={() => setShowEditTraining(false)}>Cancel</Button>
           <Button data-cy = "user-training-add"  onClick={handleEditTraining}>Save Changes</Button>

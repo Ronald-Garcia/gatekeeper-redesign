@@ -58,6 +58,7 @@ export function clearTrainingQueue() {
 }
 
 export function toggleTrainingQueue(bc: number) {
+  clearTrainingQueue();
   const bcs =  $training_queue.get();
   const hasBc = bcs.some(b => b === bc);
   if (hasBc) {
@@ -118,8 +119,9 @@ const defaultUser: User = {
 const defaultMachine: Machine = {
   id: -1,
   name: "invalid",
-  type: { id: -1, name: "invalid"},
-  hourlyRate: 0
+  machineTypeId: -1,
+  hourlyRate: 0,
+  active:-1,
 }
 
 const defaultBudget: BudgetCode = {
@@ -239,7 +241,7 @@ export function deleteBudgetCodeByNum(codeNum: string) {
 
 
 //machine store functions 
-export function addMachine(machine: Machine) {
+export function appendMachine(machine: Machine) {
   $machines.set(
     [...$machines.get(), machine]
   )

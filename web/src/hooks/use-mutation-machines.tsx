@@ -1,6 +1,7 @@
-import {  createMachineType, deleteMachine, saveCurrentMachine } from "@/data/api";
-import { addNewMachineType, deleteOldMachineType, removeMachine, setCurrentMachine, setKiosk } from "@/data/store";
+import {  createMachine, createMachineType, deleteMachine, saveCurrentMachine } from "@/data/api";
+import { addNewMachineType, appendMachine, deleteOldMachineType, removeMachine, setCurrentMachine, setKiosk } from "@/data/store";
 import { Machine } from "@/data/types/machine";
+import { MachineType } from "@/data/types/machineType";
 import { toast } from "sonner";
 
 
@@ -64,17 +65,17 @@ function useMutationMachines() {
     /*
     Hook to add machine
     */
-    const addMachine = async () => {
+    const addMachine = async (machineName:string, type:number, rate:number, active:number = 1 ) => {
         try {
-
-           // await addMachine(id);
-          //  addMachineby(id);
+            const {data} = await createMachine(machineName, type, rate, active);
+            appendMachine(data);
+            return (data);
         } catch (e) {
             const errorMessage = (e as Error).message;
-            toast.error("Sorry! There was an error deleting the Machine  🙁", {
+            toast.error("Sorry! There was an error adding the Machine  🙁", {
                 description: errorMessage  
             });
-        } 
+        }
     }
 
     /*

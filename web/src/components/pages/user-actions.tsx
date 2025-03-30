@@ -10,6 +10,8 @@ import AddMachineTypeDialog from "../machine_types/add-machine-type-dialog";
 import { Dialog, DialogTrigger } from "../ui/dialog.tsx";
 import SendFinancialStatementsDialog from "../financialStatements/send-financial-statements-dialog.tsx";
 import ErrorPage from "../layout/errorPage.tsx";
+import AddMachineDialog from "../machines/add-machine-dialog.tsx";
+
 
 /*
 Admin dashboard component
@@ -28,6 +30,8 @@ const UsersActions = () => {
 //    resetSearch();
 //    openPage($router, "financial_statements");
 //  }
+
+//<AddMachineDialog />          
 
   if (!router) {
     return <ErrorPage></ErrorPage>
@@ -57,6 +61,9 @@ const UsersActions = () => {
                 Send Financial Statements
             </Button>
           </DialogTrigger>
+
+          <AddMachineDialog/>
+
       <div className="admin-actions">
           <div className="relative w-full max-w-lg">
                 <Searchbar/>
