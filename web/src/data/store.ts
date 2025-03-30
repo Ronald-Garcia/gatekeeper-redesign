@@ -220,6 +220,10 @@ export function setBudgetCodes(codeList: BudgetCode[]) {
   $codes.set(codeList);
 }
 
+export function appendBudgetCodes(codeList: BudgetCode[]) {
+  $codes.set([...$codes.get(), ...codeList]);
+}
+
 export function addBudgetCode(code: BudgetCode) {
   $codes.set([...$codes.get(), code]);
 }
@@ -274,6 +278,10 @@ export function deleteOldMachineType(id: number) {
 
 export function setMachinesTypes(typeList: MachineType[]) {
   $machine_types.set(typeList);
+}
+
+export function appendMachineTypes(typeList: MachineType[]) {
+  $machine_types.set([...$machine_types.get(), ...typeList]);
 }
 
 // *** SERACH STORES ***
