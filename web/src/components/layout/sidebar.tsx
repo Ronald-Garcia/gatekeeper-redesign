@@ -21,13 +21,19 @@ const Sidebar = () => {
         openPage($router, "budgetCodes");
     }
 
+    const handleClickOnViewMachines = () => {
+        resetSearch();
+        openPage($router, "machines");
+    }
+    
+
     // Set users as default route if no route is selected
     if (!router?.route) {
         openPage($router, "users");
     }
 
     return (
-        <div className="w-64 h-screen bg-white border-r border-gray-200 p-4">
+        <div className="w-64 h-screen p-4 bg-white border-r border-gray-200">
             <div className="mb-8">
                 <h1 className="text-xl font-semibold">Welcome {user.name}</h1>
             </div>
@@ -55,12 +61,23 @@ const Sidebar = () => {
                     Budget Codes
                 </Button>
 
+                <Button 
+                    variant="ghost"
+                    className={cn(
+                        "w-full justify-start transition-colors duration-200",
+                        router?.route === "machines" && "bg-blue-50 text-blue-600 hover:bg-blue-100"
+                    )}
+                    onClick={handleClickOnViewMachines}
+                >
+                    Machines
+                </Button>
+
                 <div className="pt-4 border-t border-gray-200">
                     <Dialog>
                         <DialogTrigger asChild>
                             <Button 
                                 variant="ghost"
-                                className="w-full justify-start transition-colors duration-200 text-green-600 hover:bg-green-50"
+                                className="justify-start w-full text-green-600 transition-colors duration-200 hover:bg-green-50"
                                 data-cy="financial-statements-dialog"
                             >
                                 Send Financial Statements

@@ -1,12 +1,8 @@
-import UserInfo from "../Users/selected-info";
 import { useStore } from "@nanostores/react";
-import { $selected, resetSearch } from "@/data/store";
 import AddUserDialog from "../Users/add-user-dialog";
-import { Button } from "../ui/button";
-import { openPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 import AddMachineTypeDialog from "../machine_types/add-machine-type-dialog";
-import { Dialog, DialogTrigger } from "../ui/dialog";
+import { Dialog } from "../ui/dialog";
 import SendFinancialStatementsDialog from "../financialStatements/send-financial-statements-dialog";
 import ErrorPage from "../layout/errorPage";
 import Searchbar from "../general/searchbar";
@@ -18,10 +14,6 @@ Displays BudgetCodes or Users based on routing.
 const UsersActions = () => {
   const router = useStore($router);
 
-  const handleClickOnViewBudgetCodes = () => {
-    resetSearch();
-    openPage($router, "budgetCodes");
-  }
 
   if (!router) {
     return <ErrorPage></ErrorPage>
@@ -30,8 +22,8 @@ const UsersActions = () => {
   return (
     <Dialog>
       <div data-cy="admin-dashboard" className="w-full p-4 bg-white border-b">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+        <div className="mx-auto max-w-7xl">
+          <div className="flex flex-col items-start gap-4 md:flex-row md:items-center">
             <div className="flex-1 w-full">
               <Searchbar/>
             </div>
