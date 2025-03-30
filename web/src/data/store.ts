@@ -332,3 +332,18 @@ export const $curtrainings = atom<MachineType[]>([])
 export function setCurTrainings(newTrainings: MachineType[]) {
   $curtrainings.set(newTrainings)
 }
+
+export const $dashboardActiveSearch = atom("");
+export function setDashboardActiveSearch(search: string) {
+  $dashboardActiveSearch.set(search);
+}
+
+export const $dashboardLocalSearch = atom("");
+export function setDashboardLocalSearch(search: string) {
+  $dashboardLocalSearch.set(search);
+}
+
+export function resetDashboardSearch() {
+  setDashboardActiveSearch("");
+  setDashboardLocalSearch("");
+}
