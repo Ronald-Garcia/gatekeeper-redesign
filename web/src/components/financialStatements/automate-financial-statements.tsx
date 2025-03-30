@@ -7,11 +7,12 @@ import { useState } from "react";
 import { openPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 import DatePickerWithRange from "./datepicker";
-import { resetDateRange, $date_range } from "@/data/store";
+import { resetDateRange, $date_range, $date, resetDate } from "@/data/store";
 import { useStore } from "@nanostores/react";
+import { DatePicker } from "./datepick";
 
 
-const SendFinancialStatementsDialog = () => {
+const AutomateFinancialStatementsDialog = () => {
 
     const [email, setEmail] = useState("");
     const [errors, setErrors] = useState({
@@ -19,42 +20,20 @@ const SendFinancialStatementsDialog = () => {
         date: false
     });
 
-    const dateRange = useStore($date_range);
+    const date = useStore($date);
 
     const validateInputs = () => {
         const newErrors = {
             email: !email,
-            date: !dateRange
+            date: !date
         };
         setErrors(newErrors);
         return !Object.values(newErrors).some(error => error);
     };
 
-    const validateDateRange = () => {
-
-        const newErrors = {
-            email: false,
-            date: !dateRange || (!dateRange.from || !dateRange.to)
-        }
-
-        setErrors(newErrors);
-
-        if (dateRange?.from && dateRange?.to) {
-            return dateRange.from <= dateRange.to;
-        }
-        return false;
-    }
-
     const handleSendEmail = (e: React.MouseEvent<HTMLButtonElement>) => {
         if (validateInputs()) {
             sendFinancialStatementEmail(email);
-        } else {
-            e.preventDefault();
-        }
-    }
-    const handleGoToStatementsPage = (e: React.MouseEvent<HTMLButtonElement>) => {
-        if (validateDateRange()) {
-            openPage($router, "financial_statements");
         } else {
             e.preventDefault();
         }
@@ -70,14 +49,14 @@ const SendFinancialStatementsDialog = () => {
         <>
             <DialogHeader>
                 <DialogTitle data-cy="financial-statements-title">
-                    Send Financial Statements                
+                    Automate Financial Statements                
                 </DialogTitle>    
                 <DialogDescription>
-                    Please input the email to send the statements to.    
+                    Please input the email to automatically send the statements to.    
                 </DialogDescription>    
-                </DialogHeader>
+            </DialogHeader>
 
-                <div className="flex flex-col space-y-3 p-[20px]">
+                <div className="flex flex-col space-y-3 p-2">
                     
                     <div className="flex flex-row space-x-3">
                         <Label className="self-center">
@@ -95,13 +74,13 @@ const SendFinancialStatementsDialog = () => {
 
                     <div className="flex flex-row justify-between">
                         <Label className="self-center">
-                            Date Range
+                            Date
                         </Label>
                         <div className={`${errors.date ? "border border-red-500 rounded-md" : ""}`}>
-                            <DatePickerWithRange/>
+                            <DatePicker/>
                         </div>
                         <Button variant={"link"} onClick={() => {
-                            resetDateRange();
+                            resetDate();
                             setErrors(prev => ({...prev, date: false}));
                         }}>
                             Reset Date
@@ -111,11 +90,6 @@ const SendFinancialStatementsDialog = () => {
 
                 <DialogFooter>
                     <DialogClose asChild>
-                        <Button data-cy = "view-financial-statements" variant={"secondary"} onClick={handleGoToStatementsPage}>
-                            ...Or see them here!
-                        </Button>
-                    </DialogClose>
-                    <DialogClose asChild>
                         <Button data-cy= "close-financial-statements" variant={"secondary"}>
                             Close
                         </Button>
@@ -123,7 +97,7 @@ const SendFinancialStatementsDialog = () => {
                     <DialogClose asChild>
                         <Button data-cy = "email-financial-statements"
                             onClick={handleSendEmail}>
-                            Send statements
+                            Automate!
                         </Button>
                     </DialogClose>
                 </DialogFooter>
@@ -131,4 +105,4 @@ const SendFinancialStatementsDialog = () => {
     )
 }
 
-export default SendFinancialStatementsDialog;
+export default AutomateFinancialStatementsDialog;

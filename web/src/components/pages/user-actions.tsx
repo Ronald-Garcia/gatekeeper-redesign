@@ -12,6 +12,7 @@ import SendFinancialStatementsDialog from "../financialStatements/send-financial
 import ErrorPage from "../layout/errorPage.tsx";
 import AddMachineDialog from "../machines/add-machine-dialog.tsx";
 
+import StatementDialog from "../financialStatements/statements-dialog.tsx";
 
 /*
 Admin dashboard component
@@ -79,7 +80,7 @@ const UsersActions = () => {
       </div>
     </div>
 
-    <SendFinancialStatementsDialog></SendFinancialStatementsDialog>
+    <StatementDialog></StatementDialog>
     </Dialog>
 
   

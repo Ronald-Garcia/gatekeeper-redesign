@@ -1,5 +1,5 @@
 import { fetchCurrentMachine, getAllMachines, getAllTrainingsOfUser, getMachine, getMachineTypes } from "@/data/api";
-import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes} from "@/data/store";
+import { setCurrentMachine, setCurTrainings, setMachines, setMachinesTypes} from "@/data/store";
 import { Machine } from "@/data/types/machine";
 import { MachineType } from "@/data/types/machineType";
 import { useEffect } from "react";
@@ -9,24 +9,34 @@ import { toast } from "sonner";
 function useQueryMachines(reload: boolean) {
 
 
-    const getSavedMachine = async (): Promise<Machine | "kiosk" | undefined> => {
+    const getSavedMachine = async (): Promise<Machine | "kiosk" | undefined | 0> => {
         
         try {
             const { data } = await fetchCurrentMachine();
-            if (data === -1) {
-                setKiosk(true);
-                return "kiosk";
-            }
-            const { data: machine } = await getMachine(data);
-            setCurrentMachine(machine);
-            return machine;
-        } catch (e) {
-          
-            const errorMessage = (e as Error).message;
-            toast.error("Sorry! There was an error fetching the Machine  🙁", {
-                description: errorMessage  
-            });
+
+            if (data === null) {
+              return undefined;
         }
+
+        try {
+          const { data: machine } = await getMachine(data);
+          setCurrentMachine(machine);
+          return machine;
+        } catch (e) {
+          const errorMessage = (e as Error).message;
+          toast.error("Sorry! There was an error fetching the Machine  🙁", {
+              description: errorMessage  
+          });
+
+          return 0;            
+        }
+        } catch (e) {
+          const errorMessage = (e as Error).message;
+          toast.error("Sorry! There was an error fetching the Machine  🙁", {
+              description: errorMessage  
+          });
+        }    
+        
 
     }
 

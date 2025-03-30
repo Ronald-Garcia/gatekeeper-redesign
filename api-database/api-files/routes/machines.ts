@@ -116,7 +116,7 @@ machineRoutes.get("/machines/:id",
     if (!machine) {
         throw new HTTPException(404, { message: "Machine not found!"});
     }
-    if (!machine.active) {
+    if (machine.active == 0) {
         throw new HTTPException(503, {message: "Machine is not open for use."});
     }
 

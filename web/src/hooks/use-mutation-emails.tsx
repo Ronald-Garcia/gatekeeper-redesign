@@ -1,23 +1,48 @@
 import { sendEmail } from "@/data/api"
+import { $date, $date_range } from "@/data/store";
+import { useStore } from "@nanostores/react";
 import { toast } from "sonner";
 
 
 const useMutationEmails = () => {
 
-
+    const dateRange = useStore($date_range);
+    const date = useStore($date);
 
     const sendFinancialStatementEmail = async (email: string) => {
         try {
-            await sendEmail(email);
+
+            if (!dateRange) {
+                throw new Error("No date range selected");
+            } else if (!dateRange.to || !dateRange.from) {
+                throw new Error("No date range selected");
+            }
+
+            await sendEmail(email, dateRange.to, dateRange.from);
         } catch (e) {
             const errorMessage = (e as Error).message;
-            toast.error("Sorry! There was an error saving the Machine  🙁", {
+            toast.error("Sorry! There was an error sending the email 🙁", {
                 description: errorMessage  
             });
         }
     }
 
-    return { sendFinancialStatementEmail };
+    const automateFinancialStatementEmail = async (email: string) => {
+        try {
+
+            if (!date) {
+                throw new Error("No date selected");
+            }
+
+        } catch (e) {
+            const errorMessage = (e as Error).message;
+            toast.error("Sorry! There was an error automating the email  🙁", {
+                description: errorMessage  
+            });
+        }
+    }
+
+    return { sendFinancialStatementEmail, automateFinancialStatementEmail };
 }
 
 export default useMutationEmails;

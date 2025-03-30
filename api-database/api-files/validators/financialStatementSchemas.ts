@@ -12,6 +12,8 @@ export const createStatementSchema = z.object({
 });
 
 export const queryFinStatementParamsSchema = z.object({
+    to: z.coerce.date().optional(),
+    from: z.coerce.date().optional(),
     sort: z.enum(["type_asc", "type_desc"]).optional(),
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().optional(),

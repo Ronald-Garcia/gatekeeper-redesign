@@ -11,9 +11,11 @@ import { toast } from "sonner";
 import useQueryMachines from "./use-query-machines";
 import { Machine } from "@/data/types/machine";
 import { SortType } from "@/data/types/sort";
+import { $router } from "@/data/router";
 
 function useQueryUsers(reload: boolean) {
   const users = useStore($users);
+  const router = useStore($router);
   const { getSavedMachine } = useQueryMachines(false);
 
   const loadUsers = async (
@@ -36,7 +38,7 @@ function useQueryUsers(reload: boolean) {
       }
     };
 
-  const validateUser = async (cardNum: number, callPython:number): Promise<"machine_login" | "users" | "start_page" | "interlock">  => {
+  const validateUser = async (cardNum: number, callPython:number): Promise<"machine_login" | "users" | "start_page" | "interlock" | "kiosk">  => {
     try {
       const {
         data
@@ -45,7 +47,11 @@ function useQueryUsers(reload: boolean) {
         throw new Error("Could not find user! Please contact an admin to get registered.");
       }
 
-      let curMachine: Machine | "kiosk" | undefined
+      
+      setCurrentUser(data);
+
+
+      let curMachine: Machine | "kiosk" | undefined | 0
       // Call python refers to calling the machine api backend. If we are not
       // on a machine, aka we are online, don't call the machine-api, since it 
       // does not exist. Just default to kiosk
@@ -55,6 +61,12 @@ function useQueryUsers(reload: boolean) {
         curMachine = "kiosk";
       }
 
+
+      // if curMachine === 0, then machine is inactive or not found
+      if (curMachine === 0) {
+        return (router!.route as "start_page" | "kiosk");
+      }
+
       //If there is no env file and they are admin, let them choose a machine.
       if (!curMachine) {
         if (data.isAdmin) {
@@ -62,7 +74,6 @@ function useQueryUsers(reload: boolean) {
         }
 
         //Otherwise, throw an error.
-        clearCurrentUser();
         throw new Error("This interlock is not set-up! Please contact an admin to set-up this interlock.");
       }
 
@@ -70,14 +81,12 @@ function useQueryUsers(reload: boolean) {
       if (curMachine === "kiosk" && data.isAdmin) {
         return "users";
       } else if (curMachine === "kiosk") {
-        clearCurrentUser();
         throw new Error("This machine is only accessible for admins!");
       }
 
       //Otherwise, we have a machine, and need to validate them.
       const { data: ableToUse } = await validateTraining(data.id, curMachine.id);
 
-      setCurrentUser(data);
       if (!ableToUse) {
         throw new Error("User does not have access to this machine!");
       }
@@ -87,11 +96,16 @@ function useQueryUsers(reload: boolean) {
       return ret;
 
     } catch (e) { //If there was an error anywhere, redirect to the start page.
+      clearCurrentUser();
+
+      clearCurrentUser();
+
       const errorMessage = (e as Error).message;
         toast.error("Sorry! There was an error 🙁", {
           description: errorMessage  
         });
-      return "start_page";
+      return (router!.route as "start_page" | "kiosk");
+      return (router!.route as "start_page" | "kiosk");
     }
   }
 
