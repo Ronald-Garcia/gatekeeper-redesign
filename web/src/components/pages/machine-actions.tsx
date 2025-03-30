@@ -1,6 +1,6 @@
 import Searchbar from "../general/searchbar";
-import AddBudgetCodeDialog from "../BudgetCodes/add-budgetCode-dialogue";
 import { Dialog } from "../ui/dialog";
+import AddMachineDialog from "../machines/add-machine-dialog.tsx";
 
 /*
 Admin dashboard component
@@ -17,7 +17,7 @@ const MachineActions = () => {
                 <Searchbar/>
               </div>
               <div className="flex flex-wrap gap-2 shrink-0">
-                <AddBudgetCodeDialog/>
+                <AddMachineDialog/>
               </div>
             </div>
           </div>

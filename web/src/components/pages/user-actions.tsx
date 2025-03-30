@@ -5,7 +5,6 @@ import AddMachineTypeDialog from "../machine_types/add-machine-type-dialog";
 
 import { Dialog} from "../ui/dialog.tsx";
 import ErrorPage from "../layout/errorPage.tsx";
-import SendFinancialStatementsDialog from "../financialStatements/send-financial-statements-dialog";
 import Searchbar from "../general/searchbar";
 
 /*
@@ -37,7 +36,6 @@ const UsersActions = () => {
           </div>
         </div>
       </div>
-      <SendFinancialStatementsDialog/>
     </Dialog>
   ) 
 };
