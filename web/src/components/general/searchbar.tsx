@@ -4,23 +4,17 @@ import { useStore } from "@nanostores/react";
 import { $router } from "@/data/router";
 import useQueryUsers from "@/hooks/use-query-users";
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
+import { Search } from "lucide-react";
 
-const Searchbar =  () => {
-
-    
-
-    // Want to create a value field that is accessible outside of the function.
-    // So, we are going to use stores to create an "active search" usable by other components.
+const Searchbar = () => {
     const localSearch = useStore($localSearch)
     const router = useStore($router)
 
     const { loadUsers } = useQueryUsers(false);
     const { loadBudgets } = useQueryBudgets(false);
 
-    //Where we update the localSearch to activesearch, to be used by other components.
     const handleSearch = () => {
         setActiveSearch(localSearch);
-        //Decide what to clear based on current route
         switch (router?.route){
             case "users":
                 loadUsers(undefined, undefined, undefined, localSearch);
@@ -32,31 +26,33 @@ const Searchbar =  () => {
         }
     }
 
-    //Checks if we hit enter to submit. Add a search button later.
     const handleKeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter"){
             handleSearch();
         } 
     }
 
-    //Helper to locally track what is in search bar.
     const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setLocalSearch(e.target.value);
     };
 
     return (
-        <div>
-        <input
-            data-cy = "searchbar"
-            type="text"
-            value={localSearch}
-            placeholder="Search"
-            className="w-full p-4 pl-12 text-lg transition duration-300 ease-in-out border border-gray-600 rounded-full shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500/50"
-            onKeyDown={handleKeydown}
-            onChange={handleTextChange}
-        />
+        <div className="relative w-full">
+            <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                    data-cy="searchbar"
+                    type="text"
+                    value={localSearch}
+                    placeholder="Search..."
+                    className="w-full h-12 pl-10 pr-4 text-base bg-white border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-200"
+                    onKeyDown={handleKeydown}
+                    onChange={handleTextChange}
+                />
+            </div>
             <ActiveSearchDisplay/>
         </div>
     );
-} ;
+}
+
 export default Searchbar;

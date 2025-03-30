@@ -1,51 +1,29 @@
 import { Button } from "../ui/button";
-import { openPage } from "@nanostores/router";
-import { $router } from "@/data/router";
-import Searchbar from "../general/searchbar.tsx";
-import AddBudgetCodeDialog from "../BudgetCodes/add-budgetCode-dialogue.jsx";
-import { resetSearch } from "@/data/store.ts";
-import { Dialog, DialogTrigger } from "../ui/dialog.tsx";
+import Searchbar from "../general/searchbar";
+import AddBudgetCodeDialog from "../BudgetCodes/add-budgetCode-dialogue";
+import { Dialog, DialogTrigger } from "../ui/dialog";
 
 /*
 Admin dashboard component
 Displays BudgetCodes or Users based on routing. 
 */
 const BudgetActions = () => {
-
-  const handleClickOnViewUsers = () => {
-    resetSearch();
-    openPage($router, "users");
-  }
-  
   return (
     <div>
       <Dialog>
-
-      <div data-cy="admin-dashboard">
-        <div>
-          <Button  className="size-"
-            onClick={handleClickOnViewUsers}>
-              View Users
-          </Button>
-
-          <DialogTrigger asChild>
-            <Button data-cy="financial-statements-dialog"  className="transition-all">
-                Send Financial Statements
-            </Button>
-          </DialogTrigger>
-
-      <div className="admin-actions">
-          <div className="relative w-full max-w-lg">
+        <div data-cy="admin-dashboard" className="w-full p-4 bg-white border-b">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+              <div className="flex-1 w-full">
                 <Searchbar/>
-          </div>
-            <div className="admin-buttons">
-            <AddBudgetCodeDialog/>
+              </div>
+              <div className="flex flex-wrap gap-2 shrink-0">
+                <AddBudgetCodeDialog/>
+              </div>
             </div>
           </div>
         </div>
-      </div>
       </Dialog>
-
     </div>
   )
 };

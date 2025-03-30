@@ -29,15 +29,26 @@ const ActiveSearchDisplay = () => {
             default:
         }
     }
+
     if (activeSearch !== "") {
-    return(
-    <div className="search-query-container">
-        <span className="search-query" >{activeSearch}</span>
-            <Button data-cy="clear-search-button" variant={"ghost"} onClick={deleteSearch}>
-                <CrossCircledIcon/>
-            </Button>
-    </div>
-    )
+        return (
+            <div className="mt-2 flex items-center gap-2">
+                <div className="flex-1 h-12 px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-base text-gray-700 flex items-center">
+                    {activeSearch}
+                </div>
+                <Button 
+                    data-cy="clear-search-button" 
+                    variant="ghost" 
+                    size="icon"
+                    className="h-12 w-12 hover:bg-gray-100"
+                    onClick={deleteSearch}
+                >
+                    <CrossCircledIcon className="h-5 w-5 text-gray-500"/>
+                </Button>
+            </div>
+        )
     }
+    return null;
 };
+
 export default ActiveSearchDisplay;

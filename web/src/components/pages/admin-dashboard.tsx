@@ -4,9 +4,7 @@ import { useStore } from "@nanostores/react";
 import BudgetCodes from "../BudgetCodes/budgetCodes";
 import UsersActions from "./user-actions";
 import BudgetActions from "./budget-actions";
-import FinancialStatements from "../financialStatements/financialStatements";
-import FinancialActions from "./financial-actions";
-
+import Sidebar from "../layout/sidebar";
 
 /*
 Admin dashboard component
@@ -25,24 +23,25 @@ const AdminDashboard = () => {
   }
   if (router.route === "users") {
     return (
-    <div>
-      <UsersActions/>
-      <UsersComponent/>
+    <div className="flex">
+      <Sidebar />
+      <div className="flex-1">
+        <UsersActions/>
+        <UsersComponent/>
+      </div>
     </div>
     )
-  } else if (router.route === "financial_statements"){
-    return (<div>
-      <FinancialActions/>
-      <FinancialStatements/>
-    </div>);
-  }
-  else {
+  } else {
     return(
-    <div>
-      <BudgetActions/>
-      <BudgetCodes/>
+    <div className="flex">
+      <Sidebar />
+      <div className="flex-1">
+        <BudgetActions/>
+        <BudgetCodes/>
+      </div>
     </div>
     )
   }
 };
+
 export default AdminDashboard;
