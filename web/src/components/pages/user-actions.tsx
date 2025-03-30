@@ -8,7 +8,6 @@ import { $router } from "@/data/router";
 import Searchbar from "../general/searchbar.tsx";
 import AddMachineTypeDialog from "../machine_types/add-machine-type-dialog";
 import { Dialog, DialogTrigger } from "../ui/dialog.tsx";
-import SendFinancialStatementsDialog from "../financialStatements/send-financial-statements-dialog.tsx";
 import ErrorPage from "../layout/errorPage.tsx";
 import AddMachineDialog from "../machines/add-machine-dialog.tsx";
 
