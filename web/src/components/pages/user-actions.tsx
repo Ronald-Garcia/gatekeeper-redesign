@@ -3,7 +3,6 @@ import AddUserDialog from "../Users/add-user-dialog";
 import { $router } from "@/data/router";
 import AddMachineTypeDialog from "../machine_types/add-machine-type-dialog";
 import { Dialog } from "../ui/dialog";
-import SendFinancialStatementsDialog from "../financialStatements/send-financial-statements-dialog";
 import ErrorPage from "../layout/errorPage";
 import Searchbar from "../general/searchbar";
 

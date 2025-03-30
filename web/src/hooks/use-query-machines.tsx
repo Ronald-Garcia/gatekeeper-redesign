@@ -11,22 +11,37 @@ function useQueryMachines(reload: boolean) {
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-  const getSavedMachine = async (): Promise<Machine | "kiosk" | undefined> => {
+  const getSavedMachine = async (): Promise<Machine | "kiosk" | undefined | 0> => {
     try {
       const { data } = await fetchCurrentMachine();
+
+      if (data === null) {
+        return undefined;
+      }
+
       if (data === -1) {
         setKiosk(true);
         return "kiosk";
       }
-      const { data: machine } = await getMachine(data);
-      setCurrentMachine(machine);
-      return machine;
+
+      try {
+        const { data: machine } = await getMachine(data);
+        setCurrentMachine(machine);
+        return machine;
+      } catch (e) {
+        const errorMessage = (e as Error).message;
+        toast.error("Sorry! There was an error fetching the Machine  🙁", {
+          description: errorMessage  
+        });
+        return 0;            
+      }
     } catch (e) {
       const errorMessage = (e as Error).message;
       toast.error("Sorry! There was an error fetching the Machine  🙁", {
         description: errorMessage  
       });
-    }
+      return 0;
+    }    
   }
 
   const loadMachines = async () => {
