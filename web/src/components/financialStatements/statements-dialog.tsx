@@ -1,13 +1,10 @@
 import useMutationEmails from "@/hooks/use-mutation-emails";
 import { Button } from "../ui/button";
 import { DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog"
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
 import { useState } from "react";
 import { openPage } from "@nanostores/router";
 import { $router } from "@/data/router";
-import DatePickerWithRange from "./datepicker";
-import { resetDateRange, $date_range } from "@/data/store";
+import { $date_range } from "@/data/store";
 import { useStore } from "@nanostores/react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import AutomateFinancialStatementsDialog from "./automate-financial-statements";
@@ -71,6 +68,7 @@ const StatementDialog = () => {
 
     return (
         <>
+        <DialogTitle></DialogTitle>
             <DialogContent>
                 <Tabs defaultValue="send" >
                     <TabsList className="w-full">

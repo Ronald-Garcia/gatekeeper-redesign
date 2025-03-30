@@ -85,10 +85,9 @@ const Sidebar = () => {
                                 Send Financial Statements
                             </Button>
                         </DialogTrigger>
-                        <SendFinancialStatementsDialog />
+                        <StatementDialog/>
                     </Dialog>
                     
-            
 
                 </div>
                 
