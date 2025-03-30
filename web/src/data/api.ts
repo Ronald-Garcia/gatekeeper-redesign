@@ -6,6 +6,7 @@ import { Machine } from "./types/machine";
 import { MachineType } from "./types/machineType";
 import { SortBudgetType, SortType } from "./types/sort";
 import { financialStatement } from "./types/financialStatement";
+import { DateRange } from "react-day-picker";
 
 /**
  * Turns on the machine.
@@ -37,11 +38,16 @@ export const turnOffMachine = async (): Promise<boolean> => {
 export const turnOnMachine = async (): Promise<boolean> => {
   const response = await fetch(`${API_MACHINE_URL}/turn-on`, {
     method: "POST",
+    headers: {"Content-Type": "application/json"},
     credentials: "include",
   });
+  console.log("after response await")
+  console.log(response);
   const { message }: { message: string } = await response.json();
-
+  console.log("print response")
+  console.log(response.ok)
   if (!response.ok) {
+    console.log(response)
     throw new Error(message);
   }
 
@@ -571,7 +577,7 @@ export const banUser = async (id: number, ban: number): Promise<{
  */
 export const fetchCurrentMachine = async (): Promise<{
     message: string,
-    data: number
+    data: number | null
   }> => {
   let response;
   try {
@@ -579,9 +585,7 @@ export const fetchCurrentMachine = async (): Promise<{
       credentials: "include"
     })
   } catch { //Catching a disconnect / lack of connection. Assumes kiosk.
-    return {
-      message: "Failed to connect to python server, assume kiosk",
-      data:-1}
+    throw new Error("Failed to connect to machine api! Please ensure the machine is running.");
   }
 
   if (response === undefined) {
@@ -592,7 +596,7 @@ export const fetchCurrentMachine = async (): Promise<{
     throw new Error(message);
   }
 
-  const { message, data}: { message: string, data: number } = await response.json();
+  const { message, data}: { message: string, data: number | null } = await response.json();
 
   return { message, data };
 }
@@ -836,7 +840,7 @@ export const getMachineTypes = async ( sort: SortType = "asc",
  * @throws {Error} If the response is not ok, throws an error with the response message.
  */
 
-export const createMachine = async (name: string, type: MachineType, rate: number): Promise<{
+export const createMachine = async (name: string, machineTypeId: number, rate: number, active:number): Promise<{
   message: string;
   data: Machine
 }> => {
@@ -846,8 +850,9 @@ export const createMachine = async (name: string, type: MachineType, rate: numbe
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({
       name,
-      machineTypeId: type.id,
-      hourlyRate: rate
+      machineTypeId,
+      hourlyRate: rate,
+      active : active
     }),
     credentials: "include"
   });
@@ -917,11 +922,13 @@ Financial statement API functions
  * @returns {Promise<{message: string; data: financialStatement[]}>} A promise that resolves with a message and an array of financial statements.
  * @throws {Error} If the response is not ok, throws an error with the response message.
  */
-export const getFinancialStatements = async (): Promise<{
+export const getFinancialStatements = async (to: Date, from: Date): Promise<{
   message: string;
   data: financialStatement[];
 }> => {
-  const response = await fetch(`${API_DB_URL}/fin-statements`, {
+
+  
+  const response = await fetch(`${API_DB_URL}/fin-statements?to=${to}&from=${from}`, {
     credentials: "include",
   });
 
@@ -931,9 +938,8 @@ export const getFinancialStatements = async (): Promise<{
     throw new Error(message);
   }
 
-  const { message, data }: { message: string; data: financialStatement[] } =
-    await response.json();
-
+  const { message, data: sdata }: { message: string; data: financialStatement[] } = await response.json();
+  const data = sdata.map((s)=> {return{...s, dateAdded: new Date(s.dateAdded)}});
   return { message, data };
 };
 
@@ -965,11 +971,16 @@ export const createFinancialStatements = async (userId: number, machineId: numbe
   return { message, data };
 }
 
-export const sendEmail = async (email: string): Promise<boolean> => {
+export const sendEmail = async (email: string, to: Date, from: Date): Promise<boolean> => {
 
   const response = await fetch(`${API_DB_URL}/statement-email/${email}`, {
     method: "POST",
-    credentials: "include"
+    headers: {"Content-Type": "application/json"},
+    credentials: "include",
+    body: JSON.stringify({
+      endDate: to,
+      startDate: from
+    })
   });
 
   if (!response.ok) {
@@ -979,4 +990,17 @@ export const sendEmail = async (email: string): Promise<boolean> => {
   }
 
   return true;
+}
+
+export const automateEmail = async (email: string, date: Date): Promise<boolean> => {
+
+  const response = await fetch(`${API_DB_URL}/statement-email/${email}`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    credentials: "include",
+    body: JSON.stringify({
+      date
+    })
+  });
+  
 }

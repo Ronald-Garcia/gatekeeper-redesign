@@ -5,6 +5,8 @@ import BudgetCodes from "../BudgetCodes/budgetCodes";
 import UsersActions from "./user-actions";
 import BudgetActions from "./budget-actions";
 import Sidebar from "../layout/sidebar";
+import MachineActions from "./machine-actions";
+import MachinesComponent from "../machines/machines-component";
 
 /*
 Admin dashboard component
@@ -31,7 +33,7 @@ const AdminDashboard = () => {
       </div>
     </div>
     )
-  } else {
+  } else if (router.route === "budgetCodes"){
     return(
     <div className="flex">
       <Sidebar />
@@ -41,6 +43,16 @@ const AdminDashboard = () => {
       </div>
     </div>
     )
+  } else if (router.route === "machines"){
+    return(
+      <div className="flex">
+        <Sidebar />
+        <div className="flex-1">
+        <MachineActions/>
+        <MachinesComponent/>
+        </div>
+      </div>
+      )
   }
 };
 

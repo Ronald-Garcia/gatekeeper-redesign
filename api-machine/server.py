@@ -26,7 +26,7 @@ def turn_on():
         # }
 
     # led.on()
-
+    
     print("Pulse received! Turning on GPIO20")
 
     return {
@@ -71,7 +71,7 @@ def whoami_get():
             machine_id = int(f.readline())
     except IOError as e:
         message = f"Could not find file ({e})"
-        success = False
+        success = True
         machine_id = None
     except ValueError as e:
         message = f"Invalid machine id found on file! Please choose another machine"

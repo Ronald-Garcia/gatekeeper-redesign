@@ -1,8 +1,16 @@
 export type financialStatement = {
-    id: number;
-    userId: number;
-    budgetCode: string;
-    machineId: number;
-    startTime: number;
-    endTime: number;
+    user: {
+        name: string;
+        JHED: string;
+    };
+    budgetCode: {
+        name: string;
+        code: string;
+    };
+    machine: {
+        name: string;
+        hourlyRate: number;
+    };
+    dateAdded: Date;
+    timeSpent: number;
 }

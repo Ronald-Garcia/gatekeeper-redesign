@@ -1,4 +1,3 @@
-import { turnOnMachine } from "@/data/api";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useState } from "react";
@@ -52,9 +51,6 @@ const StartPageGeneral = ({callPythonServer}: startPageProps) => {
         </h2>
         <Button
           className="size-"
-          onClick={async () => {
-            await turnOnMachine();
-          }}
         >
           JHUOAuth
         </Button>

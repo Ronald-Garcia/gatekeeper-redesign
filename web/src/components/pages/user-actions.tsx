@@ -21,8 +21,8 @@ const UsersActions = () => {
   return (
     <Dialog>
       <div data-cy="admin-dashboard" className="w-full p-4 bg-white border-b">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+        <div className="mx-auto max-w-7xl">
+          <div className="flex flex-col items-start gap-4 md:flex-row md:items-center">
             <div className="flex-1 w-full">
               <Searchbar/>
             </div>
@@ -33,7 +33,6 @@ const UsersActions = () => {
           </div>
         </div>
       </div>
-      <SendFinancialStatementsDialog/>
     </Dialog>
   ) 
 };
