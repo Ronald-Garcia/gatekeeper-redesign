@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { Dialog, DialogTrigger } from "../ui/dialog";
 import SendFinancialStatementsDialog from "../financialStatements/send-financial-statements-dialog";
 import AutomateFinancialStatementsDialog from "../financialStatements/automate-financial-statements";
+import StatementDialog from "../financialStatements/statements-dialog";
 
 const Sidebar = () => {
     const user = useStore($currentUser);
@@ -87,18 +88,8 @@ const Sidebar = () => {
                         <SendFinancialStatementsDialog />
                     </Dialog>
                     
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <Button 
-                                variant="ghost"
-                                className="justify-start w-full transition-colors duration-200 hover:bg-green-50"
-                                data-cy="automate-financial-statements-dialog"
-                            >
-                                Automate Financial Statements
-                            </Button>
-                        </DialogTrigger>
-                        <AutomateFinancialStatementsDialog/>
-                    </Dialog>
+            
+
                 </div>
                 
             </nav>

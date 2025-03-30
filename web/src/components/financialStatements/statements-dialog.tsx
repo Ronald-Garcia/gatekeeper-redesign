@@ -72,7 +72,6 @@ const StatementDialog = () => {
     return (
         <>
             <DialogContent>
-
                 <Tabs defaultValue="send" >
                     <TabsList className="w-full">
                         <TabsTrigger value="send" className="w-full"> Send Statements Now! </TabsTrigger>
@@ -87,9 +86,6 @@ const StatementDialog = () => {
                         <AutomateFinancialStatementsDialog/>
                     </TabsContent>
                 </Tabs>
-                
-                
-
             </DialogContent>
 
         </>
