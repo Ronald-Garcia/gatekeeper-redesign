@@ -27,10 +27,10 @@ describe("Create a financial statements", () => {
         // click financial statemnt button 
         cy.get('[data-cy="financial-statements-dialog"]').click();
     
-        cy.get('[data-cy="financial-statements-title"]').should("be.visible");
+        cy.get('[data-cy="statement-tabs"]').should("be.visible");
 
         cy.get('[data-cy="close-financial-statements"]').click();
-        cy.get('[data-cy="financial-statements-title"]').should("not.exist");
+        cy.get('[data-cy="statement-tabs"]').should("not.exist");
 
 
         // click financial statemnt button 
@@ -40,4 +40,5 @@ describe("Create a financial statements", () => {
         //redirection to financial staemtns 
         cy.url().should("include", "/statements");
       });
+
     });
