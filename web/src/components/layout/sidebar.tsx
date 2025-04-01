@@ -34,14 +34,14 @@ const Sidebar = () => {
     return (
         <div className="w-64 h-screen p-4 bg-white border-r border-gray-200">
             <div className="mb-8">
-                <h1 className="text-xl font-semibold">Welcome {user.name}</h1>
+                <h1 className="text-2xl font-semibold">Welcome, <b className="text-2xl">{user.name}</b></h1>
             </div>
             
             <nav className="space-y-2">
                 <Button 
                     variant="ghost" 
                     className={cn(
-                        "w-full justify-start transition-colors duration-200",
+                        "w-full justify-start transition-colors duration-200 text-lg",
                         (!router?.route || router.route === "users") && "bg-blue-50 text-blue-600 hover:bg-blue-100"
                     )}
                     onClick={handleClickOnViewUsers}
@@ -52,7 +52,7 @@ const Sidebar = () => {
                 <Button 
                     variant="ghost"
                     className={cn(
-                        "w-full justify-start transition-colors duration-200",
+                        "w-full justify-start transition-colors duration-200 text-lg",
                         router?.route === "budgetCodes" && "bg-blue-50 text-blue-600 hover:bg-blue-100"
                     )}
                     onClick={handleClickOnViewBudgetCodes}
@@ -63,7 +63,7 @@ const Sidebar = () => {
                 <Button 
                     variant="ghost"
                     className={cn(
-                        "w-full justify-start transition-colors duration-200",
+                        "w-full justify-start transition-colors duration-200 text-lg",
                         router?.route === "machines" && "bg-blue-50 text-blue-600 hover:bg-blue-100"
                     )}
                     onClick={handleClickOnViewMachines}
