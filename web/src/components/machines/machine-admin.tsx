@@ -1,17 +1,62 @@
+import { useState } from "react";
 import MachineActions from "./machine-actions";
 import { Machine } from "@/data/types/machine";
+import { selectItem } from "@/data/store";
+
 
 
 
 
 export default function MachineAdmin({ machine }: { machine: Machine }) {
+
+
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isActive, setIsActive] = useState(false);
+
+  function selectMachine() {
+    if (!isActive) {
+      selectItem(machine);
+    }
+  }
+
+  const handleToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!isActive) {
+      setIsExpanded(!isExpanded);
+    }
+  };
+
+
   return (
-    <>
-      <div className="relative flex flex-col justify-between items-center py-4 max-h-[15vh] text-sm text-clip hover:bg-stone-100 transition-colors border-y-2 border-solid border-stone-300 hover:border-stone-500">
+    
+    <div
+      data-cy={`machine-${machine.id}`}
+      className="relative flex flex-col transition-all border rounded-lg shadow-sm hover:bg-stone-100 border-stone-200 hover:border-stone-400"
+    >    
+    <div 
+        className="flex items-center gap-6 p-4 cursor-pointer"
+        onClick={handleToggle}
+      >
+        <div className="flex-1">
+          <h3 className="text-base font-medium">{machine.name}</h3>
+          <p className="text-sm text-gray-600">Hourly Rate: {machine.hourlyRate}</p>
+        </div>
         <MachineActions  machineId={machine.id}></MachineActions>
-        <p>{machine.name} </p>
-        <p>{} </p>
+        </div>
+
+        <div 
+        className={`transition-all duration-200 ease-in-out ${
+          isExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="p-4 space-y-2 border-t border-stone-200">
+          <p className="text-sm"><span className="font-medium">ID:</span> {machine.id}</p>
+        </div>
       </div>
-    </>
+    </div>
+    
   );
+
+  //         onClick={handleToggle}
+
 }
