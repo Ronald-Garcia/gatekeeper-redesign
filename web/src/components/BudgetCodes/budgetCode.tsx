@@ -23,14 +23,14 @@ export default function BudgetCodeComponent({ budgetcode }: { budgetcode: Budget
   return (
     <div
       data-cy={`budget-code-${budgetcode.code}`}
-      className="relative flex flex-col rounded-lg hover:bg-stone-100 transition-all border border-stone-200 hover:border-stone-400 shadow-sm"
+      className="relative flex flex-col transition-all border rounded-lg shadow-sm hover:bg-stone-100 border-stone-200 hover:border-stone-400"
     >
       <div 
         className="flex items-center gap-6 p-4 cursor-pointer"
         onClick={handleToggle}
       >
         <div className="flex-1">
-          <h3 className="font-medium text-base">{budgetcode.name}</h3>
+          <h3 className="text-base font-medium">{budgetcode.name}</h3>
           <p className="text-sm text-gray-600">Code: {budgetcode.code}</p>
         </div>
         <BudgetCodeActions budgetcodeId={budgetcode.id} />
@@ -40,7 +40,7 @@ export default function BudgetCodeComponent({ budgetcode }: { budgetcode: Budget
           isExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
-        <div className="p-4 border-t border-stone-200 space-y-2">
+        <div className="p-4 space-y-2 border-t border-stone-200">
           <p className="text-sm"><span className="font-medium">ID:</span> {budgetcode.id}</p>
         </div>
       </div>

@@ -77,8 +77,18 @@ export function clearTrainingQueue() {
   $training_queue.set([]);
 }
 
-export function toggleTrainingQueue(bc: number) {
+export function toggleMachineTypeQueue(bc: number) {
   clearTrainingQueue();
+  const bcs =  $training_queue.get();
+  const hasBc = bcs.some(b => b === bc);
+  if (hasBc) {
+    removeTrainingQueue(bc);
+  } else {
+    addTrainingQueue(bc);
+  }
+}
+
+export function toggleTrainingQueue(bc: number) {
   const bcs =  $training_queue.get();
   const hasBc = bcs.some(b => b === bc);
   if (hasBc) {
@@ -90,7 +100,7 @@ export function toggleTrainingQueue(bc: number) {
 export const $statements = atom<financialStatement[]>([]);
 
 
-type Selected = User | BudgetCode;
+type Selected = User | BudgetCode | Machine;
 
 export const $selected = atom<Selected | null>(null);
 export function selectItem(item: Selected) {

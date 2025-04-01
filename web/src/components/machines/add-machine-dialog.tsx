@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "../ui/input";
 import useMutationMachines from "@/hooks/use-mutation-machines";
 import useQueryMachines from "@/hooks/use-query-machines";
-import { $machine_types, $training_queue, clearTrainingQueue, toggleTrainingQueue } from "@/data/store";
+import { $machine_types, $training_queue, clearTrainingQueue, toggleMachineTypeQueue } from "@/data/store";
 import { useStore } from "@nanostores/react";
 import { ScrollArea } from "../ui/scroll-area";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
@@ -85,7 +85,7 @@ const AddMachineDialog = () => {
     }
 
     const handleClickOnMachineId = (machineTypeId:number) => {
-        toggleTrainingQueue(machineTypeId);
+        toggleMachineTypeQueue(machineTypeId);
         setErrors(prev => ({...prev, machineTypeId: false}));
     }
 
