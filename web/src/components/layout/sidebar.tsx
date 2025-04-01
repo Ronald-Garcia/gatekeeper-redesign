@@ -4,9 +4,6 @@ import { $router } from "@/data/router";
 import { openPage } from "@nanostores/router";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
-import { Dialog, DialogTrigger } from "../ui/dialog";
-import SendFinancialStatementsDialog from "../financialStatements/send-financial-statements-dialog";
-import AutomateFinancialStatementsDialog from "../financialStatements/automate-financial-statements";
 import StatementDialog from "../financialStatements/statements-dialog";
 
 const Sidebar = () => {
@@ -75,19 +72,7 @@ const Sidebar = () => {
                 </Button>
 
                 <div className="pt-4 border-t border-gray-200">
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <Button 
-                                variant="ghost"
-                                className="justify-start w-full text-green-600 transition-colors duration-200 hover:bg-green-50"
-                                data-cy="financial-statements-dialog"
-                            >
-                                Send Financial Statements
-                            </Button>
-                        </DialogTrigger>
-                        <StatementDialog/>
-                    </Dialog>
-                    
+                    <StatementDialog/>
 
                 </div>
                 

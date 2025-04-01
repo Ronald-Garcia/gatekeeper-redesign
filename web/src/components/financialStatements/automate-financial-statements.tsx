@@ -1,13 +1,10 @@
 import useMutationEmails from "@/hooks/use-mutation-emails";
 import { Button } from "../ui/button";
-import { DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog"
+import { DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog"
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useState } from "react";
-import { openPage } from "@nanostores/router";
-import { $router } from "@/data/router";
-import DatePickerWithRange from "./datepicker";
-import { resetDateRange, $date_range, $date, resetDate } from "@/data/store";
+import { $date, resetDate } from "@/data/store";
 import { useStore } from "@nanostores/react";
 import { DatePicker } from "./datepick";
 
@@ -56,7 +53,7 @@ const AutomateFinancialStatementsDialog = () => {
                 </DialogDescription>    
             </DialogHeader>
 
-                <div className="flex flex-col space-y-3 p-2">
+                <div className="flex flex-col p-2 space-y-3">
                     
                     <div className="flex flex-row space-x-3">
                         <Label className="self-center">
