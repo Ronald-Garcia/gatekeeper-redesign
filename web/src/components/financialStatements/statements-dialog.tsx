@@ -13,7 +13,7 @@ const StatementDialog = () => {
             <DialogTrigger asChild>
                 <Button 
                     variant="ghost"
-                    className="justify-start w-full text-green-600 transition-colors duration-200 hover:bg-green-50"
+                    className="justify-start w-full text-green-600 transition-colors duration-200 hover:bg-green-50 text-lg"
                     data-cy="financial-statements-dialog"
                 >
                     Send Financial Statements

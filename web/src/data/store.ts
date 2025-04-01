@@ -78,7 +78,6 @@ export function clearTrainingQueue() {
 }
 
 export function toggleTrainingQueue(bc: number) {
-  clearTrainingQueue();
   const bcs =  $training_queue.get();
   const hasBc = bcs.some(b => b === bc);
   if (hasBc) {

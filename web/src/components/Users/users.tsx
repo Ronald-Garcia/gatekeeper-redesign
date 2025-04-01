@@ -13,20 +13,16 @@ export default function Users() {
   const userList = useStore($users);
 
   return (
-    <div className="flex flex-col h-full">
-      <ScrollArea className="flex-1">
-        <div className="p-4">
+    <div className="user-collection">
           {userList.length === 0 ? (
             <p data-cy="no-users">No users found!</p>
-          ) : (
-            <div className="space-y-3">
+          ) : 
+          <div className="space-y-4">
               {userList.map((user) => (
                 <UserComponent key={user.id} user={user} />
               ))}
-            </div>
-          )}
-        </div>
-      </ScrollArea>
+          </div>
+          } 
     </div>
   );
 }

@@ -32,7 +32,7 @@ const Sidebar = () => {
     }
 
     return (
-        <div className="w-64 h-screen p-4 bg-white border-r border-gray-200">
+        <div className="w-fit h-screen p-4 bg-white border-r border-gray-200">
             <div className="mb-8">
                 <h1 className="text-2xl font-semibold">Welcome, <b className="text-2xl">{user.name}</b></h1>
             </div>
