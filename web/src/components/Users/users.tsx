@@ -1,7 +1,6 @@
 import { useStore } from "@nanostores/react";
 import { $users } from "@/data/store";
 import UserComponent from "./user";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
 import useQueryUsers from "@/hooks/use-query-users";
 
 /*
@@ -13,7 +12,7 @@ export default function Users() {
   const userList = useStore($users);
 
   return (
-    <div className="user-collection">
+    <div className="p-4 collection">
           {userList.length === 0 ? (
             <p data-cy="no-users">No users found!</p>
           ) : 

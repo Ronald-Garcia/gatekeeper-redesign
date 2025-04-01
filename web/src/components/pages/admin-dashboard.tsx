@@ -30,7 +30,7 @@ const AdminDashboard = () => {
       <Sidebar />
       <div className="flex-1">
         <UsersActions/>
-        <ScrollArea>
+        <ScrollArea className="scroll-component">
           <Users/>
         </ScrollArea>
       </div>
@@ -42,7 +42,10 @@ const AdminDashboard = () => {
       <Sidebar />
       <div className="flex-1">
         <BudgetActions/>
+        <ScrollArea className="scroll-component">
         <BudgetCodes/>
+        </ScrollArea>
+
       </div>
     </div>
     )
@@ -52,7 +55,10 @@ const AdminDashboard = () => {
         <Sidebar />
         <div className="flex-1">
         <MachineActions/>
+        <ScrollArea className="scroll-component">
         <MachinesComponent/>
+        </ScrollArea>
+
         </div>
       </div>
       )
