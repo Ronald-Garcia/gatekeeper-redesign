@@ -49,18 +49,22 @@ export default function UserActions({ userId, userNumber, setIsActive }: UserAct
 
   const handleCloseDelete = () => {
     setShowDeleteUser(false);
+    setIsActive(false);
   };
 
   const handleCloseTimeout = () => {
     setShowTimeoutUser(false);
+    setIsActive(false);
   };
 
   const handleCloseTraining = () => {
     setShowEditTraining(false);
+    setIsActive(false);
   };
 
   const handleCloseBudgetCode = () => {
     setShowBudgetCode(false);
+    setIsActive(false);
   };
 
   return (

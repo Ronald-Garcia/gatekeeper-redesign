@@ -42,7 +42,8 @@ export const machines = pgTable("machines_table", {
   id: serial().primaryKey(),
   hourlyRate: integer().notNull(),
   name: text().notNull(),
-  machineTypeId: serial().notNull().references(() => machineTypes.id, {onDelete:"cascade"})
+  machineTypeId: serial().notNull().references(() => machineTypes.id, {onDelete:"cascade"}),
+  active: integer().notNull()
 })
 
 /**

@@ -26,7 +26,7 @@ def turn_on():
         # }
 
     # led.on()
-
+    
     print("Pulse received! Turning on GPIO20")
 
     return {

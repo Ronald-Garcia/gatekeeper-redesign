@@ -38,11 +38,16 @@ export const turnOffMachine = async (): Promise<boolean> => {
 export const turnOnMachine = async (): Promise<boolean> => {
   const response = await fetch(`${API_MACHINE_URL}/turn-on`, {
     method: "POST",
+    headers: {"Content-Type": "application/json"},
     credentials: "include",
   });
+  console.log("after response await")
+  console.log(response);
   const { message }: { message: string } = await response.json();
-
+  console.log("print response")
+  console.log(response.ok)
   if (!response.ok) {
+    console.log(response)
     throw new Error(message);
   }
 
@@ -325,6 +330,11 @@ export const getAllBudgets = async (
 ): Promise<{
   message: string;
   data: BudgetCode[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+  };
 }> => {
   const response = await fetch(`${API_DB_URL}/budget-codes?search=${search}&limit=${limit}&page=${page}&sort=${sort}`, {
     credentials: "include",
@@ -336,10 +346,17 @@ export const getAllBudgets = async (
     throw new Error(message);
   }
 
-  const { message, data }: { message: string; data: BudgetCode[] } =
-    await response.json();
+  const { message, data, meta }: { 
+    message: string; 
+    data: BudgetCode[];
+    meta: {
+      page: number;
+      limit: number;
+      total: number;
+    };
+  } = await response.json();
 
-  return { message, data };
+  return { message, data, meta };
 };
 
 /**
@@ -784,6 +801,11 @@ export const getMachineTypes = async ( sort: SortType = "asc",
 ): Promise<{
   message: string;
   data: MachineType[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+  };
 }> => {
   const response = await fetch(`${API_DB_URL}/machine-types?search=${search}&limit=${limit}&page=${page}&sort=${sort}`, {
     credentials: "include",
@@ -794,9 +816,17 @@ export const getMachineTypes = async ( sort: SortType = "asc",
     throw new Error(message);
   }
 
-  const { message, data }: { message: string, data: MachineType[] } = await response.json();
+  const { message, data, meta }: { 
+    message: string; 
+    data: MachineType[];
+    meta: {
+      page: number;
+      limit: number;
+      total: number;
+    };
+  } = await response.json();
 
-  return { message, data };
+  return { message, data, meta };
 }
 
 
@@ -810,7 +840,7 @@ export const getMachineTypes = async ( sort: SortType = "asc",
  * @throws {Error} If the response is not ok, throws an error with the response message.
  */
 
-export const createMachine = async (name: string, type: MachineType, rate: number): Promise<{
+export const createMachine = async (name: string, machineTypeId: number, rate: number, active:number): Promise<{
   message: string;
   data: Machine
 }> => {
@@ -820,8 +850,9 @@ export const createMachine = async (name: string, type: MachineType, rate: numbe
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({
       name,
-      machineTypeId: type.id,
-      hourlyRate: rate
+      machineTypeId,
+      hourlyRate: rate,
+      active : active
     }),
     credentials: "include"
   });

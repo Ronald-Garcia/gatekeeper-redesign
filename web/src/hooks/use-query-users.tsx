@@ -51,7 +51,7 @@ function useQueryUsers(reload: boolean) {
       setCurrentUser(data);
 
 
-      let curMachine: Machine | "kiosk" | undefined
+      let curMachine: Machine | "kiosk" | undefined | 0
       // Call python refers to calling the machine api backend. If we are not
       // on a machine, aka we are online, don't call the machine-api, since it 
       // does not exist. Just default to kiosk
@@ -59,6 +59,12 @@ function useQueryUsers(reload: boolean) {
         curMachine = await getSavedMachine();
       } else {
         curMachine = "kiosk";
+      }
+
+
+      // if curMachine === 0, then machine is inactive or not found
+      if (curMachine === 0) {
+        return (router!.route as "start_page" | "kiosk");
       }
 
       //If there is no env file and they are admin, let them choose a machine.
@@ -92,10 +98,13 @@ function useQueryUsers(reload: boolean) {
     } catch (e) { //If there was an error anywhere, redirect to the start page.
       clearCurrentUser();
 
+      clearCurrentUser();
+
       const errorMessage = (e as Error).message;
         toast.error("Sorry! There was an error 🙁", {
           description: errorMessage  
         });
+      return (router!.route as "start_page" | "kiosk");
       return (router!.route as "start_page" | "kiosk");
     }
   }
