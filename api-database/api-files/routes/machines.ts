@@ -181,10 +181,24 @@ machineRoutes.post("/machines",
         })
         .returning();
 
+    const [machineType] = await db
+        .select()
+        .from(machineTypes)
+        .where(eq(machineTypes.id, newMachine.machineTypeId));
+
+    
+
     return c.json({
         success:true,
         message:"Created a machine",
-        data: newMachine
+        data: {
+            name: newMachine.name,
+            hourlyRate: newMachine.hourlyRate,
+            machineType: machineType,
+            id: newMachine.id,
+            active: newMachine.active
+        }
+
     }, 201);
 })
 

@@ -1,8 +1,6 @@
 import { useStore } from "@nanostores/react";
 import AddUserDialog from "../Users/add-user-dialog";
 import { $router } from "@/data/router";
-import AddMachineTypeDialog from "../machine_types/add-machine-type-dialog";
-
 import { Dialog} from "../ui/dialog.tsx";
 import ErrorPage from "../layout/errorPage.tsx";
 import Searchbar from "../general/searchbar";
@@ -31,7 +29,6 @@ const UsersActions = () => {
             </div>
             <div className="flex flex-wrap gap-2 shrink-0">
               <AddUserDialog/>
-              <AddMachineTypeDialog/>
             </div>
           </div>
         </div>
