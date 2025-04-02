@@ -39,7 +39,8 @@ export default function MachineAdmin({ machine }: { machine: Machine }) {
       >
         <div className="flex-1">
           <h3 className="text-base font-medium">{machine.name}</h3>
-          <p className="text-sm text-gray-600">Hourly Rate: {machine.hourlyRate}</p>
+          <p className="text-sm text-gray-600">Type: {machine.machineType.name}</p>
+
         </div>
         <MachineActions  machineId={machine.id}></MachineActions>
         </div>
@@ -50,7 +51,7 @@ export default function MachineAdmin({ machine }: { machine: Machine }) {
         }`}
       >
         <div className="p-4 space-y-2 border-t border-stone-200">
-          <p className="text-sm"><span className="font-medium">ID:</span> {machine.id}</p>
+          <p className="text-sm"><span className="font-medium">Hourly Rate:</span> ${machine.hourlyRate}</p>
         </div>
       </div>
     </div>

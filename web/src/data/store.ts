@@ -149,7 +149,10 @@ const defaultUser: User = {
 const defaultMachine: Machine = {
   id: -1,
   name: "invalid",
-  machineTypeId: -1,
+  machineType: {
+    id: -1,
+    name: ""
+  },
   hourlyRate: 0,
   active:-1,
 }
