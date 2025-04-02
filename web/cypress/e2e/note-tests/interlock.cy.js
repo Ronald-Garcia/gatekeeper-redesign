@@ -62,8 +62,11 @@ describe("Interlock Page E2E", () => {
   context("User with machine access turns on active  machine", () => {
     it("allows the user to log into an active machine and begin use", () => {
       
+      // user logging in
       cy.get('[data-cy="cardnum-input"]').type(`;${userWithAccessCard};`)
       cy.get('[data-cy="cardnum-input"]').type("\n");
+
+      // user should be in the correct route
       cy.url().should("include", "/interlock")
       cy.get('[data-cy="toggle-budget"]')
       .should("exist")
@@ -99,13 +102,13 @@ describe("Interlock Page E2E", () => {
   context("User with machine access turns on inactive machine", () => {
     it("prevents user from logging into an inactive machine", () => {
       
+      // user tries to log into an inactive machine
       cy.get('[data-cy="cardnum-input"]').type(`;${userWithAccessCard};`)
       cy.get('[data-cy="cardnum-input"]').type("\n");
-      cy.url().should("include", "/interlock")
 
-      cy.get('[data-cy="toggle-budget"]')
-      .should("not.exist")
-      .and("have.length.greaterThan", 0);
+      // user should be blocked from logging in; user stays on the log in page and an error message should pop up
+      cy.url().should("not.include", "/interlock")
+
     })
   });
 });
