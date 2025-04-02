@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useMutationUsers from "@/hooks/user-mutation-hooks";
 import {
   Dialog,
@@ -31,6 +31,7 @@ const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogP
     //ADD WHEN ROUTES FIXED
     const { setUserTrainings } = useMutationUsers();
     const { getTrainingsOfUser } = useQueryMachines(true);
+    const [isLoading, setIsLoading] = useState(true);
     
     const trainingsList = useStore($machine_types);
   
@@ -41,14 +42,31 @@ const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogP
       setShowEditTraining(false); //make the dialogue disappear
     };
   
+    /*
+        useEffect(() => {
+          setIsLoading(true);
+          getBudgetsOfUser(userId).then((res) => {
+            if (res === undefined) {
+              setBudgetCodeQueue([]);
+              return;
+            }
+            setBudgetCodeQueue(res.map(b => b.id));
+          }).finally(() => {
+            setIsLoading(false);
+          });
+        }, [])
+    */
     useEffect(() => {
+      setIsLoading(true);
       getTrainingsOfUser(userId).then((res) => {
         if (res === undefined) {
           setTrainingQueue([]);
           return;
         }
         setTrainingQueue(res.map(b => b.id));
-      })
+      }).finally(() => {
+        setIsLoading(false);
+      });
     }, [])
   return (
     <div data-cy= "user-training-dialog">
@@ -61,8 +79,13 @@ const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogP
         <Label htmlFor="content" className="text-sm">
           Please select the title of your training
         </Label>
+        
         <div className="space-y-4">
-          <ScrollArea>
+        {isLoading ? (
+                <div className="flex justify-center items-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-stone-900"></div>
+                </div>
+              ) :  <ScrollArea>
         <ToggleGroup type="multiple" className="flex-col">
               {trainingsList.map((type) => (
                 <ToggleGroupItem
@@ -81,10 +104,9 @@ const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogP
                 </ToggleGroupItem>
               ))}
             </ToggleGroup>
-          </ScrollArea>  
-          
-    
+          </ScrollArea>  }
         </div>
+
         <DialogFooter>
           <Button data-cy = "user-traning-cancel"  onClick={() => setShowEditTraining(false)}>Cancel</Button>
           <Button data-cy = "user-training-add"  onClick={handleEditTraining}>Save Changes</Button>

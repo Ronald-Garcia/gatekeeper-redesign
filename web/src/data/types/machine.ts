@@ -3,7 +3,7 @@ import { MachineType } from "./machineType";
 export type Machine = {
     id: number;
     name: string;
-    type: MachineType,
+    machineType: MachineType,
     hourlyRate: number;
     active: number;
 }

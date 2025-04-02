@@ -815,7 +815,7 @@ export const getMachineTypes = async ( sort: SortType = "asc",
  * @throws {Error} If the response is not ok, throws an error with the response message.
  */
 
-export const createMachine = async (name: string, type: MachineType, rate: number): Promise<{
+export const createMachine = async (name: string, machineTypeId: number, rate: number, active:number): Promise<{
   message: string;
   data: Machine
 }> => {
@@ -825,8 +825,9 @@ export const createMachine = async (name: string, type: MachineType, rate: numbe
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({
       name,
-      machineTypeId: type.id,
-      hourlyRate: rate
+      machineTypeId,
+      hourlyRate: rate,
+      active : active
     }),
     credentials: "include"
   });
