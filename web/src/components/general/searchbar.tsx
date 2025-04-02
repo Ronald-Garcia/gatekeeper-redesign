@@ -24,6 +24,9 @@ const Searchbar = () => {
             case "budgetCodes":
                 loadBudgets(undefined, undefined, undefined, localSearch);
                 break;
+            case "machines":
+                loadMachines(undefined, undefined, undefined, localSearch);
+                break;
             default:
         }
     }

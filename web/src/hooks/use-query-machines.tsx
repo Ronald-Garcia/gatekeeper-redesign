@@ -2,6 +2,7 @@ import { fetchCurrentMachine, getAllMachines, getAllTrainingsOfUser, getMachine,
 import { setCurrentMachine, setCurTrainings, setMachines, setMachinesTypes} from "@/data/store";
 import { Machine } from "@/data/types/machine";
 import { MachineType } from "@/data/types/machineType";
+import { SortMachineType } from "@/data/types/sort";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
@@ -40,11 +41,17 @@ function useQueryMachines(reload: boolean) {
 
     }
 
-    const loadMachines = async () => {
+      
+    const loadMachines  = async (
+      sort: SortMachineType = "name_asc",
+      page: number = 1,
+      limit: number = 10,
+      search: string = ""
+      ) => {
         try {
           const {
             data: fetchedMachines
-          } = await getAllMachines();
+          } = await getAllMachines(sort, page, limit, search);
           setMachines(fetchedMachines);
         }  catch (e) {
             //get message from api response, put it on a toast
