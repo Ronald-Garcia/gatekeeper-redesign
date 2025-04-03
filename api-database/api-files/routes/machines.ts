@@ -70,7 +70,16 @@ machineRoutes.get("/machines",
 
     const [allMachines, [{ totalCount }]] = await Promise.all([
         db
-        .select()
+        .select({
+            name: machines.name,
+            id: machines.id,
+            hourlyRate: machines.hourlyRate,
+            active: machines.active,
+            machineType: {
+                id: machineTypes.id,
+                name: machineTypes.name
+            }
+        })
         .from(machines)
         .innerJoin(machineTypes, eq(machineTypes.id, machines.machineTypeId))
         .where(and(...whereClause))
@@ -87,7 +96,7 @@ machineRoutes.get("/machines",
     
     return c.json({
         success:true,
-        data: allMachines.map(data => data.machines_table),
+        data: allMachines,
         meta: {
             page,
             limit,
@@ -109,9 +118,20 @@ machineRoutes.get("/machines/:id",
     const { id } = c.req.valid("param");
 
     const [machine] = await db
-        .select()
+        .select({
+            name: machines.name,
+            id: machines.id,
+            hourlyRate: machines.hourlyRate,
+            active: machines.active,
+            machineType: {
+                id: machineTypes.id,
+                name: machineTypes.name
+            }
+        })
         .from(machines)
-        .where(eq(machines.id, id));
+        .innerJoin(machineTypes, eq(machines.machineTypeId, machineTypes.id))
+        .where(eq(machines.id, id))
+        ;
 
     if (!machine) {
         throw new HTTPException(404, { message: "Machine not found!"});
@@ -161,10 +181,24 @@ machineRoutes.post("/machines",
         })
         .returning();
 
+    const [machineType] = await db
+        .select()
+        .from(machineTypes)
+        .where(eq(machineTypes.id, newMachine.machineTypeId));
+
+    
+
     return c.json({
         success:true,
         message:"Created a machine",
-        data: newMachine
+        data: {
+            name: newMachine.name,
+            hourlyRate: newMachine.hourlyRate,
+            machineType: machineType,
+            id: newMachine.id,
+            active: newMachine.active
+        }
+
     }, 201);
 })
 

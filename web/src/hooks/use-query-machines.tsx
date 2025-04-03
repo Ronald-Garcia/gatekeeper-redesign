@@ -2,14 +2,15 @@ import { fetchCurrentMachine, getAllMachines, getAllTrainingsOfUser, getMachine,
 import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes, appendMachineTypes } from "@/data/store";
 import { Machine } from "@/data/types/machine";
 import { MachineType } from "@/data/types/machineType";
-import { useEffect, useState } from "react";
+
+import { SortMachineType } from "@/data/types/sort";
+import { useEffect } from "react";
+
 import { toast } from "sonner";
 import { SortType } from "@/data/types/sort";
 
 function useQueryMachines(reload: boolean) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
+
 
   const getSavedMachine = async (): Promise<Machine | "kiosk" | undefined | 0> => {
     try {
@@ -44,19 +45,6 @@ function useQueryMachines(reload: boolean) {
     }    
   }
 
-  const loadMachines = async () => {
-    try {
-      const {
-        data: fetchedMachines
-      } = await getAllMachines();
-      setMachines(fetchedMachines);
-    } catch (e) {
-      const errorMessage = (e as Error).message;
-      toast.error("Sorry! There was an error fetching Machines 🙁", {
-        description: errorMessage  
-      });
-    }
-  };
 
   const loadMachineTypes = async (
     sort: SortType = "asc",
@@ -105,22 +93,42 @@ function useQueryMachines(reload: boolean) {
     }
   }
 
-  useEffect(() => {
-    if (reload) {
-      loadMachines();
-      loadMachineTypes();
-    }
-  }, []);
 
-  return { 
-    getSavedMachine, 
-    loadMachines, 
-    loadMachineTypes, 
-    getTrainingsOfUser,
-    currentPage,
-    hasMore,
-    isLoading
-  };
+      
+    const loadMachines  = async (
+      sort: SortMachineType = "name_asc",
+      page: number = 1,
+      limit: number = 10,
+      search: string = ""
+      ) => {
+        try {
+          const {
+            data: fetchedMachines
+          } = await getAllMachines(sort, page, limit, search);
+          setMachines(fetchedMachines);
+        }  catch (e) {
+            //get message from api response, put it on a toast
+            const errorMessage = (e as Error).message;
+            toast.error("Sorry! There was an error fetching Users 🙁", {
+              description: errorMessage  
+            });
+          }
+        };
+
+
+
+
+    useEffect(()=> {
+        if (reload) {
+            loadMachines();
+            loadMachineTypes();
+        }
+    }, [])
+
+    return { getSavedMachine, loadMachines, loadMachineTypes, getTrainingsOfUser }
+
+
+
 }
 
 export default useQueryMachines;

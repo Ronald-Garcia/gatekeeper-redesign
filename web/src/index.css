@@ -105,6 +105,16 @@
 
 /*Admin dashboard syling*/
 
+.sidebar {
+  width: fit-content;
+  height: calc(100vh - 100px);
+  padding: 1rem /* 16px */;
+}
+
+.scroll-component {
+  height: calc(100vh - 181px);
+}
+
 /*toggle group styling*/
 .toggle-group-button{
   justify-content: space-between;

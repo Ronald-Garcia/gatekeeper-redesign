@@ -1,6 +1,5 @@
 import { useStore } from "@nanostores/react";
 import { $machines } from "@/data/store";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
 import useQueryUsers from "@/hooks/use-query-users";
 import MachineAdmin from "./machine-admin";
 
@@ -16,18 +15,19 @@ export default function MachinesComponent() {
 
 
   return (
-    <ScrollArea>
 
-        <div className="max-h-[20vh]">
+        <div className="max-h-[20vh] p-4">
         {machineList.length === 0 ? (
         <p> No machines found. Please add some!  </p>
-      ) : (
-        machineList.map((m) => (
+      ) : 
+      <div className="space-y-4">
+
+        {machineList.map((m) => (
           <MachineAdmin key={m.id} machine={m}/>
-        ))
-      )}
+        ))}
+        </div>
+      }
 
         </div>
-    </ScrollArea>
   );
 }
