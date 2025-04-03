@@ -32,7 +32,7 @@ export const machineRoutes = new Hono<Context>();
  */
 machineRoutes.get("/machines",
     authGuard,  
-    zValidator("query", queryMachinesSchema), async (c) => {
+     zValidator("query", queryMachinesSchema), async (c) => {
     const { page = 1, limit = 20, search, sort, type } = c.req.valid("query");
 
     const whereClause: (SQL | undefined)[] = [];
@@ -116,6 +116,9 @@ machineRoutes.get("/machines/:id",
     if (!machine) {
         throw new HTTPException(404, { message: "Machine not found!"});
     }
+    if (machine.active == 0) {
+        throw new HTTPException(503, {message: "Machine is not open for use."});
+    }
 
     return c.json({
         success: true,
@@ -136,7 +139,7 @@ machineRoutes.post("/machines",
     adminGuard,
     zValidator("json", createMachineSchema), async (c)=>{
 
-    const { name, machineTypeId, hourlyRate } = c.req.valid("json");
+    const { name, machineTypeId, hourlyRate, active } = c.req.valid("json");
     //Check if machine type actually exists exists
     const [machineTypeCheck] = await db
         .select()
@@ -153,6 +156,7 @@ machineRoutes.post("/machines",
         .values({
             name,
             machineTypeId,
+            active,
             hourlyRate
         })
         .returning();
@@ -179,7 +183,7 @@ zValidator("json", createMachineSchema),
 async (c)=>{
 
     const { id } = c.req.valid("param")
-    const { name, machineTypeId, hourlyRate } = c.req.valid("json");
+    const { name, machineTypeId, hourlyRate, active } = c.req.valid("json");
     // Check if machine exists first, throw 404 if not.
 
     const  [machine_ent]  = await db
@@ -207,7 +211,7 @@ async (c)=>{
 
     const updatedMachine = await db
         .update(machines)
-        .set({name,machineTypeId,hourlyRate })
+        .set({name,machineTypeId,hourlyRate,active })
         .where(eq(machines.id, id))
         .returning();
 

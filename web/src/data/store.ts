@@ -102,6 +102,7 @@ export function clearTrainingQueue() {
 }
 
 export function toggleTrainingQueue(bc: number) {
+  clearTrainingQueue();
   const bcs =  $training_queue.get();
   const hasBc = bcs.some(b => b === bc);
   if (hasBc) {
@@ -164,8 +165,9 @@ const defaultUser: User = {
 const defaultMachine: Machine = {
   id: -1,
   name: "invalid",
-  type: { id: -1, name: "invalid"},
-  hourlyRate: 0
+  machineTypeId: -1,
+  hourlyRate: 0,
+  active:-1,
 }
 
 const defaultBudget: BudgetCode = {
@@ -266,6 +268,10 @@ export function setBudgetCodes(codeList: BudgetCode[]) {
   $codes.set(codeList);
 }
 
+export function appendBudgetCodes(codeList: BudgetCode[]) {
+  $codes.set([...$codes.get(), ...codeList]);
+}
+
 export function addBudgetCode(code: BudgetCode) {
   $codes.set([...$codes.get(), code]);
 }
@@ -285,7 +291,7 @@ export function deleteBudgetCodeByNum(codeNum: string) {
 
 
 //machine store functions 
-export function addMachine(machine: Machine) {
+export function appendMachine(machine: Machine) {
   $machines.set(
     [...$machines.get(), machine]
   )
@@ -322,6 +328,10 @@ export function setMachinesTypes(typeList: MachineType[]) {
   $machine_types.set(typeList);
 }
 
+export function appendMachineTypes(typeList: MachineType[]) {
+  $machine_types.set([...$machine_types.get(), ...typeList]);
+}
+
 // *** SERACH STORES ***
 
 //The "local" search for a user, aka state control of the search bar.
@@ -355,4 +365,19 @@ export function setCurBudgets(newBudgetCodes: BudgetCode[]) {
 export const $curtrainings = atom<MachineType[]>([])
 export function setCurTrainings(newTrainings: MachineType[]) {
   $curtrainings.set(newTrainings)
+}
+
+export const $dashboardActiveSearch = atom("");
+export function setDashboardActiveSearch(search: string) {
+  $dashboardActiveSearch.set(search);
+}
+
+export const $dashboardLocalSearch = atom("");
+export function setDashboardLocalSearch(search: string) {
+  $dashboardLocalSearch.set(search);
+}
+
+export function resetDashboardSearch() {
+  setDashboardActiveSearch("");
+  setDashboardLocalSearch("");
 }

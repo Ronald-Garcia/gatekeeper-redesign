@@ -1,8 +1,8 @@
-import { MachineType } from "./machineType";
 
 export type Machine = {
     id: number;
     name: string;
-    type: MachineType,
+    machineTypeId: number,
     hourlyRate: number;
+    active: number;
 }

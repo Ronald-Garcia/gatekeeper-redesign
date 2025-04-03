@@ -12,7 +12,7 @@ const makeFreshUserThenLogin = () => {
         url: `http://localhost:3000/users`,
         method: "POST",
         body: {
-            name:`${test_user_name}`,
+            name:test_user_name,
             cardNum:`${test_user_num}`,
             JHED:"billfre1",
             isAdmin:0,

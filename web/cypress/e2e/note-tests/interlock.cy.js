@@ -58,4 +58,55 @@ describe("Interlock Page E2E", () => {
       cy.get('[data-cy="cardnum-input"]').should("have.value", "")
     });
   });
+
+  context("User with machine access turns on active  machine", () => {
+    it("allows the user to log into an active machine and begin use", () => {
+      
+      cy.get('[data-cy="cardnum-input"]').type(`;${userWithAccessCard};`)
+      cy.get('[data-cy="cardnum-input"]').type("\n");
+      cy.url().should("include", "/interlock")
+      cy.get('[data-cy="toggle-budget"]')
+      .should("exist")
+      .and("have.length.greaterThan", 0);
+
+      // ensure start is disabled
+      cy.get('[data-cy="start-button"]').should("be.disabled");
+
+      cy.get('[data-cy="toggle-budget"]').first().click();
+
+      // ensure start is not disabled
+      cy.get('[data-cy="start-button"]').should("not.be.disabled");
+
+      //click start
+      cy.get('[data-cy="start-button"]').click();
+
+      //verify redirection to timer, aka machine turned on 
+      cy.url().should("include", "/timer");
+    })
+  });
+
+  context("User without machine access", () => {
+    it("Does not allow user to log in", () => {
+      //Log in as the user as user with no access to LATHE 5000
+      cy.get('[data-cy="cardnum-input"]')
+        .clear()
+        .type(`;${userWithoutAccessCard};{enter}`);
+
+      cy.get('[data-cy="cardnum-input"]').should("have.value", "")
+    });
+  });
+
+  context("User with machine access turns on inactive machine", () => {
+    it("prevents user from logging into an inactive machine", () => {
+      
+      cy.get('[data-cy="cardnum-input"]').type(`;${userWithAccessCard};`)
+      cy.get('[data-cy="cardnum-input"]').type("\n");
+      cy.url().should("include", "/interlock")
+
+      cy.get('[data-cy="toggle-budget"]')
+      .should("not.exist")
+      .and("have.length.greaterThan", 0);
+    })
+  });
 });
+

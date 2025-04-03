@@ -105,6 +105,23 @@
 
 /*Admin dashboard syling*/
 
+/*toggle group styling*/
+.toggle-group-button{
+  justify-content: space-between;
+  border-top-width: 2px;
+  border-bottom-width: 2px;
+  border-color: rgb(214 211 209);
+}
+
+.toggle-group-button:hover {
+  border-color: rgb(120 113 108);
+}
+
+.toggle-error-button{
+  justify-content: space-between;
+  border-width: 1px;
+  border-color: rgb(255, 0, 0);
+}
 
 /*Search Styling*/
 

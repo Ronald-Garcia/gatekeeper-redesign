@@ -53,7 +53,7 @@ const Body = () => {
     
       {router.route === "machine_login" && <MachineLogin></MachineLogin>}
 
-      {(router.route === "users" || router.route === "budgetCodes" || router.route === "financial_statements") && <AdminDashboard></AdminDashboard>}
+      {(router.route === "users" || router.route === "budgetCodes" || router.route === "machines") && <AdminDashboard></AdminDashboard>}
 
       {router.route === "kiosk" && <KioskStartPage></KioskStartPage>}
 
