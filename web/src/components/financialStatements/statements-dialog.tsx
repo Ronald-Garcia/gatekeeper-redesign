@@ -1,4 +1,6 @@
+
 import { Dialog,  DialogContent, DialogTitle, DialogTrigger } from "../ui/dialog"
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import AutomateFinancialStatementsDialog from "./automate-financial-statements";
 import SendFinancialStatementsDialog from "./send-financial-statements-dialog";
@@ -6,7 +8,6 @@ import { Button } from "../ui/button";
 
 
 const StatementDialog = () => {
-
 
     return (
         <Dialog>
@@ -23,7 +24,10 @@ const StatementDialog = () => {
 
         <DialogTitle> </DialogTitle>
             <DialogContent>
-                <Tabs defaultValue="send" >
+
+
+                <Tabs defaultValue="send" data-cy="statement-tabs">
+
                     <TabsList className="w-full">
                         <TabsTrigger value="send" className="w-full"> Send Statements Now! </TabsTrigger>
                         <TabsTrigger value="automate" className="w-full"> Automate Statements! </TabsTrigger>

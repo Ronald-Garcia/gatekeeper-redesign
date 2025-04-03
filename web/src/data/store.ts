@@ -15,6 +15,30 @@ export const $budget_code_queue = atom<number[]>([]);
 export const $training_queue = atom<number[]>([]);
 export const $date_range = atom<DateRange | undefined>(undefined);
 export const $date = atom<Date | undefined>(undefined);
+export const $hasMoreUserBudgets = atom<boolean>(false);
+export const $hasMoreUserTrainings = atom<boolean>(false);
+export const $currentPage = atom<number>(1);
+
+export function setPage(p: number) {
+  $currentPage.set(p);
+}
+
+export function incrementPage() {
+  $currentPage.set($currentPage.get() + 1);
+}
+
+export function decrementPage() {
+  $currentPage.set($currentPage.get() - 1);
+}
+
+export function setHasMoreUserBudgets(hasMore: boolean) {
+  $hasMoreUserBudgets.set(hasMore);
+}
+
+export function setHasMoreUserTrainings(hasMore: boolean) {
+  $hasMoreUserTrainings.set(hasMore);
+}
+
 
 export function setDate(date: Date | undefined) {
   $date.set(date);
@@ -110,6 +134,8 @@ export function selectItem(item: Selected) {
 export function clearItem() {
   $selected.set(null);
 }
+
+
 
 // export function addSelectedBudgetCode(bc: number) {
 //   $budget_code_queue.set([...$budget_code_queue.get(), bc ]);
@@ -255,6 +281,10 @@ export function setBudgetCodes(codeList: BudgetCode[]) {
   $codes.set(codeList);
 }
 
+export function appendBudgetCodes(codeList: BudgetCode[]) {
+  $codes.set([...$codes.get(), ...codeList]);
+}
+
 export function addBudgetCode(code: BudgetCode) {
   $codes.set([...$codes.get(), code]);
 }
@@ -309,6 +339,10 @@ export function deleteOldMachineType(id: number) {
 
 export function setMachinesTypes(typeList: MachineType[]) {
   $machine_types.set(typeList);
+}
+
+export function appendMachineTypes(typeList: MachineType[]) {
+  $machine_types.set([...$machine_types.get(), ...typeList]);
 }
 
 // *** SERACH STORES ***

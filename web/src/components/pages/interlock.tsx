@@ -1,4 +1,5 @@
 import { useStore } from "@nanostores/react";
+import { useState } from "react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
@@ -8,6 +9,8 @@ import useQueryBudgets from "@/hooks/use-query-budgetCodes";
 import { openPage, redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 import { turnOffMachine, turnOnMachine } from "@/data/api";
+import ConfirmReportModal from "@/components/modals/ConfirmReportModal"; 
+
 
 /*
 Display to use on gates when a user logs in. Displays BudgetCodes a user has associated with his account. 
@@ -18,12 +21,26 @@ const Interlock = () => {
     const curBudget = useStore($currentBudget);
     const { getBudgetsOfUser } = useQueryBudgets(false);
     const userBudgets = useStore($curbudgets);
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
     
     const handleCancel = () => {
         clearCurrentUser();
         turnOffMachine()
         redirectPage($router, "start_page");
     }
+
+    const handleReportIssue = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleConfirmReport = () => {
+        setIsModalOpen(false);
+        console.log("Reported maintenance issue for this machine!");
+        // TODO: Implement API call to report the issue
+    };
+
+    
 
     const handleStartClick = () => {
 
@@ -80,6 +97,7 @@ const Interlock = () => {
 
                     </CardContent>
                     <CardFooter className="flex justify-end space-x-4">
+                        <Button className="bg-yellow-400 text-black px-4 py-2" variant="ghost" onClick={handleReportIssue}> Report Issue </Button>
                         { 
                         <Button data-cy="start-button" className="text-xl jhu-blue-button" variant="ghost" disabled={!validCurrentBudget()} onClick={handleStartClick}>Start</Button>
                         }
@@ -87,6 +105,13 @@ const Interlock = () => {
                     </CardFooter>
                 </Card>
             </div>
+
+            {/* Report Issue Confirmation Modal */}
+            <ConfirmReportModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onConfirm={handleConfirmReport}
+            />
 
         </>
     )

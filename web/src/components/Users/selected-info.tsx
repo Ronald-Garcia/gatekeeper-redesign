@@ -1,6 +1,5 @@
-import { $selected, clearItem } from "@/data/store";
+import { $selected } from "@/data/store";
 import { User } from "@/data/types/user";
-import { BudgetCode } from "@/data/types/budgetCode";
 import { useStore } from "@nanostores/react";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";

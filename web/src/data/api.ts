@@ -330,6 +330,11 @@ export const getAllBudgets = async (
 ): Promise<{
   message: string;
   data: BudgetCode[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+  };
 }> => {
   const response = await fetch(`${API_DB_URL}/budget-codes?search=${search}&limit=${limit}&page=${page}&sort=${sort}`, {
     credentials: "include",
@@ -341,10 +346,17 @@ export const getAllBudgets = async (
     throw new Error(message);
   }
 
-  const { message, data }: { message: string; data: BudgetCode[] } =
-    await response.json();
+  const { message, data, meta }: { 
+    message: string; 
+    data: BudgetCode[];
+    meta: {
+      page: number;
+      limit: number;
+      total: number;
+    };
+  } = await response.json();
 
-  return { message, data };
+  return { message, data, meta };
 };
 
 /**
@@ -789,6 +801,11 @@ export const getMachineTypes = async ( sort: SortType = "asc",
 ): Promise<{
   message: string;
   data: MachineType[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+  };
 }> => {
   const response = await fetch(`${API_DB_URL}/machine-types?search=${search}&limit=${limit}&page=${page}&sort=${sort}`, {
     credentials: "include",
@@ -799,9 +816,17 @@ export const getMachineTypes = async ( sort: SortType = "asc",
     throw new Error(message);
   }
 
-  const { message, data }: { message: string, data: MachineType[] } = await response.json();
+  const { message, data, meta }: { 
+    message: string; 
+    data: MachineType[];
+    meta: {
+      page: number;
+      limit: number;
+      total: number;
+    };
+  } = await response.json();
 
-  return { message, data };
+  return { message, data, meta };
 }
 
 
