@@ -1,7 +1,7 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { queryUsersParamsSchema, createUserSchema, getUserSchema, getUserByCardNumSchema } from "../validators/schemas.js";
-import { SQL, or, desc, asc, eq, and, count, ilike } from "drizzle-orm";
+import { SQL, or, desc, asc, eq, and, count, ilike, gt } from "drizzle-orm";
 import { users } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
@@ -9,6 +9,7 @@ import { lucia } from "../db/auth.js";
 import { adminGuard } from "../middleware/adminGuard.js";
 import { Context } from "../lib/context.js";
 import {User} from "../lib/types.js";
+import { inactivateGraduatedUsers } from "../middleware/gradYearRemoval.js";
 
 /**
  * Routes for budget code operations.
@@ -35,14 +36,15 @@ export function appendLastNum (entry:User): User{
  */
 userRoutes.get("/users",
      adminGuard,
+     inactivateGraduatedUsers,
      zValidator("query", queryUsersParamsSchema), async (c) => {
-    const { page = 1, limit = 20, sort, search } = c.req.valid("query");
+    const { page = 1, limit = 20, sort, search, active } = c.req.valid("query");
 
     const whereClause: (SQL | undefined)[] = [];
 
     //Update where clause to not inlcude inactive users.
     whereClause.push(
-        eq(users.active, 1)
+        eq(users.active, active ? 1 : 0)
     );
 
     if (search) {
@@ -126,6 +128,7 @@ userRoutes.get("/users",
  */
 userRoutes.post("/users", 
      adminGuard,
+     inactivateGraduatedUsers,
      zValidator("json", createUserSchema), async (c)=>{
 
     const { name, cardNum, JHED, graduationYear, isAdmin } = c.req.valid("json");
@@ -180,7 +183,9 @@ userRoutes.post("/users",
 
 
 userRoutes.get("/users/:cardNum", 
-    zValidator("param",getUserByCardNumSchema), async(c) => {
+    zValidator("param",getUserByCardNumSchema), 
+    inactivateGraduatedUsers,
+    async(c) => {
    //Given you have a well formed card number, check if that card num exists in user table.
    const { cardNum } = c.req.valid("param");
   
@@ -190,8 +195,9 @@ userRoutes.get("/users/:cardNum",
    let [user] = await db
        .select()
        .from(users)
-       .where(and(eq(users.cardNum, cardNumTrunc), eq(users.lastDigitOfCardNum, lastDigitOfCardNum)));
+       .where(and(eq(users.cardNum, cardNumTrunc), eq(users.lastDigitOfCardNum, lastDigitOfCardNum), eq(users.active, 1)));
    
+    
    // Check if exists. If not, throw error.
    // Also, do a check to see if this is an old jcard scan attempt. If yes, deny.
    if (!user || user.lastDigitOfCardNum > lastDigitOfCardNum) {    
@@ -232,6 +238,7 @@ userRoutes.get("/users/:cardNum",
 userRoutes.delete(
     "/users/:id", 
     adminGuard,
+    inactivateGraduatedUsers,
     zValidator("param", getUserSchema),
     async (c)=>{
                 
@@ -239,7 +246,7 @@ userRoutes.delete(
         const [user] = await db
             .select()
             .from(users)
-            .where(eq(users.id, id))
+            .where(and(eq(users.id, id), eq(users.active, 1)))
         
         
         if (!user) {
