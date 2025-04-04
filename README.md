@@ -108,6 +108,14 @@ Finally, open a web browser and naviagte to "http://localhost:PORT_NUMBER_YOU_PU
 
 For web enter pnpm install and then type pnpm dev and that will run web locally. 
 
+### Local Route Testing
+
+Using Postman Workspace if we want to test API routes most actions have associated AuthGuard.
+
+To properly test enter {{LOCAL_URL}}/users/1234567890777777 as a get request. This should provide proper authorization.
+
+To test logging out send as a post request the following: {{LOCAL_URL}}/logout
+
 ### Usage Specifications
 
 #### Admin Dashboard
