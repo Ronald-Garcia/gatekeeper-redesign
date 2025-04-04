@@ -29,5 +29,7 @@ export default function MachinesComponent() {
       }
 
         </div>
+
+
   );
 }

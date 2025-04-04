@@ -1,5 +1,5 @@
 import { fetchCurrentMachine, getAllMachines, getAllTrainingsOfUser, getMachine, getMachineTypes } from "@/data/api";
-import { setCurrentMachine, setCurTrainings, setMachines, setMachinesTypes} from "@/data/store";
+import { setCurrentMachine, setCurTrainings, setMachines, setMachinesTypes, setMetaData} from "@/data/store";
 import { Machine } from "@/data/types/machine";
 import { MachineType } from "@/data/types/machineType";
 import { SortMachineType } from "@/data/types/sort";
@@ -50,8 +50,10 @@ function useQueryMachines(reload: boolean) {
       ) => {
         try {
           const {
-            data: fetchedMachines
+            data: fetchedMachines,
+            meta: fetchedMetaData
           } = await getAllMachines(sort, page, limit, search);
+          setMetaData(fetchedMetaData);
           setMachines(fetchedMachines);
         }  catch (e) {
             //get message from api response, put it on a toast

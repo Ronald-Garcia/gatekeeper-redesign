@@ -7,6 +7,7 @@ import { MachineType } from "./types/machineType";
 import { SortBudgetType, SortType } from "./types/sort";
 import { financialStatement } from "./types/financialStatement";
 import { DateRange } from "react-day-picker";
+import { MetaType } from "./types/meta";
 
 /**
  * Turns on the machine.
@@ -642,6 +643,7 @@ export const getAllMachines = async (
 ): Promise<{
   message: string;
   data: Machine[];
+  meta: MetaType
 }> => {
   const response = await fetch(`${API_DB_URL}/machines?search=${search}&limit=${limit}&page=${page}&sort=${sort}&type=${type}`, {
     credentials: "include",
@@ -653,11 +655,11 @@ export const getAllMachines = async (
     throw new Error(message);
   }
 
-  const { message, data }: { message: string; data: Machine[] } =
+  const { message, data, meta }: { message: string; data: Machine[]; meta:MetaType } =
     await response.json();
 
 
-  return { message, data };
+  return { message, data, meta};
 };
 
 /**

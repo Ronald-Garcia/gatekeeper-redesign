@@ -8,6 +8,7 @@ import MachineActions from "./machine-actions";
 import MachinesComponent from "../machines/machines-component";
 import Users from "../Users/users";
 import { ScrollArea } from "../ui/scroll-area";
+import Pagination_bar from "../general/pagination-bar";
 
 /*
 Admin dashboard component
@@ -58,6 +59,7 @@ const AdminDashboard = () => {
         <ScrollArea className="scroll-component">
         <MachinesComponent/>
         </ScrollArea>
+        <Pagination_bar/>
 
         </div>
       </div>
