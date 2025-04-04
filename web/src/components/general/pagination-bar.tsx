@@ -8,15 +8,17 @@ import {
     PaginationPrevious,
   } from "@/components/ui/pagination"
 import { $current_page, $max_page, $total } from "@/data/store";
-import useQueryMachines from "@/hooks/use-query-machines";
+import { SearchQuerySorts } from "@/data/types/sort";
 import { useStore } from "@nanostores/react";
 
+interface PagProps {
+    loadFunction: (sort?: SearchQuerySorts, page?: number, limit?: number, search?: string) => void
+  }
 
-const Pagination_bar = () => {
+const PaginationBar = ({loadFunction}: PagProps) => {
   
     // const {validate_session} = useValidate();
     // validate_session();
-    const {loadMachines} = useQueryMachines(false);
 
     const curPage = useStore($current_page);
     const totalEntries = useStore($total);
@@ -24,12 +26,11 @@ const Pagination_bar = () => {
 
     const handleClick = (e: React.MouseEvent<HTMLLIElement>) => {
         const page_num = Number(e.currentTarget.id);
-        console.log(Number(e.currentTarget.id));
 
         if (page_num > totalEntries) {
             return
         }
-        loadMachines(undefined, page_num, undefined, undefined);
+        loadFunction(undefined, page_num, undefined, undefined);
     };  
 
     const handleClickBack = (_: React.MouseEvent<HTMLLIElement>) => {
@@ -37,7 +38,7 @@ const Pagination_bar = () => {
         if (page_num <= 0) {
         return
         }
-        loadMachines(undefined, page_num, undefined, undefined);
+        loadFunction(undefined, page_num, undefined, undefined);
     };
 
     const handleClickNext = (_: React.MouseEvent<HTMLLIElement>) => {
@@ -45,7 +46,7 @@ const Pagination_bar = () => {
         if (page_num > maxPage) {
         return
         }
-        loadMachines(undefined, page_num, undefined, undefined);
+        loadFunction(undefined, page_num, undefined, undefined);
     };
 
     const prevprevEleId = curPage - 2
@@ -128,4 +129,4 @@ const Pagination_bar = () => {
     );
     };
     
-    export default Pagination_bar;
+    export default PaginationBar;

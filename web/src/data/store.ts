@@ -391,7 +391,7 @@ export function resetDashboardSearch() {
 export function setMetaData(data: MetaType) {
   // Set all the things for pagination.
   setLimit(data.limit);
-  setPage(data.page);
+  setPagePag(data.page);
   setTotal(data.total);
 
   setMaxPage(Math.ceil(data.total / data.limit));

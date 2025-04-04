@@ -8,7 +8,9 @@ import MachineActions from "./machine-actions";
 import MachinesComponent from "../machines/machines-component";
 import Users from "../Users/users";
 import { ScrollArea } from "../ui/scroll-area";
-import Pagination_bar from "../general/pagination-bar";
+import PaginationBar from "../general/pagination-bar";
+import useQueryMachines from "@/hooks/use-query-machines";
+import { SearchQuerySorts } from "@/data/types/sort";
 
 /*
 Admin dashboard component
@@ -16,6 +18,11 @@ Displays BudgetCodes or Users based on routing.
 */
 const AdminDashboard = () => {
   const router = useStore($router);
+
+  //Bunch of functions that we cast to the generalized loading function type to pass to pagination.
+  const {loadMachines} = useQueryMachines(false);
+  const machineLoadFunction = loadMachines as (sort?: SearchQuerySorts, page?: number, limit?: number, search?: string) => void
+  
 
   if (!router) {
     return (
@@ -59,7 +66,7 @@ const AdminDashboard = () => {
         <ScrollArea className="scroll-component">
         <MachinesComponent/>
         </ScrollArea>
-        <Pagination_bar/>
+        <PaginationBar loadFunction={machineLoadFunction}/>
 
         </div>
       </div>
