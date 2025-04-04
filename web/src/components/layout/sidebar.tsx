@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import StatementDialog from "../financialStatements/statements-dialog";
 
+
 const Sidebar = () => {
     const user = useStore($currentUser);
     const router = useStore($router);
@@ -73,9 +74,8 @@ const Sidebar = () => {
 
                 <div className="pt-4 border-t border-gray-200">
                     <StatementDialog/>
-
                 </div>
-                
+
             </nav>
         </div>
     )

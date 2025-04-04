@@ -4,13 +4,16 @@ import { Machine } from "@/data/types/machine";
 import { MachineType } from "@/data/types/machineType";
 
 import { SortMachineType } from "@/data/types/sort";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { toast } from "sonner";
 import { SortType } from "@/data/types/sort";
 
 function useQueryMachines(reload: boolean) {
-
+  // Pagination state for machine types (used for infinite scroll)
+  const [machineTypesCurrentPage, setMachineTypesCurrentPage] = useState(1);
+  const [machineTypesHasMore, setMachineTypesHasMore] = useState(false);
+  const [machineTypesIsLoading, setMachineTypesIsLoading] = useState(false);
 
   const getSavedMachine = async (): Promise<Machine | "kiosk" | undefined | 0> => {
     try {
@@ -45,7 +48,6 @@ function useQueryMachines(reload: boolean) {
     }    
   }
 
-
   const loadMachineTypes = async (
     sort: SortType = "asc",
     page: number = 1,
@@ -54,7 +56,7 @@ function useQueryMachines(reload: boolean) {
     append: boolean = false
   ) => {
     try {
-      setIsLoading(true);
+      setMachineTypesIsLoading(true);
       const {
         data: fetchedMachineTypes,
         meta
@@ -66,15 +68,15 @@ function useQueryMachines(reload: boolean) {
         setMachinesTypes(fetchedMachineTypes);
       }
       
-      setHasMore(page * limit < meta.total);
-      setCurrentPage(page);
+      setMachineTypesHasMore(page * limit < meta.total);
+      setMachineTypesCurrentPage(page);
     } catch (e) {
       const errorMessage = (e as Error).message;
       toast.error("Sorry! There was an error fetching Machine Types 🙁", {
         description: errorMessage  
       });
     } finally {
-      setIsLoading(false);
+      setMachineTypesIsLoading(false);
     }
   };
 
@@ -93,42 +95,42 @@ function useQueryMachines(reload: boolean) {
     }
   }
 
+  const loadMachines = async (
+    sort: SortMachineType = "name_asc",
+    page: number = 1,
+    limit: number = 10,
+    search: string = ""
+  ) => {
+    try {
+      const {
+        data: fetchedMachines
+      } = await getAllMachines(sort, page, limit, search);
+      setMachines(fetchedMachines);
+    } catch (e) {
+      const errorMessage = (e as Error).message;
+      toast.error("Sorry! There was an error fetching Users 🙁", {
+        description: errorMessage  
+      });
+    }
+  };
 
-      
-    const loadMachines  = async (
-      sort: SortMachineType = "name_asc",
-      page: number = 1,
-      limit: number = 10,
-      search: string = ""
-      ) => {
-        try {
-          const {
-            data: fetchedMachines
-          } = await getAllMachines(sort, page, limit, search);
-          setMachines(fetchedMachines);
-        }  catch (e) {
-            //get message from api response, put it on a toast
-            const errorMessage = (e as Error).message;
-            toast.error("Sorry! There was an error fetching Users 🙁", {
-              description: errorMessage  
-            });
-          }
-        };
+  useEffect(() => {
+    if (reload) {
+      loadMachines();
+      loadMachineTypes();
+    }
+  }, []);
 
-
-
-
-    useEffect(()=> {
-        if (reload) {
-            loadMachines();
-            loadMachineTypes();
-        }
-    }, [])
-
-    return { getSavedMachine, loadMachines, loadMachineTypes, getTrainingsOfUser }
-
-
-
+  return { 
+    getSavedMachine, 
+    loadMachines, 
+    loadMachineTypes, 
+    getTrainingsOfUser,
+    // Only expose machine types pagination for infinite scroll
+    currentPage: machineTypesCurrentPage,
+    hasMore: machineTypesHasMore,
+    isLoading: machineTypesIsLoading
+  };
 }
 
 export default useQueryMachines;

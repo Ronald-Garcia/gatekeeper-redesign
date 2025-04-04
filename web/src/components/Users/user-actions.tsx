@@ -14,10 +14,9 @@ import BudgetCodeDialog from "./budget-code-dialog";
 type UserActionsProps = {
   userId: number;
   userNumber: string;
-  setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function UserActions({ userId, userNumber, setIsActive }: UserActionsProps) {
+export default function UserActions({ userId, userNumber }: UserActionsProps) {
   const [showEditTraining, setShowEditTraining] = useState(false);
   const [showEditBudgetCode, setShowBudgetCode] = useState(false);
   const [showDeleteUser, setShowDeleteUser] = useState(false);
@@ -26,45 +25,37 @@ export default function UserActions({ userId, userNumber, setIsActive }: UserAct
   const handleTraining = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowEditTraining(true);
-    setIsActive(true);
   };
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowDeleteUser(true);
-    setIsActive(true);
   };
 
   const handleTimeout = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowTimeoutUser(true);
-    setIsActive(true);
   };
 
   const handleBudgetCode = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowBudgetCode(true);
-    setIsActive(true);
   };
 
   const handleCloseDelete = () => {
     setShowDeleteUser(false);
-    setIsActive(false);
   };
 
   const handleCloseTimeout = () => {
     setShowTimeoutUser(false);
-    setIsActive(false);
   };
 
   const handleCloseTraining = () => {
     setShowEditTraining(false);
-    setIsActive(false);
   };
 
   const handleCloseBudgetCode = () => {
     setShowBudgetCode(false);
-    setIsActive(false);
   };
 
   return (

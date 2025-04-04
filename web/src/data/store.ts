@@ -124,16 +124,6 @@ export function toggleTrainingQueue(bc: number) {
 export const $statements = atom<financialStatement[]>([]);
 
 
-type Selected = User | BudgetCode | Machine;
-
-export const $selected = atom<Selected | null>(null);
-export function selectItem(item: Selected) {
-  $selected.set(item);
-}
-
-export function clearItem() {
-  $selected.set(null);
-}
 
 
 
