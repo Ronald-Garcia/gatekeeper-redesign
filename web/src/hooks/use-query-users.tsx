@@ -105,7 +105,6 @@ function useQueryUsers(reload: boolean) {
           description: errorMessage  
         });
       return (router!.route as "start_page" | "kiosk");
-      return (router!.route as "start_page" | "kiosk");
     }
   }
 

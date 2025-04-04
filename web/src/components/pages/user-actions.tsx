@@ -1,8 +1,8 @@
 import { useStore } from "@nanostores/react";
 import AddUserDialog from "../Users/add-user-dialog";
 import { $router } from "@/data/router";
-import { Dialog} from "../ui/dialog.tsx";
-import ErrorPage from "../layout/errorPage.tsx";
+import { Dialog } from "../ui/dialog";
+import ErrorPage from "../layout/errorPage";
 import Searchbar from "../general/searchbar";
 
 /*
@@ -11,9 +11,6 @@ Displays BudgetCodes or Users based on routing.
 */
 const UsersActions = () => {
   const router = useStore($router);
-
-
-//<AddMachineDialog />          
 
   if (!router) {
     return <ErrorPage></ErrorPage>

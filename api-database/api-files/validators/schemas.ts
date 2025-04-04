@@ -9,8 +9,7 @@ export const queryUsersParamsSchema = z.object({
     search: z.string().optional(),
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().optional(),
-    cardnum: z.coerce.number().int().positive().optional(),
-    JHED: z.string().optional(),
+    active: z.coerce.boolean().optional().default(true),
 });
 
 export const createUserSchema = z.object({

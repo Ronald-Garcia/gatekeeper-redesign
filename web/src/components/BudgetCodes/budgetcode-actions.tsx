@@ -10,29 +10,22 @@ import {
 
   
   type BudgetCodeActionsProps = {
-    budgetcodeId: number;  
+    budgetcodeId: number;
   };
   
   export default function BudgetCodeActions({ budgetcodeId }: BudgetCodeActionsProps) {
-    // const [ShowUpdateBudgetCode, setShowUpdateBudgetCode] = useState(false);
-     const [ShowDeleteBudgetCode, setShowDeleteBudgetCode] = useState(false);
+    const [ShowDeleteBudgetCode, setShowDeleteBudgetCode] = useState(false);
 
-  
     const handleDelete = (e: React.MouseEvent) => {
       e.stopPropagation();
       setShowDeleteBudgetCode(true);
     };
   
-  
     const handleCloseDelete = () => {
       setShowDeleteBudgetCode(false);
     };
-
-    
-  
   
     return (
-  
       <div data-cy={`budget-code-actions-${budgetcodeId}`}>
       <DropdownMenu >
         <DropdownMenuTrigger asChild>
@@ -47,16 +40,13 @@ import {
         </DropdownMenuContent>
       </DropdownMenu>
   
- 
-  {ShowDeleteBudgetCode && (
-    <DeleteBudgetCodeDialog
-      budgetcodeId={budgetcodeId}
-      setShowDeleteBudgetCode={handleCloseDelete}
-    />
-  )}
-
-  
-  </div >
+      {ShowDeleteBudgetCode && (
+        <DeleteBudgetCodeDialog
+          budgetcodeId={budgetcodeId}
+          setShowDeleteBudgetCode={handleCloseDelete}
+        />
+      )}
+      </div>
     );
   }
   

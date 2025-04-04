@@ -8,20 +8,17 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import DeleteMachineDialog from "./delete-machine-dialogue";
 
+
 type MachineActionsProps = {
   machineId: number;
-
 };
 
 export default function MachineActions({ machineId }: MachineActionsProps) {
-   const [ShowDeleteMachine, setShowDeleteMachine] = useState(false);
-  // const [ShowMaintenanceMachine, setShowMaintenanceMachine] = useState(false);
-
+  const [showDeleteMachine, setShowDeleteMachine] = useState(false);
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowDeleteMachine(true);
-   // isActive(true); 
   };
 
   const handleMaintenance = (e: React.MouseEvent) => {
@@ -30,47 +27,37 @@ export default function MachineActions({ machineId }: MachineActionsProps) {
    // isActive(true); 
   };
 
-
   const handleCloseDelete = () => {
     setShowDeleteMachine(false);
-   // isActive(false); 
   };
 
- // const handleCloseBan = () => {
-  //  setShowMaintenanceMachine(false);
-   // isActive(false); 
- // };
 
   return (
-
-    <>
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="absolute top-2 right-2 deck-actions">
-          ...
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuItem onClick={handleDelete} className="delete-text-red">
-          Delete
-        </DropdownMenuItem>
+    <div data-cy={`machine-actions-${machineId}`}>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="absolute top-2 right-2 deck-actions" data-cy={`machine-trigger-${machineId}`}>
+            ...
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
         <DropdownMenuItem onClick={handleMaintenance} className="delete-text-red">
           Maintenance
         </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          <DropdownMenuItem onClick={handleDelete} className="delete-text-red" data-cy={`machine-delete-${machineId}`}>
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
 
-{ShowDeleteMachine && (
-  <DeleteMachineDialog
-    machineId={machineId}
-    setShowDeleteMachine={handleCloseDelete}
-  />
-)}
+      {showDeleteMachine && (
+        <DeleteMachineDialog
+          machineId={machineId}
+          setShowDeleteMachine={handleCloseDelete}
+        />
+      )}
 
-{/* {ShowBanUser && (
-  <BanUserDialog userId={userId} setShowBanUser={handleCloseBan} />
-)} */}
-
-</>
+     
+    </div>
   );
 }
