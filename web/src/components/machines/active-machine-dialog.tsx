@@ -37,7 +37,6 @@ import useQueryMachines from "@/hooks/use-query-machines";
   
     const handleCancel = (e: React.MouseEvent) => {
       e.stopPropagation();
-      console.log(activeStatus)
       setShowActiveMachine(false); //make the dialog disappear
     };
   

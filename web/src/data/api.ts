@@ -727,7 +727,7 @@ export const updateMachineType = async (type: string): Promise<{
   data: MachineType
 }> => {
   const response = await fetch(`${API_DB_URL}/machine-types`,{
-    method: "POST",
+    method: "PATCH",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({
       machineType: type
@@ -911,9 +911,12 @@ export const deleteMachine = async (id: number) => {
  */
 export const updateMachine = async (id: number, active: number) => {
   const response = await fetch(`${API_DB_URL}/machines/${id}`,{
-    method: "POST",
+    method: "PATCH",
     headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({active})
+    credentials:"include",
+    body: JSON.stringify({
+      active: active
+    })
   });
 
   if (!response.ok) {
