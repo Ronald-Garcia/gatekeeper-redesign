@@ -49,6 +49,7 @@ machineIssueRoute.get("/machine-issues",
             
             db.select({ totalCount: count() })
                 .from(machineIssues)
+                .innerJoin(users, eq(machineIssues.userId, users.id))
                 .where(and(...whereClause))
         ]);
 
