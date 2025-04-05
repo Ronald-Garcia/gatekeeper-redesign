@@ -41,7 +41,7 @@ machineRoutes.get("/machines",
         whereClause.push(ilike(machines.name, `%${search}%`));
     }
 
-    if (active) {
+    if (active !== undefined) {
         whereClause.push(eq(machines.active, active));
     }
 
@@ -249,14 +249,11 @@ machineRoutes.delete("/machines/:id",
         throw new HTTPException(404, { message: "Machine not found" });
     }
 
-    const deletedMachine = await db
-        .delete(machines)
-        .where(eq(machines.id, id))
-        .returning();
+    const [updatedMachine] = await db.update(machines).set({active: 0}).where(eq(machines.id, id)).returning();
 
     return c.json({
         success:true,
         message:"Deleted a machine",
-        data: deletedMachine
+        data: updatedMachine
     }, 200);
 })

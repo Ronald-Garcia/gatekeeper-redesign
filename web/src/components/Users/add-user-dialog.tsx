@@ -76,7 +76,9 @@ const AddUserDialog = () => {
       isAdmin: admin,
       cardNum: processedCardNum.substring(0, 16),
       graduationYear: parseInt(year),
-      id: -1
+      id: -1,
+      active: 1,
+      lastDigitOfCardNum: parseInt(cardNum.substring(15, 16))
     }
     
     // Get that user so we can do some error checking

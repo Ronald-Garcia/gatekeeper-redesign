@@ -11,6 +11,7 @@ import BanUserDialog from "./ban-user-dialog";
 import TrainingDialog from "./training-dialog";
 import BudgetCodeDialog from "./budget-code-dialog";
 import { User } from "@/data/types/user";
+import ActivateUserDialog from "./activate-user";
 
 type UserActionsProps = {
   user: User;
@@ -22,7 +23,8 @@ export default function UserActions({ user, setIsActive }: UserActionsProps) {
   const [showEditBudgetCode, setShowBudgetCode] = useState(false);
   const [showDeleteUser, setShowDeleteUser] = useState(false);
   const [showTimeoutUser, setShowTimeoutUser] = useState(false);
-
+  const [showActivateUser, setShowActivateUser] = useState(false);
+  
   const handleTraining = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowEditTraining(true);
@@ -47,6 +49,13 @@ export default function UserActions({ user, setIsActive }: UserActionsProps) {
     setIsActive(true);
   };
 
+  const handleActivate = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowActivateUser(true);
+    setIsActive(true);
+  };
+
+
   const handleCloseDelete = () => {
     setShowDeleteUser(false);
     setIsActive(false);
@@ -67,6 +76,12 @@ export default function UserActions({ user, setIsActive }: UserActionsProps) {
     setIsActive(false);
   };
 
+  const handleCloseActivate = () => {
+    setShowActivateUser(false);
+    setIsActive(false);
+  };
+
+
   return (
     <div data-cy = "user-actions" >
     <DropdownMenu>
@@ -85,7 +100,7 @@ export default function UserActions({ user, setIsActive }: UserActionsProps) {
         {user.active === 1 && <DropdownMenuItem onClick={handleDelete} className="delete-text-red" data-cy="user-delete">
           Deactivate
         </DropdownMenuItem>}
-        {user.active === 0 && <DropdownMenuItem onClick={handleDelete} className="delete-text-red" data-cy="user-delete">
+        {user.active === 0 && <DropdownMenuItem onClick={handleActivate} className="delete-text-red" data-cy="user-delete">
           Activate
         </DropdownMenuItem>}
         <DropdownMenuItem onClick={handleTimeout} className="delete-text-red" data-cy="user-timeout">
@@ -109,6 +124,10 @@ export default function UserActions({ user, setIsActive }: UserActionsProps) {
 
 {showTimeoutUser && (
   <BanUserDialog userId={user.id} setShowBanUser={handleCloseTimeout} />
+)}
+
+{showActivateUser && (
+  <ActivateUserDialog userId={user.id} setShowActivateUser={handleCloseActivate} />
 )}
 
 </div>

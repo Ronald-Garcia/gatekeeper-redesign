@@ -539,6 +539,24 @@ export const deleteUserMachineRelation = async (training_id: number): Promise<{
 }
 
 
+export const activateMachine = async (id:number) => {
+  const response = await fetch(`${API_DB_URL}/machines/${id}`, {
+    method: "PATCH",
+    credentials: "include",
+    body: JSON.stringify({
+      active: 1
+    })
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string, data: Machine } = await response.json();
+  return { message, data};
+}
+
 
 /**
  * Bans or unbans a user.
@@ -1077,3 +1095,29 @@ export const updateMachineIssue = async (id: number, resolved: number): Promise<
 
   return { message, data };
 }
+
+export const enableUser = async (id: number, graduationYear: number): Promise<{
+  message: string,
+  data: User
+}> => {
+  const response = await fetch(`${API_DB_URL}/users/${id}`, {
+    method: "PATCH",
+    credentials: "include",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      active: 1,
+      graduationYear
+    })
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string; data: User } = await response.json();
+
+  return { message, data };
+}
+

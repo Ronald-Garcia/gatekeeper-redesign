@@ -1,4 +1,4 @@
-import {  createMachine, createMachineType, deleteMachine, saveCurrentMachine } from "@/data/api";
+import {  activateMachine, createMachine, createMachineType, deleteMachine, saveCurrentMachine } from "@/data/api";
 import { addNewMachineType, appendMachine, deleteOldMachineType, removeMachine, setCurrentMachine, setKiosk } from "@/data/store";
 import { Machine } from "@/data/types/machine";
 import { MachineType } from "@/data/types/machineType";
@@ -114,8 +114,21 @@ function useMutationMachines() {
         
     }
 
+    const enableMachine = async (id:number) => {
+        try {
+            await activateMachine(id);
+            return true;
+            
+        } catch (error) {
+            const errorMessage = (error as Error).message;
+            toast.error("Sorry! There was an error activating the Machine  🙁", {
+                description: errorMessage  
+            });
+        }
+    }
+
     
-    return { saveMachine, makeKiosk, removeMachineById, addMachine, addMachineType, deleteMachineType}
+    return { saveMachine, makeKiosk, removeMachineById, addMachine, addMachineType, deleteMachineType, enableMachine}
 }
 
 export default useMutationMachines;

@@ -12,6 +12,10 @@ export const queryUsersParamsSchema = z.object({
     active: z.coerce.number().int().min(0).max(1).optional().default(1),
 });
 
+export const enableUserSchema = z.object({
+  active: z.coerce.number().int().min(0).max(1)
+})
+
 export const createUserSchema = z.object({
     name: z.string()
       .min(1, "Name is required")
