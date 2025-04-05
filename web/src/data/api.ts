@@ -6,6 +6,7 @@ import { Machine } from "./types/machine";
 import { MachineType } from "./types/machineType";
 import { SortBudgetType, SortType } from "./types/sort";
 import { financialStatement } from "./types/financialStatement";
+import { DateRange } from "react-day-picker";
 import { MachineIssue } from "./types/machineIssues";
 
 /**
@@ -1012,19 +1013,27 @@ export const sendEmail = async (email: string, to: Date, from: Date): Promise<bo
   return true;
 }
 
-// export const automateEmail = async (email: string, date: Date): Promise<boolean> => {
+export const automateEmail = async (email: string, date: Date): Promise<boolean> => {
 
-//   const response = await fetch(`${API_DB_URL}/statement-email/${email}`, {
-//     method: "POST",
-//     headers: {"Content-Type": "application/json"},
-//     credentials: "include",
-//     body: JSON.stringify({
-//       date
-//     })
-//   });
+  const response = await fetch(`${API_DB_URL}/statement-email/schedule/${email}`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    credentials: "include",
+    body: JSON.stringify({
+      date
+    })
+  });
+
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+
+    throw new Error(message);
+  }
+
+  return true;
   
-// }
-
+}
 export const createMachineIssue = async (userId: number, machineId: number): Promise<{
   message: string,
   data: MachineIssue

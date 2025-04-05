@@ -1,4 +1,4 @@
-import { sendEmail } from "@/data/api"
+import { sendEmail, automateEmail } from "@/data/api"
 import { $date, $date_range } from "@/data/store";
 import { useStore } from "@nanostores/react";
 import { useToast } from "./use-toast";
@@ -34,15 +34,13 @@ const useMutationEmails = () => {
 
     const automateFinancialStatementEmail = async (email: string) => {
         try {
+                
             if (!date) {
                 throw new Error("No date selected");
             }
 
-            toast({
-                variant: "default", 
-                title: "✅ Success 😊!",
-                description: "Email automation set successfully!"
-            });
+            await automateEmail(email, date);
+
         } catch (e) {
             const errorMessage = (e as Error).message;
             toast({
