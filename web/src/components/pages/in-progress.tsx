@@ -8,11 +8,13 @@ import { openPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 import { $currentUser, $currentMachine } from "@/data/store";
 import ConfirmReportModal from "@/components/modals/ConfirmReportModal"; 
+import useMutationMachineIssue from "@/hooks/use-mutation-machineIssue";
 
 const InProgress = () => {
 
     const curUser = useStore($currentUser);
     const curMachine = useStore($currentMachine);
+    const { reportIssue } = useMutationMachineIssue();
 
     const { curBudget, createStatement } = useMutationStatements();
     
@@ -35,29 +37,11 @@ const InProgress = () => {
 
     const handleConfirmReport = async () => {
         setIsModalOpen(false);
-    
-        try {
-            const response = await fetch("http://localhost:3000/machine-issues", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    userId: curUser.id,
-                    machineId: curMachine.id,
-                }),
-                credentials: "include"
-            });
-    
-            const result = await response.json();
-    
-            if (response.ok) {
-                console.log("Reported maintenance issue:", result.data);
-            } else {
-                console.error("Failed to report issue:", result.message || result.error);
-            }
-        } catch (err) {
-            console.error("Error reporting issue:", err);
+      
+        const result = await reportIssue(curUser.id, curMachine.id); 
+      
+        if (result) {
+          console.log("Reported issue:", result);
         }
     };
 

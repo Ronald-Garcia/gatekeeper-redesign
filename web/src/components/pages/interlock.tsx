@@ -6,6 +6,7 @@ import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 import { $curbudgets, $currentBudget, $currentUser, $currentMachine, clearCurrentBudget, clearCurrentUser, setCurrentBudget, validCurrentBudget } from "@/data/store";
 import { useEffect } from "react";
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
+import useMutationMachineIssue from "@/hooks/use-mutation-machineIssue";
 import { openPage, redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 import { turnOffMachine, turnOnMachine } from "@/data/api";
@@ -22,6 +23,8 @@ const Interlock = () => {
     const curBudget = useStore($currentBudget);
     const { getBudgetsOfUser } = useQueryBudgets(false);
     const userBudgets = useStore($curbudgets);
+    const { reportIssue } = useMutationMachineIssue();
+
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     
@@ -37,31 +40,14 @@ const Interlock = () => {
 
     const handleConfirmReport = async () => {
         setIsModalOpen(false);
-    
-        try {
-            const response = await fetch("http://localhost:3000/machine-issues", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    userId: curUser.id,
-                    machineId: curMachine.id,
-                }),
-                credentials: "include"
-            });
-    
-            const result = await response.json();
-    
-            if (response.ok) {
-                console.log("Reported maintenance issue:", result.data);
-            } else {
-                console.error("Failed to report issue:", result.message || result.error);
-            }
-        } catch (err) {
-            console.error("Error reporting issue:", err);
+      
+        const result = await reportIssue(curUser.id, curMachine.id); 
+      
+        if (result) {
+          console.log("Reported issue:", result);
         }
     };
+      
     
 
     
