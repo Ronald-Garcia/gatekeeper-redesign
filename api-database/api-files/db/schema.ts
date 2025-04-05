@@ -56,6 +56,7 @@ export const budgetCodes = pgTable("budgetCodes" , {
   id: serial().primaryKey(),
   code: text().notNull().unique(),
   name: text().notNull(),
+  // active: integer().notNull().default(1)
 })
 
 

@@ -13,28 +13,31 @@ import {
 import { Input } from "../ui/input";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { useState } from "react";
+import { User } from "@/data/types/user";
+import { Checkbox } from "../ui/checkbox";
 
 
 //prop for handling state of the dialog
 type ActivateUserDialogProp = {
-  userId: number;
+  user: User;
   setShowActivateUser:  React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 //function that handles state of the dialog
 const ActivateUserDialog = ({
-  userId,
+  user,
   setShowActivateUser,
 }: ActivateUserDialogProp) => {
   const { activateUser } = useMutationUsers();
   const { loadUsers } = useQueryUsers(false);
 
-  const [graduationYear, setGraduationYear] = useState<number>(0);
+  const [isFaculty, setIsFaculty] = useState<boolean>(!user.graduationYear);
+  const [graduationYear, setGraduationYear] = useState<number>(user.graduationYear || 0);
 
   //async function that handles deletion logic
   const handleActivateUser = async (e: React.MouseEvent) => {
     e.stopPropagation();
-     await activateUser(userId, graduationYear);
+     await activateUser(user.id, isFaculty ? undefined : graduationYear);
      loadUsers();
     setShowActivateUser(false); //make the dialog disappear
   };
@@ -67,10 +70,16 @@ const ActivateUserDialog = ({
         </AlertDialogHeader>
 
         <div className="flex flex-col gap-2">
+
+          <Label>
+            Faculty?
+          </Label>
+          <Checkbox defaultChecked={!user.graduationYear} onCheckedChange={() => setIsFaculty(!isFaculty)} />
+          
           <Label>
             Graduation Year
           </Label>
-          <Input type="number" value={graduationYear} onChange={handleGraduationYearChange} />
+          <Input disabled={isFaculty} type="number" value={graduationYear} defaultValue={user.graduationYear} onChange={handleGraduationYearChange} />
 
         </div>
 

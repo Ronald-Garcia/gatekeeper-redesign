@@ -127,7 +127,7 @@ export default function UserActions({ user, setIsActive }: UserActionsProps) {
 )}
 
 {showActivateUser && (
-  <ActivateUserDialog userId={user.id} setShowActivateUser={handleCloseActivate} />
+  <ActivateUserDialog user={user} setShowActivateUser={handleCloseActivate} />
 )}
 
 </div>

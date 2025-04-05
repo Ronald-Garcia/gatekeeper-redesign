@@ -35,7 +35,8 @@ export default function UserComponent({ user }: { user: User }) {
       >
         <div className="flex-1">
           <h3 className="font-medium text-base">{user.name}</h3>
-          <p className="text-sm text-gray-600">Class of {user.graduationYear}</p>
+          {user.graduationYear ? <p className="text-sm text-gray-600">Class of {user.graduationYear}</p> : 
+          <p className="text-sm text-gray-600">Faculty</p>}
         </div>
         <UserActions
           user={user}

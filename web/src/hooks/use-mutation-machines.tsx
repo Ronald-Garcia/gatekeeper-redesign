@@ -1,28 +1,32 @@
 import {  activateMachine, createMachine, createMachineType, deleteMachine, saveCurrentMachine } from "@/data/api";
 import { addNewMachineType, appendMachine, deleteOldMachineType, removeMachine, setCurrentMachine, setKiosk } from "@/data/store";
 import { Machine } from "@/data/types/machine";
-import { MachineType } from "@/data/types/machineType";
-import { toast } from "sonner";
-
-
+import { useToast } from "./use-toast";
 
 //primarily has functions handling state of decks after app is loaded, pretty much what's on posts UI but for this application
 
 function useMutationMachines() {
+    const { toast } = useToast();
 
     /**
       Hook to save machine
       @param machine: machine to save 
     */
     const saveMachine = async (machine: Machine) => {
-
         try {
             await saveCurrentMachine(machine.id);
             setCurrentMachine(machine);
+            toast({
+                variant: "default",
+                title: "✅ Success 😊!",
+                description: "Machine saved successfully!"
+            });
         } catch (e) {
             const errorMessage = (e as Error).message;
-            toast.error("Sorry! There was an error saving the Machine  🙁", {
-                description: errorMessage  
+            toast({
+                variant: "destructive",
+                title: "❌ Sorry! There was an error saving the Machine 🙁",
+                description: errorMessage
             });
         }
     }
@@ -32,14 +36,19 @@ function useMutationMachines() {
     */
     const makeKiosk = async () => {
         try {
-
             await saveCurrentMachine(-1);
             setKiosk(true);
-
+            toast({
+                variant: "default", 
+                title: "✅ Success 😊!",
+                description: "Kiosk mode set successfully!"
+            });
         } catch (e) {
             const errorMessage = (e as Error).message;
-            toast.error("Sorry! There was an error saving the Machine  🙁", {
-                description: errorMessage  
+            toast({
+                variant: "destructive",
+                title: "❌ Sorry! There was an error setting kiosk mode 🙁",
+                description: errorMessage
             });
         }
     }
@@ -49,15 +58,20 @@ function useMutationMachines() {
     @param id: id of machine to remove
     */
     const removeMachineById = async (id: number) => {
-
         try {
-
             await deleteMachine(id);
             removeMachine(id);
+            toast({
+                variant: "default",
+                title: "✅ Success 😊!",
+                description: "Machine removed successfully!"
+            });
         } catch (e) {
             const errorMessage = (e as Error).message;
-            toast.error("Sorry! There was an error deleting the Machine  🙁", {
-                description: errorMessage  
+            toast({
+                variant: "destructive",
+                title: "❌ Sorry! There was an error deleting the Machine 🙁",
+                description: errorMessage
             });
         } 
     }
@@ -69,11 +83,18 @@ function useMutationMachines() {
         try {
             const {data} = await createMachine(machineName, type, rate, active);
             appendMachine(data);
+            toast({
+                variant: "default",
+                title: "✅ Success 😊!",
+                description: "Machine added successfully!"
+            });
             return (data);
         } catch (e) {
             const errorMessage = (e as Error).message;
-            toast.error("Sorry! There was an error adding the Machine  🙁", {
-                description: errorMessage  
+            toast({
+                variant: "destructive",
+                title: "❌ Sorry! There was an error adding the Machine 🙁",
+                description: errorMessage
             });
         }
     }
@@ -84,16 +105,21 @@ function useMutationMachines() {
     */
     const addMachineType = async (type:string) => {
         try {
-
             const {data } = await createMachineType(type);
-           addNewMachineType(data);
+            addNewMachineType(data);
+            toast({
+                variant: "default",
+                title: "✅ Success 😊!",
+                description: "Machine type added successfully!"
+            });
         } catch (e) {
             const errorMessage = (e as Error).message;
-            toast.error("Sorry! There was an error adding the Machine Type  🙁", {
-                description: errorMessage  
+            toast({
+                variant: "destructive",
+                title: "❌ Sorry! There was an error adding the Machine Type 🙁",
+                description: errorMessage
             });
         } 
-        
     }
 
      /*
@@ -102,32 +128,42 @@ function useMutationMachines() {
     */
     const deleteMachineType = async (id:number) => {
         try {
-
             await deleteMachineType(id);
             deleteOldMachineType(id);
+            toast({
+                variant: "default",
+                title: "✅ Success 😊!",
+                description: "Machine type deleted successfully!"
+            });
         } catch (e) {
             const errorMessage = (e as Error).message;
-            toast.error("Sorry! There was an error deleting the Machine Type  🙁", {
-                description: errorMessage  
+            toast({
+                variant: "destructive",
+                title: "❌ Sorry! There was an error deleting the Machine Type 🙁",
+                description: errorMessage
             });
         } 
-        
     }
 
     const enableMachine = async (id:number) => {
         try {
             await activateMachine(id);
+            toast({
+                variant: "default",
+                title: "✅ Success 😊!",
+                description: "Machine activated successfully!"
+            });
             return true;
-            
         } catch (error) {
             const errorMessage = (error as Error).message;
-            toast.error("Sorry! There was an error activating the Machine  🙁", {
-                description: errorMessage  
+            toast({
+                variant: "destructive",
+                title: "❌ Sorry! There was an error activating the Machine 🙁",
+                description: errorMessage
             });
         }
     }
 
-    
     return { saveMachine, makeKiosk, removeMachineById, addMachine, addMachineType, deleteMachineType, enableMachine}
 }
 

@@ -7,7 +7,7 @@ import { $activeTab, $users,
 import { User } from "@/data/types/user";
 import { useStore } from "@nanostores/react";
 import { useEffect } from "react";
-import { toast } from "sonner";
+import { useToast } from "./use-toast";
 import useQueryMachines from "./use-query-machines";
 import { Machine } from "@/data/types/machine";
 import { SortType } from "@/data/types/sort";
@@ -18,6 +18,7 @@ function useQueryUsers(reload: boolean) {
   const router = useStore($router);
   const { getSavedMachine } = useQueryMachines(false);
   const activeTab = useStore($activeTab);
+  const { toast } = useToast();
 
   const loadUsers = async (
     sort: SortType = "name_asc",
@@ -31,10 +32,11 @@ function useQueryUsers(reload: boolean) {
       } = await getAllUsers(sort,page,limit,search, activeTab);
       setUsers(fetchedUsers);
     }  catch (e) {
-        //get message from api response, put it on a toast
         const errorMessage = (e as Error).message;
-        toast.error("Sorry! There was an error fetching Users 🙁", {
-          description: errorMessage  
+        toast({
+          variant: "destructive",
+          title: "❌ Sorry! There was an error fetching Users 🙁",
+          description: errorMessage
         });
       }
     };
@@ -48,9 +50,7 @@ function useQueryUsers(reload: boolean) {
         throw new Error("Could not find user! Please contact an admin to get registered.");
       }
 
-      
       setCurrentUser(data);
-
 
       let curMachine: Machine | "kiosk" | undefined | 0
       // Call python refers to calling the machine api backend. If we are not
@@ -61,7 +61,6 @@ function useQueryUsers(reload: boolean) {
       } else {
         curMachine = "kiosk";
       }
-
 
       // if curMachine === 0, then machine is inactive or not found
       if (curMachine === 0) {
@@ -92,20 +91,19 @@ function useQueryUsers(reload: boolean) {
         throw new Error("User does not have access to this machine!");
       }
 
+
       // If here, we have a non kiosk machine and are able to use it. Redirect to interlock
       const ret = "interlock";
       return ret;
 
     } catch (e) { //If there was an error anywhere, redirect to the start page.
       clearCurrentUser();
-
-      clearCurrentUser();
-
       const errorMessage = (e as Error).message;
-        toast.error("Sorry! There was an error 🙁", {
-          description: errorMessage  
-        });
-      return (router!.route as "start_page" | "kiosk");
+      toast({
+        variant: "destructive",
+        title: "❌ Sorry! There was an error 🙁",
+        description: errorMessage
+      });
       return (router!.route as "start_page" | "kiosk");
     }
   }

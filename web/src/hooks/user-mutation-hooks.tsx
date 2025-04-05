@@ -2,7 +2,6 @@ import { addUser,
     deleteUserById,
     updateUserById,
  } from "@/data/store";
-import { toast } from "sonner";
 import { User } from "@/data/types/user";
 import { createUser, 
     createUserMachineRelation, 
@@ -13,118 +12,148 @@ import { createUser,
     replaceBudgetsOfUser,
     replaceTrainingsOfUser,
     enableUser} from "@/data/api";
-
-
+import { useToast } from "./use-toast";
 
 //primarily has functions handling state of decks after app is loaded, pretty much what's on posts UI
 function useMutationUsers() {
- 
+  const { toast } = useToast();
   const deleteUser = async (id: number) => {
     try {
       await removeUser(id); 
       deleteUserById(id); 
 
+      toast({
+        variant: "default",
+        title: `✅ Success 😊!`,
+        description: `User deactivated successfully!`
+      })
+
     } catch (e) {
       //get message from api response, put it on a toast
       const errorMessage = (e as Error).message;
-      toast.error("Sorry! There was an error removing a user 🙁", {
-
+      toast({
+        variant: "destructive",
+        title: "❌ Sorry! There was an error removing a user 🙁",
         description: errorMessage
-
       })
     }
   };
 
   const addNewUser = async (user: User) => {
     try {    
+      if (!user.graduationYear) {
+        delete user.graduationYear;
+      }
       const response : { message: string, data: User } = await createUser(user);
       addUser(response.data);
+      toast({
+        variant: "default",
+        title: `✅ Success 😊!`,
+        description: `${response.data.name} added successfully!`
+      })
       return response;
+    } catch (e) {
+      const errorMessage = (e as Error).message;
+      toast({
+        variant: "destructive",
+        title: "❌ Sorry! There was an error adding a user 🙁",
+        description: errorMessage
+      })
     }
-      //get message from api response, put it on a toast
-      catch (e) {
-        //get message from api response, put it on a toast
-        const errorMessage = (e as Error).message;
-        toast.error("Sorry! There was an error adding a user 🙁", {
-          description: errorMessage  
-        });
-      }
-    };
+  };
 
-  //function that handles state of deck
   const giveBudgetCode = async (user_id: number, budget_code: number) => {
     try {
       await createUserBudgetCode(user_id, budget_code);
-
+      toast({
+        variant: "default",
+        title: `✅ Success 😊!`, 
+        description: "User budget codes updated."
+      })
     } catch (e) {
-        //get message from api response, put it on a toast
-        const errorMessage = (e as Error).message;
-        toast.error("Sorry! There was an error creating budget code relation 🙁", {
-          description: errorMessage  
-        });
-      }
-    };
+      const errorMessage = (e as Error).message;
+      toast({
+        variant: "destructive",
+        title: "❌ Sorry! There was an updating user budget codes 🙁",
+        description: errorMessage
+      })
+    }
+  };
 
   const setUserBudgetCodes = async (user_id: number, budget_codes: number[]) => {
     try {
       await replaceBudgetsOfUser(user_id, budget_codes);
-
+      toast({
+        variant: "default",
+        title: `✅ Success 😊!`,
+        description: "User budget codes updated."
+      })
     } catch (e) {
-        //get message from api response, put it on a toast
-        const errorMessage = (e as Error).message;
-        toast.error("Sorry! There was an error creating budget code relations 🙁", {
-          description: errorMessage  
-        });
-      }
-    };
+      const errorMessage = (e as Error).message;
+      toast({
+        variant: "destructive",
+        title: "❌ Sorry! There was an updating user budget codes 🙁",
+        description: errorMessage
+      })
+    }
+  };
 
-    const setUserTrainings = async (user_id: number, machine_types: number[]) => {
-      try {
-        await replaceTrainingsOfUser(user_id, machine_types);
-  
-      } catch (e) {
-          //get message from api response, put it on a toast
-          const errorMessage = (e as Error).message;
-          toast.error("Sorry! There was an error creating trainings 🙁", {
-            description: errorMessage  
-          });
-        }
-      };
+  const setUserTrainings = async (user_id: number, machine_types: number[]) => {
+    try {
+      await replaceTrainingsOfUser(user_id, machine_types);
+      toast({
+        variant: "default",
+        title: `✅ Success 😊!`,
+        description: "User training records updated successfully!"
+      })
+    } catch (e) {
+      const errorMessage = (e as Error).message;
+      toast({
+        variant: "destructive",
+        title: "❌ Sorry! There was an error updating trainings 🙁",
+        description: errorMessage
+      })
+    }
+  };
 
-
-  //function that handles state of deck
   const giveTraining = async (user_id: number, machine_id: number) => {
     try {
       await createUserMachineRelation(user_id, machine_id);
-
+      toast({
+        variant: "default",
+        title: `✅ Success 😊!`,
+        description: "User training record added successfully!"
+      })
     } catch (e) {
-        //get message from api response, put it on a toast
-        const errorMessage = (e as Error).message;
-        toast.error("Sorry! There was an error creating machine relation 🙁", {
-          description: errorMessage  
-        });
-      }
-    };
+      const errorMessage = (e as Error).message;
+      toast({
+        variant: "destructive",
+        title: "❌ Sorry! There was an error updating user trainings 🙁",
+        description: errorMessage
+      })
+    }
+  };
 
-   const updateUser = async (newUser: User) => {
+  const updateUser = async (newUser: User) => {
     try {
-    
-      const { data } = await editUser(newUser); //using store functions to handle state of app
-       updateUserById(data); //edit deck on api
-      
-    }   catch (e) {
-        //get message from api response, put it on a toast
-        const errorMessage = (e as Error).message;
-        toast.error("Sorry! There was an error updating a user 🙁", {
-          description: errorMessage  
-        });
-      }
-    };
+      const { data } = await editUser(newUser);
+      updateUserById(data);
+      toast({
+        variant: "default",
+        title: `✅ Success 😊!`,
+        description: "User updated successfully!"
+      })
+    } catch (e) {
+      const errorMessage = (e as Error).message;
+      toast({
+        variant: "destructive",
+        title: "❌ Sorry! There was an error updating a user 🙁",
+        description: errorMessage
+      })
+    }
+  };
 
-
-
-
-/*
+  /*
     const banUserById = async (user_id: number, ban: number) => {
         try {
         
@@ -139,36 +168,44 @@ function useMutationUsers() {
             });
           }
         };
+  */
 
-*/
-      const fetchUser = async (card: number) => {
-          try {
-           await getUser(card); 
-      
-          } catch (e) {
-            //get message from api response, put it on a toast
-            const errorMessage = (e as Error).message;
-            toast.error("Sorry! There was an error removing a user 🙁", {
-      
-              description: errorMessage
-      
-            })
-          }
-        };
+  const fetchUser = async (card: number) => {
+    try {
+      await getUser(card);
+      toast({
+        variant: "default",
+        title: `✅ Success 😊!`,
+        description: "User fetched successfully!"
+      })
+    } catch (e) {
+      const errorMessage = (e as Error).message;
+      toast({
+        variant: "destructive",
+        title: "❌ Sorry! There was an error fetching the user 🙁",
+        description: errorMessage
+      })
+    }
+  };
 
-        const activateUser = async (user_id: number, graduationYear: number) => {
-          try {
-            await enableUser(user_id, graduationYear);
-          } catch (e) {
-            const errorMessage = (e as Error).message;
-            toast.error("Sorry! There was an error activating a user 🙁", {
-              description: errorMessage
-            });
-          }
-        };
-        
+  const activateUser = async (user_id: number, graduationYear?: number) => {
+    try {
+      await enableUser(user_id, graduationYear);
+      toast({
+        variant: "default",
+        title: `✅ Success 😊!`,
+        description: "User activated successfully!"
+      })
+    } catch (e) {
+      const errorMessage = (e as Error).message;
+      toast({
+        variant: "destructive",
+        title: "❌ Sorry! There was an error activating a user 🙁",
+        description: errorMessage
+      })
+    }
+  };
 
-      
   return {
     deleteUser,
     addNewUser,
@@ -182,6 +219,5 @@ function useMutationUsers() {
     activateUser
   };
 }
-
 
 export default useMutationUsers;
