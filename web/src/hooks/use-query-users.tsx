@@ -31,7 +31,6 @@ function useQueryUsers(reload: boolean) {
         meta
       } = await getAllUsers(sort,page,limit,search);
       setUsers(fetchedUsers);
-      console.log(meta);
       setMetaData(meta);
     }  catch (e) {
         //get message from api response, put it on a toast
