@@ -843,7 +843,30 @@ export const getMachineTypes = async ( sort: SortType = "asc",
   return { message, data, meta };
 }
 
+/**
+ * Retrieves a machine by its ID.
+ * @param {number} id - The ID of the machine.
+ * @returns {Promise<{message: string, data: Machine}>} A promise that resolves with a message and the machine data.
+ * @throws {Error} If the response is not ok, throws an error with the response message.
+ */
+export const getMachine = async (id: number): Promise<{
+  message: string;
+  data: Machine
+}> => {
 
+  const response = await fetch(`${API_DB_URL}/machines/${id}`, {
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string, data: Machine } = await response.json();
+  
+  return { message, data };
+}
 
 /**
  * Creates a new machine.
@@ -893,6 +916,30 @@ export const deleteMachine = async (id: number) => {
   const response = await fetch(`${API_DB_URL}/machines/${id}`,{
     method: "DELETE",
     credentials: "include"
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string} = await response.json();
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string, data: Machine } = await response.json();
+
+  return { message, data };
+}
+
+/**
+ * Updates a machine by its ID.
+ * @param {number} id - The ID of the machine to delete.
+ * @param {boolean} active - active status of the machine
+ * @returns {Promise<{message: string, data: Machine}>} A promise that resolves with a message and the updated machine.
+ * @throws {Error} If the response is not ok, throws an error with the response message.
+ */
+export const updateMachine = async (id: number, active: boolean) => {
+  const response = await fetch(`${API_DB_URL}/machines/${id}`,{
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({active})
   });
 
   if (!response.ok) {

@@ -7,14 +7,18 @@ import {
 import { Button } from "@/components/ui/button"; 
 import { useState } from "react";
 import DeleteMachineDialog from "./delete-machine-dialogue";
-
+import ActiveMachineDialog from "./active-machine-dialog";
 
 type MachineActionsProps = {
   machineId: number;
+  activeStatus: number;
 };
 
-export default function MachineActions({ machineId }: MachineActionsProps) {
-  const [showDeleteMachine, setShowDeleteMachine] = useState(false);
+export default function MachineActions({ machineId, activeStatus }: MachineActionsProps) {
+   const [ShowDeleteMachine, setShowDeleteMachine] = useState(false);
+   const [ShowActiveStatus, setShowActiveMachine] = useState(false);
+  // const [ShowMaintenanceMachine, setShowMaintenanceMachine] = useState(false);
+
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -25,6 +29,12 @@ export default function MachineActions({ machineId }: MachineActionsProps) {
     e.stopPropagation();
    // setShowMaintenanceMachine(true);
    // isActive(true); 
+  };
+
+  const handleActiveStatus = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowActiveMachine(true);
+    // isActive(true); 
   };
 
   const handleCloseDelete = () => {
@@ -44,18 +54,26 @@ export default function MachineActions({ machineId }: MachineActionsProps) {
         <DropdownMenuItem onClick={handleMaintenance} className="delete-text-red">
           Maintenance
         </DropdownMenuItem>
-          <DropdownMenuItem onClick={handleDelete} className="delete-text-red" data-cy={`machine-delete-${machineId}`}>
-            Delete
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+        <DropdownMenuItem onClick={handleActiveStatus} className="delete-text-red">
+          Active Status
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
 
-      {showDeleteMachine && (
-        <DeleteMachineDialog
-          machineId={machineId}
-          setShowDeleteMachine={handleCloseDelete}
-        />
-      )}
+{ShowDeleteMachine && (
+  <DeleteMachineDialog
+    machineId={machineId}
+    setShowDeleteMachine={handleCloseDelete}
+  />
+)}
+
+{ShowActiveStatus && (
+  <ActiveMachineDialog
+    machineId={machineId}
+    activeStatus={activeStatus}
+    setShowActiveMachine={setShowActiveMachine}
+  />
+)}
 
      
     </div>

@@ -27,6 +27,19 @@ function useMutationMachines() {
         }
     }
 
+    const statusMachine = async (machine: Machine) => {
+
+        try {
+            await saveCurrentMachine(machine.id);
+            setCurrentMachine(machine);
+        } catch (e) {
+            const errorMessage = (e as Error).message;
+            toast.error("Sorry! There was an error saving the Machine  🙁", {
+                description: errorMessage  
+            });
+        }
+    }
+
      /*
       Hook to make kiosk, set current machine as the kiosk
     */
@@ -80,7 +93,7 @@ function useMutationMachines() {
 
     /*
     Hook to add MachineType
-    @param type: name of the new type of macine to be added
+    * @param type: name of the new type of macine to be added
     */
     const addMachineType = async (type:string) => {
         try {
@@ -115,7 +128,7 @@ function useMutationMachines() {
     }
 
     
-    return { saveMachine, makeKiosk, removeMachineById, addMachine, addMachineType, deleteMachineType}
+    return { saveMachine, makeKiosk, removeMachineById, addMachine, addMachineType, deleteMachineType, statusMachine}
 }
 
 export default useMutationMachines;
