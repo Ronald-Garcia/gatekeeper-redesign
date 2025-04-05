@@ -283,14 +283,14 @@ userRoutes.patch("/users/:id",
     zValidator("json", enableUserSchema),
     async (c) => {
         const { id } = c.req.valid("param");
-        const { active } = c.req.valid("json");
+        const { active, graduationYear } = c.req.valid("json");
         const [user] = await db.select().from(users).where(eq(users.id, id));
         
         if (!user) {
             throw new HTTPException(404, { message: "User not found" });
         }
 
-        const [updatedUser] = await db.update(users).set({ active }).where(eq(users.id, id)).returning();
+        const [updatedUser] = await db.update(users).set({ active, graduationYear: graduationYear === undefined ? null : graduationYear }).where(eq(users.id, id)).returning();
 
         return c.json({
             success: true,

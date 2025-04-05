@@ -7,11 +7,12 @@ import {
 import {  } from "@/data/types/budgetCode";
 import { useStore } from "@nanostores/react";
 import { useEffect } from "react";
-import { toast } from "sonner";
+import { useToast } from "./use-toast";
 
 function useQueryStatements(reload: boolean) {
   const statements = useStore($statements);
   const dateRange = useStore($date_range);
+  const { toast } = useToast();
   
   const loadFinancialStatements = async () => {
     try {
@@ -19,17 +20,17 @@ function useQueryStatements(reload: boolean) {
         data: fetchedFinancialStatements
       } = await getFinancialStatements(dateRange!.to as Date, dateRange!.from as Date);
       setFinancialStatements(fetchedFinancialStatements);
-    }  catch (e) {
-        //get message from api response, put it on a toast
-        const errorMessage = (e as Error).message;
-        toast.error("Sorry! There was an error fetching Budget Codes  🙁", {
-          description: errorMessage  
-        });
-      }
-    };
+    } catch (e) {
+      const errorMessage = (e as Error).message;
+      toast({
+        variant: "destructive",
+        title: "❌ Sorry! There was an error fetching financial statements 🙁",
+        description: errorMessage
+      });
+    }
+  };
 
   useEffect(() => {
-
     if (reload) {
       loadFinancialStatements();
     }

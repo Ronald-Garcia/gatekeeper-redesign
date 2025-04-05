@@ -4,7 +4,7 @@ export type User = {
   cardNum: string;
   JHED: string;
   isAdmin: number;
-  graduationYear: number;
+  graduationYear?: number;
   active: number;
   lastDigitOfCardNum: number;
 }

@@ -1096,18 +1096,26 @@ export const updateMachineIssue = async (id: number, resolved: number): Promise<
   return { message, data };
 }
 
-export const enableUser = async (id: number, graduationYear: number): Promise<{
+export const enableUser = async (id: number, graduationYear?: number): Promise<{
   message: string,
   data: User
 }> => {
+
+  let body: {active: number, graduationYear?: number} = {
+    active: 1,
+    graduationYear: graduationYear
+  }
+
+  if (!graduationYear) {
+    delete body.graduationYear;
+  } 
+
+  console.log(body);
   const response = await fetch(`${API_DB_URL}/users/${id}`, {
     method: "PATCH",
     credentials: "include",
     headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      active: 1,
-      graduationYear
-    })
+    body: JSON.stringify(body)
   });
 
   if (!response.ok) {

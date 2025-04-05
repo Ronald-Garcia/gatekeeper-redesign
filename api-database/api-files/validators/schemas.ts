@@ -13,7 +13,8 @@ export const queryUsersParamsSchema = z.object({
 });
 
 export const enableUserSchema = z.object({
-  active: z.coerce.number().int().min(0).max(1)
+  active: z.coerce.number().int().min(0).max(1),
+  graduationYear: z.coerce.number().int().min(1850).max(3000).optional()
 })
 
 export const createUserSchema = z.object({
