@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
-import { $curbudgets, $currentBudget, $currentUser, clearCurrentBudget, clearCurrentUser, setCurrentBudget, validCurrentBudget } from "@/data/store";
+import { $curbudgets, $currentBudget, $currentUser, $currentMachine, clearCurrentBudget, clearCurrentUser, setCurrentBudget, validCurrentBudget } from "@/data/store";
 import { useEffect } from "react";
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
 import { openPage, redirectPage } from "@nanostores/router";
@@ -18,6 +18,7 @@ Display to use on gates when a user logs in. Displays BudgetCodes a user has ass
 const Interlock = () => {
 
     const curUser = useStore($currentUser);
+    const curMachine = useStore($currentMachine);
     const curBudget = useStore($currentBudget);
     const { getBudgetsOfUser } = useQueryBudgets(false);
     const userBudgets = useStore($curbudgets);
@@ -34,11 +35,34 @@ const Interlock = () => {
         setIsModalOpen(true);
     };
 
-    const handleConfirmReport = () => {
+    const handleConfirmReport = async () => {
         setIsModalOpen(false);
-        console.log("Reported maintenance issue for this machine!");
-        // TODO: Implement API call to report the issue
+    
+        try {
+            const response = await fetch("http://localhost:3000/machine-issues", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    userId: curUser.id,
+                    machineId: curMachine.id,
+                }),
+                credentials: "include"
+            });
+    
+            const result = await response.json();
+    
+            if (response.ok) {
+                console.log("Reported maintenance issue:", result.data);
+            } else {
+                console.error("Failed to report issue:", result.message || result.error);
+            }
+        } catch (err) {
+            console.error("Error reporting issue:", err);
+        }
     };
+    
 
     
 

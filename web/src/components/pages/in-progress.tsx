@@ -1,3 +1,4 @@
+import { useStore } from "@nanostores/react";
 import { useState, useEffect } from "react";
 import Timer from "./timer";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
@@ -5,9 +6,13 @@ import { Button } from "@/components/ui/button";
 import useMutationStatements from "@/hooks/use-mutation-financial-statements";
 import { openPage } from "@nanostores/router";
 import { $router } from "@/data/router";
+import { $currentUser, $currentMachine } from "@/data/store";
 import ConfirmReportModal from "@/components/modals/ConfirmReportModal"; 
 
 const InProgress = () => {
+
+    const curUser = useStore($currentUser);
+    const curMachine = useStore($currentMachine);
 
     const { curBudget, createStatement } = useMutationStatements();
     
@@ -28,10 +33,32 @@ const InProgress = () => {
         setIsModalOpen(true);
     };
 
-    const handleConfirmReport = () => {
+    const handleConfirmReport = async () => {
         setIsModalOpen(false);
-        console.log("Reported maintenance issue for this machine!");
-        // TODO: Implement API call to report the issue
+    
+        try {
+            const response = await fetch("http://localhost:3000/machine-issues", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    userId: curUser.id,
+                    machineId: curMachine.id,
+                }),
+                credentials: "include"
+            });
+    
+            const result = await response.json();
+    
+            if (response.ok) {
+                console.log("Reported maintenance issue:", result.data);
+            } else {
+                console.error("Failed to report issue:", result.message || result.error);
+            }
+        } catch (err) {
+            console.error("Error reporting issue:", err);
+        }
     };
 
     
