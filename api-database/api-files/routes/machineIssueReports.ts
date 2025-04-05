@@ -1,6 +1,6 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { createMachineIssueSchema, updateMachineIssueSchema, queryMachineIssuesSchema, getIssuesOfMachineSchema } from "../validators/machineIssueReportSchema.js";
+import { createMachineIssueSchema, updateMachineIssueParamSchema, updateMachineIssueBodySchema, queryMachineIssuesSchema, getIssuesOfMachineSchema } from "../validators/machineIssueReportSchema.js";
 import { and, asc, count, desc, eq } from "drizzle-orm";
 import { db } from "../db/index.js";
 import { machineIssues, machines, users } from "../db/schema.js";
@@ -29,15 +29,18 @@ machineIssueRoute.get("/machine-issues",
 
         const [issues, [{ totalCount }]] = await Promise.all([
             db.select({
+                id: machineIssues.id,
                 user: {
-                    id: machineIssues.userId,
-                    name: users.name,
-                    JHED: users.JHED,
+                  id: machineIssues.userId,
+                  name: users.name,
+                  JHED: users.JHED,
                 },
                 machine: {
-                    id: machines.id,
-                    name: machines.name,
-                }
+                  id: machines.id,
+                  name: machines.name,
+                },
+                resolved: machineIssues.resolved,
+                reportedAt: machineIssues.reportedAt,
             })
                 .from(machineIssues)
                 .innerJoin(users, eq(machineIssues.userId, users.id))
@@ -99,28 +102,29 @@ machineIssueRoute.post("/machine-issues",
 // Update issue status (resolve/unresolve)
 machineIssueRoute.patch("/machine-issues/:id", 
     adminGuard,
-    zValidator("param", updateMachineIssueSchema),
-    zValidator("json", updateMachineIssueSchema),
+    zValidator("param", updateMachineIssueParamSchema),
+    zValidator("json", updateMachineIssueBodySchema),
     async (c) => {
-        const { id } = c.req.valid("param");
-        const { resolved } = c.req.valid("json");
-
-        const [updatedIssue] = await db.update(machineIssues)
-            .set({ resolved })
-            .where(eq(machineIssues.id, id))
-            .returning();
-
-        if (!updatedIssue) {
-            throw new HTTPException(404, { message: "Issue not found." });
-        }
-
-        return c.json({
-            success: true,
-            message: "Machine issue updated successfully.",
-            data: updatedIssue
-        });
+      const { id } = c.req.valid("param");
+      const { resolved } = c.req.valid("json");
+  
+      const [updatedIssue] = await db.update(machineIssues)
+        .set({ resolved })
+        .where(eq(machineIssues.id, id))
+        .returning();
+  
+      if (!updatedIssue) {
+        throw new HTTPException(404, { message: "Issue not found." });
+      }
+  
+      return c.json({
+        success: true,
+        message: "Machine issue updated successfully.",
+        data: updatedIssue
+      });
     }
-);
+  );
+  
 
 
 // Get machine issues (with filtering and pagination)

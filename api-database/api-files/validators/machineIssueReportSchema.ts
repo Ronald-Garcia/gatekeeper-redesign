@@ -14,11 +14,14 @@ export const createMachineIssueSchema = z.object({
     machineId: z.coerce.number().int().positive()
 });
 
-export const updateMachineIssueSchema = z.object({
+export const updateMachineIssueParamSchema = z.object({
     id: z.coerce.number().int().positive(),
+  });
+  
+  export const updateMachineIssueBodySchema = z.object({
     resolved: z.enum(["0", "1"]).transform(val => parseInt(val)), // Convert to integer
-});
-
+  });
+  
 export const getIssuesOfMachineSchema = z.object({
     machineId: z.coerce.number().int().positive(),
 });
