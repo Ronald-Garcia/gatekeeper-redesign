@@ -2,6 +2,7 @@ import { getAllUsers, getUser, validateTraining } from "@/data/api";
 import { $users, 
   clearCurrentUser, 
   setCurrentUser, 
+  setMetaData, 
   setUsers,
  } from "@/data/store";
 import { User } from "@/data/types/user";
@@ -26,9 +27,11 @@ function useQueryUsers(reload: boolean) {
   ) => {
     try {
       const {
-        data: fetchedUsers
+        data: fetchedUsers,
+        meta
       } = await getAllUsers(sort,page,limit,search);
       setUsers(fetchedUsers);
+      setMetaData(meta);
     }  catch (e) {
         //get message from api response, put it on a toast
         const errorMessage = (e as Error).message;
@@ -104,7 +107,6 @@ function useQueryUsers(reload: boolean) {
         toast.error("Sorry! There was an error 🙁", {
           description: errorMessage  
         });
-      return (router!.route as "start_page" | "kiosk");
       return (router!.route as "start_page" | "kiosk");
     }
   }

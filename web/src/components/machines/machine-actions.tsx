@@ -23,7 +23,6 @@ export default function MachineActions({ machineId, activeStatus }: MachineActio
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowDeleteMachine(true);
-   // isActive(true); 
   };
 
   const handleMaintenance = (e: React.MouseEvent) => {
@@ -40,27 +39,18 @@ export default function MachineActions({ machineId, activeStatus }: MachineActio
 
   const handleCloseDelete = () => {
     setShowDeleteMachine(false);
-   // isActive(false); 
   };
 
- // const handleCloseBan = () => {
-  //  setShowMaintenanceMachine(false);
-   // isActive(false); 
- // };
 
   return (
-
-    <>
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="absolute top-2 right-2 deck-actions">
-          ...
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuItem onClick={handleDelete} className="delete-text-red">
-          Delete
-        </DropdownMenuItem>
+    <div data-cy={`machine-actions-${machineId}`}>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="absolute top-2 right-2 deck-actions" data-cy={`machine-trigger-${machineId}`}>
+            ...
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
         <DropdownMenuItem onClick={handleMaintenance} className="delete-text-red">
           Maintenance
         </DropdownMenuItem>
@@ -85,10 +75,7 @@ export default function MachineActions({ machineId, activeStatus }: MachineActio
   />
 )}
 
-{/* {ShowBanUser && (
-  <BanUserDialog userId={userId} setShowBanUser={handleCloseBan} />
-)} */}
-
-</>
+     
+    </div>
   );
 }

@@ -5,11 +5,13 @@ import { Button } from "@/components/ui/button";
 import useMutationStatements from "@/hooks/use-mutation-financial-statements";
 import { openPage } from "@nanostores/router";
 import { $router } from "@/data/router";
+import ConfirmReportModal from "@/components/modals/ConfirmReportModal"; 
 
 const InProgress = () => {
 
     const { curBudget, createStatement } = useMutationStatements();
     
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const [time, setTime] = useState<number>(0);
 
@@ -21,6 +23,17 @@ const InProgress = () => {
             clearInterval(interval)
         };
     }, []);
+
+    const handleReportIssue = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleConfirmReport = () => {
+        setIsModalOpen(false);
+        console.log("Reported maintenance issue for this machine!");
+        // TODO: Implement API call to report the issue
+    };
+
     
     const onSubmit = async () => {
         await createStatement(time);
@@ -44,15 +57,25 @@ const InProgress = () => {
                         <Timer time={time}></Timer>
                     </div>
                     </CardContent>
-                    <CardFooter 
-                        className="justify-center"
-                        data-cy="submit"
-                        onClick={onSubmit}>
-                        <Button>
+                    <CardFooter className="relative flex justify-end items-center w-full" data-cy="submit">
+                        <Button className="bg-yellow-400 text-black px-4 py-2 ml-4" variant="ghost" onClick={(e) => { 
+                            e.stopPropagation();  // Prevent the click from bubbling up to the CardFooter's onClick
+                            handleReportIssue(); 
+                        }}> 
+                            Report Issue 
+                        </Button>
+                        <Button className="absolute left-1/2 transform -translate-x-1/2" onClick={onSubmit}>
                             Tap when finished!
                         </Button>
                     </CardFooter>
             </Card>
+
+            {/* Report Issue Confirmation Modal */}
+            <ConfirmReportModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onConfirm={handleConfirmReport}
+            />
         </>
     );
 }

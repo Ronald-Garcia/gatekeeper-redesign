@@ -4,8 +4,9 @@ import { Training } from "./types/training";
 import { BudgetCode } from "./types/budgetCode"; 
 import { Machine } from "./types/machine";
 import { MachineType } from "./types/machineType";
-import { SortBudgetType, SortType } from "./types/sort";
+import { SortBudgetType, SortMachineType, SortType } from "./types/sort";
 import { financialStatement } from "./types/financialStatement";
+import { MetaType } from "./types/meta";
 
 /**
  * Turns on the machine.
@@ -77,6 +78,11 @@ export const getAllUsers = async (
 ): Promise<{
   message: string;
   data: User[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+  };
 }> => {
   const response = await fetch(`${API_DB_URL}/users?search=${search}&limit=${limit}&page=${page}&sort=${sort}`, {
     credentials: "include",
@@ -88,10 +94,18 @@ export const getAllUsers = async (
     throw new Error(message);
   }
 
-  const { message, data }: { message: string; data: User[] } =
+  const { message, data, meta }: { 
+    message: string; 
+    data: User[],
+    meta: {
+      page: number;
+      limit: number;
+      total: number;
+    };
+   } =
     await response.json();
 
-  return { message, data };
+  return { message, data, meta };
 };
 
 
@@ -329,6 +343,11 @@ export const getAllBudgets = async (
 ): Promise<{
   message: string;
   data: BudgetCode[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+  };
 }> => {
   const response = await fetch(`${API_DB_URL}/budget-codes?search=${search}&limit=${limit}&page=${page}&sort=${sort}`, {
     credentials: "include",
@@ -340,10 +359,17 @@ export const getAllBudgets = async (
     throw new Error(message);
   }
 
-  const { message, data }: { message: string; data: BudgetCode[] } =
-    await response.json();
+  const { message, data, meta }: { 
+    message: string; 
+    data: BudgetCode[];
+    meta: {
+      page: number;
+      limit: number;
+      total: number;
+    };
+  } = await response.json();
 
-  return { message, data };
+  return { message, data, meta };
 };
 
 /**
@@ -632,7 +658,7 @@ export const saveCurrentMachine = async (machine_id: number): Promise<{
  * @throws {Error} If the response is not ok, throws an error with the response message.
  */
 export const getAllMachines = async (
-  sort: SortType = "name_asc",
+  sort: SortMachineType = "name_asc",
   page: number = 1,
   limit: number = 10,
   search: string = "",
@@ -641,6 +667,7 @@ export const getAllMachines = async (
 ): Promise<{
   message: string;
   data: Machine[];
+  meta: MetaType
 }> => {
   const response = await fetch(`${API_DB_URL}/machines?search=${search}&limit=${limit}&page=${page}&sort=${sort}&type=${type}`, {
     credentials: "include",
@@ -652,12 +679,37 @@ export const getAllMachines = async (
     throw new Error(message);
   }
 
-  const { message, data }: { message: string; data: Machine[] } =
+  const { message, data, meta }: { message: string; data: Machine[]; meta:MetaType } =
     await response.json();
 
 
-  return { message, data };
+  return { message, data, meta};
 };
+
+/**
+ * Retrieves a machine by its ID.
+ * @param {number} id - The ID of the machine.
+ * @returns {Promise<{message: string, data: Machine}>} A promise that resolves with a message and the machine data.
+ * @throws {Error} If the response is not ok, throws an error with the response message.
+ */
+export const getMachine = async (id: number): Promise<{
+  message: string;
+  data: Machine
+}> => {
+
+  const response = await fetch(`${API_DB_URL}/machines/${id}`, {
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string, data: Machine } = await response.json();
+  
+  return { message, data };
+}
 
 
 /**
@@ -763,6 +815,11 @@ export const getMachineTypes = async ( sort: SortType = "asc",
 ): Promise<{
   message: string;
   data: MachineType[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+  };
 }> => {
   const response = await fetch(`${API_DB_URL}/machine-types?search=${search}&limit=${limit}&page=${page}&sort=${sort}`, {
     credentials: "include",
@@ -773,9 +830,17 @@ export const getMachineTypes = async ( sort: SortType = "asc",
     throw new Error(message);
   }
 
-  const { message, data }: { message: string, data: MachineType[] } = await response.json();
+  const { message, data, meta }: { 
+    message: string; 
+    data: MachineType[];
+    meta: {
+      page: number;
+      limit: number;
+      total: number;
+    };
+  } = await response.json();
 
-  return { message, data };
+  return { message, data, meta };
 }
 
 /**

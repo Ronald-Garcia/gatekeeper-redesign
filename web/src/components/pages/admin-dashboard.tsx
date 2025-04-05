@@ -8,6 +8,11 @@ import MachineActions from "./machine-actions";
 import MachinesComponent from "../machines/machines-component";
 import Users from "../Users/users";
 import { ScrollArea } from "../ui/scroll-area";
+import PaginationBar from "../general/pagination-bar";
+import useQueryMachines from "@/hooks/use-query-machines";
+import { SearchQuerySorts } from "@/data/types/sort";
+import useQueryUsers from "@/hooks/use-query-users";
+import useQueryBudgets from "@/hooks/use-query-budgetCodes";
 
 /*
 Admin dashboard component
@@ -15,6 +20,17 @@ Displays BudgetCodes or Users based on routing.
 */
 const AdminDashboard = () => {
   const router = useStore($router);
+
+  //Bunch of functions that we cast to the generalized loading function type to pass to pagination.
+  const {loadUsers} = useQueryUsers(false);
+  const userLoadFunction = loadUsers as (sort?: SearchQuerySorts, page?: number, limit?: number, search?: string) => void
+
+  const {loadBudgets} = useQueryBudgets(false);
+  const budgetLoadFunction = loadBudgets as (sort?: SearchQuerySorts, page?: number, limit?: number, search?: string) => void
+
+  const {loadMachines} = useQueryMachines(false);
+  const machineLoadFunction = loadMachines as (sort?: SearchQuerySorts, page?: number, limit?: number, search?: string) => void
+  
 
   if (!router) {
     return (
@@ -33,6 +49,8 @@ const AdminDashboard = () => {
         <ScrollArea className="scroll-component">
           <Users/>
         </ScrollArea>
+        <PaginationBar loadFunction={userLoadFunction}/>
+
       </div>
     </div>
     )
@@ -45,6 +63,7 @@ const AdminDashboard = () => {
         <ScrollArea className="scroll-component">
         <BudgetCodes/>
         </ScrollArea>
+        <PaginationBar loadFunction={budgetLoadFunction}/>
 
       </div>
     </div>
@@ -58,6 +77,7 @@ const AdminDashboard = () => {
         <ScrollArea className="scroll-component">
         <MachinesComponent/>
         </ScrollArea>
+        <PaginationBar loadFunction={machineLoadFunction}/>
 
         </div>
       </div>

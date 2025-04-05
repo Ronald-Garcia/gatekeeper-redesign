@@ -6,6 +6,7 @@ import { MachineType } from "./types/machineType";
 import { financialStatement } from "./types/financialStatement";
 import { logger } from "@nanostores/logger"
 import { DateRange } from "react-day-picker";
+import { MetaType } from "./types/meta";
 
 export const $users = atom<User[]>([]);
 export const $codes = atom<BudgetCode[]>([]);
@@ -15,6 +16,30 @@ export const $budget_code_queue = atom<number[]>([]);
 export const $training_queue = atom<number[]>([]);
 export const $date_range = atom<DateRange | undefined>(undefined);
 export const $date = atom<Date | undefined>(undefined);
+export const $hasMoreUserBudgets = atom<boolean>(false);
+export const $hasMoreUserTrainings = atom<boolean>(false);
+export const $currentPage = atom<number>(1);
+
+export function setPage(p: number) {
+  $currentPage.set(p);
+}
+
+export function incrementPage() {
+  $currentPage.set($currentPage.get() + 1);
+}
+
+export function decrementPage() {
+  $currentPage.set($currentPage.get() - 1);
+}
+
+export function setHasMoreUserBudgets(hasMore: boolean) {
+  $hasMoreUserBudgets.set(hasMore);
+}
+
+export function setHasMoreUserTrainings(hasMore: boolean) {
+  $hasMoreUserTrainings.set(hasMore);
+}
+
 
 export function setDate(date: Date | undefined) {
   $date.set(date);
@@ -100,16 +125,8 @@ export function toggleTrainingQueue(bc: number) {
 export const $statements = atom<financialStatement[]>([]);
 
 
-type Selected = User | BudgetCode | Machine;
 
-export const $selected = atom<Selected | null>(null);
-export function selectItem(item: Selected) {
-  $selected.set(item);
-}
 
-export function clearItem() {
-  $selected.set(null);
-}
 
 // export function addSelectedBudgetCode(bc: number) {
 //   $budget_code_queue.set([...$budget_code_queue.get(), bc ]);
@@ -255,6 +272,10 @@ export function setBudgetCodes(codeList: BudgetCode[]) {
   $codes.set(codeList);
 }
 
+export function appendBudgetCodes(codeList: BudgetCode[]) {
+  $codes.set([...$codes.get(), ...codeList]);
+}
+
 export function addBudgetCode(code: BudgetCode) {
   $codes.set([...$codes.get(), code]);
 }
@@ -311,6 +332,10 @@ export function setMachinesTypes(typeList: MachineType[]) {
   $machine_types.set(typeList);
 }
 
+export function appendMachineTypes(typeList: MachineType[]) {
+  $machine_types.set([...$machine_types.get(), ...typeList]);
+}
+
 // *** SERACH STORES ***
 
 //The "local" search for a user, aka state control of the search bar.
@@ -359,4 +384,44 @@ export function setDashboardLocalSearch(search: string) {
 export function resetDashboardSearch() {
   setDashboardActiveSearch("");
   setDashboardLocalSearch("");
+}
+
+// Pagination stores
+
+export function setMetaData(data: MetaType) {
+  // Set all the things for pagination.
+  setLimit(data.limit);
+  setPagePag(data.page);
+  setTotal(data.total);
+
+  setMaxPage(Math.ceil(data.total / data.limit));
+}
+
+export const $current_page = atom<number>(1);
+export function setPagePag(page: number) {
+  $current_page.set(page);
+}
+
+export function decrementPagePag() {
+  $current_page.set($current_page.get() - 1);
+}
+
+export const $has_more_pag = atom(true);
+export function set_has_more_pag(hasMore: boolean) {
+  $has_more_pag.set(hasMore);
+}
+
+export const $limit = atom<number>(0);
+export function setLimit(limit: number) {
+  $limit.set(limit);
+}
+
+export const $total = atom<number>(0);
+export function setTotal(total: number) {
+  $total.set(total);
+}
+
+export const $max_page = atom<number>(1);
+export function setMaxPage(max_page: number) {
+  $max_page.set(max_page);
 }
