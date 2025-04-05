@@ -9,6 +9,7 @@ import { useState } from "react";
 import DeleteMachineDialog from "./delete-machine-dialogue";
 import ActiveMachineDialog from "./active-machine-dialog";
 
+
 type MachineActionsProps = {
   machineId: number;
   activeStatus: number;
@@ -51,6 +52,9 @@ export default function MachineActions({ machineId, activeStatus }: MachineActio
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
+        <DropdownMenuItem onClick={handleDelete} className="delete-text-red">
+          Delete
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={handleMaintenance} className="delete-text-red">
           Maintenance
         </DropdownMenuItem>
