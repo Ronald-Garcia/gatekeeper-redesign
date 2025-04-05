@@ -112,7 +112,7 @@
 }
 
 .scroll-component {
-  height: calc(100vh - 181px);
+  height: calc(100vh - 181px - 36px);
 }
 
 /*toggle group styling*/

@@ -6,6 +6,7 @@ import { MachineType } from "./types/machineType";
 import { financialStatement } from "./types/financialStatement";
 import { logger } from "@nanostores/logger"
 import { DateRange } from "react-day-picker";
+import { MetaType } from "./types/meta";
 
 export const $users = atom<User[]>([]);
 export const $codes = atom<BudgetCode[]>([]);
@@ -383,4 +384,44 @@ export function setDashboardLocalSearch(search: string) {
 export function resetDashboardSearch() {
   setDashboardActiveSearch("");
   setDashboardLocalSearch("");
+}
+
+// Pagination stores
+
+export function setMetaData(data: MetaType) {
+  // Set all the things for pagination.
+  setLimit(data.limit);
+  setPagePag(data.page);
+  setTotal(data.total);
+
+  setMaxPage(Math.ceil(data.total / data.limit));
+}
+
+export const $current_page = atom<number>(1);
+export function setPagePag(page: number) {
+  $current_page.set(page);
+}
+
+export function decrementPagePag() {
+  $current_page.set($current_page.get() - 1);
+}
+
+export const $has_more_pag = atom(true);
+export function set_has_more_pag(hasMore: boolean) {
+  $has_more_pag.set(hasMore);
+}
+
+export const $limit = atom<number>(0);
+export function setLimit(limit: number) {
+  $limit.set(limit);
+}
+
+export const $total = atom<number>(0);
+export function setTotal(total: number) {
+  $total.set(total);
+}
+
+export const $max_page = atom<number>(1);
+export function setMaxPage(max_page: number) {
+  $max_page.set(max_page);
 }

@@ -1,5 +1,5 @@
-import { fetchCurrentMachine, getAllMachines, getAllTrainingsOfUser, getMachine, getMachineTypes } from "@/data/api";
-import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes, appendMachineTypes } from "@/data/store";
+import { fetchCurrentMachine, getAllMachines, getAllTrainingsOfUser, getMachine, getMachineTypes } from "@/data/api"
+import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes, appendMachineTypes,setMetaData } from "@/data/store";
 import { Machine } from "@/data/types/machine";
 import { MachineType } from "@/data/types/machineType";
 
@@ -100,19 +100,22 @@ function useQueryMachines(reload: boolean) {
     page: number = 1,
     limit: number = 10,
     search: string = ""
-  ) => {
-    try {
-      const {
-        data: fetchedMachines
-      } = await getAllMachines(sort, page, limit, search);
-      setMachines(fetchedMachines);
-    } catch (e) {
-      const errorMessage = (e as Error).message;
-      toast.error("Sorry! There was an error fetching Users 🙁", {
-        description: errorMessage  
-      });
-    }
-  };
+    ) => {
+      try {
+        const {
+          data: fetchedMachines,
+          meta: fetchedMetaData
+        } = await getAllMachines(sort, page, limit, search);
+        setMetaData(fetchedMetaData);
+        setMachines(fetchedMachines);
+      }  catch (e) {
+          //get message from api response, put it on a toast
+          const errorMessage = (e as Error).message;
+          toast.error("Sorry! There was an error fetching Users 🙁", {
+            description: errorMessage  
+          });
+        }
+      };
 
   useEffect(() => {
     if (reload) {

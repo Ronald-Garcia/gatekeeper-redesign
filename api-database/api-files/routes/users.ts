@@ -181,7 +181,7 @@ userRoutes.post("/users",
     }, 201);
 })
 
-
+//Sign in a user by id.
 userRoutes.get("/users/:cardNum", 
     zValidator("param",getUserByCardNumSchema), 
     inactivateGraduatedUsers,
