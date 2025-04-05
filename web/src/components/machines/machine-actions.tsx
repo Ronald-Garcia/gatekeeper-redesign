@@ -7,15 +7,15 @@ import {
 import { Button } from "@/components/ui/button"; 
 import { useState } from "react";
 import DeleteMachineDialog from "./delete-machine-dialogue";
-import ActiveMachineDialog from "./active-machine-dialog";
+import { Machine } from "@/data/types/machine";
+import ActivateMachineDialog from "./activate-machine";
 
 
 type MachineActionsProps = {
-  machineId: number;
-  activeStatus: number;
+  machine: Machine;
 };
 
-export default function MachineActions({ machineId, activeStatus }: MachineActionsProps) {
+export default function MachineActions({ machine }: MachineActionsProps) {
    const [ShowDeleteMachine, setShowDeleteMachine] = useState(false);
    const [ShowActiveStatus, setShowActiveMachine] = useState(false);
   // const [ShowMaintenanceMachine, setShowMaintenanceMachine] = useState(false);
@@ -44,39 +44,39 @@ export default function MachineActions({ machineId, activeStatus }: MachineActio
 
 
   return (
-    <div data-cy={`machine-actions-${machineId}`}>
+    <div data-cy={`machine-actions-${machine.id}`}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="absolute top-2 right-2 deck-actions" data-cy={`machine-trigger-${machineId}`}>
+          <Button variant="ghost" className="absolute top-2 right-2 deck-actions" data-cy={`machine-trigger-${machine.id}`}>
             ...
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-        <DropdownMenuItem onClick={handleDelete} className="delete-text-red">
-          Delete
-        </DropdownMenuItem>
+        {machine.active ? <DropdownMenuItem onClick={handleDelete} className="delete-text-red">
+          Deactivate
+        </DropdownMenuItem> : <DropdownMenuItem onClick={handleActiveStatus}>
+          Activate
+        </DropdownMenuItem>}
         <DropdownMenuItem onClick={handleMaintenance} className="delete-text-red">
           Maintenance
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleActiveStatus} className="delete-text-red">
-          Active Status
-        </DropdownMenuItem>
+        
       </DropdownMenuContent>
     </DropdownMenu>
 
 {ShowDeleteMachine && (
   <DeleteMachineDialog
-    machineId={machineId}
+    machineId={machine.id}
     setShowDeleteMachine={handleCloseDelete}
   />
 )}
 
 {ShowActiveStatus && (
-  <ActiveMachineDialog
-    machineId={machineId}
-    activeStatus={activeStatus}
-    setShowActiveMachine={setShowActiveMachine}
-  />
+  <ActivateMachineDialog
+  machine={machine}
+  setShowActivateMachine={setShowActiveMachine}>
+
+  </ActivateMachineDialog>
 )}
 
      

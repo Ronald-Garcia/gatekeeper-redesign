@@ -13,6 +13,11 @@ export const getMachineSchema = z.object({
     id: z.coerce.number().positive()
 })
 
+
+export const enableMachineSchema = z.object({
+    active: z.coerce.number().int().min(0).max(1),
+})
+
 export const createMachineSchema = z.object({
     name: z.string(),
     machineTypeId: z.coerce.number().positive().int(),

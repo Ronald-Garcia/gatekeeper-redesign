@@ -13,7 +13,7 @@ export default function MachineAdmin({ machine }: { machine: Machine }) {
       ]}
       actions={
         <MachineActions 
-          machineId={machine.id} activeStatus={machine.active}
+          machine={machine}
         />
       }
       dataCy={`machine-${machine.id}`}

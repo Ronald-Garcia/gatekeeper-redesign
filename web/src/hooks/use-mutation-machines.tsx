@@ -76,6 +76,24 @@ function useMutationMachines() {
         } 
     }
 
+
+  const enableMachine = async (machine_id: number) => {
+    try {
+      await activateMachine(machine_id);
+      toast({
+        variant: "default",
+        title: `✅ Success 😊!`, 
+        description: "Machine activated successfully!"
+      })
+    } catch (e) {
+      const errorMessage = (e as Error).message;
+      toast({
+        variant: "destructive",
+        title: "❌ Sorry! There was an error activating the machine 🙁",
+        description: errorMessage
+      })
+    }
+  };
     /*
     Hook to add machine
     */
@@ -143,25 +161,6 @@ function useMutationMachines() {
                 description: errorMessage
             });
         } 
-    }
-
-    const enableMachine = async (id:number) => {
-        try {
-            await activateMachine(id);
-            toast({
-                variant: "default",
-                title: "✅ Success 😊!",
-                description: "Machine activated successfully!"
-            });
-            return true;
-        } catch (error) {
-            const errorMessage = (error as Error).message;
-            toast({
-                variant: "destructive",
-                title: "❌ Sorry! There was an error activating the Machine 🙁",
-                description: errorMessage
-            });
-        }
     }
 
     return { saveMachine, makeKiosk, removeMachineById, addMachine, addMachineType, deleteMachineType, enableMachine}

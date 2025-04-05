@@ -554,8 +554,11 @@ export const deleteUserMachineRelation = async (training_id: number): Promise<{
 
 
 export const activateMachine = async (id:number) => {
+
+  console.log(JSON.stringify({active: 1}))
   const response = await fetch(`${API_DB_URL}/machines/${id}`, {
     method: "PATCH",
+    headers: { "Content-Type": "application/json" },
     credentials: "include",
     body: JSON.stringify({
       active: 1

@@ -1,4 +1,4 @@
-import { $activeTab, setActiveTab } from "@/data/store";
+import { $activeTab, resetSearch, setActiveTab } from "@/data/store";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { useEffect } from "react";
 import { useStore } from "@nanostores/react";
@@ -28,8 +28,8 @@ const InactiveTab = () => {
 
         <Tabs defaultValue="active" data-cy="active-tabs">
                     <TabsList className="w-full">
-                        <TabsTrigger onClick={() => setActiveTab(1)} value="active" className="w-full"> Active </TabsTrigger>
-                        <TabsTrigger onClick={() => setActiveTab(0)} value="inactive" className="w-full"> Inactive </TabsTrigger>
+                        <TabsTrigger onClick={() => {setActiveTab(1); resetSearch()}} value="active" className="w-full"> Active </TabsTrigger>
+                        <TabsTrigger onClick={() => {setActiveTab(0); resetSearch()}} value="inactive" className="w-full"> Inactive </TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="active">
