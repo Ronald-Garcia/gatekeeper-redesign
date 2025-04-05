@@ -9,6 +9,7 @@ import {
     AlertDialogCancel,
   } from "@/components/ui/alert-dialog";
 import { updateMachine } from "@/data/api";
+import useQueryMachines from "@/hooks/use-query-machines";
   
   //prop for handling state of the dialog
   type ActiveMachineDialogProp = {
@@ -23,12 +24,15 @@ import { updateMachine } from "@/data/api";
     activeStatus,
     setShowActiveMachine,
   }: ActiveMachineDialogProp) => {
+
+    const {loadMachines} = useQueryMachines(false);
   
     //async function that handles deletion logic
     const handleActiveMachine = async (e: React.MouseEvent) => {
       e.stopPropagation();
-       await updateMachine(machineId, false);
+       await updateMachine(machineId, activeStatus);
        setShowActiveMachine(false); //make the dialog disappear
+       loadMachines();
     };
   
     const handleCancel = (e: React.MouseEvent) => {
@@ -49,7 +53,7 @@ import { updateMachine } from "@/data/api";
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogDescription onClick={handleActiveMachine}>
                 {activeStatus == 1 ?
                 "This will render the machine inactive." : "This will activate the machine"
                 }
