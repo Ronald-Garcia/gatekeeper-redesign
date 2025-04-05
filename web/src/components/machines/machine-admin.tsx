@@ -42,7 +42,7 @@ export default function MachineAdmin({ machine }: { machine: Machine }) {
           <p className="text-sm text-gray-600">Type: {machine.machineType.name}</p>
 
         </div>
-        <MachineActions  machineId={machine.id}></MachineActions>
+        <MachineActions  machineId={machine.id} activeStatus={machine.active}></MachineActions>
         </div>
 
         <div 

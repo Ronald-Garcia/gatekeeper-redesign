@@ -7,14 +7,16 @@ import {
 import { Button } from "@/components/ui/button"; 
 import { useState } from "react";
 import DeleteMachineDialog from "./delete-machine-dialogue";
+import ActiveMachineDialog from "./active-machine-dialog";
 
 type MachineActionsProps = {
   machineId: number;
-
+  activeStatus: number;
 };
 
-export default function MachineActions({ machineId }: MachineActionsProps) {
+export default function MachineActions({ machineId, activeStatus }: MachineActionsProps) {
    const [ShowDeleteMachine, setShowDeleteMachine] = useState(false);
+   const [ShowActiveStatus, setShowActiveMachine] = useState(false);
   // const [ShowMaintenanceMachine, setShowMaintenanceMachine] = useState(false);
 
 
@@ -30,6 +32,11 @@ export default function MachineActions({ machineId }: MachineActionsProps) {
    // isActive(true); 
   };
 
+  const handleActiveStatus = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowActiveMachine(true);
+    // isActive(true); 
+  };
 
   const handleCloseDelete = () => {
     setShowDeleteMachine(false);
@@ -57,6 +64,9 @@ export default function MachineActions({ machineId }: MachineActionsProps) {
         <DropdownMenuItem onClick={handleMaintenance} className="delete-text-red">
           Maintenance
         </DropdownMenuItem>
+        <DropdownMenuItem onClick={handleActiveStatus} className="delete-text-red">
+          Active Status
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
 
@@ -64,6 +74,14 @@ export default function MachineActions({ machineId }: MachineActionsProps) {
   <DeleteMachineDialog
     machineId={machineId}
     setShowDeleteMachine={handleCloseDelete}
+  />
+)}
+
+{ShowActiveStatus && (
+  <ActiveMachineDialog
+    machineId={machineId}
+    activeStatus={activeStatus}
+    setShowActiveMachine={setShowActiveMachine}
   />
 )}
 

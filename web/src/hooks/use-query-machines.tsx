@@ -49,12 +49,26 @@ function useQueryMachines(reload: boolean) {
         }  catch (e) {
             //get message from api response, put it on a toast
             const errorMessage = (e as Error).message;
-            toast.error("Sorry! There was an error fetching Users 🙁", {
+            toast.error("Sorry! There was an error fetching machines 🙁", {
               description: errorMessage  
             });
           }
         };
 
+    const getIDMachine = async (id: number ) => {
+      try {
+        const {
+          data: fetchedMachines
+        } = await getMachine(id);
+        setCurrentMachine(fetchedMachines);
+      }  catch (e) {
+          //get message from api response, put it on a toast
+          const errorMessage = (e as Error).message;
+          toast.error("Sorry! There was an error fetching this machine 🙁", {
+            description: errorMessage  
+          });
+        }
+    };
 
     const loadMachineTypes = async () => {
         try {
@@ -69,7 +83,7 @@ function useQueryMachines(reload: boolean) {
                 description: errorMessage  
               });
             }
-          };
+    };
     
 
     const getTrainingsOfUser = async (userId: number)
@@ -87,7 +101,7 @@ function useQueryMachines(reload: boolean) {
               description: errorMessage  
             });
           }
-        }
+    };
 
 
     useEffect(()=> {
@@ -97,7 +111,7 @@ function useQueryMachines(reload: boolean) {
         }
     }, [])
 
-    return { getSavedMachine, loadMachines, loadMachineTypes, getTrainingsOfUser }
+    return { getSavedMachine, loadMachines, loadMachineTypes, getTrainingsOfUser, getIDMachine }
 
 
 }
