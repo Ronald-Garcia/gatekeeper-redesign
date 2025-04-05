@@ -9,3 +9,7 @@ export const getTimeSchema = z.object({
     startDate: z.coerce.date(),
     endDate: z.coerce.date()
 })
+
+export const getDateSchema = z.object({
+    date: z.coerce.date(),
+})

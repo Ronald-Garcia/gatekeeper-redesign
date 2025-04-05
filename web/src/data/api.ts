@@ -6,7 +6,7 @@ import { Machine } from "./types/machine";
 import { MachineType } from "./types/machineType";
 import { SortBudgetType, SortType } from "./types/sort";
 import { financialStatement } from "./types/financialStatement";
-import { DateRange } from "react-day-picker";
+
 
 /**
  * Turns on the machine.
@@ -994,7 +994,7 @@ export const sendEmail = async (email: string, to: Date, from: Date): Promise<bo
 
 export const automateEmail = async (email: string, date: Date): Promise<boolean> => {
 
-  const response = await fetch(`${API_DB_URL}/statement-email/${email}`, {
+  const response = await fetch(`${API_DB_URL}/statement-email/schedule/${email}`, {
     method: "POST",
     headers: {"Content-Type": "application/json"},
     credentials: "include",
@@ -1002,5 +1002,14 @@ export const automateEmail = async (email: string, date: Date): Promise<boolean>
       date
     })
   });
+
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+
+    throw new Error(message);
+  }
+
+  return true;
   
 }
