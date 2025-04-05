@@ -4,6 +4,7 @@ import { BudgetCode } from "./types/budgetCode";
 import { Machine } from "./types/machine";
 import { MachineType } from "./types/machineType";
 import { financialStatement } from "./types/financialStatement";
+import { MachineIssue } from "./types/machineIssues"
 import { logger } from "@nanostores/logger"
 import { DateRange } from "react-day-picker";
 
@@ -19,6 +20,7 @@ export const $hasMoreUserBudgets = atom<boolean>(false);
 export const $hasMoreUserTrainings = atom<boolean>(false);
 export const $currentPage = atom<number>(1);
 export const $activeTab = atom<number>(1);
+export const $machine_issues = atom<MachineIssue[]>([]);
 
 export function setActiveTab(tab: number) {
   $activeTab.set(tab);
@@ -183,6 +185,7 @@ const defaultBudget: BudgetCode = {
   code: "invalid"
 }
 
+
 export const $kiosk = atom<boolean>(false);
 
 export function setKiosk(isKiosk: boolean) {
@@ -267,6 +270,7 @@ export function setCurrentMachine(machine: Machine) {
 export function clearCurrentMachine() {
   $currentMachine.set(defaultMachine);
 }
+
 
 
 

@@ -3,6 +3,9 @@ import { createMachineIssue } from "@/data/api";
 import { MachineIssue } from "@/data/types/machineIssues";
 
 function useMutationMachineIssue() {
+
+  
+
   const reportIssue = async (userId: number, machineId: number): Promise<MachineIssue | undefined> => {
     try {
       const { data } = await createMachineIssue(userId, machineId);

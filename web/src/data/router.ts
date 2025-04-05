@@ -10,5 +10,6 @@ export const $router = createRouter({
   machines: `${BASE_URL}machines`,
   kiosk: `${BASE_URL}kiosk`,
   financial_statements: `${BASE_URL}statements`,
-  timer: `${BASE_URL}timer`
+  timer: `${BASE_URL}timer`,
+  machineIssues: `${BASE_URL}issues`
 });

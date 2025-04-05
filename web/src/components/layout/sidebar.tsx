@@ -25,6 +25,11 @@ const Sidebar = () => {
         resetSearch();
         openPage($router, "machines");
     }
+
+    const handleClickOnViewIssues = () => {
+        resetSearch();
+        openPage($router, "machineIssues");
+    }
     
 
     // Set users as default route if no route is selected
@@ -70,6 +75,16 @@ const Sidebar = () => {
                     onClick={handleClickOnViewMachines}
                 >
                     Machines
+                </Button>
+                <Button 
+                    variant="ghost"
+                    className={cn(
+                        "w-full justify-start transition-colors duration-200",
+                        router?.route === "machineIssues" && "bg-blue-50 text-blue-600 hover:bg-blue-100"
+                    )}
+                    onClick={handleClickOnViewIssues}
+                >
+                    Machine Issues
                 </Button>
 
                 <div className="pt-4 border-t border-gray-200">
