@@ -18,3 +18,7 @@ export const updateMachineIssueSchema = z.object({
     id: z.coerce.number().int().positive(),
     resolved: z.enum(["0", "1"]).transform(val => parseInt(val)), // Convert to integer
 });
+
+export const getIssuesOfMachineSchema = z.object({
+    machineId: z.coerce.number().int().positive(),
+});

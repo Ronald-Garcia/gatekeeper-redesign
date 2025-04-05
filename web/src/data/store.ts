@@ -18,6 +18,11 @@ export const $date = atom<Date | undefined>(undefined);
 export const $hasMoreUserBudgets = atom<boolean>(false);
 export const $hasMoreUserTrainings = atom<boolean>(false);
 export const $currentPage = atom<number>(1);
+export const $activeTab = atom<number>(1);
+
+export function setActiveTab(tab: number) {
+  $activeTab.set(tab);
+}
 
 export function setPage(p: number) {
   $currentPage.set(p);
@@ -156,10 +161,12 @@ export function clearItem() {
 const defaultUser: User = {
   name: "test",
   cardNum: "-1",
+  lastDigitOfCardNum: -1,
   isAdmin: 0,
   graduationYear: 2020,
   JHED: "ttest01",
-  id: -1
+  id: -1,
+  active: 0
 }
 
 const defaultMachine: Machine = {
@@ -381,3 +388,5 @@ export function resetDashboardSearch() {
   setDashboardActiveSearch("");
   setDashboardLocalSearch("");
 }
+
+logger({ $activeTab, $users })

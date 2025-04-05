@@ -43,9 +43,11 @@ userRoutes.get("/users",
     const whereClause: (SQL | undefined)[] = [];
 
     //Update where clause to not inlcude inactive users.
-    whereClause.push(
-        eq(users.active, active ? 1 : 0)
-    );
+    if (active) {
+        whereClause.push(
+            eq(users.active, active)
+        );
+    }
 
     if (search) {
         whereClause.push(
@@ -87,7 +89,8 @@ userRoutes.get("/users",
             lastDigitOfCardNum: users.lastDigitOfCardNum,
             JHED: users.JHED,
             isAdmin: users.isAdmin,
-            graduationYear: users.graduationYear
+            graduationYear: users.graduationYear,
+            active: users.active
         })
           .from(users)
           .where(and(...whereClause))

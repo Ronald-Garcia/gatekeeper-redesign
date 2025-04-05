@@ -1,5 +1,5 @@
 import { getAllUsers, getUser, validateTraining } from "@/data/api";
-import { $users, 
+import { $activeTab, $users, 
   clearCurrentUser, 
   setCurrentUser, 
   setUsers,
@@ -17,17 +17,18 @@ function useQueryUsers(reload: boolean) {
   const users = useStore($users);
   const router = useStore($router);
   const { getSavedMachine } = useQueryMachines(false);
+  const activeTab = useStore($activeTab);
 
   const loadUsers = async (
     sort: SortType = "name_asc",
     page: number = 1,
     limit: number = 10,
-    search: string = ""
+    search: string = "",
   ) => {
     try {
       const {
         data: fetchedUsers
-      } = await getAllUsers(sort,page,limit,search);
+      } = await getAllUsers(sort,page,limit,search, activeTab);
       setUsers(fetchedUsers);
     }  catch (e) {
         //get message from api response, put it on a toast

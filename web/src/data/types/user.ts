@@ -5,4 +5,6 @@ export type User = {
   JHED: string;
   isAdmin: number;
   graduationYear: number;
+  active: number;
+  lastDigitOfCardNum: number;
 }

@@ -38,8 +38,7 @@ export default function UserComponent({ user }: { user: User }) {
           <p className="text-sm text-gray-600">Class of {user.graduationYear}</p>
         </div>
         <UserActions
-          userId={user.id}
-          userNumber={user.cardNum}
+          user={user}
           setIsActive={setIsActive}
         />
       </div>
@@ -49,7 +48,7 @@ export default function UserComponent({ user }: { user: User }) {
         }`}
       >
         <div className="p-4 border-t border-stone-200 space-y-2">
-          <p className="text-sm"><span className="font-medium">Card Number:</span> {user.cardNum}</p>
+          <p className="text-sm"><span className="font-medium">Card Number:</span> {user.cardNum}{user.lastDigitOfCardNum}</p>
           <p className="text-sm"><span className="font-medium">JHED:</span> {user.JHED}</p>
           <p className="text-sm"><span className="font-medium">Role:</span> {role}</p>
         </div>

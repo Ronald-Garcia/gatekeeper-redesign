@@ -7,6 +7,7 @@ import BudgetActions from "./budget-actions";
 import Sidebar from "../layout/sidebar";
 import MachineActions from "./machine-actions";
 import MachinesComponent from "../machines/machines-component";
+import InactiveTab from "../general/inactive-tab";
 
 /*
 Admin dashboard component
@@ -29,6 +30,7 @@ const AdminDashboard = () => {
       <Sidebar />
       <div className="flex-1">
         <UsersActions/>
+        <InactiveTab/>
         <UsersComponent/>
       </div>
     </div>
@@ -39,6 +41,7 @@ const AdminDashboard = () => {
       <Sidebar />
       <div className="flex-1">
         <BudgetActions/>
+        <InactiveTab/>
         <BudgetCodes/>
       </div>
     </div>
@@ -49,6 +52,7 @@ const AdminDashboard = () => {
         <Sidebar />
         <div className="flex-1">
         <MachineActions/>
+        <InactiveTab/>
         <MachinesComponent/>
         </div>
       </div>

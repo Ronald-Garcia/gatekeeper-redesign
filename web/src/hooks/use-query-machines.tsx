@@ -1,15 +1,18 @@
 import { fetchCurrentMachine, getAllMachines, getAllTrainingsOfUser, getMachine, getMachineTypes } from "@/data/api";
-import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes, appendMachineTypes } from "@/data/store";
+import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes, appendMachineTypes, $activeTab } from "@/data/store";
 import { Machine } from "@/data/types/machine";
 import { MachineType } from "@/data/types/machineType";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { SortType } from "@/data/types/sort";
+import { useStore } from "@nanostores/react";
 
 function useQueryMachines(reload: boolean) {
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+
+  const activeTab = useStore($activeTab);
 
   const getSavedMachine = async (): Promise<Machine | "kiosk" | undefined | 0> => {
     try {
@@ -44,11 +47,16 @@ function useQueryMachines(reload: boolean) {
     }    
   }
 
-  const loadMachines = async () => {
+  const loadMachines = async (
+    sort: SortType = "name_asc",
+    page: number = 1,
+    limit: number = 10,
+    search: string = "",
+    type: string = "") => {
     try {
       const {
         data: fetchedMachines
-      } = await getAllMachines();
+      } = await getAllMachines(sort, page, limit, search, type, activeTab);
       setMachines(fetchedMachines);
     } catch (e) {
       const errorMessage = (e as Error).message;

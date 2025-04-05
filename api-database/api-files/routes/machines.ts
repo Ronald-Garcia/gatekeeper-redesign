@@ -33,12 +33,16 @@ export const machineRoutes = new Hono<Context>();
 machineRoutes.get("/machines",
     authGuard,  
      zValidator("query", queryMachinesSchema), async (c) => {
-    const { page = 1, limit = 20, search, sort, type } = c.req.valid("query");
+    const { page = 1, limit = 20, search, sort, type, active } = c.req.valid("query");
 
     const whereClause: (SQL | undefined)[] = [];
 
     if (search) {
         whereClause.push(ilike(machines.name, `%${search}%`));
+    }
+
+    if (active) {
+        whereClause.push(eq(machines.active, active));
     }
 
     if (type) {

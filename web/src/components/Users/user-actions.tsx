@@ -10,14 +10,14 @@ import DeleteUserDialog from "./delete-user-dialogue";
 import BanUserDialog from "./ban-user-dialog";
 import TrainingDialog from "./training-dialog";
 import BudgetCodeDialog from "./budget-code-dialog";
+import { User } from "@/data/types/user";
 
 type UserActionsProps = {
-  userId: number;
-  userNumber: string;
+  user: User;
   setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function UserActions({ userId, userNumber, setIsActive }: UserActionsProps) {
+export default function UserActions({ user, setIsActive }: UserActionsProps) {
   const [showEditTraining, setShowEditTraining] = useState(false);
   const [showEditBudgetCode, setShowBudgetCode] = useState(false);
   const [showDeleteUser, setShowDeleteUser] = useState(false);
@@ -71,7 +71,7 @@ export default function UserActions({ userId, userNumber, setIsActive }: UserAct
     <div data-cy = "user-actions" >
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost"  data-cy={`user-trigger-${userNumber}`} className="absolute top-2 right-2 deck-actions">
+        <Button variant="ghost"  data-cy={`user-trigger-${user.cardNum}`} className="absolute top-2 right-2 deck-actions">
           ...
         </Button>
       </DropdownMenuTrigger>
@@ -79,12 +79,15 @@ export default function UserActions({ userId, userNumber, setIsActive }: UserAct
         <DropdownMenuItem onClick={handleTraining}>
           Training
         </DropdownMenuItem>
-        <DropdownMenuItem data-cy={`user-budget-code-${userNumber}`} onClick={handleBudgetCode}>
+        <DropdownMenuItem data-cy={`user-budget-code-${user.cardNum}`} onClick={handleBudgetCode}>
           Budget Code
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleDelete} className="delete-text-red" data-cy="user-delete">
-          Delete
-        </DropdownMenuItem>
+        {user.active === 1 && <DropdownMenuItem onClick={handleDelete} className="delete-text-red" data-cy="user-delete">
+          Deactivate
+        </DropdownMenuItem>}
+        {user.active === 0 && <DropdownMenuItem onClick={handleDelete} className="delete-text-red" data-cy="user-delete">
+          Activate
+        </DropdownMenuItem>}
         <DropdownMenuItem onClick={handleTimeout} className="delete-text-red" data-cy="user-timeout">
           Timeout
         </DropdownMenuItem>
@@ -92,20 +95,20 @@ export default function UserActions({ userId, userNumber, setIsActive }: UserAct
     </DropdownMenu>
 
 {showEditTraining && (
-  <TrainingDialog userId={userId} setShowEditTraining={handleCloseTraining} />
+  <TrainingDialog userId={user.id} setShowEditTraining={handleCloseTraining} />
 )}
 {showEditBudgetCode && (
-  <BudgetCodeDialog userId={userId} setShowEditBudgetCode={handleCloseBudgetCode} />
+  <BudgetCodeDialog userId={user.id} setShowEditBudgetCode={handleCloseBudgetCode} />
 )}
 {showDeleteUser && (
   <DeleteUserDialog
-    userId={userId}
+    userId={user.id}
     setShowDeleteUser={handleCloseDelete}
   />
 )}
 
 {showTimeoutUser && (
-  <BanUserDialog userId={userId} setShowBanUser={handleCloseTimeout} />
+  <BanUserDialog userId={user.id} setShowBanUser={handleCloseTimeout} />
 )}
 
 </div>
