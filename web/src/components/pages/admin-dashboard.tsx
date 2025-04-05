@@ -13,6 +13,7 @@ import useQueryMachines from "@/hooks/use-query-machines";
 import { SearchQuerySorts } from "@/data/types/sort";
 import useQueryUsers from "@/hooks/use-query-users";
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
+import { $activeSearch } from "@/data/store";
 
 /*
 Admin dashboard component
@@ -31,6 +32,7 @@ const AdminDashboard = () => {
   const {loadMachines} = useQueryMachines(false);
   const machineLoadFunction = loadMachines as (sort?: SearchQuerySorts, page?: number, limit?: number, search?: string) => void
   
+  const activeSearch = useStore($activeSearch);
 
   if (!router) {
     return (
@@ -46,7 +48,8 @@ const AdminDashboard = () => {
       <Sidebar />
       <div className="flex-1">
         <UsersActions/>
-        <ScrollArea className="scroll-component">
+        <ScrollArea className={`${activeSearch ? 'scroll-component-search' : 'scroll-component'}`}>
+
           <Users/>
         </ScrollArea>
         <PaginationBar loadFunction={userLoadFunction}/>
@@ -60,7 +63,7 @@ const AdminDashboard = () => {
       <Sidebar />
       <div className="flex-1">
         <BudgetActions/>
-        <ScrollArea className="scroll-component">
+        <ScrollArea className={`${activeSearch ? 'scroll-component-search' : 'scroll-component'}`}>
         <BudgetCodes/>
         </ScrollArea>
         <PaginationBar loadFunction={budgetLoadFunction}/>
@@ -74,7 +77,7 @@ const AdminDashboard = () => {
         <Sidebar />
         <div className="flex-1">
         <MachineActions/>
-        <ScrollArea className="scroll-component">
+        <ScrollArea className={`${activeSearch ? 'scroll-component-search' : 'scroll-component'}`}>
         <MachinesComponent/>
         </ScrollArea>
         <PaginationBar loadFunction={machineLoadFunction}/>

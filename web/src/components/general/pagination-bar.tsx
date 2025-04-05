@@ -7,7 +7,7 @@ import {
     PaginationNext,
     PaginationPrevious,
   } from "@/components/ui/pagination"
-import { $current_page, $max_page, $total } from "@/data/store";
+import { $activeSearch, $current_page, $max_page, $total } from "@/data/store";
 import { SearchQuerySorts } from "@/data/types/sort";
 import { useStore } from "@nanostores/react";
 
@@ -23,6 +23,7 @@ const PaginationBar = ({loadFunction}: PagProps) => {
     const curPage = useStore($current_page);
     const totalEntries = useStore($total);
     const maxPage = useStore($max_page);
+    const activeSearch = useStore($activeSearch);
 
     const handleClick = (e: React.MouseEvent<HTMLLIElement>) => {
         const page_num = Number(e.currentTarget.id);
@@ -30,7 +31,7 @@ const PaginationBar = ({loadFunction}: PagProps) => {
         if (page_num > totalEntries) {
             return
         }
-        loadFunction(undefined, page_num, undefined, undefined);
+        loadFunction(undefined, page_num, undefined, activeSearch);
     };  
 
     const handleClickBack = (_: React.MouseEvent<HTMLLIElement>) => {
@@ -38,7 +39,7 @@ const PaginationBar = ({loadFunction}: PagProps) => {
         if (page_num <= 0) {
         return
         }
-        loadFunction(undefined, page_num, undefined, undefined);
+        loadFunction(undefined, page_num, undefined, activeSearch);
     };
 
     const handleClickNext = (_: React.MouseEvent<HTMLLIElement>) => {
