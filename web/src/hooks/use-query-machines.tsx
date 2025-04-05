@@ -2,15 +2,17 @@ import { fetchCurrentMachine, getAllMachines, getAllTrainingsOfUser, getMachine,
 import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes, appendMachineTypes, $activeTab } from "@/data/store";
 import { Machine } from "@/data/types/machine";
 import { MachineType } from "@/data/types/machineType";
+
 import { useEffect, useState } from "react";
 import { SortType } from "@/data/types/sort";
 import { useStore } from "@nanostores/react";
 import { useToast } from "./use-toast";
 
 function useQueryMachines(reload: boolean) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
+  // Pagination state for machine types (used for infinite scroll)
+  const [machineTypesCurrentPage, setMachineTypesCurrentPage] = useState(1);
+  const [machineTypesHasMore, setMachineTypesHasMore] = useState(false);
+  const [machineTypesIsLoading, setMachineTypesIsLoading] = useState(false);
   const { toast } = useToast();
 
   const activeTab = useStore($activeTab);
@@ -81,7 +83,7 @@ function useQueryMachines(reload: boolean) {
     append: boolean = false
   ) => {
     try {
-      setIsLoading(true);
+      setMachineTypesIsLoading(true);
       const {
         data: fetchedMachineTypes,
         meta
@@ -93,8 +95,8 @@ function useQueryMachines(reload: boolean) {
         setMachinesTypes(fetchedMachineTypes);
       }
       
-      setHasMore(page * limit < meta.total);
-      setCurrentPage(page);
+      setMachineTypesHasMore(page * limit < meta.total);
+      setMachineTypesCurrentPage(page);
       
     } catch (e) {
       const errorMessage = (e as Error).message;
@@ -104,7 +106,7 @@ function useQueryMachines(reload: boolean) {
         description: errorMessage
       });
     } finally {
-      setIsLoading(false);
+      setMachineTypesIsLoading(false);
     }
   };
 
@@ -138,9 +140,10 @@ function useQueryMachines(reload: boolean) {
     loadMachines, 
     loadMachineTypes, 
     getTrainingsOfUser,
-    currentPage,
-    hasMore,
-    isLoading
+    // Only expose machine types pagination for infinite scroll
+    currentPage: machineTypesCurrentPage,
+    hasMore: machineTypesHasMore,
+    isLoading: machineTypesIsLoading
   };
 }
 

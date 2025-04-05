@@ -5,6 +5,7 @@ import { $router } from "@/data/router";
 import useQueryUsers from "@/hooks/use-query-users";
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
 import { Search } from "lucide-react";
+import useQueryMachines from "@/hooks/use-query-machines";
 
 const Searchbar = () => {
     const localSearch = useStore($localSearch)
@@ -12,6 +13,7 @@ const Searchbar = () => {
 
     const { loadUsers } = useQueryUsers(false);
     const { loadBudgets } = useQueryBudgets(false);
+    const { loadMachines } = useQueryMachines(false);
 
     const handleSearch = () => {
         setActiveSearch(localSearch);
@@ -21,6 +23,9 @@ const Searchbar = () => {
                 break;
             case "budgetCodes":
                 loadBudgets(undefined, undefined, undefined, localSearch);
+                break;
+            case "machines":
+                loadMachines(undefined, undefined, undefined, localSearch);
                 break;
             default:
         }
@@ -39,13 +44,13 @@ const Searchbar = () => {
     return (
         <div className="relative w-full">
             <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Search className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
                 <input
                     data-cy="searchbar"
                     type="text"
                     value={localSearch}
                     placeholder="Search..."
-                    className="w-full h-12 pl-10 pr-4 text-base bg-white border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-200"
+                    className="w-full h-12 pl-10 pr-4 text-base transition-all duration-200 bg-white border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500"
                     onKeyDown={handleKeydown}
                     onChange={handleTextChange}
                 />

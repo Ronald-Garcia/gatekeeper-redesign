@@ -1,35 +1,31 @@
 import { useEffect, useState } from "react";
 import useMutationUsers from "@/hooks/user-mutation-hooks";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
-  DialogOverlay,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "../ui/scroll-area";
 import { useStore } from "@nanostores/react";
-import { $training_queue, $machine_types, setTrainingQueue, toggleTrainingQueue } from "@/data/store";
+import { $machine_types, $training_queue, setTrainingQueue, toggleTrainingQueue } from "@/data/store";
 import useQueryMachines from "@/hooks/use-query-machines";
+import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 import InfiniteScroll from "../general/infinite-scroll";
 
-//prop for handling state of the dialogue
 type EditTrainingDialogProp = {
   userId: number;
   setShowEditTraining: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-// function that handles state of the dialogue, error handling from api
 const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogProp) => {
   const trainingQueue = useStore($training_queue);
   const { setUserTrainings } = useMutationUsers();
   const { loadMachineTypes, getTrainingsOfUser, currentPage, hasMore, isLoading } = useQueryMachines(true);
   const [isLoadingUserTrainings, setIsLoadingUserTrainings] = useState(true);
-  
   const trainingsList = useStore($machine_types);
 
   const handleLoadMore = () => {
@@ -38,7 +34,6 @@ const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogP
     }
   };
 
-  //async function with editing logic, including error handling
   const handleEditTraining = async () => {
     await setUserTrainings(userId, trainingQueue);
     setShowEditTraining(false);
@@ -60,7 +55,6 @@ const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogP
   return (
     <div data-cy="user-training-dialog">
       <Dialog open={true} onOpenChange={setShowEditTraining}>
-        <DialogOverlay />
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Edit Training</DialogTitle>

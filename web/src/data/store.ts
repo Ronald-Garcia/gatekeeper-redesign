@@ -108,8 +108,18 @@ export function clearTrainingQueue() {
   $training_queue.set([]);
 }
 
-export function toggleTrainingQueue(bc: number) {
+export function toggleMachineTypeQueue(bc: number) {
   clearTrainingQueue();
+  const bcs =  $training_queue.get();
+  const hasBc = bcs.some(b => b === bc);
+  if (hasBc) {
+    removeTrainingQueue(bc);
+  } else {
+    addTrainingQueue(bc);
+  }
+}
+
+export function toggleTrainingQueue(bc: number) {
   const bcs =  $training_queue.get();
   const hasBc = bcs.some(b => b === bc);
   if (hasBc) {
@@ -121,16 +131,6 @@ export function toggleTrainingQueue(bc: number) {
 export const $statements = atom<financialStatement[]>([]);
 
 
-type Selected = User | BudgetCode;
-
-export const $selected = atom<Selected | null>(null);
-export function selectItem(item: Selected) {
-  $selected.set(item);
-}
-
-export function clearItem() {
-  $selected.set(null);
-}
 
 
 
@@ -174,7 +174,10 @@ const defaultUser: User = {
 const defaultMachine: Machine = {
   id: -1,
   name: "invalid",
-  machineTypeId: -1,
+  machineType: {
+    id: -1,
+    name: ""
+  },
   hourlyRate: 0,
   active:-1,
 }

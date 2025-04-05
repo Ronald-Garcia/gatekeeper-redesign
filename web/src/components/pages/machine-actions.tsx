@@ -1,6 +1,7 @@
 import Searchbar from "../general/searchbar";
 import { Dialog } from "../ui/dialog";
 import AddMachineDialog from "../machines/add-machine-dialog.tsx";
+import AddMachineTypeDialog from "../machine_types/add-machine-type-dialog.tsx";
 
 /*
 Admin dashboard component
@@ -18,6 +19,7 @@ const MachineActions = () => {
               </div>
               <div className="flex flex-wrap gap-2 shrink-0">
                 <AddMachineDialog/>
+                <AddMachineTypeDialog/>
               </div>
             </div>
           </div>

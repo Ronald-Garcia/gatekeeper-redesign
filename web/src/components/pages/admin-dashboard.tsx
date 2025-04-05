@@ -1,4 +1,3 @@
-import UsersComponent from "../Users/users";
 import { $router } from "@/data/router";
 import { useStore } from "@nanostores/react";
 import BudgetCodes from "../BudgetCodes/budgetCodes";
@@ -8,7 +7,8 @@ import Sidebar from "../layout/sidebar";
 import MachineActions from "./machine-actions";
 import MachinesComponent from "../machines/machines-component";
 import InactiveTab from "../general/inactive-tab";
-import MachineIssue from "../machineIssues/machineIssues"
+import { ScrollArea } from "../ui/scroll-area";
+import Users from "../Users/users";
 
 /*
 Admin dashboard component
@@ -32,7 +32,9 @@ const AdminDashboard = () => {
       <div className="flex-1">
         <UsersActions/>
         <InactiveTab/>
-        <UsersComponent/>
+        <ScrollArea className="scroll-component">
+          <Users/>
+        </ScrollArea>
       </div>
     </div>
     )
@@ -43,7 +45,10 @@ const AdminDashboard = () => {
       <div className="flex-1">
         <BudgetActions/>
         <InactiveTab/>
-        <BudgetCodes/>
+        <ScrollArea className="scroll-component">
+          <BudgetCodes/>
+        </ScrollArea>
+
       </div>
     </div>
     )
@@ -54,7 +59,10 @@ const AdminDashboard = () => {
         <div className="flex-1">
         <MachineActions/>
         <InactiveTab/>
+        <ScrollArea className="scroll-component">
         <MachinesComponent/>
+        </ScrollArea>
+
         </div>
       </div>
       )

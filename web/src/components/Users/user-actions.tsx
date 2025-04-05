@@ -15,10 +15,9 @@ import ActivateUserDialog from "./activate-user";
 
 type UserActionsProps = {
   user: User;
-  setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function UserActions({ user, setIsActive }: UserActionsProps) {
+export default function UserActions({ user }: UserActionsProps) {
   const [showEditTraining, setShowEditTraining] = useState(false);
   const [showEditBudgetCode, setShowBudgetCode] = useState(false);
   const [showDeleteUser, setShowDeleteUser] = useState(false);
@@ -28,57 +27,47 @@ export default function UserActions({ user, setIsActive }: UserActionsProps) {
   const handleTraining = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowEditTraining(true);
-    setIsActive(true);
   };
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowDeleteUser(true);
-    setIsActive(true);
   };
 
   const handleTimeout = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowTimeoutUser(true);
-    setIsActive(true);
   };
 
   const handleBudgetCode = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowBudgetCode(true);
-    setIsActive(true);
   };
 
   const handleActivate = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowActivateUser(true);
-    setIsActive(true);
   };
 
 
   const handleCloseDelete = () => {
     setShowDeleteUser(false);
-    setIsActive(false);
   };
 
   const handleCloseTimeout = () => {
     setShowTimeoutUser(false);
-    setIsActive(false);
   };
 
   const handleCloseTraining = () => {
     setShowEditTraining(false);
-    setIsActive(false);
   };
 
   const handleCloseBudgetCode = () => {
     setShowBudgetCode(false);
-    setIsActive(false);
   };
 
   const handleCloseActivate = () => {
     setShowActivateUser(false);
-    setIsActive(false);
   };
 
 
