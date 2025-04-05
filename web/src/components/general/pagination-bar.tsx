@@ -1,7 +1,6 @@
 import {
     Pagination,
     PaginationContent,
-    PaginationEllipsis,
     PaginationItem,
     PaginationLink,
     PaginationNext,
@@ -50,12 +49,12 @@ const PaginationBar = ({loadFunction}: PagProps) => {
         loadFunction(undefined, page_num, undefined, undefined);
     };
 
-    const prevprevEleId = curPage - 2
+
     const prevEleId = curPage - 1
     const curEleId = curPage
     const secondEleId = curPage + 1
-    const thirdEleId = curPage + 2
 
+    //If its less then 7, just show all of them.
     return (
         <Pagination>
         <PaginationContent>
@@ -63,24 +62,8 @@ const PaginationBar = ({loadFunction}: PagProps) => {
             <PaginationItem onClick={handleClickBack}>
             <PaginationPrevious/>
             </PaginationItem>
-
-            {(curEleId - 3) >= 1 && (
-            <PaginationItem id = {"1"} onClick={handleClick}>
-                {1}
-            </PaginationItem>
-            )}
-            {(curEleId - 3) >= 1 && (
-            <PaginationItem>
-                <PaginationEllipsis />
-            </PaginationItem>
-            )}
-        {prevprevEleId > 0 && (
-            <PaginationItem id = {`${prevprevEleId}`} onClick={handleClick}>
-                <PaginationLink href="#">
-                    {prevprevEleId}
-                </PaginationLink>
-            </PaginationItem>
-        )}
+    
+    
         {prevEleId > 0 && (
             <PaginationItem id = {`${prevEleId}`} onClick={handleClick}>
                 <PaginationLink href="#">
@@ -102,32 +85,16 @@ const PaginationBar = ({loadFunction}: PagProps) => {
                 </PaginationLink>
             </PaginationItem>
             )}
-            {thirdEleId <= maxPage && (
-                
-            <PaginationItem id = {`${thirdEleId}`} onClick={handleClick}>
-                <PaginationLink href="#">
-                    {thirdEleId}
-                </PaginationLink>
-            </PaginationItem>
-            )}
-            {(curEleId + 3) <= maxPage && (
-            <PaginationItem>
-                <PaginationEllipsis />
-            </PaginationItem>
-            )}
-            {(curEleId + 3) <= maxPage && (
-            <PaginationItem id = {`${maxPage}`} onClick={handleClick}>
-                <PaginationLink href="#">
-                    {maxPage}
-                </PaginationLink>
-            </PaginationItem>
-            )}
+
+
             <PaginationItem onClick={handleClickNext}>
             <PaginationNext />
             </PaginationItem>
         </PaginationContent>
         </Pagination>
-    );
+    )
+
+    
     };
     
     export default PaginationBar;
