@@ -1,10 +1,10 @@
-import { fetchCurrentMachine, getAllMachines, getAllTrainingsOfUser, getMachine, getMachineTypes } from "@/data/api";
-import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes, appendMachineTypes, $activeTab } from "@/data/store";
+import { fetchCurrentMachine, getAllMachines, getAllTrainingsOfUser, getMachine, getMachineTypes } from "@/data/api"
+import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes, appendMachineTypes, $activeTab, setMetaData } from "@/data/store";
 import { Machine } from "@/data/types/machine";
 import { MachineType } from "@/data/types/machineType";
 
 import { useEffect, useState } from "react";
-import { SortType } from "@/data/types/sort";
+import { SortMachineType, SortType } from "@/data/types/sort";
 import { useStore } from "@nanostores/react";
 import { useToast } from "./use-toast";
 
@@ -53,27 +53,6 @@ function useQueryMachines(reload: boolean) {
       return 0;
     }    
   }
-
-  const loadMachines = async (
-    sort: SortType = "name_asc",
-    page: number = 1,
-    limit: number = 10,
-    search: string = "",
-    type: string = "") => {
-    try {
-      const {
-        data: fetchedMachines
-      } = await getAllMachines(sort, page, limit, search, type, activeTab);
-      setMachines(fetchedMachines);
-    } catch (e) {
-      const errorMessage = (e as Error).message;
-      toast({
-        variant: "destructive",
-        title: "❌ Sorry! There was an error fetching Machines 🙁",
-        description: errorMessage
-      });
-    }
-  };
 
   const loadMachineTypes = async (
     sort: SortType = "asc",
@@ -127,6 +106,33 @@ function useQueryMachines(reload: boolean) {
       });
     }
   }
+
+  
+
+  const loadMachines = async (
+    sort: SortMachineType = "name_asc",
+    page: number = 1,
+    limit: number = 10,
+    search: string = "",
+    type: string = "") => {
+    try {
+      const {
+        data: fetchedMachines,
+        meta: fetchedMetaData
+      } = await getAllMachines(sort, page, limit, search, type, activeTab);
+      setMetaData(fetchedMetaData);
+
+      setMachines(fetchedMachines);
+    } catch (e) {
+      const errorMessage = (e as Error).message;
+      toast({
+        variant: "destructive",
+        title: "❌ Sorry! There was an error fetching Machines 🙁",
+        description: errorMessage
+      });
+    }
+  };
+  
 
   useEffect(() => {
     if (reload) {

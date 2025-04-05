@@ -9,6 +9,7 @@ import {
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
 import useMutationMachines from "@/hooks/use-mutation-machines";
+import useQueryMachines from "@/hooks/use-query-machines";
 
 
 //prop for handling state of the dialog
@@ -24,11 +25,14 @@ const DeleteMachineDialog = ({
 }: DeleteMachineDialogProp) => {
   const { removeMachineById } = useMutationMachines();
 
+  const {loadMachines} = useQueryMachines(false);
+
   //async function that handles deletion logic
   const handleDeleteUser = async (e: React.MouseEvent) => {
     e.stopPropagation();
      await removeMachineById(machineId);
     setShowDeleteMachine(false); //make the dialog disappear
+    loadMachines();
   };
 
   const handleCancel = (e: React.MouseEvent) => {

@@ -2,6 +2,7 @@ import { getAllUsers, getUser, validateTraining } from "@/data/api";
 import { $activeTab, $users, 
   clearCurrentUser, 
   setCurrentUser, 
+  setMetaData, 
   setUsers,
  } from "@/data/store";
 import { User } from "@/data/types/user";
@@ -28,9 +29,11 @@ function useQueryUsers(reload: boolean) {
   ) => {
     try {
       const {
-        data: fetchedUsers
+        data: fetchedUsers,
+        meta
       } = await getAllUsers(sort,page,limit,search, activeTab);
       setUsers(fetchedUsers);
+      setMetaData(meta);
     }  catch (e) {
         const errorMessage = (e as Error).message;
         toast({

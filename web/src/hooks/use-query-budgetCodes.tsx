@@ -3,6 +3,7 @@ import { $codes,
   setBudgetCodes,
   setCurBudgets,
   appendBudgetCodes,
+  setMetaData,
 } from "@/data/store";
 import { BudgetCode } from "@/data/types/budgetCode";
 import { SortBudgetType } from "@/data/types/sort";
@@ -30,6 +31,8 @@ function useQueryBudgets(reload: boolean) {
         data: fetchedBudgetCodes,
         meta
       } = await getAllBudgets(sort, page, limit, search);
+
+      setMetaData(meta);
       
       if (append) {
         appendBudgetCodes(fetchedBudgetCodes);

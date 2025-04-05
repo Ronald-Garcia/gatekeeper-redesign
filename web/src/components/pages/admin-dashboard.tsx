@@ -8,6 +8,12 @@ import MachineActions from "./machine-actions";
 import MachinesComponent from "../machines/machines-component";
 import InactiveTab from "../general/inactive-tab";
 import { ScrollArea } from "../ui/scroll-area";
+import PaginationBar from "../general/pagination-bar";
+import useQueryMachines from "@/hooks/use-query-machines";
+import { SearchQuerySorts } from "@/data/types/sort";
+import useQueryUsers from "@/hooks/use-query-users";
+import useQueryBudgets from "@/hooks/use-query-budgetCodes";
+import { $activeSearch } from "@/data/store";
 import Users from "../Users/users";
 
 /*
@@ -16,6 +22,18 @@ Displays BudgetCodes or Users based on routing.
 */
 const AdminDashboard = () => {
   const router = useStore($router);
+
+  //Bunch of functions that we cast to the generalized loading function type to pass to pagination.
+  const {loadUsers} = useQueryUsers(false);
+  const userLoadFunction = loadUsers as (sort?: SearchQuerySorts, page?: number, limit?: number, search?: string) => void
+
+  const {loadBudgets} = useQueryBudgets(false);
+  const budgetLoadFunction = loadBudgets as (sort?: SearchQuerySorts, page?: number, limit?: number, search?: string) => void
+
+  const {loadMachines} = useQueryMachines(false);
+  const machineLoadFunction = loadMachines as (sort?: SearchQuerySorts, page?: number, limit?: number, search?: string) => void
+  
+  const activeSearch = useStore($activeSearch);
 
   if (!router) {
     return (
@@ -32,9 +50,12 @@ const AdminDashboard = () => {
       <div className="flex-1">
         <UsersActions/>
         <InactiveTab/>
-        <ScrollArea className="scroll-component">
+        <ScrollArea className={`${activeSearch ? 'scroll-component-search' : 'scroll-component'}`}>
+
           <Users/>
         </ScrollArea>
+        <PaginationBar loadFunction={userLoadFunction}/>
+
       </div>
     </div>
     )
@@ -45,9 +66,10 @@ const AdminDashboard = () => {
       <div className="flex-1">
         <BudgetActions/>
         <InactiveTab/>
-        <ScrollArea className="scroll-component">
+        <ScrollArea className={`${activeSearch ? 'scroll-component-search' : 'scroll-component'}`}>
           <BudgetCodes/>
         </ScrollArea>
+        <PaginationBar loadFunction={budgetLoadFunction}/>
 
       </div>
     </div>
@@ -59,9 +81,10 @@ const AdminDashboard = () => {
         <div className="flex-1">
         <MachineActions/>
         <InactiveTab/>
-        <ScrollArea className="scroll-component">
+        <ScrollArea className={`${activeSearch ? 'scroll-component-search' : 'scroll-component'}`}>
         <MachinesComponent/>
         </ScrollArea>
+        <PaginationBar loadFunction={machineLoadFunction}/>
 
         </div>
       </div>

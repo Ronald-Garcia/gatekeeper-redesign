@@ -112,7 +112,14 @@
 }
 
 .scroll-component {
-  height: calc(100vh - 181px);
+  min-height: 203px;
+  height: calc(100vh - 187px - 96px);
+}
+
+.scroll-component-search {
+  min-height: 203px;
+  height: calc(100vh - 187px - 96px - 48px);
+  
 }
 
 /*toggle group styling*/

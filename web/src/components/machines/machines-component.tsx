@@ -1,10 +1,10 @@
 import { useStore } from "@nanostores/react";
 import { $machines } from "@/data/store";
-import useQueryUsers from "@/hooks/use-query-users";
 import MachineAdmin from "./machine-admin";
+import useQueryMachines from "@/hooks/use-query-machines";
 
 export default function MachinesComponent() {
-  useQueryUsers(true);
+  useQueryMachines(true);
 
   const machineList = useStore($machines);
 
@@ -29,5 +29,7 @@ export default function MachinesComponent() {
       }
 
         </div>
+
+
   );
 }

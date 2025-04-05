@@ -101,7 +101,7 @@ function useMutationMachines() {
 
     /*
     Hook to add MachineType
-    @param type: name of the new type of macine to be added
+    * @param type: name of the new type of macine to be added
     */
     const addMachineType = async (type:string) => {
         try {
