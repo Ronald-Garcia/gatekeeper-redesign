@@ -10,56 +10,74 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
+import { Input } from "../ui/input";
+import { Label } from "@radix-ui/react-dropdown-menu";
+import { useState } from "react";
 
 
 //prop for handling state of the dialog
-type DeleteUserDialogProp = {
+type ActivateUserDialogProp = {
   userId: number;
-  setShowDeleteUser:  React.Dispatch<React.SetStateAction<boolean>>;
+  setShowActivateUser:  React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 //function that handles state of the dialog
-const DeleteUserDialog = ({
+const ActivateUserDialog = ({
   userId,
-  setShowDeleteUser,
-}: DeleteUserDialogProp) => {
-  const { deleteUser } = useMutationUsers();
+  setShowActivateUser,
+}: ActivateUserDialogProp) => {
+  const { activateUser } = useMutationUsers();
   const { loadUsers } = useQueryUsers(false);
 
+  const [graduationYear, setGraduationYear] = useState<number>(0);
+
   //async function that handles deletion logic
-  const handleDeleteUser = async (e: React.MouseEvent) => {
+  const handleActivateUser = async (e: React.MouseEvent) => {
     e.stopPropagation();
-     await deleteUser(userId);
+     await activateUser(userId, graduationYear);
      loadUsers();
-    setShowDeleteUser(false); //make the dialog disappear
+    setShowActivateUser(false); //make the dialog disappear
   };
 
   const handleCancel = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setShowDeleteUser(false);
+    setShowActivateUser(false);
   };
 
   // Handle dialog close event
   const handleDialogClose = (open: boolean) => {
     if (!open) {
-      setShowDeleteUser(false);
+      setShowActivateUser(false);
     }
   };
 
+  const handleGraduationYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setGraduationYear(parseInt(e.target.value));
+  };
+
   return (
-    <div data-cy = "user-delete-dialog">
-    <AlertDialog>
+    <div data-cy = "user-activate-dialog">
+    <AlertDialog open={true} onOpenChange={handleDialogClose}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will delete the user from using the machines. 
+            This will activate the user account. 
           </AlertDialogDescription>
         </AlertDialogHeader>
+
+        <div className="flex flex-col gap-2">
+          <Label>
+            Graduation Year
+          </Label>
+          <Input type="number" value={graduationYear} onChange={handleGraduationYearChange} />
+
+        </div>
+
         <AlertDialogFooter>
-          <AlertDialogCancel data-cy = "user-delete-cancel" onClick={handleCancel}>Cancel</AlertDialogCancel>
-          <AlertDialogAction data-cy = "user-delete-confirm" onClick={handleDeleteUser}>
-            Delete
+          <AlertDialogCancel data-cy = "user-activate-cancel" onClick={handleCancel}>Cancel</AlertDialogCancel>
+          <AlertDialogAction data-cy = "user-activate-confirm" onClick={handleActivateUser}>
+            Activate
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -68,4 +86,4 @@ const DeleteUserDialog = ({
   );
 };
 
-export default DeleteUserDialog;
+export default ActivateUserDialog;

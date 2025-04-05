@@ -11,7 +11,8 @@ import { createUser,
     getUser,
     createUserBudgetCode,
     replaceBudgetsOfUser,
-    replaceTrainingsOfUser} from "@/data/api";
+    replaceTrainingsOfUser,
+    enableUser} from "@/data/api";
 
 
 
@@ -155,6 +156,17 @@ function useMutationUsers() {
           }
         };
 
+        const activateUser = async (user_id: number, graduationYear: number) => {
+          try {
+            await enableUser(user_id, graduationYear);
+          } catch (e) {
+            const errorMessage = (e as Error).message;
+            toast.error("Sorry! There was an error activating a user 🙁", {
+              description: errorMessage
+            });
+          }
+        };
+        
 
       
   return {
@@ -166,7 +178,8 @@ function useMutationUsers() {
     //banUserById,
     fetchUser,
     setUserBudgetCodes,
-    setUserTrainings
+    setUserTrainings,
+    activateUser
   };
 }
 

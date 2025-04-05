@@ -1,6 +1,6 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { queryUsersParamsSchema, createUserSchema, getUserSchema, getUserByCardNumSchema } from "../validators/schemas.js";
+import { queryUsersParamsSchema, createUserSchema, getUserSchema, getUserByCardNumSchema, enableUserSchema } from "../validators/schemas.js";
 import { SQL, or, desc, asc, eq, and, count, ilike, gt } from "drizzle-orm";
 import { users } from "../db/schema.js";
 import { db } from "../db/index.js";
@@ -43,7 +43,7 @@ userRoutes.get("/users",
     const whereClause: (SQL | undefined)[] = [];
 
     //Update where clause to not inlcude inactive users.
-    if (active) {
+    if (active !== undefined) {
         whereClause.push(
             eq(users.active, active)
         );
@@ -277,3 +277,25 @@ userRoutes.delete(
 })
 
 
+userRoutes.patch("/users/:id", 
+    adminGuard,
+    zValidator("param", getUserSchema),
+    zValidator("json", enableUserSchema),
+    async (c) => {
+        const { id } = c.req.valid("param");
+        const { active } = c.req.valid("json");
+        const [user] = await db.select().from(users).where(eq(users.id, id));
+        
+        if (!user) {
+            throw new HTTPException(404, { message: "User not found" });
+        }
+
+        const [updatedUser] = await db.update(users).set({ active }).where(eq(users.id, id)).returning();
+
+        return c.json({
+            success: true,
+            message: "User has been activated",
+            data: updatedUser
+        });
+    }
+)
