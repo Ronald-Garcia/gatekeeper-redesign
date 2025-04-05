@@ -8,6 +8,7 @@ import Sidebar from "../layout/sidebar";
 import MachineActions from "./machine-actions";
 import MachinesComponent from "../machines/machines-component";
 import InactiveTab from "../general/inactive-tab";
+import MachineIssue from "../machineIssues/machineIssues"
 
 /*
 Admin dashboard component
