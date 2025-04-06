@@ -31,7 +31,7 @@ const Interlock = () => {
     const handleCancel = () => {
         clearCurrentUser();
         turnOffMachine()
-        redirectPage($router, "start_page");
+        redirectPage($router, "interlockLogin");
     }
 
     const handleReportIssue = () => {
@@ -107,7 +107,7 @@ const Interlock = () => {
 
                     </CardContent>
                     <CardFooter className="flex justify-end space-x-4">
-                        <Button className="bg-yellow-400 text-black px-4 py-2" variant="ghost" onClick={handleReportIssue}> Report Issue </Button>
+                        <Button className="px-4 py-2 text-black bg-yellow-400" variant="ghost" onClick={handleReportIssue}> Report Issue </Button>
                         { 
                         <Button data-cy="start-button" className="text-xl jhu-blue-button" variant="ghost" disabled={!validCurrentBudget()} onClick={handleStartClick}>Start</Button>
                         }

@@ -19,7 +19,7 @@ const SignOutDialog = () => {
     const handleSignOut = () => {
         signOut();
         resetStores();
-        openPage($router, "start_page");
+        openPage($router, "kiosk");
 
     }
 
