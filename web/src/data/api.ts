@@ -175,7 +175,7 @@ export const removeUser = async (id: number): Promise<{
 
 
 /**
- * Retrieves a user based on the card number.
+ * Signs in a user based on the card number.
  * @param {number} cardNum - The card number of the user.
  * @returns {Promise<{message: string; data: User}>} A promise that resolves with a message and the user data.
  * @throws {Error} If the response is not ok, throws an error with the response message.
@@ -204,6 +204,20 @@ export const getUser = async (cardNum: number): Promise<{
   return { message, data };
 }
 
+/** Signs out the current user
+ * 
+ */
+// Sign out a user
+export const signOut = async (): Promise<boolean> => {
+  const response = await fetch(`${API_DB_URL}/sign-out`, {
+    method: "POST",
+    credentials: "include", 
+  });
+  if (!response.ok) {
+    throw new Error(`API request failed! with status: ${response.status}`);
+  }
+  return true;
+};
 
 /**
  * Creates a new user.

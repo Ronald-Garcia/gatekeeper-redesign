@@ -21,8 +21,8 @@ const HomePage = () => {
         <div className="text-3xl font-semibold text-gray-800 ">Welcome to the Interlock Homepage!</div>
         <div className="mb-4 text-lg text-gray-600">Choose the system you want to sign in to.</div>
         <div className="flex space-x-4">
-            <Button onClick={handleInterlockClick} className="jhu-blue-button">Interlock</Button>
-            <Button onClick={handleKioskClick} className=" jhu-blue-button">Kiosk</Button>
+            <Button variant={"ghost"} onClick={handleInterlockClick} className="jhu-blue-button">Interlock</Button>
+            <Button variant={"ghost"} onClick={handleKioskClick} className=" jhu-blue-button">Kiosk</Button>
         </div>
     </div>
   );

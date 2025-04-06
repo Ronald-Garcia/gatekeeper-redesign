@@ -275,9 +275,6 @@ export function clearCurrentMachine() {
   $currentMachine.set(defaultMachine);
 }
 
-
-
-
  //budget code store functions 
 export function setBudgetCodes(codeList: BudgetCode[]) {
   $codes.set(codeList);
@@ -437,3 +434,12 @@ export function setMaxPage(max_page: number) {
   $max_page.set(max_page);
 }
 logger({ $activeTab, $users })
+
+export function resetStores() {
+  resetDashboardSearch();
+  resetDate();
+  resetDateRange();
+  resetSearch();
+  clearCurrentUser();
+  
+}

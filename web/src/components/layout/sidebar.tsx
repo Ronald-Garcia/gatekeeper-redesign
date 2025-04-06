@@ -5,6 +5,7 @@ import { openPage } from "@nanostores/router";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import StatementDialog from "../financialStatements/statements-dialog";
+import SignOutDialog from "../general/signout-dialog";
 
 
 const Sidebar = () => {
@@ -30,6 +31,7 @@ const Sidebar = () => {
         resetSearch();
         openPage($router, "machineIssues");
     }
+
     
 
     // Set users as default route if no route is selected
@@ -89,6 +91,10 @@ const Sidebar = () => {
 
                 <div className="pt-4 border-t border-gray-200">
                     <StatementDialog/>
+                </div>
+
+                <div className="pt-4 border-t border-gray-200">
+                <SignOutDialog/>
                 </div>
 
             </nav>
