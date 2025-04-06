@@ -12,7 +12,7 @@ export default function BudgetCodeComponent({ budgetcode }: { budgetcode: Budget
       ]}
       actions={
         <BudgetCodeActions 
-          budgetcodeId={budgetcode.id} 
+          budgetcode={budgetcode} 
         />
       }
       dataCy={`budget-code-${budgetcode.code}`}
