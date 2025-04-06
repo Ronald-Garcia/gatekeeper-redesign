@@ -39,6 +39,7 @@ const AdminDashboard = () => {
 
   const {loadMachineIssues} = useQueryMachineIssues(false);
   const machineIssueLoadFunction = loadMachineIssues as (sort?: SearchQuerySorts, page?: number, limit?: number, search?: string) => void
+  
   const {loadFinancialStatements} = useQueryStatements(false);
   const financialStatementLoadFunction = loadFinancialStatements as (sort?: SearchQuerySorts, page?: number, limit?: number, search?: string) => void
 

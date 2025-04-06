@@ -1009,8 +1009,6 @@ export const getFinancialStatements = async (
   meta: MetaType
 
 }> => {
-
-  
   const response = await fetch(`${API_DB_URL}/fin-statements?limit=${limit}&page=${page}&sort=${sort}&to=${to}&from=${from}`, {
     credentials: "include",
   });
@@ -1121,12 +1119,16 @@ export const createMachineIssue = async (userId: number, machineId: number): Pro
   return { message, data };
 }
 
-export const getMachineIssues = (
+export const getMachineIssues = async(
   sort: "asc" | "desc",
   page: number,
   limit: number,
   resolved?: number // ✅ make resolved optional
-) => {
+) : Promise<{
+  message: string;
+  data: MachineIssue[];
+  meta: MetaType
+}> => {
   const query = new URLSearchParams({
     sort,
     page: page.toString(),
@@ -1137,11 +1139,19 @@ export const getMachineIssues = (
   if (resolved !== undefined) {
     query.append("resolved", resolved.toString());
   }
-
-  return fetch(`${API_DB_URL}/machine-issues?${query.toString()}`, {
+  const response = await fetch(`${API_DB_URL}/machine-issues?${query.toString()}`, {
     method: "GET",
     credentials: "include",
-  }).then(res => res.json());
+  })
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+
+    throw new Error(message);
+  }
+
+  const { message, data, meta }: { message: string; data: MachineIssue[]; meta:MetaType } = await response.json();
+  return { message, data, meta };
 };
 
 export const updateMachineIssue = async (
