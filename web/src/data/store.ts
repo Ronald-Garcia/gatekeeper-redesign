@@ -23,6 +23,14 @@ export const $currentPage = atom<number>(1);
 export const $activeTab = atom<number>(1);
 export const $machine_issues = atom<MachineIssue[]>([]);
 
+
+export function setMachineIssues(issues: MachineIssue[]) {
+  $machine_issues.set(issues);
+}
+export function resetMachineIssues() {
+  $machine_issues.set([]);
+}
+
 export function setActiveTab(tab: number) {
   $activeTab.set(tab);
 }
