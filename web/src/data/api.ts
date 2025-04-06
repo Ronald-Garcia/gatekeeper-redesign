@@ -1,7 +1,7 @@
 import { API_DB_URL, API_MACHINE_URL } from "../env";
 import { User } from "./types/user";
 import { Training } from "./types/training"; 
-import { BudgetCode } from "./types/budgetCode"; 
+import { BudgetCode, budgetCodeType } from "./types/budgetCode"; 
 import { Machine } from "./types/machine";
 import { MachineType } from "./types/machineType";
 import { SortBudgetType, SortMachineType, SortType } from "./types/sort";
@@ -856,6 +856,8 @@ export const getMachineTypes = async ( sort: SortType = "asc",
   return { message, data, meta };
 }
 
+
+
 /**
  * Retrieves a machine by its ID.
  * @param {number} id - The ID of the machine.
@@ -1191,5 +1193,51 @@ export const enableUser = async (id: number, graduationYear?: number): Promise<{
   const { message, data }: { message: string; data: User } = await response.json();
 
   return { message, data };
+}
+
+
+/**
+ * Retrieves machine types with optional sorting, pagination, and search.
+ * @param {SortType} sort - Sorting order, default "asc".
+ * @param {number} page - Page number, default 1.
+ * @param {number} limit - Number of machine types per page, default 10.
+ * @param {string} search - Search term, default empty string.
+ * @returns {Promise<{message: string, data: MachineType[]}>} A promise that resolves with a message and an array of machine types.
+ * @throws {Error} If the response is not ok, throws an error with the response message.
+ */
+export const getBudgetCodeType = async ( sort: SortType = "asc",
+  page: number = 1,
+  limit: number = 10,
+  search: string = ""
+
+): Promise<{
+  message: string;
+  data: budgetCodeType[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+  };
+}> => {
+  const response = await fetch(`${API_DB_URL}/budget-code-types?search=${search}&limit=${limit}&page=${page}&sort=${sort}`, {
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string} = await response.json();
+    throw new Error(message);
+  }
+
+  const { message, data, meta }: { 
+    message: string; 
+    data: budgetCodeType[];
+    meta: {
+      page: number;
+      limit: number;
+      total: number;
+    };
+  } = await response.json();
+
+  return { message, data, meta };
 }
 

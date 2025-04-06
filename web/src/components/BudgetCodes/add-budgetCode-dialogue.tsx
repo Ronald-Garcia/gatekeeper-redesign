@@ -14,6 +14,10 @@ import { useState } from "react";
 import { BudgetCode } from "@/data/types/budgetCode";
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
 import { DialogClose } from "@radix-ui/react-dialog";
+import { $budgetCodeTypes, $budget_code_queue, toggleBudgetCodeQueue } from "@/data/store";
+import { useStore } from "@nanostores/react";
+import { ScrollArea } from "../ui/scroll-area";
+import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 
 // function that handles state of the dialogue, error handling from api
 const AddBudgetCodeDialog = () => {
@@ -21,12 +25,15 @@ const AddBudgetCodeDialog = () => {
   const { loadBudgets } = useQueryBudgets(false);
   const [budgetCode, setbudgetCode] = useState("");
   const [name, setName] = useState("");
+  const typeList = useStore($budgetCodeTypes);
+  const budgetCodeQueue = useStore($budget_code_queue);
 
   // This is dialog component state management
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState({
     name: false,
-    code: false
+    code: false,
+    budgetCodeTypeId: false
   });
 
   const handleOpenClose = () => {
@@ -34,14 +41,16 @@ const AddBudgetCodeDialog = () => {
     // Reset errors when dialog closes
     setErrors({
       name: false,
-      code: false
+      code: false, 
+      budgetCodeTypeId: false
     });
   }
 
   const validateFields = () => {
     const newErrors = {
       name: name.trim() === "",
-      code: budgetCode.trim() === ""
+      code: budgetCode.trim() === "",
+      budgetCodeTypeId: budgetCodeQueue.length === 0
     };
     
     setErrors(newErrors);
@@ -54,10 +63,16 @@ const AddBudgetCodeDialog = () => {
       return;
     }
 
+    const selectedType = typeList.find(type => type.id === budgetCodeQueue[0]);
+    
     const newCode: BudgetCode = {
       code: budgetCode,
       id: -1,
-      name: name
+      name: name, 
+      type: selectedType || {
+        id: -1,
+        type: ""
+      }
     }
     const response = await addNewBudgetCode(newCode);
     setOpen(false);
@@ -75,6 +90,11 @@ const AddBudgetCodeDialog = () => {
   const handleOnChangeCode = (e: React.ChangeEvent<HTMLInputElement>) => {
     setbudgetCode(e.target.value);
     setErrors(prev => ({...prev, code: false}));
+  }
+
+  const handleClickOnBudgetType = (budgetTypeId: number) => {
+    toggleBudgetCodeQueue(budgetTypeId);
+    setErrors(prev => ({...prev, budgetCodeTypeId: false}));
   }
 
   return (
@@ -101,6 +121,36 @@ const AddBudgetCodeDialog = () => {
             >
             </Input>
           </div>
+
+          <div className="space-y-4">
+            <Label htmlFor="budget-type" className="text-sm">
+              Select Budget Code Type:
+            </Label>
+            <ScrollArea className="h-[200px]">
+              <ToggleGroup type="single" className="flex-col w-full">
+                {typeList.map((type) => (
+                  <ToggleGroupItem
+                    key={type.id}
+                    value={type.id.toString()}
+                    onClick={() => handleClickOnBudgetType(type.id)}
+                    className={`flex items-center justify-center h-12 w-full text-sm transition-colors border-y border-solid border-stone-200 hover:bg-stone-50 hover:border-stone-300 cursor-pointer rounded-md ${
+                      budgetCodeQueue.includes(type.id) ?
+                      "bg-stone-100 border-stone-300" :
+                      "bg-white"
+                    }`}
+                    data-state={budgetCodeQueue.includes(type.id) ? "on" : "off"}
+                    aria-pressed={budgetCodeQueue.includes(type.id)}
+                  >
+                    <p className="text-center font-medium">{type.type}</p>
+                  </ToggleGroupItem>
+                ))}
+              </ToggleGroup>
+            </ScrollArea>
+            {errors.budgetCodeTypeId && (
+              <p className="text-red-500 text-sm">Please select a budget code type</p>
+            )}
+          </div>
+
           <div className="space-y-4">
             <Input
               onChange={handleOnChangeCode}

@@ -1,6 +1,6 @@
 import { User } from "./types/user";
 import { atom, map } from "nanostores";
-import { BudgetCode } from "./types/budgetCode"; 
+import { BudgetCode, budgetCodeType } from "./types/budgetCode"; 
 import { Machine } from "./types/machine";
 import { MachineType } from "./types/machineType";
 import { financialStatement } from "./types/financialStatement";
@@ -22,6 +22,7 @@ export const $hasMoreUserTrainings = atom<boolean>(false);
 export const $currentPage = atom<number>(1);
 export const $activeTab = atom<number>(1);
 export const $machine_issues = atom<MachineIssue[]>([]);
+export const $budgetCodeTypes = atom<budgetCodeType[]>([]);
 
 export function setActiveTab(tab: number) {
   $activeTab.set(tab);
@@ -120,6 +121,7 @@ export function toggleMachineTypeQueue(bc: number) {
   }
 }
 
+
 export function toggleTrainingQueue(bc: number) {
   const bcs =  $training_queue.get();
   const hasBc = bcs.some(b => b === bc);
@@ -186,7 +188,11 @@ const defaultMachine: Machine = {
 const defaultBudget: BudgetCode = {
   id: -1, 
   name: "invalid",
-  code: "invalid"
+  code: "invalid", 
+  type: {
+     id: -1, 
+    type: ""
+  }
 }
 
 
@@ -343,6 +349,16 @@ export function setMachinesTypes(typeList: MachineType[]) {
 export function appendMachineTypes(typeList: MachineType[]) {
   $machine_types.set([...$machine_types.get(), ...typeList]);
 }
+
+
+export function setBudgetCodeTypes(typeList: budgetCodeType[]) {
+  $budgetCodeTypes.set(typeList);
+}
+
+export function appendBudgetCodeType(typeList: budgetCodeType[]) {
+  $budgetCodeTypes.set([...$budgetCodeTypes.get(), ...typeList]);
+}
+
 
 // *** SERACH STORES ***
 
