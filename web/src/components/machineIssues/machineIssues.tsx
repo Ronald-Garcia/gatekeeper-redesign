@@ -1,5 +1,4 @@
-import { useStore } from "@nanostores/react";
-import { $machine_issues } from "@/data/store";
+
 //import MachineIssue from "./machineIssue";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 //import useQueryMachineIssues from "@/hooks/use-query-machine-issues";
@@ -12,7 +11,6 @@ not resolved.
 export default function MachineIssue() {
     //useQueryUsers(true);
   
-    const machineIssueList = useStore($machine_issues);
   
     return (
         <div className="flex flex-col h-full">
