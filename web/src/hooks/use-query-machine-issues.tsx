@@ -19,17 +19,18 @@ function useQueryMachineIssues(reload: boolean) {
     page: number = 1,
     limit: number = 10,
     search: string = "", // Placeholder if needed later
-    resolved: number = 0
+    resolved?: number
   ) => {
     try {
       setIsLoading(true);
 
       const { data } = await getMachineIssues(sort, page, limit, resolved);
 
-      const formatted: MachineIssue[] = data.map((issue) => ({
+      const formatted: MachineIssue[] = data.map((issue: MachineIssue) => ({
         ...issue,
         reportedAt: new Date(issue.reportedAt),
       }));
+      
 
       $machine_issues.set(formatted);
 

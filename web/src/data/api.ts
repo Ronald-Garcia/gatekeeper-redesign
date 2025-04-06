@@ -1114,27 +1114,28 @@ export const createMachineIssue = async (userId: number, machineId: number): Pro
   return { message, data };
 }
 
-export const getMachineIssues = async (sort: "asc" | "desc",
+export const getMachineIssues = (
+  sort: "asc" | "desc",
   page: number,
   limit: number,
-  resolved: number): Promise<{
-  message: string,
-  data: MachineIssue[],
-}> => {
-  const response = await fetch(`${API_DB_URL}/machine-issues?sort=${sort}&page=${page}&limit=${limit}&resolved=${resolved}`, {
-    credentials: "include",
+  resolved?: number // ✅ make resolved optional
+) => {
+  const query = new URLSearchParams({
+    sort,
+    page: page.toString(),
+    limit: limit.toString(),
   });
 
-  if (!response.ok) {
-    const { message }: { message: string } = await response.json();
-
-    throw new Error(message); 
+  // ✅ only add 'resolved' if it's explicitly provided
+  if (resolved !== undefined) {
+    query.append("resolved", resolved.toString());
   }
 
-  const { message, data }: { message: string; data: MachineIssue[] } = await response.json();
-
-  return { message, data };
-}
+  return fetch(`${API_DB_URL}/machine-issues?${query.toString()}`, {
+    method: "GET",
+    credentials: "include",
+  }).then(res => res.json());
+};
 
 export const updateMachineIssue = async (
   id: number,
