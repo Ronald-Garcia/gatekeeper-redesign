@@ -2,7 +2,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { queryBudgetCodesParamsSchema, createBudgetCode, deleteBudgetCodeSchema } from "../validators/schemas.js";
 import { SQL, desc, asc, eq, and, count, ilike } from "drizzle-orm";
-import { budgetCodes } from "../db/schema.js";
+import { budgetCodes, budgetCodeType } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
 import { Context } from "../lib/context.js";
@@ -96,7 +96,16 @@ budgetCodesRoutes.post("/budget-codes",
     adminGuard,
     zValidator("json", createBudgetCode), async (c)=>{
 
-    const { name, code } = c.req.valid("json");
+    const { name, code, budgetCodeTypeId } = c.req.valid("json");
+
+     const [budgetCodeCheck1] = await db
+            .select()
+            .from(budgetCodeType)
+            .where(eq(budgetCodeType.id, budgetCodeTypeId))
+        
+        if (!budgetCodeCheck1) {
+            throw new HTTPException(404, { message: "Invalid machine type" });
+        }
 
     //Check if there is a duplicate.
     const [budgetCodeCheck] = await db
@@ -112,7 +121,8 @@ budgetCodesRoutes.post("/budget-codes",
         .insert(budgetCodes)
         .values({
             name,
-            code
+            code,
+            budgetCodeTypeId
         })
         .returning();
 

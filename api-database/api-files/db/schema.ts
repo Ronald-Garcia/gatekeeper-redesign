@@ -46,6 +46,12 @@ export const machines = pgTable("machines_table", {
   active: integer().notNull()
 })
 
+
+export const budgetCodeType = pgTable("budgetCodeType", {
+  id: serial().primaryKey(),
+  name: text().unique().notNull()
+})
+
 /**
  * The table that stores the budget codes registered with the app.
  * @primary id          the database ID of the budget code.
@@ -56,6 +62,7 @@ export const budgetCodes = pgTable("budgetCodes" , {
   id: serial().primaryKey(),
   code: text().notNull().unique(),
   name: text().notNull(),
+  budgetCodeTypeId: serial().notNull().references(() => budgetCodeType.id, {onDelete:"cascade"}),
   // active: integer().notNull().default(1)
 })
 

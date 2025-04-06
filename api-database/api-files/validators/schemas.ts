@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { budgetCodeType } from "../db/schema";
 
 export const testSchema = z.object({
   id: z.coerce.number().int().positive(),
@@ -71,6 +72,8 @@ export const createBudgetCode = z.object({
     .min(1, "Name is required")
     .max(100, "Name must be 100 characters or less"),
   code: z.string().min(0),
+  budgetCodeTypeId: z.coerce.number().positive().int(),
+  
 
   
 });
