@@ -21,7 +21,7 @@ import { $current_page } from "@/data/store";
       e.stopPropagation();
       setResolving(true);
       await resolveIssue(issue.id);
-      await loadMachineIssues(undefined, page, undefined, undefined);
+      await loadMachineIssues(undefined, page, undefined);
       setResolving(false);
     };
   
