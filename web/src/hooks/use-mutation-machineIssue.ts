@@ -1,11 +1,9 @@
 import { createMachineIssue, updateMachineIssue } from "@/data/api";
 import { MachineIssue } from "@/data/types/machineIssues";
 import { toast } from "./use-toast";
-import { $machine_issues, setMachineIssues } from "@/data/store";
-import { useStore } from "@nanostores/react";
 function useMutationMachineIssue() {
 
-  const machineIssues = useStore($machine_issues);
+
   const reportIssue = async (userId: number, machineId: number): Promise<MachineIssue | undefined> => {
     try {
       const { data } = await createMachineIssue(userId, machineId);
