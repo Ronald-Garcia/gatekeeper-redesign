@@ -15,6 +15,8 @@ import useQueryUsers from "@/hooks/use-query-users";
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
 import { $activeSearch } from "@/data/store";
 import Users from "../Users/users";
+import FinancialStatements from "../financialStatements/financialStatements";
+import useQueryStatements from "@/hooks/use-financialStatements-hook";
 
 /*
 Admin dashboard component
@@ -33,6 +35,9 @@ const AdminDashboard = () => {
   const {loadMachines} = useQueryMachines(false);
   const machineLoadFunction = loadMachines as (sort?: SearchQuerySorts, page?: number, limit?: number, search?: string) => void
   
+  const {loadFinancialStatements} = useQueryStatements(false);
+  const financialStatementLoadFunction = loadFinancialStatements as (sort?: SearchQuerySorts, page?: number, limit?: number, search?: string) => void
+
   const activeSearch = useStore($activeSearch);
 
   if (!router) {
@@ -89,6 +94,18 @@ const AdminDashboard = () => {
         </div>
       </div>
       )
+  } else if (router.route === "financial_statements"){
+    return(
+      <div className="flex">
+        <Sidebar />
+        <div className="flex-1">
+          <ScrollArea className={`${activeSearch ? 'scroll-component-search' : 'scroll-component'}`}>
+            <FinancialStatements/>
+          </ScrollArea>
+          <PaginationBar loadFunction={financialStatementLoadFunction}/>
+        </div>
+      </div>
+    )
   }
 };
 

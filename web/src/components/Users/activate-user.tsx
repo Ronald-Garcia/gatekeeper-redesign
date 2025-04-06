@@ -28,7 +28,7 @@ const ActivateUserDialog = ({
   user,
   setShowActivateUser,
 }: ActivateUserDialogProp) => {
-  const { activateUser } = useMutationUsers();
+  const { modifyUser } = useMutationUsers();
   const { loadUsers } = useQueryUsers(false);
 
   const [isFaculty, setIsFaculty] = useState<boolean>(!user.graduationYear);
@@ -46,7 +46,7 @@ const ActivateUserDialog = ({
       return
     }
 
-     await activateUser(user.id, isFaculty ? undefined : graduationYear);
+    await modifyUser(user.id, 1, isFaculty ? undefined : graduationYear);
      loadUsers();
     setShowActivateUser(false); //make the dialog disappear
   };
