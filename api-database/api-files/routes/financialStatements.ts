@@ -39,9 +39,8 @@ financialStatementRoutes.get("/fin-statements",
 
         
     const offset = (page - 1) * limit;
-
     const [allFinancialStatements, [{ totalCount }]] = await Promise.all([
-         await db.select({
+        db.select({
             user: {
                 name: users.name,
                 JHED: users.JHED,
@@ -78,7 +77,7 @@ financialStatementRoutes.get("/fin-statements",
         .groupBy(financialStatementsTable.dateAdded)
         .orderBy(...orderByClause)
       ]);
-    
+
     return c.json({
         success:true,
         data: allFinancialStatements,
