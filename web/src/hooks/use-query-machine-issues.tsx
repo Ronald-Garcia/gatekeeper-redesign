@@ -3,6 +3,7 @@ import { $machine_issues } from "@/data/store";
 import { useStore } from "@nanostores/react";
 import { useEffect, useState } from "react";
 import { useToast } from "./use-toast";
+import { MachineIssue } from "@/data/types/machineIssues";
 
 function useQueryMachineIssues(reload: boolean) {
   const machineIssues = useStore($machine_issues);
@@ -19,13 +20,10 @@ function useQueryMachineIssues(reload: boolean) {
       setIsLoading(true);
       const { data } = await getMachineIssues(sort, page, limit, resolved);
 
-      // Transform response to match frontend expected shape
-      const formatted = data.map((issue) => ({
-        id: issue.id,
-        userId: issue.userId,
-        machineId: issue.machineId,
-        reportedAt: new Date(issue.reportedAt),
-        resolved: issue.resolved,
+      // Optional: Convert reportedAt to Date objects
+      const formatted: MachineIssue[] = data.map((issue) => ({
+        ...issue,
+        reportedAt: new Date(issue.reportedAt), // ← optional depending on UI use
       }));
 
       $machine_issues.set(formatted);
