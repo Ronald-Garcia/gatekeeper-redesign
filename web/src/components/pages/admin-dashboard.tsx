@@ -15,6 +15,8 @@ import useQueryUsers from "@/hooks/use-query-users";
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
 import { $activeSearch } from "@/data/store";
 import Users from "../Users/users";
+import MachineIssues from "../machineIssues/machineIssues";
+import useQueryMachineIssues from "@/hooks/use-query-machine-issues";
 
 /*
 Admin dashboard component
@@ -32,7 +34,10 @@ const AdminDashboard = () => {
 
   const {loadMachines} = useQueryMachines(false);
   const machineLoadFunction = loadMachines as (sort?: SearchQuerySorts, page?: number, limit?: number, search?: string) => void
-  
+
+  const {loadMachineIssues} = useQueryMachineIssues(false);
+  const machineIssueLoadFunction = loadMachineIssues as (sort?: SearchQuerySorts, page?: number, limit?: number, search?: string) => void
+
   const activeSearch = useStore($activeSearch);
 
   if (!router) {
@@ -85,6 +90,19 @@ const AdminDashboard = () => {
         <MachinesComponent/>
         </ScrollArea>
         <PaginationBar loadFunction={machineLoadFunction}/>
+
+        </div>
+      </div>
+      )
+  } else if (router.route === "machineIssues"){
+    return(
+      <div className="flex">
+        <Sidebar />
+        <div className="flex-1">
+        <ScrollArea className={`${activeSearch ? 'scroll-component-search' : 'scroll-component'}`}>
+          <MachineIssues/>
+        </ScrollArea>
+        <PaginationBar loadFunction={machineIssueLoadFunction}/>
 
         </div>
       </div>
