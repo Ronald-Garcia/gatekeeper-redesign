@@ -8,6 +8,7 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
+import { DatePicker } from "../financialStatements/datepick";
 
 
 //prop for handling state of the dialog
@@ -49,13 +50,18 @@ const BanUserDialog = ({
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will ban the user from using the machines. 
+            This will timeout the user from using the machines. 
           </AlertDialogDescription>
         </AlertDialogHeader>
+
+        <DatePicker>
+          
+        </DatePicker>
+
         <AlertDialogFooter>
           <AlertDialogCancel data-cy = "user-ban-cancel" onClick={handleCancel}>Cancel</AlertDialogCancel>
           <AlertDialogAction  data-cy = "user-ban-confirm" onClick={handleBanUser}>
-            Ban
+            Timeout
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
