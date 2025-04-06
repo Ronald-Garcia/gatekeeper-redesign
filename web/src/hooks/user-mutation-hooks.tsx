@@ -1,17 +1,15 @@
 import { addUser, 
     deleteUserById,
-    updateUserById,
  } from "@/data/store";
 import { User } from "@/data/types/user";
 import { createUser, 
     createUserMachineRelation, 
     removeUser, 
-    editUser, 
     getUser,
     createUserBudgetCode,
     replaceBudgetsOfUser,
     replaceTrainingsOfUser,
-    enableUser} from "@/data/api";
+    updateUserStatus} from "@/data/api";
 import { useToast } from "./use-toast";
 
 //primarily has functions handling state of decks after app is loaded, pretty much what's on posts UI
@@ -134,24 +132,6 @@ function useMutationUsers() {
     }
   };
 
-  const updateUser = async (newUser: User) => {
-    try {
-      const { data } = await editUser(newUser);
-      updateUserById(data);
-      toast({
-        variant: "default",
-        title: `✅ Success 😊!`,
-        description: "User updated successfully!"
-      })
-    } catch (e) {
-      const errorMessage = (e as Error).message;
-      toast({
-        variant: "destructive",
-        title: "❌ Sorry! There was an error updating a user 🙁",
-        description: errorMessage
-      })
-    }
-  };
 
   /*
     const banUserById = async (user_id: number, ban: number) => {
@@ -188,9 +168,9 @@ function useMutationUsers() {
     }
   };
 
-  const activateUser = async (user_id: number, graduationYear?: number) => {
+  const modifyUser = async (user_id: number, active: number, graduationYear?: number, timeoutDate?: Date) => {
     try {
-      await enableUser(user_id, graduationYear);
+      await updateUserStatus(user_id, active, graduationYear, timeoutDate);
       toast({
         variant: "default",
         title: `✅ Success 😊!`,
@@ -210,13 +190,12 @@ function useMutationUsers() {
     deleteUser,
     addNewUser,
     giveTraining,
-    updateUser,
     giveBudgetCode,
     //banUserById,
     fetchUser,
     setUserBudgetCodes,
     setUserTrainings,
-    activateUser
+    modifyUser
   };
 }
 

@@ -1,4 +1,4 @@
-import { activateBudgetCode, createBudgetCode, 
+import { updateBudgetCode, createBudgetCode, 
     deleteBudgetCode } from "../data/api";
 import { addBudgetCode, deleteBudgetCodeById } from "../data/store";
 import { BudgetCode } from "@/data/types/budgetCode";
@@ -46,50 +46,29 @@ function useMutationBudgetCodes() {
     }
   };
 
-  const enableBudgetCode = async (codeId: number) => {
+  const modifyBudgetCode = async (codeId: number, active: number) => {
     try {
-      await activateBudgetCode(codeId);
+      await updateBudgetCode(codeId, active);
       toast({
         variant: "default",
         title: "✅ Success 😊!",
-        description: "Budget code activated successfully!"
+        description: "Budget code modified successfully!"
       });
     } catch (e) {
       const errorMessage = (e as Error).message;
       toast({
         variant: "destructive",
-        title: "❌ Sorry! There was an error activating the budget code 🙁",
+        title: "❌ Sorry! There was an error modifying the budget code 🙁",
         description: errorMessage
       });
     }
   };
-/*
-  
-  const updateBudgetCode = async (budget: BudgetCode) => {
-    try {
-      const { data } = await editBudgetCode(budget);
-      updateABudgetCode(data);
-      toast({
-        variant: "default",
-        title: "✅ Success 😊!",
-        description: "Budget code updated successfully!"
-      });
-      return data;
-    } catch (e) {
-      const errorMessage = (e as Error).message;
-      toast({
-        variant: "destructive",
-        title: "❌ Sorry! There was an error updating the budget code 🙁",
-        description: errorMessage
-      });
-    }
-  };*/
 
   return {
     addNewBudgetCode,
     removeBudgetCode,
    // updateBudgetCode,
-   enableBudgetCode,
+   modifyBudgetCode,
   };
 }
 

@@ -23,13 +23,13 @@ const ActivateMachineDialog = ({
   machine,
   setShowActivateMachine,
 }: ActivateMachineDialogProp) => {
-  const { enableMachine } = useMutationMachines();
+  const { modifyMachine } = useMutationMachines();
   const { loadMachines } = useQueryMachines(false);
 
   //async function that handles activation logic
   const handleActivateMachine = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    await enableMachine(machine.id);
+    await modifyMachine(machine.id, 1);
     loadMachines();
     setShowActivateMachine(false); //make the dialog disappear
   };
