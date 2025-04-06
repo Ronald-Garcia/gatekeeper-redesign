@@ -1,8 +1,7 @@
 import type { Context, Next } from "hono";
-import { HTTPException } from "hono/http-exception";
-import { db } from "../db";
-import { users } from "../db/schema";
-import { gt, isNull, lt, not } from "drizzle-orm";
+import { users } from "../db/schema.js";
+import { gt, lt } from "drizzle-orm";
+import { db } from "../db/index.js";
 
 export const timeoutUserHandle = async (c: Context, next: Next) => {
   
