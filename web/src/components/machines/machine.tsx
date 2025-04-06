@@ -1,25 +1,17 @@
 import MachineSelectDialog from "./machine-select";
 import { Machine } from "@/data/types/machine";
 
-
-
-
 export default function MachineSelect({ machine }: { machine: Machine }) {
   return (
-    <>
-    
-      <div
-      className="flex flex-col justify-between items-center py-4 max-h-[15vh] text-sm text-clip hover:bg-stone-100 transition-colors border-y-2 border-solid border-stone-300 hover:border-stone-500"
-    >
-      <div className="flex w-full justify-between px-2">
-        <div className=" truncate">
-          {machine.name}
+    <div data-cy={`machine-${machine.id}`} className="relative">
+      <div className="relative flex flex-col p-4 bg-white border rounded-lg shadow-sm hover:shadow-md transition-shadow">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-medium">{machine.name}</h3>
+          </div>
+          <MachineSelectDialog machine={machine} />
         </div>
-
-        <MachineSelectDialog machine={machine}></MachineSelectDialog>
       </div>
-
     </div>
-    </>
   );
 }
