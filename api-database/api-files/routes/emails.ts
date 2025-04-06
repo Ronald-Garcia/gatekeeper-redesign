@@ -4,7 +4,7 @@ import { zValidator } from "@hono/zod-validator";
 import { getDateSchema, getTimeSchema, sendEmailSchema } from "../validators/emailSchemas.js";
 import { db } from "../db/index.js";
 import { budgetCodes, financialStatementsTable, machines, users } from "../db/schema.js";
-import { transporter } from "../emails/index.js";
+import { bree, transporter } from "../emails/index.js";
 import writeXlsxFile from "write-excel-file/node";
 import { between, eq } from "drizzle-orm";
 import { adminGuard } from "../middleware/adminGuard.js";
@@ -12,10 +12,10 @@ import { HTTPException } from "hono/http-exception";
 import Bree from "bree"; 
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
+import schedule from "node-schedule";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
+let j: schedule.Job;
 /**
  * Routes for email operations.
  * @post    /statement-email/:email    sends financial statements via email for a date range.
@@ -192,26 +192,19 @@ emailRoutes.post("/statement-email/schedule/:email",
 
 
     //Create a Bree instance, might need to do singleton instancem for prod
-    const bree = new Bree({
-      root: join(__dirname, "../emails/jobs")
-
-    });
+    
 
 
 
     try {
-      // Schedule the job
-
-      bree.add({
-        name: "index", 
-        cron: `0 0 ${date} * *`, 
-        worker: {
-          workerData: { email, date },
-        }
-      });
-
-
       
+      if (!j) {
+        j = schedule.scheduleJob(`0 0 ${date.getDay()} * *`, async () => {
+          await sendEmail(email, true, undefined, undefined, date);
+        });  
+      } else {
+        j.reschedule(`0 0 ${date.getDay()} * *`);
+      }
  
 
     } catch (err) {
@@ -224,3 +217,15 @@ emailRoutes.post("/statement-email/schedule/:email",
       message: `Automated email scheduled to run on day ${date} of every month at midnight.`
     });
 });
+
+emailRoutes.delete("/statement-email/cancel",
+
+  async (c) => {
+    j.cancel();
+    return c.json({
+      success: true,
+      message: "Automated email cancelled."
+    });
+  }
+)
+

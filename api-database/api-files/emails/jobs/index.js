@@ -1,18 +1,10 @@
-import { parentPort, workerData } from "worker_threads";
+import { parentPort, workerData } from 'node:worker_threads';
+import process from 'node:process';
 
-(async () => {
 
-  try {
-    //workerData contains the email and selected date 
-    const { email, date } = workerData;
-    //Call the email-sending function
-    
-    console.log("Automated email sent successfully.");
-  } catch (error) {
-    console.error("Error sending automated email:", error);
-    process.exit(1);
-  }
-  // mark as completed 
-  parentPort.postMessage("done");
-  process.exit(0);
-})();
+console.log(workerData)
+console.log('Hello TypeScript!');
+
+// signal to parent that the job is done
+if (parentPort) parentPort.postMessage('done');
+else process.exit(0);
