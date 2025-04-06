@@ -28,14 +28,14 @@ import { $current_page } from "@/data/store";
     return (
       <div data-cy={`machine-issue-actions-${issue.id}`} className="flex items-center gap-1">
         
-        <Button
+        {!issue.resolved && <Button
           onClick={handleResolve}
           variant="ghost"
           disabled={issue.resolved}
           data-cy={`machine-issue-resolve-${issue.id}`}
         >
           {resolving ? "Resolving..." : "Mark Resolved"}
-        </Button>
+        </Button>}
       
         <Circle
           size={12}
