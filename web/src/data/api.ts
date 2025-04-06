@@ -355,7 +355,8 @@ export const getAllBudgets = async (
   sort: SortBudgetType = "name_asc",
   page: number = 1,
   limit: number = 10,
-  search: string = ""
+  search: string = "",
+  active: number = 1
 ): Promise<{
   message: string;
   data: BudgetCode[];
@@ -365,7 +366,7 @@ export const getAllBudgets = async (
     total: number;
   };
 }> => {
-  const response = await fetch(`${API_DB_URL}/budget-codes?search=${search}&limit=${limit}&page=${page}&sort=${sort}`, {
+  const response = await fetch(`${API_DB_URL}/budget-codes?search=${search}&limit=${limit}&page=${page}&sort=${sort}&active=${active}`, {
     credentials: "include",
   });
 
@@ -569,7 +570,6 @@ export const deleteUserMachineRelation = async (training_id: number): Promise<{
 
 export const activateMachine = async (id:number) => {
 
-  console.log(JSON.stringify({active: 1}))
   const response = await fetch(`${API_DB_URL}/machines/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
@@ -588,6 +588,26 @@ export const activateMachine = async (id:number) => {
   return { message, data};
 }
 
+
+export const activateBudgetCode = async (id:number) => {
+
+  const response = await fetch(`${API_DB_URL}/budget-codes/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({
+      active: 1
+    })
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string, data: BudgetCode } = await response.json();
+  return { message, data};
+}
 
 /**
  * Bans or unbans a user.

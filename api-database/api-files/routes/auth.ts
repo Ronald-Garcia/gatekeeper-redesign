@@ -10,6 +10,7 @@ import { and, eq } from "drizzle-orm";
 import { appendLastNum } from "./users.js";
 import { ServiceProvider, IdentityProvider } from "samlify"; 
 import dotenv from 'dotenv';
+import { timeoutUserHandle } from "../middleware/timeoutHandle.js";
 dotenv.config();
 
 
@@ -33,6 +34,7 @@ authRoutes.post("/logout", async (c) => {
  * @returns the user.
  */
 authRoutes.post("/users/:cardNum", 
+  timeoutUserHandle,
   zValidator("param",getUserByCardNumSchema), async(c) => {
  //Given you have a well formed card number, check if that card num exists in user table.
  const { cardNum } = c.req.valid("param");

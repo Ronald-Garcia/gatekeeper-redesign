@@ -10,6 +10,7 @@ import { adminGuard } from "../middleware/adminGuard.js";
 import { Context } from "../lib/context.js";
 import {User} from "../lib/types.js";
 import { inactivateGraduatedUsers } from "../middleware/gradYearRemoval.js";
+import { timeoutUserHandle } from "../middleware/timeoutHandle.js";
 
 /**
  * Routes for budget code operations.
@@ -188,6 +189,7 @@ userRoutes.post("/users",
 userRoutes.get("/users/:cardNum", 
     zValidator("param",getUserByCardNumSchema), 
     inactivateGraduatedUsers,
+    timeoutUserHandle,
     async(c) => {
    //Given you have a well formed card number, check if that card num exists in user table.
    const { cardNum } = c.req.valid("param");

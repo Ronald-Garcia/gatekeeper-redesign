@@ -1,4 +1,4 @@
-import { createBudgetCode, 
+import { activateBudgetCode, createBudgetCode, 
     deleteBudgetCode } from "../data/api";
 import { addBudgetCode, deleteBudgetCodeById } from "../data/store";
 import { BudgetCode } from "@/data/types/budgetCode";
@@ -45,6 +45,24 @@ function useMutationBudgetCodes() {
       });
     }
   };
+
+  const enableBudgetCode = async (codeId: number) => {
+    try {
+      await activateBudgetCode(codeId);
+      toast({
+        variant: "default",
+        title: "✅ Success 😊!",
+        description: "Budget code activated successfully!"
+      });
+    } catch (e) {
+      const errorMessage = (e as Error).message;
+      toast({
+        variant: "destructive",
+        title: "❌ Sorry! There was an error activating the budget code 🙁",
+        description: errorMessage
+      });
+    }
+  };
 /*
   
   const updateBudgetCode = async (budget: BudgetCode) => {
@@ -71,6 +89,7 @@ function useMutationBudgetCodes() {
     addNewBudgetCode,
     removeBudgetCode,
    // updateBudgetCode,
+   enableBudgetCode,
   };
 }
 

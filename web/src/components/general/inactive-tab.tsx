@@ -5,6 +5,7 @@ import { useStore } from "@nanostores/react";
 import { $router } from "@/data/router";
 import useQueryUsers from "@/hooks/use-query-users";
 import useQueryMachines from "@/hooks/use-query-machines";
+import useQueryBudgets from "@/hooks/use-query-budgetCodes";
 
 
 const InactiveTab = () => {
@@ -15,12 +16,15 @@ const InactiveTab = () => {
 
     const { loadUsers } = useQueryUsers(false);
     const { loadMachines } = useQueryMachines(false);
+    const { loadBudgets } = useQueryBudgets(false);
 
     useEffect(() => {
         if (router!.route === "users") {
             loadUsers();
         } else if (router!.route === "machines") {
             loadMachines();
+        } else if (router!.route === "budgetCodes") {
+            loadBudgets();
         }
     }, [activeTab])
 
