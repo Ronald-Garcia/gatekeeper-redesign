@@ -21,16 +21,20 @@ export default function MachinesSelect() {
   return (
     <ScrollArea>
 
-        <div className="max-h-[20vh]">
-        {machineList.length === 0 ? (
-        <Button onClick={handleKiosk} className="text-xl text-wrap h-fit">No machines found, make this the Kiosk? (Make sure this has access to a keyboard!)</Button>
+    <div className="max-h-[35vh] p-4">
+      {machineList.length === 0 ? (
+        <Button onClick={handleKiosk} className="text-xl text-wrap h-fit">
+          No machines found, make this the Kiosk? (Make sure this has access to a keyboard!)
+        </Button>
       ) : (
-        machineList.map((machine) => (
-          <MachineSelect key={machine.id} machine={machine} />
-        ))
-      )}
-
+        <div className="space-y-4">
+          {machineList.map((machine) => (
+            <MachineSelect key={machine.id} machine={machine} />
+          ))}
         </div>
+      )}
+    </div>
     </ScrollArea>
+
   );
 }

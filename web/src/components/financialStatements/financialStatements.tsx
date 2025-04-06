@@ -10,14 +10,15 @@ export default function FinancialStatements() {
 
   const statementList = useStore($statements);
 
-
   return (
     <div>
     <ScrollArea>
 
         <div data-cy="financial-stament-components" className="max-h-[20vh]">
         {statementList.length === 0 ? (
-        <p> No statements available!  </p>
+          <div>
+              <p> No statements available!  </p>
+          </div>
       ) : (
         statementList.map((statement) => (
           <div className="relative flex flex-col justify-between items-center py-4 max-h-[15vh] text-sm text-clip hover:bg-stone-100 transition-colors border-y-2 border-solid border-stone-300 hover:border-stone-500">

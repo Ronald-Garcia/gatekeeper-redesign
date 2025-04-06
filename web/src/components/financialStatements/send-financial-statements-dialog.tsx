@@ -55,6 +55,7 @@ const SendFinancialStatementsDialog = () => {
     const handleGoToStatementsPage = (e: React.MouseEvent<HTMLButtonElement>) => {
         if (validateDateRange()) {
             openPage($router, "financial_statements");
+
         } else {
             e.preventDefault();
         }
