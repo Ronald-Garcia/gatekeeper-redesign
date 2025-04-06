@@ -63,9 +63,9 @@ const AdminDashboard = () => {
     return(
     <div className="flex">
       <Sidebar />
-      <div className="flex-1">
+      <div className="admin-dashboard">
         <BudgetActions/>
-        <InactiveTab/>
+        <InactiveTab />
         <ScrollArea className={`${activeSearch ? 'scroll-component-search' : 'scroll-component'}`}>
           <BudgetCodes/>
         </ScrollArea>

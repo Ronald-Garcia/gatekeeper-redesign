@@ -26,7 +26,7 @@ const InactiveTab = () => {
 
     return (
 
-        <Tabs defaultValue="active" data-cy="active-tabs">
+        <Tabs defaultValue="active" data-cy="active-tabs" className="tabs">
                     <TabsList className="w-full">
                         <TabsTrigger onClick={() => {setActiveTab(1); resetSearch()}} value="active" className="w-full"> Active </TabsTrigger>
                         <TabsTrigger onClick={() => {setActiveTab(0); resetSearch()}} value="inactive" className="w-full"> Inactive </TabsTrigger>
