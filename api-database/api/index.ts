@@ -52,7 +52,7 @@ app.route("/", financialStatementRoutes);
 app.route("/", userBudgetCodeRelationRoute);
 app.route("/", authRoutes);
 app.route("/", machineIssueRoute);
-//app.route("/", emailRoutes);
+app.route("/", emailRoutes);
 
 app.onError((err, c) => {
   console.error(`${err}`);

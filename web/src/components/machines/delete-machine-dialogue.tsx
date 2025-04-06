@@ -23,14 +23,14 @@ const DeleteMachineDialog = ({
   machineId,
   setShowDeleteMachine,
 }: DeleteMachineDialogProp) => {
-  const { removeMachineById } = useMutationMachines();
+  const { modifyMachine } = useMutationMachines();
 
   const {loadMachines} = useQueryMachines(false);
 
   //async function that handles deletion logic
   const handleDeleteUser = async (e: React.MouseEvent) => {
     e.stopPropagation();
-     await removeMachineById(machineId);
+     await modifyMachine(machineId, 0);
     setShowDeleteMachine(false); //make the dialog disappear
     loadMachines();
   };

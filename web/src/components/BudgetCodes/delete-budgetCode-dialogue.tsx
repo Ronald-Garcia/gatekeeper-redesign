@@ -23,7 +23,7 @@ const DeleteBudgetCodeDialog = ({
   budgetcodeId,
   setShowDeleteBudgetCode,
 }: DeleteBudgetCodeDialogProp) => {
-  const { removeBudgetCode } = useMutationBudgetCodes();
+  const { modifyBudgetCode } = useMutationBudgetCodes();
 
 
   const { loadBudgets } = useQueryBudgets(false);
@@ -31,7 +31,7 @@ const DeleteBudgetCodeDialog = ({
   //async function that handles deletion logic
   const handleDeleteBudgetCode = async (e: React.MouseEvent) => {
     e.stopPropagation();
-     await removeBudgetCode(budgetcodeId);
+     await modifyBudgetCode(budgetcodeId, 0);
     setShowDeleteBudgetCode(false); //make the dialog disappear
     loadBudgets();
   };

@@ -568,35 +568,14 @@ export const deleteUserMachineRelation = async (training_id: number): Promise<{
 }
 
 
-export const activateMachine = async (id:number) => {
-
-  const response = await fetch(`${API_DB_URL}/machines/${id}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-    body: JSON.stringify({
-      active: 1
-    })
-  });
-
-  if (!response.ok) {
-    const { message }: { message: string } = await response.json();
-    throw new Error(message);
-  }
-
-  const { message, data }: { message: string, data: Machine } = await response.json();
-  return { message, data};
-}
-
-
-export const activateBudgetCode = async (id:number) => {
+export const updateBudgetCode = async (id:number, active:number) => {
 
   const response = await fetch(`${API_DB_URL}/budget-codes/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
     body: JSON.stringify({
-      active: 1
+      active
     })
   });
 
@@ -1180,21 +1159,25 @@ export const updateMachineIssue = async (id: number, resolved: number): Promise<
   return { message, data };
 }
 
-export const enableUser = async (id: number, graduationYear?: number): Promise<{
+export const updateUserStatus = async (id: number, active: number, graduationYear?: number, timeoutDate?: Date): Promise<{
   message: string,
   data: User
 }> => {
 
-  let body: {active: number, graduationYear?: number} = {
-    active: 1,
-    graduationYear: graduationYear
+  let body: {active: number, graduationYear?: number, timeoutDate?: Date} = {
+    active,
+    graduationYear: graduationYear,
+    timeoutDate: timeoutDate
   }
 
   if (!graduationYear) {
     delete body.graduationYear;
   } 
 
-  console.log(body);
+  if (!timeoutDate) {
+    delete body.timeoutDate;
+  }
+
   const response = await fetch(`${API_DB_URL}/users/${id}`, {
     method: "PATCH",
     credentials: "include",

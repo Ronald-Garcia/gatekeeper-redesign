@@ -177,6 +177,11 @@
   border-color: rgb(255, 0, 0);
 }
 
+.error-text{
+  
+  color: rgb(239, 68, 68);
+}
+
 /*Search Styling*/
 
 .admin-actions{

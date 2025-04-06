@@ -23,13 +23,13 @@ const ActivateBudgetCodeDialog = ({
   budgetcode,
   setShowActivateBudgetCode,
 }: ActivateBudgetCodeDialogProp) => {
-  const { enableBudgetCode } = useMutationBudgetCodes();
+  const { modifyBudgetCode } = useMutationBudgetCodes();
   const { loadBudgets } = useQueryBudgets(false);
 
   //async function that handles activation logic
   const handleActivateBudgetCode = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    await enableBudgetCode(budgetcode.id);
+    await modifyBudgetCode(budgetcode.id, 1);
     loadBudgets();
     setShowActivateBudgetCode(false); //make the dialog disappear
   };
