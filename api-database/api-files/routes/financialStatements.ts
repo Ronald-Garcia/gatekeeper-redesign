@@ -68,14 +68,7 @@ financialStatementRoutes.get("/fin-statements",
         db
           .select({ totalCount: count() })
           .from(financialStatementsTable)
-          .innerJoin(users, eq(users.id, financialStatementsTable.userId))
-        .innerJoin(budgetCodes, eq(budgetCodes.id, financialStatementsTable.budgetCode))
-        .innerJoin(machines, eq(machines.id, financialStatementsTable.machineId))
-        .where(and(...whereClause))
-        .limit(limit)
-        .offset(offset)
-        .groupBy(financialStatementsTable.dateAdded)
-        .orderBy(...orderByClause)
+          .where(and(...whereClause))
       ]);
 
     return c.json({

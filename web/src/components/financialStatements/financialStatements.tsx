@@ -14,7 +14,7 @@ export default function FinancialStatements() {
   return (
           <div className="max-h-[20vh] p-4">
           {statementList.length === 0 ? (
-          <p> No machines found. Please add some!  </p>
+          <p> No statements found.  </p>
         ) : 
         <div className="space-y-4">
   
