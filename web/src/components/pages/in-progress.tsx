@@ -48,7 +48,7 @@ const InProgress = () => {
     
     const onSubmit = async () => {
         await createStatement(time);
-        openPage($router, "start_page")
+        openPage($router, "interlockLogin")
     }
     return (
         <>
