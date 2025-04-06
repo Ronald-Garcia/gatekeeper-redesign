@@ -197,19 +197,19 @@ emailRoutes.post("/statement-email/schedule/:email",
 
     });
 
-    console.log("why")
 
 
     try {
       // Schedule the job
+
       bree.add({
-        name: "autoEmail", 
+        name: "index", 
         cron: `0 0 ${date} * *`, 
         worker: {
-          workerData: { email, date }
-          
+          workerData: { email, date },
         }
       });
+
 
       
  
