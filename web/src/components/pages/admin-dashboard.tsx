@@ -99,7 +99,7 @@ const AdminDashboard = () => {
       <div className="flex">
         <Sidebar />
         <div className="flex-1">
-          <ScrollArea className={`${activeSearch ? 'scroll-component-search' : 'scroll-component'}`}>
+          <ScrollArea className={`${activeSearch ? 'scroll-component-search-fin' : 'scroll-component-fin'}`}>
             <FinancialStatements/>
           </ScrollArea>
           <PaginationBar loadFunction={financialStatementLoadFunction}/>

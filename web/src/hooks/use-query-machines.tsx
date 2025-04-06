@@ -121,7 +121,6 @@ function useQueryMachines(reload: boolean) {
         meta: fetchedMetaData
       } = await getAllMachines(sort, page, limit, search, type, activeTab);
       setMetaData(fetchedMetaData);
-
       setMachines(fetchedMachines);
     } catch (e) {
       const errorMessage = (e as Error).message;

@@ -8,14 +8,7 @@ export default function MachinesComponent() {
 
   const machineList = useStore($machines);
 
-  // useEffect(() =>  {
-   
-  //   loadUsers();
-  //   }, [userList]);
-
-
   return (
-
         <div className="max-h-[20vh] p-4">
         {machineList.length === 0 ? (
         <p> No machines found. Please add some!  </p>
@@ -27,9 +20,6 @@ export default function MachinesComponent() {
         ))}
         </div>
       }
-
         </div>
-
-
   );
 }

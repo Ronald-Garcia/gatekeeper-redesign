@@ -997,13 +997,21 @@ Financial statement API functions
  * @returns {Promise<{message: string; data: financialStatement[]}>} A promise that resolves with a message and an array of financial statements.
  * @throws {Error} If the response is not ok, throws an error with the response message.
  */
-export const getFinancialStatements = async (to: Date, from: Date): Promise<{
+export const getFinancialStatements = async (
+  sort: SortMachineType = "name_asc",
+  page: number = 1,
+  limit: number = 10,
+  to: Date,
+  from: Date
+): Promise<{
   message: string;
   data: financialStatement[];
+  meta: MetaType
+
 }> => {
 
   
-  const response = await fetch(`${API_DB_URL}/fin-statements?to=${to}&from=${from}`, {
+  const response = await fetch(`${API_DB_URL}/fin-statements?limit=${limit}&page=${page}&sort=${sort}&to=${to}&from=${from}`, {
     credentials: "include",
   });
 
@@ -1013,9 +1021,9 @@ export const getFinancialStatements = async (to: Date, from: Date): Promise<{
     throw new Error(message);
   }
 
-  const { message, data: sdata }: { message: string; data: financialStatement[] } = await response.json();
+  const { message, data: sdata, meta }: { message: string; data: financialStatement[]; meta:MetaType } = await response.json();
   const data = sdata.map((s)=> {return{...s, dateAdded: new Date(s.dateAdded)}});
-  return { message, data };
+  return { message, data, meta };
 };
 
 export const createFinancialStatements = async (userId: number, machineId: number, budgetCode: number, timeSpent: number ): Promise<{
