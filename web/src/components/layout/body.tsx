@@ -10,6 +10,7 @@ import Interlock from "../pages/interlock";
 import KioskStartPage from "../pages/kiosk-start-page";
 import ErrorPage from "./errorPage";
 import InProgress from "../pages/in-progress";
+import HomePage from "../pages/home-page";
 
 /*
 Body component of the application
@@ -53,15 +54,17 @@ const Body = () => {
     
       {router.route === "machine_login" && <MachineLogin></MachineLogin>}
 
-      {(router.route === "users" || router.route === "budgetCodes" || router.route === "machines") && <AdminDashboard></AdminDashboard>}
+      {(router.route === "users" || router.route === "budgetCodes" || router.route === "machines" || router.route === "machineIssues" || router.route === "financial_statements") && <AdminDashboard></AdminDashboard>}
 
       {router.route === "kiosk" && <KioskStartPage></KioskStartPage>}
 
-      {router.route === "start_page" && <StartPage></StartPage>}
+      {router.route === "start_page" && <HomePage></HomePage>}
 
       {router.route === "interlock" && <Interlock></Interlock>}
 
       {router.route === "timer" && <InProgress></InProgress>}
+
+      {router.route === "interlockLogin" && <StartPage></StartPage>}
 
     </>
   )  

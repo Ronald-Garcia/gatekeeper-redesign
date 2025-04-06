@@ -28,7 +28,8 @@ export const users = pgTable("users_table", {
   JHED: text().notNull(),
   isAdmin: integer().notNull(),
   graduationYear: integer(), //This is optional because some users like Rich do not have grad year.
-  active: integer().notNull().default(1)
+  active: integer().notNull().default(1),
+  timeoutDate: timestamp({ precision: 3, withTimezone: true }).defaultNow()
 });
 
 /**
@@ -56,6 +57,7 @@ export const budgetCodes = pgTable("budgetCodes" , {
   id: serial().primaryKey(),
   code: text().notNull().unique(),
   name: text().notNull(),
+  active: integer().notNull().default(1)
 })
 
 
@@ -119,6 +121,22 @@ export const financialStatementsTable = pgTable("financial_statements_table", {
   machineId: serial().notNull().references(() => machines.id, {onDelete: "no action"}),
   dateAdded: timestamp({ precision: 3, withTimezone: true }).notNull(),
   timeSpent: integer().notNull(),
+});
+
+/**
+ * The table that associates a user and a machine with a machine issue report.
+ * @primary id         the database ID of the issue report.
+ * @foreign userId     the database ID of the user reporting the issue.
+ * @foreign machineId  the database ID of the affected machine.
+ * @timestamp reportedAt  the timestamp when the issue was reported.
+ * @integer resolved   the flag indicating if the issue has been resolved (0 = no, 1 = yes).
+ */
+export const machineIssues = pgTable("machine_issues", {
+  id: serial().primaryKey(),
+  userId: integer().notNull().references(() => users.id, { onDelete: "cascade" }),
+  machineId: integer().notNull().references(() => machines.id, { onDelete: "cascade" }),
+  reportedAt: timestamp({ precision: 3, withTimezone: true }).notNull().defaultNow(),
+  resolved: integer().notNull().default(0), // 0 = Not Resolved, 1 = Resolved
 });
 
 

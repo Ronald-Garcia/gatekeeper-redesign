@@ -49,6 +49,7 @@ userBudgetCodeRelationRoute.get("/user-budgets/:id",
 
         whereClause.push(eq(userBudgetCodeTable.userId, id));
     
+        whereClause.push(eq(budgetCodes.active, 1));
         const offset = (page - 1) * limit;
         
         const [allCodes, [{ totalCount }]] = await Promise.all([
@@ -65,6 +66,7 @@ userBudgetCodeRelationRoute.get("/user-budgets/:id",
                    db
                      .select({ totalCount: count() })
                      .from(userBudgetCodeTable)
+                     .innerJoin(budgetCodes, eq(userBudgetCodeTable.budgetCodeId, budgetCodes.id))
                      .where(and(...whereClause)),
                  ]);
                
@@ -96,9 +98,9 @@ userBudgetCodeRelationRoute.post("/user-budgets",
         .where(and(eq(userBudgetCodeTable.userId, userId), eq(userBudgetCodeTable.budgetCodeId, budgetCodeId)))
         
         //If this guy already exists, throw an error
-        //if (ubcCheck) {
-        //    throw new HTTPException(409, {message: "User already has that budget code."})
-        //}
+        if (ubcCheck) {
+           throw new HTTPException(409, {message: "User already has that budget code."})
+        }
 
         //Otherwise, regular insertion.
         const [ ubc ] = await db.insert(userBudgetCodeTable)

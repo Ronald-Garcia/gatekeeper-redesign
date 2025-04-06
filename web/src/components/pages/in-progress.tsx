@@ -1,3 +1,4 @@
+import { useStore } from "@nanostores/react";
 import { useState, useEffect } from "react";
 import Timer from "./timer";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
@@ -5,9 +6,15 @@ import { Button } from "@/components/ui/button";
 import useMutationStatements from "@/hooks/use-mutation-financial-statements";
 import { openPage } from "@nanostores/router";
 import { $router } from "@/data/router";
+import { $currentUser, $currentMachine } from "@/data/store";
 import ConfirmReportModal from "@/components/modals/ConfirmReportModal"; 
+import useMutationMachineIssue from "@/hooks/use-mutation-machineIssue";
 
 const InProgress = () => {
+
+    const curUser = useStore($currentUser);
+    const curMachine = useStore($currentMachine);
+    const { reportIssue } = useMutationMachineIssue();
 
     const { curBudget, createStatement } = useMutationStatements();
     
@@ -28,16 +35,20 @@ const InProgress = () => {
         setIsModalOpen(true);
     };
 
-    const handleConfirmReport = () => {
+    const handleConfirmReport = async () => {
         setIsModalOpen(false);
-        console.log("Reported maintenance issue for this machine!");
-        // TODO: Implement API call to report the issue
+      
+        const result = await reportIssue(curUser.id, curMachine.id); 
+      
+        if (result) {
+          console.log("Reported issue:", result);
+        }
     };
 
     
     const onSubmit = async () => {
         await createStatement(time);
-        openPage($router, "start_page")
+        openPage($router, "interlockLogin")
     }
     return (
         <>

@@ -28,19 +28,28 @@ const AutomateFinancialStatementsDialog = () => {
         return !Object.values(newErrors).some(error => error);
     };
 
-    const handleSendEmail = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const handleAutomation = (e:React.MouseEvent<HTMLButtonElement>) => {
         if (validateInputs()) {
-            sendFinancialStatementEmail(email);
+            automateFinancialStatementEmail(email);
         } else {
             e.preventDefault();
         }
     }
+
+    // const handleSendEmail = (e: React.MouseEvent<HTMLButtonElement>) => {
+    //     if (validateInputs()) {
+    //         sendFinancialStatementEmail(email);
+    //     } else {
+    //         e.preventDefault();
+    //     }
+    // }
+    
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
         setErrors(prev => ({...prev, email: false}));
     }
 
-    const { sendFinancialStatementEmail } = useMutationEmails();
+    const { automateFinancialStatementEmail } = useMutationEmails();
 
     return (
         <>
@@ -93,7 +102,7 @@ const AutomateFinancialStatementsDialog = () => {
                     </DialogClose>
                     <DialogClose asChild>
                         <Button data-cy = "email-financial-statements"
-                            onClick={handleSendEmail}>
+                            onClick={handleAutomation}>
                             Automate!
                         </Button>
                     </DialogClose>

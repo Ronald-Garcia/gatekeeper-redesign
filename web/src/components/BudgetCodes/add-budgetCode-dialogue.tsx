@@ -57,7 +57,8 @@ const AddBudgetCodeDialog = () => {
     const newCode: BudgetCode = {
       code: budgetCode,
       id: -1,
-      name: name
+      name: name,
+      active: 1
     }
     const response = await addNewBudgetCode(newCode);
     setOpen(false);

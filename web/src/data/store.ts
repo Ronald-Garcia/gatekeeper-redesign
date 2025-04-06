@@ -4,6 +4,7 @@ import { BudgetCode } from "./types/budgetCode";
 import { Machine } from "./types/machine";
 import { MachineType } from "./types/machineType";
 import { financialStatement } from "./types/financialStatement";
+import { MachineIssue } from "./types/machineIssues"
 import { logger } from "@nanostores/logger"
 import { DateRange } from "react-day-picker";
 import { MetaType } from "./types/meta";
@@ -19,6 +20,20 @@ export const $date = atom<Date | undefined>(undefined);
 export const $hasMoreUserBudgets = atom<boolean>(false);
 export const $hasMoreUserTrainings = atom<boolean>(false);
 export const $currentPage = atom<number>(1);
+export const $activeTab = atom<number>(1);
+export const $machine_issues = atom<MachineIssue[]>([]);
+
+
+export function setMachineIssues(issues: MachineIssue[]) {
+  $machine_issues.set(issues);
+}
+export function resetMachineIssues() {
+  $machine_issues.set([]);
+}
+
+export function setActiveTab(tab: number) {
+  $activeTab.set(tab);
+}
 
 export function setPage(p: number) {
   $currentPage.set(p);
@@ -157,10 +172,12 @@ export const $statements = atom<financialStatement[]>([]);
 const defaultUser: User = {
   name: "test",
   cardNum: "-1",
+  lastDigitOfCardNum: -1,
   isAdmin: 0,
   graduationYear: 2020,
   JHED: "ttest01",
-  id: -1
+  id: -1,
+  active: 0
 }
 
 const defaultMachine: Machine = {
@@ -177,8 +194,10 @@ const defaultMachine: Machine = {
 const defaultBudget: BudgetCode = {
   id: -1, 
   name: "invalid",
-  code: "invalid"
+  code: "invalid",
+  active:-1
 }
+
 
 export const $kiosk = atom<boolean>(false);
 
@@ -264,8 +283,6 @@ export function setCurrentMachine(machine: Machine) {
 export function clearCurrentMachine() {
   $currentMachine.set(defaultMachine);
 }
-
-
 
  //budget code store functions 
 export function setBudgetCodes(codeList: BudgetCode[]) {
@@ -424,4 +441,14 @@ export function setTotal(total: number) {
 export const $max_page = atom<number>(1);
 export function setMaxPage(max_page: number) {
   $max_page.set(max_page);
+}
+logger({ $activeTab, $users })
+
+export function resetStores() {
+  resetDashboardSearch();
+  resetDate();
+  resetDateRange();
+  resetSearch();
+  clearCurrentUser();
+  
 }

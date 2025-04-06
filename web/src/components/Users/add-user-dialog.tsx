@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useMutationUsers from "@/hooks/user-mutation-hooks";
 import {
   Dialog,
@@ -52,7 +52,7 @@ const AddUserDialog = () => {
       name: name.trim() === "",
       cardNum: cardNum.trim() === "" || cardNum.length < 16,
       jhed: jhed.trim() === "",
-      year: year.trim() === "" || isNaN(parseInt(year))
+      year: year.trim() !== "" && isNaN(parseInt(year))
     };
     
     setErrors(newErrors);
@@ -76,7 +76,9 @@ const AddUserDialog = () => {
       isAdmin: admin,
       cardNum: processedCardNum.substring(0, 16),
       graduationYear: parseInt(year),
-      id: -1
+      id: -1,
+      active: 1,
+      lastDigitOfCardNum: parseInt(cardNum.substring(15, 16))
     }
     
     // Get that user so we can do some error checking
@@ -109,6 +111,14 @@ const AddUserDialog = () => {
     setJhed(e.target.value);
     setErrors(prev => ({...prev, jhed: false}));
   }
+
+  useEffect(() => {
+    setYear("");
+    setJhed("");
+    setCardNum("");
+    setName("");
+    setAdmin(0);
+  }, [])
 
   // Function that handles clicking on the radio components.
   // Keep in mind, admin is by default set to 0.

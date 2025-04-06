@@ -3,33 +3,41 @@ import {
   $date_range,
   $statements, 
   setFinancialStatements,
+  setMetaData,
  } from "@/data/store";
 import {  } from "@/data/types/budgetCode";
 import { useStore } from "@nanostores/react";
 import { useEffect } from "react";
-import { toast } from "sonner";
+import { useToast } from "./use-toast";
+import { SortFinancialType } from "@/data/types/sort";
 
 function useQueryStatements(reload: boolean) {
   const statements = useStore($statements);
   const dateRange = useStore($date_range);
+  const { toast } = useToast();
   
-  const loadFinancialStatements = async () => {
+  const loadFinancialStatements = async (
+      sort: SortFinancialType = "type_asc",
+      page: number = 1,
+      limit: number = 10) => {
     try {
       const {
-        data: fetchedFinancialStatements
-      } = await getFinancialStatements(dateRange!.to as Date, dateRange!.from as Date);
+        data: fetchedFinancialStatements,
+        meta: fetchedMetaData
+      } = await getFinancialStatements(sort,page,limit, dateRange!.to as Date, dateRange!.from as Date);
+      setMetaData(fetchedMetaData);
       setFinancialStatements(fetchedFinancialStatements);
-    }  catch (e) {
-        //get message from api response, put it on a toast
-        const errorMessage = (e as Error).message;
-        toast.error("Sorry! There was an error fetching Budget Codes  🙁", {
-          description: errorMessage  
-        });
-      }
-    };
+    } catch (e) {
+      const errorMessage = (e as Error).message;
+      toast({
+        variant: "destructive",
+        title: "❌ Sorry! There was an error fetching financial statements 🙁",
+        description: errorMessage
+      });
+    }
+  };
 
   useEffect(() => {
-
     if (reload) {
       loadFinancialStatements();
     }

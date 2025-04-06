@@ -1,6 +1,6 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { queryUsersParamsSchema, createUserSchema, getUserSchema, getUserByCardNumSchema } from "../validators/schemas.js";
+import { queryUsersParamsSchema, createUserSchema, getUserSchema, getUserByCardNumSchema, enableUserSchema } from "../validators/schemas.js";
 import { SQL, or, desc, asc, eq, and, count, ilike, gt } from "drizzle-orm";
 import { users } from "../db/schema.js";
 import { db } from "../db/index.js";
@@ -10,6 +10,7 @@ import { adminGuard } from "../middleware/adminGuard.js";
 import { Context } from "../lib/context.js";
 import {User} from "../lib/types.js";
 import { inactivateGraduatedUsers } from "../middleware/gradYearRemoval.js";
+import { timeoutUserHandle } from "../middleware/timeoutHandle.js";
 
 /**
  * Routes for budget code operations.
@@ -37,15 +38,18 @@ export function appendLastNum (entry:User): User{
 userRoutes.get("/users",
      adminGuard,
      inactivateGraduatedUsers,
+     timeoutUserHandle,
      zValidator("query", queryUsersParamsSchema), async (c) => {
     const { page = 1, limit = 20, sort, search, active } = c.req.valid("query");
 
     const whereClause: (SQL | undefined)[] = [];
 
     //Update where clause to not inlcude inactive users.
-    whereClause.push(
-        eq(users.active, active ? 1 : 0)
-    );
+    if (active !== undefined) {
+        whereClause.push(
+            eq(users.active, active)
+        );
+    }
 
     if (search) {
         whereClause.push(
@@ -87,7 +91,8 @@ userRoutes.get("/users",
             lastDigitOfCardNum: users.lastDigitOfCardNum,
             JHED: users.JHED,
             isAdmin: users.isAdmin,
-            graduationYear: users.graduationYear
+            graduationYear: users.graduationYear,
+            active: users.active
         })
           .from(users)
           .where(and(...whereClause))
@@ -185,6 +190,7 @@ userRoutes.post("/users",
 userRoutes.get("/users/:cardNum", 
     zValidator("param",getUserByCardNumSchema), 
     inactivateGraduatedUsers,
+    timeoutUserHandle,
     async(c) => {
    //Given you have a well formed card number, check if that card num exists in user table.
    const { cardNum } = c.req.valid("param");
@@ -274,3 +280,32 @@ userRoutes.delete(
 })
 
 
+userRoutes.patch("/users/:id", 
+    adminGuard,
+    zValidator("param", getUserSchema),
+    zValidator("json", enableUserSchema),
+    async (c) => {
+        const { id } = c.req.valid("param");
+        const { active, graduationYear, timeoutDate } = c.req.valid("json");
+        const [user] = await db.select().from(users).where(eq(users.id, id));
+        
+
+        if (timeoutDate) {
+            if (timeoutDate < new Date()) {
+                throw new HTTPException(400, { message: "Timeout date cannot be in the past" });
+            }
+        }
+
+        if (!user) {
+            throw new HTTPException(404, { message: "User not found" });
+        }
+
+        const [updatedUser] = await db.update(users).set({ active, graduationYear: graduationYear === undefined ? null : graduationYear, timeoutDate: (timeoutDate === undefined || active === 1) ? null : timeoutDate }).where(eq(users.id, id)).returning();
+
+        return c.json({
+            success: true,
+            message: "User has been activated",
+            data: updatedUser
+        });
+    }
+)

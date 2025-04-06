@@ -7,6 +7,7 @@ import { MachineType } from "./types/machineType";
 import { SortBudgetType, SortMachineType, SortType } from "./types/sort";
 import { financialStatement } from "./types/financialStatement";
 import { MetaType } from "./types/meta";
+import { MachineIssue } from "./types/machineIssues";
 
 /**
  * Turns on the machine.
@@ -73,7 +74,8 @@ export const getAllUsers = async (
   sort: SortType = "name_asc",
   page: number = 1,
   limit: number = 10,
-  search: string = ""
+  search: string = "",
+  active: number = 1
 
 ): Promise<{
   message: string;
@@ -84,7 +86,7 @@ export const getAllUsers = async (
     total: number;
   };
 }> => {
-  const response = await fetch(`${API_DB_URL}/users?search=${search}&limit=${limit}&page=${page}&sort=${sort}`, {
+  const response = await fetch(`${API_DB_URL}/users?search=${search}&limit=${limit}&page=${page}&sort=${sort}&active=${active}`, {
     credentials: "include",
   });
 
@@ -173,7 +175,7 @@ export const removeUser = async (id: number): Promise<{
 
 
 /**
- * Retrieves a user based on the card number.
+ * Signs in a user based on the card number.
  * @param {number} cardNum - The card number of the user.
  * @returns {Promise<{message: string; data: User}>} A promise that resolves with a message and the user data.
  * @throws {Error} If the response is not ok, throws an error with the response message.
@@ -202,6 +204,20 @@ export const getUser = async (cardNum: number): Promise<{
   return { message, data };
 }
 
+/** Signs out the current user
+ * 
+ */
+// Sign out a user
+export const signOut = async (): Promise<boolean> => {
+  const response = await fetch(`${API_DB_URL}/sign-out`, {
+    method: "POST",
+    credentials: "include", 
+  });
+  if (!response.ok) {
+    throw new Error(`API request failed! with status: ${response.status}`);
+  }
+  return true;
+};
 
 /**
  * Creates a new user.
@@ -339,7 +355,8 @@ export const getAllBudgets = async (
   sort: SortBudgetType = "name_asc",
   page: number = 1,
   limit: number = 10,
-  search: string = ""
+  search: string = "",
+  active: number = 1
 ): Promise<{
   message: string;
   data: BudgetCode[];
@@ -349,7 +366,7 @@ export const getAllBudgets = async (
     total: number;
   };
 }> => {
-  const response = await fetch(`${API_DB_URL}/budget-codes?search=${search}&limit=${limit}&page=${page}&sort=${sort}`, {
+  const response = await fetch(`${API_DB_URL}/budget-codes?search=${search}&limit=${limit}&page=${page}&sort=${sort}&active=${active}`, {
     credentials: "include",
   });
 
@@ -551,6 +568,25 @@ export const deleteUserMachineRelation = async (training_id: number): Promise<{
 }
 
 
+export const updateBudgetCode = async (id:number, active:number) => {
+
+  const response = await fetch(`${API_DB_URL}/budget-codes/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({
+      active
+    })
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string, data: BudgetCode } = await response.json();
+  return { message, data};
+}
 
 /**
  * Bans or unbans a user.
@@ -663,13 +699,14 @@ export const getAllMachines = async (
   limit: number = 10,
   search: string = "",
   type: string = "",
+  active: number = 1
 
 ): Promise<{
   message: string;
   data: Machine[];
   meta: MetaType
 }> => {
-  const response = await fetch(`${API_DB_URL}/machines?search=${search}&limit=${limit}&page=${page}&sort=${sort}&type=${type}`, {
+  const response = await fetch(`${API_DB_URL}/machines?search=${search}&limit=${limit}&page=${page}&sort=${sort}&type=${type}&active=${active}`, {
     credentials: "include",
   });
 
@@ -685,31 +722,6 @@ export const getAllMachines = async (
 
   return { message, data, meta};
 };
-
-/**
- * Retrieves a machine by its ID.
- * @param {number} id - The ID of the machine.
- * @returns {Promise<{message: string, data: Machine}>} A promise that resolves with a message and the machine data.
- * @throws {Error} If the response is not ok, throws an error with the response message.
- */
-export const getMachine = async (id: number): Promise<{
-  message: string;
-  data: Machine
-}> => {
-
-  const response = await fetch(`${API_DB_URL}/machines/${id}`, {
-    credentials: "include",
-  });
-
-  if (!response.ok) {
-    const { message }: { message: string } = await response.json();
-    throw new Error(message);
-  }
-
-  const { message, data }: { message: string, data: Machine } = await response.json();
-  
-  return { message, data };
-}
 
 
 /**
@@ -752,7 +764,7 @@ export const updateMachineType = async (type: string): Promise<{
   data: MachineType
 }> => {
   const response = await fetch(`${API_DB_URL}/machine-types`,{
-    method: "POST",
+    method: "PATCH",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({
       machineType: type
@@ -843,8 +855,30 @@ export const getMachineTypes = async ( sort: SortType = "asc",
   return { message, data, meta };
 }
 
+/**
+ * Retrieves a machine by its ID.
+ * @param {number} id - The ID of the machine.
+ * @returns {Promise<{message: string, data: Machine}>} A promise that resolves with a message and the machine data.
+ * @throws {Error} If the response is not ok, throws an error with the response message.
+ */
+export const getMachine = async (id: number): Promise<{
+  message: string;
+  data: Machine
+}> => {
 
+  const response = await fetch(`${API_DB_URL}/machines/${id}`, {
+    credentials: "include",
+  });
 
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string, data: Machine } = await response.json();
+  
+  return { message, data };
+}
 /**
  * Creates a new machine.
  * @param {string} name - The name of the machine.
@@ -905,6 +939,33 @@ export const deleteMachine = async (id: number) => {
   return { message, data };
 }
 
+/**
+ * Updates a machine by its ID.
+ * @param {number} id - The ID of the machine to delete.
+ * @param {boolean} active - active status of the machine
+ * @returns {Promise<{message: string, data: Machine}>} A promise that resolves with a message and the updated machine.
+ * @throws {Error} If the response is not ok, throws an error with the response message.
+ */
+export const updateMachine = async (id: number, active: number) => {
+  const response = await fetch(`${API_DB_URL}/machines/${id}`,{
+    method: "PATCH",
+    headers: {"Content-Type": "application/json"},
+    credentials:"include",
+    body: JSON.stringify({
+      active: active
+    })
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string} = await response.json();
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string, data: Machine } = await response.json();
+
+  return { message, data };
+}
+
 export const createUserBudgetCode = async (user_id: number, budget_code_id: number): Promise<boolean> => {
 
   const response = await fetch(`${API_DB_URL}/user-budgets`, {
@@ -936,13 +997,19 @@ Financial statement API functions
  * @returns {Promise<{message: string; data: financialStatement[]}>} A promise that resolves with a message and an array of financial statements.
  * @throws {Error} If the response is not ok, throws an error with the response message.
  */
-export const getFinancialStatements = async (to: Date, from: Date): Promise<{
+export const getFinancialStatements = async (
+  sort: SortMachineType = "name_asc",
+  page: number = 1,
+  limit: number = 10,
+  to: Date,
+  from: Date
+): Promise<{
   message: string;
   data: financialStatement[];
-}> => {
+  meta: MetaType
 
-  
-  const response = await fetch(`${API_DB_URL}/fin-statements?to=${to}&from=${from}`, {
+}> => {
+  const response = await fetch(`${API_DB_URL}/fin-statements?limit=${limit}&page=${page}&sort=${sort}&to=${to}&from=${from}`, {
     credentials: "include",
   });
 
@@ -952,9 +1019,9 @@ export const getFinancialStatements = async (to: Date, from: Date): Promise<{
     throw new Error(message);
   }
 
-  const { message, data: sdata }: { message: string; data: financialStatement[] } = await response.json();
+  const { message, data: sdata, meta }: { message: string; data: financialStatement[]; meta:MetaType } = await response.json();
   const data = sdata.map((s)=> {return{...s, dateAdded: new Date(s.dateAdded)}});
-  return { message, data };
+  return { message, data, meta };
 };
 
 export const createFinancialStatements = async (userId: number, machineId: number, budgetCode: number, timeSpent: number ): Promise<{
@@ -1008,7 +1075,7 @@ export const sendEmail = async (email: string, to: Date, from: Date): Promise<bo
 
 export const automateEmail = async (email: string, date: Date): Promise<boolean> => {
 
-  const response = await fetch(`${API_DB_URL}/statement-email/${email}`, {
+  const response = await fetch(`${API_DB_URL}/statement-email/schedule/${email}`, {
     method: "POST",
     headers: {"Content-Type": "application/json"},
     credentials: "include",
@@ -1016,5 +1083,146 @@ export const automateEmail = async (email: string, date: Date): Promise<boolean>
       date
     })
   });
+
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+
+    throw new Error(message);
+  }
+
+  return true;
   
 }
+export const createMachineIssue = async (userId: number, machineId: number): Promise<{
+  message: string,
+  data: MachineIssue
+}> => {
+  const response = await fetch(`${API_DB_URL}/machine-issues`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    credentials: "include",
+    body: JSON.stringify({
+      userId,
+      machineId
+    })
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string; data: MachineIssue } = await response.json();
+
+  return { message, data };
+}
+
+export const getMachineIssues = async(
+  sort: "asc" | "desc",
+  page: number,
+  limit: number,
+  resolved?: number // ✅ make resolved optional
+) : Promise<{
+  message: string;
+  data: MachineIssue[];
+  meta: MetaType
+}> => {
+  const query = new URLSearchParams({
+    sort,
+    page: page.toString(),
+    limit: limit.toString(),
+  });
+
+  // ✅ only add 'resolved' if it's explicitly provided
+  if (resolved !== undefined) {
+    query.append("resolved", resolved.toString());
+  }
+  const response = await fetch(`${API_DB_URL}/machine-issues?${query.toString()}`, {
+    method: "GET",
+    credentials: "include",
+  })
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+
+    throw new Error(message);
+  }
+
+  const { message, data, meta }: { message: string; data: MachineIssue[]; meta:MetaType } = await response.json();
+  return { message, data, meta };
+};
+
+export const updateMachineIssue = async (
+  id: number,
+  resolved: number // you can keep the argument type as number
+): Promise<{
+  message: string;
+  data: MachineIssue;
+}> => {
+  const response = await fetch(`${API_DB_URL}/machine-issues/${id}`, {
+    method: "PATCH", // ✅ correct method
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({
+      resolved: String(resolved), // ✅ convert to "1" or "0"
+    }),
+  });
+
+  let responseBody;
+  try {
+    responseBody = await response.json();
+  } catch {
+    throw new Error("No response from server");
+  }
+
+  if (!response.ok) {
+    const message = responseBody?.message || "Unknown error";
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string; data: MachineIssue } = responseBody;
+  return { message, data };
+};
+
+
+export const updateUserStatus = async (id: number, active: number, graduationYear?: number, timeoutDate?: Date): Promise<{
+  message: string,
+  data: User
+}> => {
+
+  let body: {active: number, graduationYear?: number, timeoutDate?: Date} = {
+    active,
+    graduationYear: graduationYear,
+    timeoutDate: timeoutDate
+  }
+
+  if (!graduationYear) {
+    delete body.graduationYear;
+  } 
+
+  if (!timeoutDate) {
+    delete body.timeoutDate;
+  }
+
+  const response = await fetch(`${API_DB_URL}/users/${id}`, {
+    method: "PATCH",
+    credentials: "include",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(body)
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string; data: User } = await response.json();
+
+  return { message, data };
+}
+

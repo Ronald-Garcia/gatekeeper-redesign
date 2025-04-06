@@ -6,13 +6,19 @@ import BudgetActions from "./budget-actions";
 import Sidebar from "../layout/sidebar";
 import MachineActions from "./machine-actions";
 import MachinesComponent from "../machines/machines-component";
-import Users from "../Users/users";
+import InactiveTab from "../general/inactive-tab";
 import { ScrollArea } from "../ui/scroll-area";
 import PaginationBar from "../general/pagination-bar";
 import useQueryMachines from "@/hooks/use-query-machines";
 import { SearchQuerySorts } from "@/data/types/sort";
 import useQueryUsers from "@/hooks/use-query-users";
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
+import { $activeSearch } from "@/data/store";
+import Users from "../Users/users";
+import MachineIssues from "../machineIssues/machineIssues";
+import useQueryMachineIssues from "@/hooks/use-query-machine-issues";
+import FinancialStatements from "../financialStatements/financialStatements";
+import useQueryStatements from "@/hooks/use-financialStatements-hook";
 
 /*
 Admin dashboard component
@@ -30,7 +36,14 @@ const AdminDashboard = () => {
 
   const {loadMachines} = useQueryMachines(false);
   const machineLoadFunction = loadMachines as (sort?: SearchQuerySorts, page?: number, limit?: number, search?: string) => void
+
+  const {loadMachineIssues} = useQueryMachineIssues(false);
+  const machineIssueLoadFunction = loadMachineIssues as (sort?: SearchQuerySorts, page?: number, limit?: number, search?: string) => void
   
+  const {loadFinancialStatements} = useQueryStatements(false);
+  const financialStatementLoadFunction = loadFinancialStatements as (sort?: SearchQuerySorts, page?: number, limit?: number, search?: string) => void
+
+  const activeSearch = useStore($activeSearch);
 
   if (!router) {
     return (
@@ -46,7 +59,9 @@ const AdminDashboard = () => {
       <Sidebar />
       <div className="flex-1">
         <UsersActions/>
-        <ScrollArea className="scroll-component">
+        <InactiveTab/>
+        <ScrollArea className={`${activeSearch ? 'scroll-component-search' : 'scroll-component'}`}>
+
           <Users/>
         </ScrollArea>
         <PaginationBar loadFunction={userLoadFunction}/>
@@ -58,10 +73,11 @@ const AdminDashboard = () => {
     return(
     <div className="flex">
       <Sidebar />
-      <div className="flex-1">
+      <div className="admin-dashboard">
         <BudgetActions/>
-        <ScrollArea className="scroll-component">
-        <BudgetCodes/>
+        <InactiveTab />
+        <ScrollArea className={`${activeSearch ? 'scroll-component-search' : 'scroll-component'}`}>
+          <BudgetCodes/>
         </ScrollArea>
         <PaginationBar loadFunction={budgetLoadFunction}/>
 
@@ -74,7 +90,8 @@ const AdminDashboard = () => {
         <Sidebar />
         <div className="flex-1">
         <MachineActions/>
-        <ScrollArea className="scroll-component">
+        <InactiveTab/>
+        <ScrollArea className={`${activeSearch ? 'scroll-component-search' : 'scroll-component'}`}>
         <MachinesComponent/>
         </ScrollArea>
         <PaginationBar loadFunction={machineLoadFunction}/>
@@ -82,6 +99,31 @@ const AdminDashboard = () => {
         </div>
       </div>
       )
+  } else if (router.route === "machineIssues"){
+    return(
+      <div className="flex">
+        <Sidebar />
+        <div className="flex-1">
+        <ScrollArea className={`${activeSearch ? 'scroll-component-search-fin' : 'scroll-component-fin'}`}>
+          <MachineIssues/>
+        </ScrollArea>
+        <PaginationBar loadFunction={machineIssueLoadFunction}/>
+
+        </div>
+      </div>
+      )
+  } else if (router.route === "financial_statements"){
+    return(
+      <div className="flex">
+        <Sidebar />
+        <div className="flex-1">
+          <ScrollArea className={`${activeSearch ? 'scroll-component-search-fin' : 'scroll-component-fin'}`}>
+            <FinancialStatements/> 
+          </ScrollArea>
+          <PaginationBar loadFunction={financialStatementLoadFunction}/>
+        </div>
+      </div>
+    )
   }
 };
 

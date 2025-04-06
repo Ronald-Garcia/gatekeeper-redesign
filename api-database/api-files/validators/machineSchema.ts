@@ -6,10 +6,16 @@ export const queryMachinesSchema = z.object({
     type: z.string().optional(),
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().optional(),
+    active: z.coerce.number().int().min(0).max(1).optional().default(1)
 });
 
 export const getMachineSchema = z.object({
     id: z.coerce.number().positive()
+})
+
+
+export const enableMachineSchema = z.object({
+    active: z.coerce.number().int().min(0).max(1),
 })
 
 export const createMachineSchema = z.object({

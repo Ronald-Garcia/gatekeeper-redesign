@@ -13,6 +13,7 @@ import { auth } from "../api-files/middleware/auth.js";
 import { Context } from "../api-files/lib/context.js";
 import { financialStatementRoutes } from "../api-files/routes/financialStatements.js";
 import { userBudgetCodeRelationRoute } from "../api-files/routes/userBudgetCodeRelations.js";
+import { machineIssueRoute } from "../api-files/routes/machineIssueReports.js";
 import { emailRoutes } from "../api-files/routes/emails.js";
 
 
@@ -50,7 +51,8 @@ app.route("/", machineRoutes);
 app.route("/", financialStatementRoutes);
 app.route("/", userBudgetCodeRelationRoute);
 app.route("/", authRoutes);
-//app.route("/", emailRoutes);
+app.route("/", machineIssueRoute);
+app.route("/", emailRoutes);
 
 app.onError((err, c) => {
   console.error(`${err}`);

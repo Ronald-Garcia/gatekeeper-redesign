@@ -23,13 +23,13 @@ const DeleteUserDialog = ({
   userId,
   setShowDeleteUser,
 }: DeleteUserDialogProp) => {
-  const { deleteUser } = useMutationUsers();
+  const { modifyUser } = useMutationUsers();
   const { loadUsers } = useQueryUsers(false);
 
   //async function that handles deletion logic
   const handleDeleteUser = async (e: React.MouseEvent) => {
     e.stopPropagation();
-     await deleteUser(userId);
+     await modifyUser(userId, 0);
      loadUsers();
     setShowDeleteUser(false); //make the dialog disappear
   };

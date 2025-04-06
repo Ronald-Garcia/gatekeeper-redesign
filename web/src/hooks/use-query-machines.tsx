@@ -1,19 +1,21 @@
 import { fetchCurrentMachine, getAllMachines, getAllTrainingsOfUser, getMachine, getMachineTypes } from "@/data/api"
-import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes, appendMachineTypes,setMetaData } from "@/data/store";
+import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes, appendMachineTypes, $activeTab, setMetaData } from "@/data/store";
 import { Machine } from "@/data/types/machine";
 import { MachineType } from "@/data/types/machineType";
 
-import { SortMachineType } from "@/data/types/sort";
 import { useEffect, useState } from "react";
-
-import { toast } from "sonner";
-import { SortType } from "@/data/types/sort";
+import { SortMachineType, SortType } from "@/data/types/sort";
+import { useStore } from "@nanostores/react";
+import { useToast } from "./use-toast";
 
 function useQueryMachines(reload: boolean) {
   // Pagination state for machine types (used for infinite scroll)
   const [machineTypesCurrentPage, setMachineTypesCurrentPage] = useState(1);
   const [machineTypesHasMore, setMachineTypesHasMore] = useState(false);
   const [machineTypesIsLoading, setMachineTypesIsLoading] = useState(false);
+  const { toast } = useToast();
+
+  const activeTab = useStore($activeTab);
 
   const getSavedMachine = async (): Promise<Machine | "kiosk" | undefined | 0> => {
     try {
@@ -34,15 +36,19 @@ function useQueryMachines(reload: boolean) {
         return machine;
       } catch (e) {
         const errorMessage = (e as Error).message;
-        toast.error("Sorry! There was an error fetching the Machine  🙁", {
-          description: errorMessage  
+        toast({
+          variant: "destructive",
+          title: "❌ Sorry! There was an error fetching the Machine 🙁",
+          description: errorMessage
         });
         return 0;            
       }
     } catch (e) {
       const errorMessage = (e as Error).message;
-      toast.error("Sorry! There was an error fetching the Machine  🙁", {
-        description: errorMessage  
+      toast({
+        variant: "destructive",
+        title: "❌ Sorry! There was an error fetching the Machine 🙁",
+        description: errorMessage
       });
       return 0;
     }    
@@ -70,10 +76,13 @@ function useQueryMachines(reload: boolean) {
       
       setMachineTypesHasMore(page * limit < meta.total);
       setMachineTypesCurrentPage(page);
+      
     } catch (e) {
       const errorMessage = (e as Error).message;
-      toast.error("Sorry! There was an error fetching Machine Types 🙁", {
-        description: errorMessage  
+      toast({
+        variant: "destructive",
+        title: "❌ Sorry! There was an error fetching Machine Types 🙁",
+        description: errorMessage
       });
     } finally {
       setMachineTypesIsLoading(false);
@@ -86,36 +95,43 @@ function useQueryMachines(reload: boolean) {
         data: types
       } = await getAllTrainingsOfUser(userId);
       setCurTrainings(types);
+      
       return types;
     } catch (e) {
       const errorMessage = (e as Error).message;
-      toast.error("Sorry! There was an error fetching Machine Types  🙁", {
-        description: errorMessage  
+      toast({
+        variant: "destructive",
+        title: "❌ Sorry! There was an error fetching Machine Types 🙁",
+        description: errorMessage
       });
     }
   }
+
+  
 
   const loadMachines = async (
     sort: SortMachineType = "name_asc",
     page: number = 1,
     limit: number = 10,
-    search: string = ""
-    ) => {
-      try {
-        const {
-          data: fetchedMachines,
-          meta: fetchedMetaData
-        } = await getAllMachines(sort, page, limit, search);
-        setMetaData(fetchedMetaData);
-        setMachines(fetchedMachines);
-      }  catch (e) {
-          //get message from api response, put it on a toast
-          const errorMessage = (e as Error).message;
-          toast.error("Sorry! There was an error fetching Users 🙁", {
-            description: errorMessage  
-          });
-        }
-      };
+    search: string = "",
+    type: string = "") => {
+    try {
+      const {
+        data: fetchedMachines,
+        meta: fetchedMetaData
+      } = await getAllMachines(sort, page, limit, search, type, activeTab);
+      setMetaData(fetchedMetaData);
+      setMachines(fetchedMachines);
+    } catch (e) {
+      const errorMessage = (e as Error).message;
+      toast({
+        variant: "destructive",
+        title: "❌ Sorry! There was an error fetching Machines 🙁",
+        description: errorMessage
+      });
+    }
+  };
+  
 
   useEffect(() => {
     if (reload) {
