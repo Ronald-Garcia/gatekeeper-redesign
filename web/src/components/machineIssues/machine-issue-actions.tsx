@@ -8,6 +8,8 @@ import {
   import { useState } from "react";
   import useMutationMachineIssue from "@/hooks/use-mutation-machineIssue";
   import { MachineIssue } from "@/data/types/machineIssues";
+  import { $machine_issues } from "@/data/store";
+  import { toast } from "sonner";
   
   type MachineIssueActionsProps = {
     issue: MachineIssue;
@@ -18,14 +20,38 @@ import {
     const [resolving, setResolving] = useState(false);
   
     const handleResolve = async (e: React.MouseEvent) => {
-      e.stopPropagation();
-      setResolving(true);
-      const updated = await resolveIssue(issue.id);
-      if (updated) {
-        window.location.reload(); // Or replace with better refetch logic if available
-      }
-      setResolving(false);
-    };
+        e.stopPropagation();
+        setResolving(true);
+      
+        try {
+          const updated = await resolveIssue(issue.id);
+      
+          if (!updated) {
+            toast.error("Failed to update issue.");
+            return;
+          }
+      
+          // ✅ Manually merge back the user and machine data
+          const fixed: MachineIssue = {
+            ...updated,
+            user: issue.user,
+            machine: issue.machine,
+            resolved: Number(updated.resolved) === 1, // convert number to boolean if needed
+          };
+      
+          const current = $machine_issues.get();
+          const updatedList = current.map((i) => (i.id === fixed.id ? fixed : i));
+          $machine_issues.set(updatedList);
+      
+          toast.success("Issue marked as resolved ✅");
+        } catch (error) {
+          console.error("Resolve failed:", error);
+          toast.error("Something went wrong.");
+        } finally {
+          setResolving(false);
+        }
+      };
+      
   
     return (
       <div data-cy={`machine-issue-actions-${issue.id}`}>

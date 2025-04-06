@@ -25,11 +25,12 @@ function useMutationMachineIssue() {
     } catch (e) {
       const errorMessage = (e as Error).message;
       toast.error("Failed to mark issue resolved ❌", {
-        description: errorMessage,
+        description: errorMessage || "Unknown error",
       });
       return undefined;
     }
   };
+  
 
   return {
     reportIssue,

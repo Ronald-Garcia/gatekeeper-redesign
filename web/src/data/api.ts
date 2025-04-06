@@ -1136,29 +1136,40 @@ export const getMachineIssues = async (sort: "asc" | "desc",
   return { message, data };
 }
 
-export const updateMachineIssue = async (id: number, resolved: number): Promise<{
-  message: string,
-  data: MachineIssue
+export const updateMachineIssue = async (
+  id: number,
+  resolved: number // you can keep the argument type as number
+): Promise<{
+  message: string;
+  data: MachineIssue;
 }> => {
   const response = await fetch(`${API_DB_URL}/machine-issues/${id}`, {
-    method: "PUT",
-    headers: {"Content-Type": "application/json"},
+    method: "PATCH", // ✅ correct method
+    headers: {
+      "Content-Type": "application/json",
+    },
     credentials: "include",
     body: JSON.stringify({
-      resolved
-    })
+      resolved: String(resolved), // ✅ convert to "1" or "0"
+    }),
   });
 
-  if (!response.ok) {
-    const { message }: { message: string } = await response.json();
+  let responseBody;
+  try {
+    responseBody = await response.json();
+  } catch {
+    throw new Error("No response from server");
+  }
 
+  if (!response.ok) {
+    const message = responseBody?.message || "Unknown error";
     throw new Error(message);
   }
 
-  const { message, data }: { message: string; data: MachineIssue } = await response.json();
-
+  const { message, data }: { message: string; data: MachineIssue } = responseBody;
   return { message, data };
-}
+};
+
 
 export const enableUser = async (id: number, graduationYear?: number): Promise<{
   message: string,
