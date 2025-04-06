@@ -111,26 +111,13 @@ const AdminDashboard = () => {
         </div>
       </div>
       )
-  } else if (router.route === "machineIssues"){
-    return(
-      <div className="flex">
-        <Sidebar />
-        <div className="flex-1">
-        <ScrollArea className={`${activeSearch ? 'scroll-component-search' : 'scroll-component'}`}>
-          <MachineIssues/>
-        </ScrollArea>
-        <PaginationBar loadFunction={machineIssueLoadFunction}/>
-
-        </div>
-      </div>
-      )
   } else if (router.route === "financial_statements"){
     return(
       <div className="flex">
         <Sidebar />
         <div className="flex-1">
           <ScrollArea className={`${activeSearch ? 'scroll-component-search-fin' : 'scroll-component-fin'}`}>
-            <FinancialStatements/> // aaa
+            <FinancialStatements/> 
           </ScrollArea>
           <PaginationBar loadFunction={financialStatementLoadFunction}/>
         </div>
