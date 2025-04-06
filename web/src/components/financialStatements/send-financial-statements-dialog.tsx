@@ -4,7 +4,7 @@ import { DialogClose,  DialogDescription, DialogFooter, DialogHeader, DialogTitl
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useState } from "react";
-import { openPage } from "@nanostores/router";
+import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 import DatePickerWithRange from "./datepicker";
 import { resetDateRange, $date_range } from "@/data/store";
@@ -60,7 +60,7 @@ const SendFinancialStatementsDialog = () => {
             //Also, do an initial load evey time we do this.
             loadFinancialStatements(undefined, 1, undefined);
             
-            openPage($router, "financial_statements");
+            redirectPage($router, "financial_statements");
 
         } else {
             e.preventDefault();

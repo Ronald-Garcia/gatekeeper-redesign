@@ -4,7 +4,7 @@ import Timer from "./timer";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "@/components/ui/button";
 import useMutationStatements from "@/hooks/use-mutation-financial-statements";
-import { openPage } from "@nanostores/router";
+import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 import { $currentUser, $currentMachine } from "@/data/store";
 import ConfirmReportModal from "@/components/modals/ConfirmReportModal"; 
@@ -48,7 +48,7 @@ const InProgress = () => {
     
     const onSubmit = async () => {
         await createStatement(time);
-        openPage($router, "interlockLogin")
+        redirectPage($router, "interlockLogin")
     }
     return (
         <>

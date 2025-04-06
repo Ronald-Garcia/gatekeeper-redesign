@@ -8,7 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogTrigger } from "@radix-ui/react-dialog";
 import { signOut } from "@/data/api";
-import { openPage } from "@nanostores/router";
+import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 import { resetStores } from "@/data/store";
 
@@ -19,7 +19,7 @@ const SignOutDialog = () => {
     const handleSignOut = () => {
         signOut();
         resetStores();
-        openPage($router, "kiosk");
+        redirectPage($router, "kiosk");
 
     }
 
