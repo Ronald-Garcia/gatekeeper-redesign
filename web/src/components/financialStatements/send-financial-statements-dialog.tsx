@@ -9,9 +9,12 @@ import { $router } from "@/data/router";
 import DatePickerWithRange from "./datepicker";
 import { resetDateRange, $date_range } from "@/data/store";
 import { useStore } from "@nanostores/react";
+import useQueryStatements from "@/hooks/use-financialStatements-hook";
 
 
 const SendFinancialStatementsDialog = () => {
+
+    const {loadFinancialStatements} = useQueryStatements(false);
 
     const [email, setEmail] = useState("");
     const [errors, setErrors] = useState({
@@ -54,6 +57,9 @@ const SendFinancialStatementsDialog = () => {
     }
     const handleGoToStatementsPage = (e: React.MouseEvent<HTMLButtonElement>) => {
         if (validateDateRange()) {
+            //Also, do an initial load evey time we do this.
+            loadFinancialStatements(undefined, 1, undefined);
+            
             openPage($router, "financial_statements");
 
         } else {
