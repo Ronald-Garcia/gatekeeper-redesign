@@ -13,12 +13,14 @@ import useQueryMachines from "@/hooks/use-query-machines";
 import { SearchQuerySorts } from "@/data/types/sort";
 import useQueryUsers from "@/hooks/use-query-users";
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
-import { $activeSearch } from "@/data/store";
+import { $activeSearch, validCurrentUser } from "@/data/store";
 import Users from "../Users/users";
 import MachineIssues from "../machineIssues/machineIssues";
 import useQueryMachineIssues from "@/hooks/use-query-machine-issues";
 import FinancialStatements from "../financialStatements/financialStatements";
 import useQueryStatements from "@/hooks/use-financialStatements-hook";
+import { useEffect } from "react";
+import { redirectPage } from "@nanostores/router";
 
 /*
 Admin dashboard component
@@ -44,6 +46,12 @@ const AdminDashboard = () => {
   const financialStatementLoadFunction = loadFinancialStatements as (sort?: SearchQuerySorts, page?: number, limit?: number, search?: string) => void
 
   const activeSearch = useStore($activeSearch);
+
+  useEffect(() => {
+    if(!validCurrentUser()) {
+      redirectPage($router, "start_page");
+    }
+  }, [])
 
   if (!router) {
     return (
