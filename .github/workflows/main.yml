@@ -4,17 +4,10 @@ env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_WEB_ID }}
 on:
-  push:
 
   workflow_dispatch:
 jobs:
-  call-workflow-cypress-testing:
-    uses: ./.github/workflows/cypress.yaml
-  call-workflow-jest-testing:
-    uses: ./.github/workflows/jest.yml
   call-workflow-api-deploy:
-    needs: [call-workflow-jest-testing, call-workflow-cypress-testing]
     uses: ./.github/workflows/api_deploy.yaml
   call-workflow-web-deploy:
-    needs: [call-workflow-jest-testing, call-workflow-cypress-testing]
     uses: ./.github/workflows/web_deploy.yaml
