@@ -1,5 +1,5 @@
 import { Button } from "../ui/button";
-import { openPage } from "@nanostores/router";
+import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 import Searchbar from "../general/searchbar.tsx";
 import { resetSearch } from "@/data/store.ts";
@@ -12,11 +12,11 @@ const FinancialActions = () => {
 
   const handleClickOnViewUsers = () => {
     resetSearch();
-    openPage($router, "users");
+    redirectPage($router, "users");
   }
   const handleClickOnViewBudgetCodes = () => {
     resetSearch();
-    openPage($router, "budgetCodes");
+    redirectPage($router, "budgetCodes");
   }
 
   

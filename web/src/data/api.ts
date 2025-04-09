@@ -997,13 +997,19 @@ Financial statement API functions
  * @returns {Promise<{message: string; data: financialStatement[]}>} A promise that resolves with a message and an array of financial statements.
  * @throws {Error} If the response is not ok, throws an error with the response message.
  */
-export const getFinancialStatements = async (to: Date, from: Date): Promise<{
+export const getFinancialStatements = async (
+  sort: SortMachineType = "name_asc",
+  page: number = 1,
+  limit: number = 10,
+  to: Date,
+  from: Date
+): Promise<{
   message: string;
   data: financialStatement[];
-}> => {
+  meta: MetaType
 
-  
-  const response = await fetch(`${API_DB_URL}/fin-statements?to=${to}&from=${from}`, {
+}> => {
+  const response = await fetch(`${API_DB_URL}/fin-statements?limit=${limit}&page=${page}&sort=${sort}&to=${to}&from=${from}`, {
     credentials: "include",
   });
 
@@ -1013,9 +1019,9 @@ export const getFinancialStatements = async (to: Date, from: Date): Promise<{
     throw new Error(message);
   }
 
-  const { message, data: sdata }: { message: string; data: financialStatement[] } = await response.json();
+  const { message, data: sdata, meta }: { message: string; data: financialStatement[]; meta:MetaType } = await response.json();
   const data = sdata.map((s)=> {return{...s, dateAdded: new Date(s.dateAdded)}});
-  return { message, data };
+  return { message, data, meta };
 };
 
 export const createFinancialStatements = async (userId: number, machineId: number, budgetCode: number, timeSpent: number ): Promise<{
@@ -1113,40 +1119,30 @@ export const createMachineIssue = async (userId: number, machineId: number): Pro
   return { message, data };
 }
 
-export const getMachineIssues = async (sort: "asc" | "desc",
+export const getMachineIssues = async(
+  sort: "asc" | "desc",
   page: number,
   limit: number,
-  resolved: number): Promise<{
-  message: string,
-  data: MachineIssue[],
+  resolved?: number // ✅ make resolved optional
+) : Promise<{
+  message: string;
+  data: MachineIssue[];
+  meta: MetaType
 }> => {
-  const response = await fetch(`${API_DB_URL}/machine-issues?sort=${sort}&page=${page}&limit=${limit}&resolved=${resolved}`, {
-    credentials: "include",
+  const query = new URLSearchParams({
+    sort,
+    page: page.toString(),
+    limit: limit.toString(),
   });
 
-  if (!response.ok) {
-    const { message }: { message: string } = await response.json();
-
-    throw new Error(message); 
+  // ✅ only add 'resolved' if it's explicitly provided
+  if (resolved !== undefined) {
+    query.append("resolved", resolved.toString());
   }
-
-  const { message, data }: { message: string; data: MachineIssue[] } = await response.json();
-
-  return { message, data };
-}
-
-export const updateMachineIssue = async (id: number, resolved: number): Promise<{
-  message: string,
-  data: MachineIssue
-}> => {
-  const response = await fetch(`${API_DB_URL}/machine-issues/${id}`, {
-    method: "PUT",
-    headers: {"Content-Type": "application/json"},
+  const response = await fetch(`${API_DB_URL}/machine-issues?${query.toString()}`, {
+    method: "GET",
     credentials: "include",
-    body: JSON.stringify({
-      resolved
-    })
-  });
+  })
 
   if (!response.ok) {
     const { message }: { message: string } = await response.json();
@@ -1154,10 +1150,44 @@ export const updateMachineIssue = async (id: number, resolved: number): Promise<
     throw new Error(message);
   }
 
-  const { message, data }: { message: string; data: MachineIssue } = await response.json();
+  const { message, data, meta }: { message: string; data: MachineIssue[]; meta:MetaType } = await response.json();
+  return { message, data, meta };
+};
 
+export const updateMachineIssue = async (
+  id: number,
+  resolved: number // you can keep the argument type as number
+): Promise<{
+  message: string;
+  data: MachineIssue;
+}> => {
+  const response = await fetch(`${API_DB_URL}/machine-issues/${id}`, {
+    method: "PATCH", // ✅ correct method
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({
+      resolved: String(resolved), // ✅ convert to "1" or "0"
+    }),
+  });
+
+  let responseBody;
+  try {
+    responseBody = await response.json();
+  } catch {
+    throw new Error("No response from server");
+  }
+
+  if (!response.ok) {
+    const message = responseBody?.message || "Unknown error";
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string; data: MachineIssue } = responseBody;
   return { message, data };
-}
+};
+
 
 export const updateUserStatus = async (id: number, active: number, graduationYear?: number, timeoutDate?: Date): Promise<{
   message: string,

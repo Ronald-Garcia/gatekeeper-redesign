@@ -4,14 +4,17 @@ import { DialogClose,  DialogDescription, DialogFooter, DialogHeader, DialogTitl
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useState } from "react";
-import { openPage } from "@nanostores/router";
+import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 import DatePickerWithRange from "./datepicker";
 import { resetDateRange, $date_range } from "@/data/store";
 import { useStore } from "@nanostores/react";
+import useQueryStatements from "@/hooks/use-financialStatements-hook";
 
 
 const SendFinancialStatementsDialog = () => {
+
+    const {loadFinancialStatements} = useQueryStatements(false);
 
     const [email, setEmail] = useState("");
     const [errors, setErrors] = useState({
@@ -54,7 +57,10 @@ const SendFinancialStatementsDialog = () => {
     }
     const handleGoToStatementsPage = (e: React.MouseEvent<HTMLButtonElement>) => {
         if (validateDateRange()) {
-            openPage($router, "financial_statements");
+            //Also, do an initial load evey time we do this.
+            loadFinancialStatements(undefined, 1, undefined);
+            
+            redirectPage($router, "financial_statements");
 
         } else {
             e.preventDefault();

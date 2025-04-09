@@ -3,11 +3,11 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
-import { $curbudgets, $currentBudget, $currentUser, $currentMachine, clearCurrentBudget, clearCurrentUser, setCurrentBudget, validCurrentBudget } from "@/data/store";
+import { $curbudgets, $currentBudget, $currentUser, $currentMachine, clearCurrentBudget, clearCurrentUser, setCurrentBudget, validCurrentBudget, validCurrentUser } from "@/data/store";
 import { useEffect } from "react";
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
 import useMutationMachineIssue from "@/hooks/use-mutation-machineIssue";
-import { openPage, redirectPage } from "@nanostores/router";
+import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 import { turnOffMachine, turnOnMachine } from "@/data/api";
 import ConfirmReportModal from "@/components/modals/ConfirmReportModal"; 
@@ -52,12 +52,17 @@ const Interlock = () => {
 
     
 
+    useEffect(() => {
+        if(!validCurrentUser()) {
+          redirectPage($router, "start_page");
+        }
+      }, [])
     const handleStartClick = () => {
 
 
         turnOnMachine().then(res => {
             if (res) {
-                openPage($router, "timer");
+                redirectPage($router, "timer");
             }
         })
 

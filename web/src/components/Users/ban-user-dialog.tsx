@@ -81,7 +81,7 @@ const BanUserDialog = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        <div className={`${errors.date ? "border border-red-500 rounded-md" : ""}`}>
+        <div className={`${errors.date ? "border border-red-500 rounded-md" : ""} space-x-2`}>
           <Label>
             Date to Reactivate
           </Label>
