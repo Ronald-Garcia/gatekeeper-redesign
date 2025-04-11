@@ -13,8 +13,14 @@ import useQueryMachines from "@/hooks/use-query-machines";
 import { SearchQuerySorts } from "@/data/types/sort";
 import useQueryUsers from "@/hooks/use-query-users";
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
-import { $activeSearch } from "@/data/store";
+import { $activeSearch, validCurrentUser } from "@/data/store";
 import Users from "../Users/users";
+import MachineIssues from "../machineIssues/machineIssues";
+import useQueryMachineIssues from "@/hooks/use-query-machine-issues";
+import FinancialStatements from "../financialStatements/financialStatements";
+import useQueryStatements from "@/hooks/use-financialStatements-hook";
+import { useEffect } from "react";
+import { redirectPage } from "@nanostores/router";
 
 /*
 Admin dashboard component
@@ -32,8 +38,20 @@ const AdminDashboard = () => {
 
   const {loadMachines} = useQueryMachines(false);
   const machineLoadFunction = loadMachines as (sort?: SearchQuerySorts, page?: number, limit?: number, search?: string) => void
+
+  const {loadMachineIssues} = useQueryMachineIssues(false);
+  const machineIssueLoadFunction = loadMachineIssues as (sort?: SearchQuerySorts, page?: number, limit?: number, search?: string) => void
   
+  const {loadFinancialStatements} = useQueryStatements(false);
+  const financialStatementLoadFunction = loadFinancialStatements as (sort?: SearchQuerySorts, page?: number, limit?: number, search?: string) => void
+
   const activeSearch = useStore($activeSearch);
+
+  useEffect(() => {
+    if(!validCurrentUser()) {
+      redirectPage($router, "start_page");
+    }
+  }, [])
 
   if (!router) {
     return (
@@ -89,6 +107,31 @@ const AdminDashboard = () => {
         </div>
       </div>
       )
+  } else if (router.route === "machineIssues"){
+    return(
+      <div className="flex">
+        <Sidebar />
+        <div className="flex-1">
+        <ScrollArea className={`${activeSearch ? 'scroll-component-search-fin' : 'scroll-component-fin'}`}>
+          <MachineIssues/>
+        </ScrollArea>
+        <PaginationBar loadFunction={machineIssueLoadFunction}/>
+
+        </div>
+      </div>
+      )
+  } else if (router.route === "financial_statements"){
+    return(
+      <div className="flex">
+        <Sidebar />
+        <div className="flex-1">
+          <ScrollArea className={`${activeSearch ? 'scroll-component-search-fin' : 'scroll-component-fin'}`}>
+            <FinancialStatements/> 
+          </ScrollArea>
+          <PaginationBar loadFunction={financialStatementLoadFunction}/>
+        </div>
+      </div>
+    )
   }
 };
 

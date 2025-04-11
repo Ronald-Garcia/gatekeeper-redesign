@@ -15,7 +15,8 @@ export const queryUsersParamsSchema = z.object({
 
 export const enableUserSchema = z.object({
   active: z.coerce.number().int().min(0).max(1),
-  graduationYear: z.coerce.number().int().min(1850).max(3000).optional()
+  graduationYear: z.coerce.number().int().min(1850).max(3000).optional(),
+  timeoutDate: z.coerce.date().optional()
 })
 
 export const createUserSchema = z.object({
@@ -65,6 +66,7 @@ export const queryBudgetCodesParamsSchema = z.object({
     limit: z.coerce.number().int().positive().optional(),
     budgetCode: z.coerce.number().int().positive().optional(),
     name: z.string().optional(),
+    active: z.coerce.number().int().min(0).max(1).optional().default(1)
 });
 
 export const createBudgetCode = z.object({
@@ -83,4 +85,12 @@ export const deleteBudgetCodeSchema = z.object({
 
 });
 
+
+export const getBudgetCodeSchema = z.object({
+  id: z.coerce.number().int().positive()
+})
+
+export const updateBudgetCodeSchema = z.object({
+  active: z.coerce.number().int().min(0).max(1)
+})
   

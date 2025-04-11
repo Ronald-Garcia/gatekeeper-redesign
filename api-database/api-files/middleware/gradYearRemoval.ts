@@ -1,8 +1,7 @@
 import type { Context, Next } from "hono";
-import { HTTPException } from "hono/http-exception";
-import { db } from "../db";
-import { users } from "../db/schema";
+import { users } from "../db/schema.js";
 import { and, isNull, lt, not } from "drizzle-orm";
+import { db } from "../db/index.js";
 
 export const inactivateGraduatedUsers = async (c: Context, next: Next) => {
   

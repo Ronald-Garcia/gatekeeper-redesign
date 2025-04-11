@@ -7,7 +7,6 @@ import {
   AlertDialogFooter,
   AlertDialogTitle,
   AlertDialogDescription,
-  AlertDialogAction,
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
 import { Input } from "../ui/input";
@@ -15,6 +14,7 @@ import { Label } from "@radix-ui/react-dropdown-menu";
 import { useState } from "react";
 import { User } from "@/data/types/user";
 import { Checkbox } from "../ui/checkbox";
+import { Button } from "../ui/button";
 
 
 //prop for handling state of the dialog
@@ -28,16 +28,25 @@ const ActivateUserDialog = ({
   user,
   setShowActivateUser,
 }: ActivateUserDialogProp) => {
-  const { activateUser } = useMutationUsers();
+  const { modifyUser } = useMutationUsers();
   const { loadUsers } = useQueryUsers(false);
 
   const [isFaculty, setIsFaculty] = useState<boolean>(!user.graduationYear);
   const [graduationYear, setGraduationYear] = useState<number>(user.graduationYear || 0);
+  const [gradYearError, setGradYearError] = useState(false);
+
 
   //async function that handles deletion logic
   const handleActivateUser = async (e: React.MouseEvent) => {
     e.stopPropagation();
-     await activateUser(user.id, isFaculty ? undefined : graduationYear);
+
+    if (!isFaculty && (!graduationYear || graduationYear <  new Date().getFullYear())) {
+      console.log("BILL");
+      setGradYearError(true);
+      return
+    }
+
+    await modifyUser(user.id, 1, isFaculty ? undefined : graduationYear);
      loadUsers();
     setShowActivateUser(false); //make the dialog disappear
   };
@@ -45,17 +54,20 @@ const ActivateUserDialog = ({
   const handleCancel = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowActivateUser(false);
+    setGradYearError(false);
   };
 
   // Handle dialog close event
   const handleDialogClose = (open: boolean) => {
     if (!open) {
       setShowActivateUser(false);
+      setGradYearError(false);
     }
   };
 
   const handleGraduationYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGraduationYear(parseInt(e.target.value));
+    setGradYearError(false);
   };
 
   return (
@@ -79,15 +91,18 @@ const ActivateUserDialog = ({
           <Label>
             Graduation Year
           </Label>
-          <Input disabled={isFaculty} type="number" value={graduationYear} defaultValue={user.graduationYear} onChange={handleGraduationYearChange} />
+          {gradYearError && <div className="error-text">Graduation year must be current or future year</div>}
+          <Input
+          className={gradYearError ? "border-red-500" : ""} 
+          disabled={isFaculty} type="number" value={graduationYear} defaultValue={user.graduationYear} onChange={handleGraduationYearChange} />
 
         </div>
 
         <AlertDialogFooter>
           <AlertDialogCancel data-cy = "user-activate-cancel" onClick={handleCancel}>Cancel</AlertDialogCancel>
-          <AlertDialogAction data-cy = "user-activate-confirm" onClick={handleActivateUser}>
+          <Button data-cy = "user-activate-confirm" onClick={handleActivateUser}>
             Activate
-          </AlertDialogAction>
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

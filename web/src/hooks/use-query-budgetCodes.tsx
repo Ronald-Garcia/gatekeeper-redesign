@@ -5,7 +5,8 @@ import { $codes,
   appendBudgetCodes,
   setMetaData,
   setBudgetCodeTypes,
-  appendBudgetCodeType
+  appendBudgetCodeType,
+  $activeTab
 } from "@/data/store";
 import { BudgetCode } from "@/data/types/budgetCode";
 import { SortBudgetType, SortType } from "@/data/types/sort";
@@ -19,11 +20,13 @@ function useQueryBudgets(reload: boolean) {
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const activeTab = useStore($activeTab)
 
 
   const [BudgetCodeTypeCurrentPage, setBudgetCodeTypeCurrentPage] = useState(1);
   const [BudgetCodeTypeHasMore, setBudgetCodeTypeHasMore] = useState(false);
   const [BudgetCodeTypeIsLoading, setBudgetCodeTypeIsLoading] = useState(false);
+
 
   const loadBudgets = async (
     sort: SortBudgetType = "name_asc",
@@ -37,7 +40,7 @@ function useQueryBudgets(reload: boolean) {
       const {
         data: fetchedBudgetCodes,
         meta
-      } = await getAllBudgets(sort, page, limit, search);
+      } = await getAllBudgets(sort, page, limit, search, activeTab);
 
       setMetaData(meta);
       

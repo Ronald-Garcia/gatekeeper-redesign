@@ -78,16 +78,20 @@ const Sidebar = () => {
                 >
                     Machines
                 </Button>
+
+                <div className="pt-4 border-t border-gray-200">
                 <Button 
                     variant="ghost"
                     className={cn(
-                        "w-full justify-start transition-colors duration-200",
+                        "w-full justify-start transition-colors duration-200 text-lg",
                         router?.route === "machineIssues" && "bg-blue-50 text-blue-600 hover:bg-blue-100"
                     )}
                     onClick={handleClickOnViewIssues}
                 >
                     Machine Issues
                 </Button>
+                </div>
+                
 
                 <div className="pt-4 border-t border-gray-200">
                     <StatementDialog/>

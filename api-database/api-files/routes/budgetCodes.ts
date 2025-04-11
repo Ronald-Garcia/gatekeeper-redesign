@@ -1,6 +1,6 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { queryBudgetCodesParamsSchema, createBudgetCode, deleteBudgetCodeSchema } from "../validators/schemas.js";
+import { queryBudgetCodesParamsSchema, createBudgetCode, deleteBudgetCodeSchema, updateBudgetCodeSchema, getBudgetCodeSchema } from "../validators/schemas.js";
 import { SQL, desc, asc, eq, and, count, ilike } from "drizzle-orm";
 import { budgetCodes, budgetCodeType } from "../db/schema.js";
 import { db } from "../db/index.js";
@@ -29,12 +29,16 @@ export const budgetCodesRoutes = new Hono<Context>();
 budgetCodesRoutes.get("/budget-codes",
      adminGuard, 
      zValidator("query", queryBudgetCodesParamsSchema), async (c) => {
-    const { page = 1, limit = 20, search, sort } = c.req.valid("query");
+    const { page = 1, limit = 20, search, sort, active } = c.req.valid("query");
 
     const whereClause: (SQL | undefined)[] = [];
 
     if (search) {
         whereClause.push(ilike(budgetCodes.name, `%${search}%`));
+    }
+
+    if (active !== undefined) {
+        whereClause.push(eq(budgetCodes.active, active));
     }
 
         const orderByClause: SQL[] = [];
@@ -156,14 +160,19 @@ budgetCodesRoutes.delete("/budget-codes/:id",
     zValidator("param", deleteBudgetCodeSchema), async (c)=>{
     const { id } = c.req.valid("param");
 
-    const [deletedBudgetCode] = await db
-        .delete(budgetCodes)
-        .where(eq(budgetCodes.id, id))
-        .returning();
-
-    if (!deletedBudgetCode) {
+    const [budgetCodeCheck] = await db
+    .select()
+    .from(budgetCodes)
+    .where(eq(budgetCodes.id, id))
+    if (!budgetCodeCheck) {
         throw new HTTPException(404, { message: "Budget Code not found!"});
     }
+
+    const [deletedBudgetCode] = await db
+        .update(budgetCodes)
+        .set({active: 0})
+        .where(eq(budgetCodes.id, id))
+        .returning();
 
     return c.json({
         success:true,
@@ -171,4 +180,34 @@ budgetCodesRoutes.delete("/budget-codes/:id",
         data:deletedBudgetCode
     }, 200)
 
+})
+
+budgetCodesRoutes.patch("/budget-codes/:id",
+    adminGuard,
+    zValidator("param", getBudgetCodeSchema),
+    zValidator("json", updateBudgetCodeSchema), async (c)=>{
+    const { id } = c.req.valid("param");
+
+    const { active } = c.req.valid("json");
+
+    const [budgetCodeCheck] = await db
+        .select()
+        .from(budgetCodes)
+        .where(eq(budgetCodes.id, id))
+    if (!budgetCodeCheck) {
+        throw new HTTPException(404, { message: "Budget Code not found!"});
+    }
+
+    const [bc] = await db
+    .update(budgetCodes)
+    .set({active})
+    .where(eq(budgetCodes.id, id))
+    .returning();
+
+    return c.json({
+        success:true,
+        message:"Updated budget code",
+        data:bc
+    }, 200);
+    
 })

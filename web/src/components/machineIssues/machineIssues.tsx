@@ -1,27 +1,25 @@
-import { useStore } from "@nanostores/react";
 import { $machine_issues } from "@/data/store";
-//import MachineIssue from "./machineIssue";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
-//import useQueryMachineIssues from "@/hooks/use-query-machine-issues";
+import { useStore } from "@nanostores/react";
+import useQueryMachineIssues from "@/hooks/use-query-machine-issues";
+import MachineIssueComponent from "./machineIssue";
 
-/*
-List of Machine Issues with the machine name and user id with a flag on the right side if
-not resolved.
-*/
+export default function MachineIssues() {
+  const issueList = useStore($machine_issues);
+  
+  // Ensure machine issues load when component mounts
+  useQueryMachineIssues(true);
 
-export default function MachineIssue() {
-    //useQueryUsers(true);
-  
-    const machineIssueList = useStore($machine_issues);
-  
-    return (
-        <div className="flex flex-col h-full">
-        <ScrollArea className="flex-1">
-          <div className="p-4">
-              <p data-cy="no-users">No users found!</p>
-          </div>
-        </ScrollArea>
-      </div>
-    );
-  }
-  
+  return (
+    <div className="p-4">
+      {issueList.length === 0 ? (
+        <p data-cy="no-issues">No machine issues!</p>
+      ) : (
+        <div className="space-y-4">
+          {issueList.map((issue) => (
+            <MachineIssueComponent key={issue.id} issue={issue} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

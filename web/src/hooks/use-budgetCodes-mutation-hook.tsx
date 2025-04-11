@@ -1,4 +1,4 @@
-import { createBudgetCode, 
+import { updateBudgetCode, createBudgetCode, 
     createBudgetType, 
     deleteBudgetCode } from "../data/api";
 import { addBudgetCode, addNewBudgetCodeTypes, deleteBudgetCodeById } from "../data/store";
@@ -46,27 +46,24 @@ function useMutationBudgetCodes() {
       });
     }
   };
-/*
-  
-  const updateBudgetCode = async (budget: BudgetCode) => {
+
+  const modifyBudgetCode = async (codeId: number, active: number) => {
     try {
-      const { data } = await editBudgetCode(budget);
-      updateABudgetCode(data);
+      await updateBudgetCode(codeId, active);
       toast({
         variant: "default",
         title: "✅ Success 😊!",
-        description: "Budget code updated successfully!"
+        description: "Budget code modified successfully!"
       });
-      return data;
     } catch (e) {
       const errorMessage = (e as Error).message;
       toast({
         variant: "destructive",
-        title: "❌ Sorry! There was an error updating the budget code 🙁",
+        title: "❌ Sorry! There was an error modifying the budget code 🙁",
         description: errorMessage
       });
     }
-  };*/
+  };
 
 
   /*
@@ -97,6 +94,7 @@ function useMutationBudgetCodes() {
     addNewBudgetCode,
     removeBudgetCode,
    // updateBudgetCode,
+   modifyBudgetCode,
    addNewBudgetCodeType
   };
 }

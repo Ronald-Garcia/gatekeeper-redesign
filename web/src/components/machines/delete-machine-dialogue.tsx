@@ -23,14 +23,14 @@ const DeleteMachineDialog = ({
   machineId,
   setShowDeleteMachine,
 }: DeleteMachineDialogProp) => {
-  const { removeMachineById } = useMutationMachines();
+  const { modifyMachine } = useMutationMachines();
 
   const {loadMachines} = useQueryMachines(false);
 
   //async function that handles deletion logic
   const handleDeleteUser = async (e: React.MouseEvent) => {
     e.stopPropagation();
-     await removeMachineById(machineId);
+     await modifyMachine(machineId, 0);
     setShowDeleteMachine(false); //make the dialog disappear
     loadMachines();
   };
@@ -53,13 +53,13 @@ const DeleteMachineDialog = ({
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will delete the user from using the machines. 
+            This will render the machine inactive. 
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={handleCancel}>Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={handleDeleteUser}>
-            Delete
+            Deactivate
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

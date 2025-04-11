@@ -3,6 +3,7 @@ export type BudgetCode = {
     code: string;
     name: string;
     type: budgetCodeType;
+    active: number;
 }
 
 

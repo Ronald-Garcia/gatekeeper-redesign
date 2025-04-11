@@ -10,6 +10,7 @@ import { adminGuard } from "../middleware/adminGuard.js";
 import { Context } from "../lib/context.js";
 import {User} from "../lib/types.js";
 import { inactivateGraduatedUsers } from "../middleware/gradYearRemoval.js";
+import { timeoutUserHandle } from "../middleware/timeoutHandle.js";
 
 /**
  * Routes for budget code operations.
@@ -37,6 +38,7 @@ export function appendLastNum (entry:User): User{
 userRoutes.get("/users",
      adminGuard,
      inactivateGraduatedUsers,
+     timeoutUserHandle,
      zValidator("query", queryUsersParamsSchema), async (c) => {
     const { page = 1, limit = 20, sort, search, active } = c.req.valid("query");
 
@@ -188,6 +190,7 @@ userRoutes.post("/users",
 userRoutes.get("/users/:cardNum", 
     zValidator("param",getUserByCardNumSchema), 
     inactivateGraduatedUsers,
+    timeoutUserHandle,
     async(c) => {
    //Given you have a well formed card number, check if that card num exists in user table.
    const { cardNum } = c.req.valid("param");
@@ -283,14 +286,21 @@ userRoutes.patch("/users/:id",
     zValidator("json", enableUserSchema),
     async (c) => {
         const { id } = c.req.valid("param");
-        const { active, graduationYear } = c.req.valid("json");
+        const { active, graduationYear, timeoutDate } = c.req.valid("json");
         const [user] = await db.select().from(users).where(eq(users.id, id));
         
+
+        if (timeoutDate) {
+            if (timeoutDate < new Date()) {
+                throw new HTTPException(400, { message: "Timeout date cannot be in the past" });
+            }
+        }
+
         if (!user) {
             throw new HTTPException(404, { message: "User not found" });
         }
 
-        const [updatedUser] = await db.update(users).set({ active, graduationYear: graduationYear === undefined ? null : graduationYear }).where(eq(users.id, id)).returning();
+        const [updatedUser] = await db.update(users).set({ active, graduationYear: graduationYear === undefined ? null : graduationYear, timeoutDate: (timeoutDate === undefined || active === 1) ? null : timeoutDate }).where(eq(users.id, id)).returning();
 
         return c.json({
             success: true,

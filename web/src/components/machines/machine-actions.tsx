@@ -45,6 +45,9 @@ export default function MachineActions({ machine }: MachineActionsProps) {
 
   return (
     <div data-cy={`machine-actions-${machine.id}`}>
+
+      
+
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="absolute top-2 right-2 deck-actions" data-cy={`machine-trigger-${machine.id}`}>

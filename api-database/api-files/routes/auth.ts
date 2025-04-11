@@ -10,6 +10,7 @@ import { and, eq } from "drizzle-orm";
 import { appendLastNum } from "./users.js";
 import { ServiceProvider, IdentityProvider } from "samlify"; 
 import dotenv from 'dotenv';
+import { timeoutUserHandle } from "../middleware/timeoutHandle.js";
 dotenv.config();
 
 
@@ -33,6 +34,7 @@ authRoutes.post("/logout", async (c) => {
  * @returns the user.
  */
 authRoutes.post("/users/:cardNum", 
+  timeoutUserHandle,
   zValidator("param",getUserByCardNumSchema), async(c) => {
  //Given you have a well formed card number, check if that card num exists in user table.
  const { cardNum } = c.req.valid("param");
@@ -47,8 +49,10 @@ authRoutes.post("/users/:cardNum",
  
  // Check if exists. If not, throw error.
  // Also, do a check to see if this is an old jcard scan attempt. If yes, deny.
- if (!user || user.lastDigitOfCardNum > lastDigitOfCardNum) {    
-     throw new HTTPException(404, { message: "User not found" });
+ if (!user) {    
+     throw new HTTPException(404, { message: "Invalid User: User not found" });
+ } else if (user.lastDigitOfCardNum > lastDigitOfCardNum) {
+     throw new HTTPException(404, { message: "Invalid User: Update your J-card"})
  }
 
  // Check for a more recent jcard num. In this case, we will update the last digit with the new digit

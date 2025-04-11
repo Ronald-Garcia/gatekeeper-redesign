@@ -22,6 +22,14 @@ export const $hasMoreUserTrainings = atom<boolean>(false);
 export const $currentPage = atom<number>(1);
 export const $activeTab = atom<number>(1);
 export const $machine_issues = atom<MachineIssue[]>([]);
+
+
+export function setMachineIssues(issues: MachineIssue[]) {
+  $machine_issues.set(issues);
+}
+export function resetMachineIssues() {
+  $machine_issues.set([]);
+}
 export const $budgetCodeTypes = atom<budgetCodeType[]>([]);
 
 export function setActiveTab(tab: number) {

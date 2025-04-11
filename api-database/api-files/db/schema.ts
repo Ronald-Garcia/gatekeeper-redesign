@@ -28,7 +28,8 @@ export const users = pgTable("users_table", {
   JHED: text().notNull(),
   isAdmin: integer().notNull(),
   graduationYear: integer(), //This is optional because some users like Rich do not have grad year.
-  active: integer().notNull().default(1)
+  active: integer().notNull().default(1),
+  timeoutDate: timestamp({ precision: 3, withTimezone: true }).defaultNow()
 });
 
 /**
@@ -63,7 +64,7 @@ export const budgetCodes = pgTable("budgetCodes" , {
   code: text().notNull().unique(),
   name: text().notNull(),
   budgetCodeTypeId: serial().notNull().references(() => budgetCodeType.id, {onDelete:"cascade"}),
-  // active: integer().notNull().default(1)
+  active: integer().notNull().default(1)
 })
 
 
