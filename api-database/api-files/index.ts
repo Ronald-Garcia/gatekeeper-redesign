@@ -15,6 +15,8 @@ import { auth } from "./middleware/auth.js";
 import authRoutes from "./routes/auth.js";
 import { emailRoutes } from "./routes/emails.js";
 import { machineIssueRoute } from "./routes/machineIssueReports.js";
+import { budgetCodeType } from "./db/schema.js";
+import { budgetCodeTypeRoutes } from "./routes/budgetCodeTypes.js";
 
 
 const app = new Hono<Context>();
@@ -53,6 +55,7 @@ app.route("/", userBudgetCodeRelationRoute);
 app.route("/", authRoutes);
 app.route("/", emailRoutes);
 app.route("/", machineIssueRoute);
+app.route("/", budgetCodeTypeRoutes);
 
 app.onError((err, c) => {
   console.error(`${err}`);

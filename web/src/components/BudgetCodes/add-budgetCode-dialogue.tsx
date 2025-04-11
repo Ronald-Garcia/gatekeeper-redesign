@@ -10,11 +10,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "../ui/input";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BudgetCode } from "@/data/types/budgetCode";
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
 import { DialogClose } from "@radix-ui/react-dialog";
-import { $budgetCodeTypes, $budget_code_queue, toggleBudgetCodeQueue } from "@/data/store";
+import { $budgetCodeTypes, $budget_code_queue, toggleBudgetCodeQueue, clearBudgetCodeQueue } from "@/data/store";
 import { useStore } from "@nanostores/react";
 import { ScrollArea } from "../ui/scroll-area";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
@@ -22,11 +22,16 @@ import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 // function that handles state of the dialogue, error handling from api
 const AddBudgetCodeDialog = () => {
   const { addNewBudgetCode } = useMutationBudgetCodes();
-  const { loadBudgets } = useQueryBudgets(false);
+  const { loadBudgets, loadBudgetCodeType } = useQueryBudgets(false);
   const [budgetCode, setbudgetCode] = useState("");
   const [name, setName] = useState("");
   const typeList = useStore($budgetCodeTypes);
   const budgetCodeQueue = useStore($budget_code_queue);
+
+  // Load budget code types when component mounts
+  useEffect(() => {
+    loadBudgetCodeType();
+  }, []);
 
   // This is dialog component state management
   const [open, setOpen] = useState(false);
@@ -44,6 +49,8 @@ const AddBudgetCodeDialog = () => {
       code: false, 
       budgetCodeTypeId: false
     });
+    // Clear the budget code queue when dialog closes
+    clearBudgetCodeQueue();
   }
 
   const validateFields = () => {
@@ -63,23 +70,27 @@ const AddBudgetCodeDialog = () => {
       return;
     }
 
-    const selectedType = typeList.find(type => type.id === budgetCodeQueue[0]);
-    
-    const newCode: BudgetCode = {
-      code: budgetCode,
-      id: -1,
-      name: name, 
-      type: selectedType || {
-        id: -1,
-        type: ""
+    try {
+      const selectedType = typeList.find(type => type.id === budgetCodeQueue[0]);
+      
+      if (!selectedType) {
+        setErrors(prev => ({...prev, budgetCodeTypeId: true}));
+        return;
       }
+      
+      const newCode: BudgetCode = {
+        code: budgetCode,
+        id: -1,
+        name: name, 
+        type: selectedType
+      }
+      
+      await addNewBudgetCode(newCode);
+      setOpen(false);
+      loadBudgets();
+    } catch (error) {
+      console.error("Error adding budget code:", error);
     }
-    const response = await addNewBudgetCode(newCode);
-    setOpen(false);
-    if (response) {
-      //TODO error handling.
-    }
-    loadBudgets();
   };
 
   const handleOnChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -141,7 +152,7 @@ const AddBudgetCodeDialog = () => {
                     data-state={budgetCodeQueue.includes(type.id) ? "on" : "off"}
                     aria-pressed={budgetCodeQueue.includes(type.id)}
                   >
-                    <p className="text-center font-medium">{type.type}</p>
+                    <p className="text-center font-medium">{type.name}</p>
                   </ToggleGroupItem>
                 ))}
               </ToggleGroup>

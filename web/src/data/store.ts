@@ -91,6 +91,9 @@ export function toggleBudgetCodeQueue(bc: number) {
   }
 }
 
+export function addNewBudgetCodeTypes(type: budgetCodeType) {
+  $budgetCodeTypes.set([...$budgetCodeTypes.get(), type]);
+}
 
 export function setTrainingQueue(bcs: number[]) {
   $training_queue.set(bcs);
@@ -191,7 +194,7 @@ const defaultBudget: BudgetCode = {
   code: "invalid", 
   type: {
      id: -1, 
-    type: ""
+    name: ""
   }
 }
 

@@ -463,11 +463,13 @@ export const createBudgetCode = async (budget: BudgetCode): Promise<{
   message: string,
   data: BudgetCode
 }> => {
+
+    const { name, code, type } = budget;
   const response = await fetch(`${API_DB_URL}/budget-codes`,{
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      ...budget
+      name, code, budgetCodeTypeId: type.id,
     }),
     credentials: "include"
   })
@@ -1241,3 +1243,32 @@ export const getBudgetCodeType = async ( sort: SortType = "asc",
   return { message, data, meta };
 }
 
+
+/**
+ * Creates a new machine type.
+ * @param {string} type - The machine type string.
+ * @returns {Promise<{message: string, data: MachineType}>} A promise that resolves with a message and the created machine type.
+ * @throws {Error} If the response is not ok, throws an error with the response message.
+ */
+export const createBudgetType = async (type: string): Promise<{
+  message: string;
+  data: budgetCodeType
+}> => {
+  const response = await fetch(`${API_DB_URL}/budget-code-types`,{
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      name: type
+    }),
+    credentials: "include"
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string} = await response.json();
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string, data: budgetCodeType } = await response.json();
+
+  return { message, data };
+}

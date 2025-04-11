@@ -14,5 +14,5 @@ export type UserBudgetCodeRelation = {
 
 export type budgetCodeType = {
     id: number; 
-    type : string;
+    name: string;
 }

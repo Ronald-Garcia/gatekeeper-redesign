@@ -58,8 +58,20 @@ budgetCodesRoutes.get("/budget-codes",
 
     const [allBudgetCodes, [{ totalCount }]] = await Promise.all([
         db
-            .select()
-            .from(budgetCodes)
+            .select({
+                id: budgetCodes.id,
+                name: budgetCodes.name,
+                code: budgetCodes.code,
+                type: {
+                  id: budgetCodeType.id,
+                  name: budgetCodeType.name,
+                },
+              })
+            .from(budgetCodes) 
+            .innerJoin(
+                budgetCodeType,
+                eq(budgetCodes.budgetCodeTypeId, budgetCodeType.id)
+              )
             .where(and(...whereClause))
             .orderBy(...orderByClause)
             .limit(limit)
