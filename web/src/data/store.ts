@@ -197,13 +197,14 @@ const defaultMachine: Machine = {
 }
 
 const defaultBudget: BudgetCode = {
-  id: -1, 
+  id: -1,
   name: "invalid",
-  code: "invalid", 
+  code: "invalid",
   type: {
-     id: -1, 
+    id: -1,
     name: ""
-  }
+  },
+  active: 0
 }
 
 
