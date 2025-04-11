@@ -7,13 +7,11 @@ import useMutationStatements from "@/hooks/use-mutation-financial-statements";
 import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 import { $currentUser, $currentMachine } from "@/data/store";
-import useMutationMachineIssue from "@/hooks/use-mutation-machineIssue";
 import ReportFormModal from "@/components/modals/ReportFormmodal"; 
 
 const InProgress = () => {
   const curUser = useStore($currentUser);
   const curMachine = useStore($currentMachine);
-  const { reportIssue } = useMutationMachineIssue();
   const { curBudget, createStatement } = useMutationStatements();
 
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
@@ -29,12 +27,7 @@ const InProgress = () => {
   }, []);
 
   const handleReportIssue = () => {
-    reportIssue(curUser.id, curMachine.id).then((res) => {
-      if (res) {
-        console.log("Reported issue:", res);
-        setIsFormModalOpen(true);
-      }
-    });
+    setIsFormModalOpen(true);
   };
 
   const onSubmit = async () => {
@@ -82,7 +75,10 @@ const InProgress = () => {
       <ReportFormModal
         isOpen={isFormModalOpen}
         onClose={() => setIsFormModalOpen(false)}
-      />
+        userId={curUser.id}
+        machineId={curMachine.id}
+        />
+
     </>
   );
 };

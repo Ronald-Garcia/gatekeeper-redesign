@@ -15,7 +15,6 @@ import {
   validCurrentUser
 } from "@/data/store";
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
-import useMutationMachineIssue from "@/hooks/use-mutation-machineIssue";
 import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 import { turnOffMachine, turnOnMachine } from "@/data/api";
@@ -31,7 +30,6 @@ const Interlock = () => {
   const userBudgets = useStore($curbudgets);
 
   const { getBudgetsOfUser } = useQueryBudgets(false);
-  const { reportIssue } = useMutationMachineIssue();
 
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
@@ -42,12 +40,7 @@ const Interlock = () => {
   };
 
   const handleReportIssue = () => {
-    reportIssue(curUser.id, curMachine.id).then((result) => {
-      if (result) {
-        console.log("Reported issue:", result);
-        setIsFormModalOpen(true);
-      }
-    });
+    setIsFormModalOpen(true);
   };
 
   const handleStartClick = () => {
@@ -130,7 +123,10 @@ const Interlock = () => {
       <ReportFormModal
         isOpen={isFormModalOpen}
         onClose={() => setIsFormModalOpen(false)}
-      />
+        userId={curUser.id}
+        machineId={curMachine.id}
+        />
+
     </>
   );
 };

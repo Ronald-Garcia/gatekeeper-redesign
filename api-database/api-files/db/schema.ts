@@ -137,6 +137,7 @@ export const machineIssues = pgTable("machine_issues", {
   machineId: integer().notNull().references(() => machines.id, { onDelete: "cascade" }),
   reportedAt: timestamp({ precision: 3, withTimezone: true }).notNull().defaultNow(),
   resolved: integer().notNull().default(0), // 0 = Not Resolved, 1 = Resolved
+  description: text("description")
 });
 
 
