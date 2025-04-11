@@ -11,6 +11,8 @@ import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 import { turnOffMachine, turnOnMachine } from "@/data/api";
 import ConfirmReportModal from "@/components/modals/ConfirmReportModal"; 
+import ReportFormModal from "@/components/modals/ReportFormmodal";
+
 
 
 /*
@@ -25,8 +27,12 @@ const Interlock = () => {
     const userBudgets = useStore($curbudgets);
     const { reportIssue } = useMutationMachineIssue();
 
+    
+
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+
     
     const handleCancel = () => {
         clearCurrentUser();
@@ -40,13 +46,13 @@ const Interlock = () => {
 
     const handleConfirmReport = async () => {
         setIsModalOpen(false);
-      
         const result = await reportIssue(curUser.id, curMachine.id); 
-      
         if (result) {
           console.log("Reported issue:", result);
+          setIsFormModalOpen(true); // Open the QR form modal
         }
-    };
+      };
+      
       
     
 
@@ -121,12 +127,17 @@ const Interlock = () => {
                 </Card>
             </div>
 
-            {/* Report Issue Confirmation Modal */}
             <ConfirmReportModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onConfirm={handleConfirmReport}
             />
+
+            <ReportFormModal
+                isOpen={isFormModalOpen}
+                onClose={() => setIsFormModalOpen(false)}
+            />
+
 
         </>
     )
