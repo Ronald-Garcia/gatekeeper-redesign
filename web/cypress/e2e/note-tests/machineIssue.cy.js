@@ -1,49 +1,60 @@
 /// <reference types="cypress" />
 
-const WEB_URL = "http://localhost:5173";
-const adminCard = "1234567890777777"; // Has access
-const userCard = "1234567890777777"; // Used to submit issue
-const machineName = "LATHE 5000";     // Make sure this exists in your DB
+describe("Machine Issue Reporting (Full Lifecycle)", () => {
+  const WEB_URL = "http://localhost:5173";
+  const cardNum = "1234567890777777";
+  const issueDescription = "Power not working on startup";
 
-describe("Machine Issue End-to-End", () => {
-  it("User reports an issue and admin resolves it", () => {
-    // === STEP 1: User logs in through interlock and reports issue === //
-    cy.visit(`${WEB_URL}`);
+  it("submits issue via QR and verifies it in the kiosk dashboard", () => {
+    // Step 1: Go to Interlock
+    cy.visit(WEB_URL);
     cy.get('[data-cy="interlock-button"]').click();
+    cy.get('[data-cy="cardnum-input"]').type(`;${cardNum};\n`);
 
-    // Log in user with access
-    cy.get('[data-cy="cardnum-input"]').type(`;${userCard};\n`);
-    cy.get('[data-cy="toggle-budget"]').first().click();
+    // Step 2: Open the Report Issue modal
+    cy.get('[data-cy="report-issue-button"]').click({ force: true });
+    cy.contains("Scan the QR code").should("exist");
 
-    // Click report issue
-    cy.get('[data-cy="report-issue-button"]').click();
+    // Step 3: Extract form URL, open form page, submit
+    cy.get("p")
+      .contains("http")
+      .invoke("text")
+      .then((formUrl) => {
+        cy.visit(formUrl);
 
-    // Wait for QR form modal to appear
-    cy.get('[data-cy="report-form-modal"]').should("be.visible");
+        cy.get('input[placeholder="Describe the issue..."]').type(issueDescription);
+        cy.contains("Submit Report").click();
+        cy.contains("Submitted ✅").should("exist");
 
-    // Instead of scanning QR, visit the URL manually (simulate scanning)
-    cy.url().then(() => {
-      cy.visit(`${WEB_URL}/form/2034/1759`); // Use actual user/machine IDs if dynamic
-    });
+        // Step 4: Go to kiosk
+        cy.visit(WEB_URL);
+        cy.get('[data-cy="kiosk-button"]').click();
+        cy.get('[data-cy="cardnum-input"]').type(`;${cardNum};\n`);
 
-    // Fill out issue description and submit
-    cy.get('[data-cy="maintenance-textarea"]').type("The machine is making weird noises.");
-    cy.get('[data-cy="submit-maintenance-report"]').click();
+        // Step 5: Navigate to Machine Issues tab
+        cy.get('[data-cy="admin-dashboard"]').should("exist");
+        cy.contains("Machine Issues").click();
 
-    // Assert we're redirected and form is cleared
-    cy.contains("Thank you for reporting!").should("exist");
+        // Step 6: Find issue and check it
+        cy.contains(issueDescription, { timeout: 10000 }).should("exist");
+        cy.contains(issueDescription)
+          .parents("[data-cy^=machine-issue-]")
+          .as("issueCard");
 
-    // === STEP 2: Admin logs in via kiosk to view and resolve === //
-    cy.visit(`${WEB_URL}/kiosk`);
-    cy.get('[data-cy="cardnum-input"]').type(`;${adminCard};\n`);
-    cy.get('[data-cy="admin-dashboard"]').should("exist");
+        cy.get("@issueCard").within(() => {
+          cy.get('[data-cy^="machine-issue-description-"]').should("contain", issueDescription);
+          cy.contains("Reported by").should("exist");
 
-    // Should see the reported machine issue
-    cy.contains(machineName).should("exist");
-    cy.contains("The machine is making weird noises.").should("exist");
-    cy.contains("Resolve").click();
+          // Step 7: Click 'Mark Resolved'
+          cy.get('[data-cy^="machine-issue-resolve-"]').click();
 
-    // Assert it's now resolved (e.g., disappears or shows 'Yes')
-    cy.contains("Resolved").next().should("contain", "Yes");
+          // Step 8: Wait and check for resolved icon
+          cy.contains("Resolving...").should("exist");
+          cy.contains("Mark Resolved").should("not.exist");
+
+          // Step 9: Confirm green resolved dot
+          cy.get("svg.text-green-500").should("exist");
+        });
+      });
   });
 });

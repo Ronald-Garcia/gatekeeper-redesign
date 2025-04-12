@@ -4,7 +4,7 @@ import { useState } from "react";
 interface ToggleableItemProps {
   title: string;
   subtitle: string;
-  details: { label: string; value: string | number }[];
+  details: { label: string; value: string | number; dataCy?: string }[];
   actions?: React.ReactNode;
   onClick?: () => void;
   dataCy?: string;
@@ -48,11 +48,11 @@ export default function ToggleableItem({
         )}
       >
         <div className="p-4 border-t border-stone-200 space-y-2">
-          {details.map((detail, index) => (
-            <p key={index} className="text-sm">
-              <span className="font-medium">{detail.label}:</span> {detail.value}
-            </p>
-          ))}
+        {details.map((detail, index) => (
+          <p key={index} className="text-sm" data-cy={detail.dataCy}>
+            <span className="font-medium">{detail.label}:</span> {detail.value}
+          </p>
+        ))}
         </div>
       </div>
     </div>

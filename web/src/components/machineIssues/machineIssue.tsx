@@ -8,10 +8,23 @@ export default function MachineIssueComponent({ issue }: { issue: MachineIssue }
       title={issue.machine.name}
       subtitle={`Reported by: ${issue.user.name} (${issue.user.JHED})`}
       details={[
-        { label: "Description", value: issue.description },
-        { label: "Reported At", value: new Date(issue.reportedAt).toLocaleString() },
-        { label: "Resolved", value: issue.resolved ? "Yes" : "No" },
+        {
+          label: "Description",
+          value: issue.description,
+          dataCy: `machine-issue-description-${issue.id}`,
+        },
+        {
+          label: "Reported At",
+          value: new Date(issue.reportedAt).toLocaleString(),
+          dataCy: `machine-issue-reported-${issue.id}`,
+        },
+        {
+          label: "Resolved",
+          value: issue.resolved ? "Yes" : "No",
+          dataCy: `machine-issue-status-${issue.id}`,
+        },
       ]}
+      
       actions={<MachineIssueActions issue={issue} />}
       dataCy={`machine-issue-${issue.id}`}
     />

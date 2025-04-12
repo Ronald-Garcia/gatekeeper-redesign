@@ -18,7 +18,7 @@ import useQueryBudgets from "@/hooks/use-query-budgetCodes";
 import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 import { turnOffMachine, turnOnMachine } from "@/data/api";
-import ReportFormModal from "@/components/modals/ReportFormmodal"; 
+import ReportFormModal from "@/components/modals/ReportFormModal"; 
 
 /*
 Display to use on gates when a user logs in. Displays BudgetCodes a user has associated with his account. 
@@ -97,13 +97,14 @@ const Interlock = () => {
             </ToggleGroup>
           </CardContent>
           <CardFooter className="flex justify-end space-x-4">
-            <Button
-              className="px-4 py-2 text-black bg-yellow-400"
-              variant="ghost"
-              onClick={handleReportIssue}
-            >
-              Report Issue
-            </Button>
+          <Button
+            data-cy="report-issue-button"
+            className="px-4 py-2 text-black bg-yellow-400"
+            variant="ghost"
+            onClick={handleReportIssue}
+          >
+            Report Issue
+          </Button>
             <Button
               data-cy="start-button"
               className="text-xl jhu-blue-button"
