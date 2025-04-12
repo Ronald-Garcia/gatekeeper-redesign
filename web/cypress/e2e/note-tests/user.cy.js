@@ -10,6 +10,7 @@ describe('Add user tests', () => {
   beforeEach(() => {
     //Before each test, go to our locally running app and use the testing carNum "1234567890777777"
     cy.visit('http://localhost:5173/kiosk')
+    cy.get('[data-cy= "kiosk-button"]').click();
     cy.get('[data-cy="cardnum-input"]').type(`;${admin_card_num};`)
     cy.get('[data-cy="cardnum-input"]').type("\n")
   })
@@ -63,6 +64,7 @@ describe('Remove user tests', () => {
   beforeEach(() => {
     //Before each test, go to our locally running app and use the testing carNum "1234567890777777"
     cy.visit('http://localhost:5173/kiosk')
+    cy.get('[data-cy= "kiosk-button"]').click();
     cy.get('[data-cy="cardnum-input"]').type(`;1234567890777777;`)
     cy.get('[data-cy="cardnum-input"]').type("\n")
 
