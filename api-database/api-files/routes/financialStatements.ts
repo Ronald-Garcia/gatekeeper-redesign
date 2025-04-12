@@ -1,10 +1,12 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { createStatementSchema, queryFinStatementParamsSchema } from "../validators/financialStatementSchemas.js";
+import { createStatementSchema, queryFinStatementParamsSchema, validateFinancialStatementIdSchema, validateTimeSchema } from "../validators/financialStatementSchemas.js";
 import { like, SQL, or, desc, asc, eq, and, count, between, gte, lte } from "drizzle-orm";
 import { budgetCodes, financialStatementsTable, machines, users } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { adminGuard } from "../middleware/adminGuard.js";
+import { HTTPException } from "hono/http-exception";
+import { authGuard } from "../middleware/authGuard.js";
 
 export const financialStatementRoutes = new Hono();
 
@@ -87,7 +89,7 @@ financialStatementRoutes.get("/fin-statements",
 
 // adding a new financial statement
 financialStatementRoutes.post("/fin-statements",
-    adminGuard,
+    authGuard,
     zValidator("json", createStatementSchema),
     async (c)=>{
 
@@ -109,6 +111,41 @@ financialStatementRoutes.post("/fin-statements",
         success:true,
         message:"Created new financial statement code",
         data:newFinStatement
+    }, 201);
+
+})
+
+//Update the time spent in a financial statement by id.
+financialStatementRoutes.patch("/fin-statements/:id",
+    authGuard,
+    zValidator("param", validateFinancialStatementIdSchema),
+    zValidator("json", validateTimeSchema),
+    async (c)=>{
+
+    const { id } = c.req.valid("param");
+    const { timeSpent } = c.req.valid("json");
+
+    //For financial statement, make sure a financial statement with matching user, machine, and budget code exists
+    const [finStatement] = await db
+        .select()
+        .from(financialStatementsTable)
+        .where(eq(financialStatementsTable.id, id));
+    
+        if (!finStatement) {
+            throw new HTTPException(404, { message: "No financial statement found" });
+        }
+    
+    //If we have the financial statement, update it and return the updated entry.
+    const [updatedStatement] = await db
+        .update(financialStatementsTable)
+        .set({timeSpent})
+        .where(eq(financialStatementsTable.id, id))
+        .returning();
+
+    return c.json({
+        success:true,
+        message:"Updated time for financial statement",
+        data:updatedStatement
     }, 201);
 
 })
