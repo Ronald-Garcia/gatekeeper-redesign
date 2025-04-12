@@ -66,6 +66,7 @@ budgetCodesRoutes.get("/budget-codes",
                 id: budgetCodes.id,
                 name: budgetCodes.name,
                 code: budgetCodes.code,
+                active: budgetCodes.active,
                 type: {
                   id: budgetCodeType.id,
                   name: budgetCodeType.name,
