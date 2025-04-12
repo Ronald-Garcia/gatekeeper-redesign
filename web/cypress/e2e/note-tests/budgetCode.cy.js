@@ -12,6 +12,7 @@ describe('Add Budget Code tests', () => {
   beforeEach(() => {
     // Before each test, visit the kiosk page.
     cy.visit('http://localhost:5173/kiosk');
+    cy.get('[data-cy= "kiosk-button"]').click();
     cy.get('[data-cy="cardnum-input"]').type(`;${admin_card_num};`)
     cy.get('[data-cy="cardnum-input"]').type("\n")
   });
@@ -48,6 +49,7 @@ describe('Add Budget Code tests', () => {
     // Fill out the form fields
     cy.get('[data-cy="enter-budget-name"]').type(testBudgetName);
     cy.get('[data-cy="enter-budget-code"]').type(testBudgetCode);
+    cy.get('[data-cy="Class"]').click();
 
     // Click the confirm (Save Changes) button to add the new budget code
     cy.get('[data-cy="budget-code-add-confirm"]').click();
@@ -66,6 +68,7 @@ describe('Deleting Budget Code tests', () => {
   beforeEach(() => {
     // Visit the kiosk page before each test. Sign in as admin.
     cy.visit('http://localhost:5173/kiosk');
+    cy.get('[data-cy= "kiosk-button"]').click();
     cy.get('[data-cy="cardnum-input"]').type(`;${admin_card_num};`)
     cy.get('[data-cy="cardnum-input"]').type("\n")
   });
@@ -77,6 +80,8 @@ describe('Deleting Budget Code tests', () => {
     const newBudget = {
       name: testBudgetName,
       code: testBudgetCode,
+      budgetCodeTypeId:1,
+     active:1
     };
 
     cy.request({
