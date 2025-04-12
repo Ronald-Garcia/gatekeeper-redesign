@@ -1098,30 +1098,35 @@ export const automateEmail = async (email: string, date: Date): Promise<boolean>
   return true;
   
 }
-export const createMachineIssue = async (userId: number, machineId: number): Promise<{
-  message: string,
-  data: MachineIssue
+export const createMachineIssue = async (
+  userId: number,
+  machineId: number,
+  description?: string
+): Promise<{
+  message: string;
+  data: MachineIssue;
 }> => {
   const response = await fetch(`${API_DB_URL}/machine-issues`, {
     method: "POST",
-    headers: {"Content-Type": "application/json"},
+    headers: { "Content-Type": "application/json" },
     credentials: "include",
     body: JSON.stringify({
       userId,
-      machineId
-    })
+      machineId,
+      ...(description && { description }), // only include if present
+    }),
   });
 
   if (!response.ok) {
     const { message }: { message: string } = await response.json();
-
     throw new Error(message);
   }
 
   const { message, data }: { message: string; data: MachineIssue } = await response.json();
 
   return { message, data };
-}
+};
+
 
 export const getMachineIssues = async(
   sort: "asc" | "desc",

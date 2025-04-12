@@ -8,6 +8,7 @@ export default function MachineIssueComponent({ issue }: { issue: MachineIssue }
       title={issue.machine.name}
       subtitle={`Reported by: ${issue.user.name} (${issue.user.JHED})`}
       details={[
+        { label: "Description", value: issue.description },
         { label: "Reported At", value: new Date(issue.reportedAt).toLocaleString() },
         { label: "Resolved", value: issue.resolved ? "Yes" : "No" },
       ]}

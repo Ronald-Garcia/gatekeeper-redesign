@@ -1,17 +1,23 @@
 import { createMachineIssue, updateMachineIssue } from "@/data/api";
 import { MachineIssue } from "@/data/types/machineIssues";
 import { toast } from "./use-toast";
+
 function useMutationMachineIssue() {
-
-
-  const reportIssue = async (userId: number, machineId: number): Promise<MachineIssue | undefined> => {
+  // 👇 Pass description as a parameter
+  const reportIssue = async (
+    userId: number,
+    machineId: number,
+    description: string
+  ): Promise<MachineIssue | undefined> => {
     try {
-      const { data } = await createMachineIssue(userId, machineId);
+      const { data } = await createMachineIssue(userId, machineId, description);
+
       toast({
         variant: "default",
         title: "Maintenance issue reported successfully!",
         description: "Issue reported successfully!",
       });
+
       return data;
     } catch (e) {
       const errorMessage = (e as Error).message;
@@ -20,6 +26,7 @@ function useMutationMachineIssue() {
         title: "Failed to report maintenance issue 😞",
         description: errorMessage,
       });
+
       return undefined;
     }
   };
@@ -33,7 +40,6 @@ function useMutationMachineIssue() {
         description: "Issue marked as resolved successfully!",
       });
 
-      
       return data;
     } catch (e) {
       const errorMessage = (e as Error).message;
@@ -42,10 +48,10 @@ function useMutationMachineIssue() {
         title: "❌ Failed to mark issue resolved",
         description: errorMessage || "Unknown error",
       });
+
       return undefined;
     }
   };
-  
 
   return {
     reportIssue,

@@ -5,11 +5,12 @@ import { QRCodeSVG } from "qrcode.react";
 type ReportFormModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  userId: number;
+  machineId: number;
 };
 
-const ReportFormModal = ({ isOpen, onClose }: ReportFormModalProps) => {
-  const formUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; // ← hardcoded QR code URL to be put here
-  
+const ReportFormModal = ({ isOpen, onClose, userId, machineId }: ReportFormModalProps) => {
+  const formUrl = `${window.location.origin}/form/${userId}/${machineId}`;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -18,8 +19,9 @@ const ReportFormModal = ({ isOpen, onClose }: ReportFormModalProps) => {
           <DialogTitle>Report Form</DialogTitle>
         </DialogHeader>
         <div className="flex flex-col items-center gap-4 text-center">
-          <p>Please scan this QR code to complete the maintenance report form.</p>
+          <p>Scan the QR code to submit a maintenance report.</p>
           <QRCodeSVG value={formUrl} size={200} />
+          <p className="text-xs break-all text-gray-500">{formUrl}</p>
         </div>
         <DialogFooter className="pt-4">
           <DialogClose asChild>
@@ -32,4 +34,5 @@ const ReportFormModal = ({ isOpen, onClose }: ReportFormModalProps) => {
 };
 
 export default ReportFormModal;
+
 
