@@ -86,11 +86,9 @@ machineIssueRoute.post(
     inactivateGraduatedUsers,
     zValidator("json", createMachineIssueSchema),
     async (c) => {
-      console.log("Reached POST /machine-issues route");
   
       try {
         const body = c.req.valid("json");
-        console.log("📩 Received machine issue body:", body);
   
         const { userId, machineId, description } = body;
   
@@ -100,7 +98,6 @@ machineIssueRoute.post(
           .where(and(eq(users.id, userId), eq(users.active, 1)));
   
         if (!user) {
-          console.warn("⚠️ User not found or inactive:", userId);
           throw new HTTPException(404, { message: "User not found" });
         }
   
@@ -110,7 +107,6 @@ machineIssueRoute.post(
           .where(eq(machines.id, machineId));
   
         if (!machine) {
-          console.warn("⚠️ Machine not found:", machineId);
           throw new HTTPException(404, { message: "Machine not found" });
         }
   
@@ -123,7 +119,7 @@ machineIssueRoute.post(
           })
           .returning();
   
-        console.log("Issue successfully inserted:", issue);
+
   
         return c.json(
           {
@@ -134,7 +130,7 @@ machineIssueRoute.post(
           201
         );
       } catch (err) {
-        console.error("Failed to create machine issue:", err);
+        
   
         return c.json(
           {
