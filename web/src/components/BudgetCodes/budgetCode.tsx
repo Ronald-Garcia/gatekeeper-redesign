@@ -6,7 +6,7 @@ export default function BudgetCodeComponent({ budgetcode }: { budgetcode: Budget
   return (
     <ToggleableItem
       title={budgetcode.name}
-      subtitle={`hi`}
+      subtitle={"Type: "+ (budgetcode.type?.name || "Unknown")}
       details={[
         { label: "Code", value: budgetcode.code }
       ]}

@@ -1,6 +1,7 @@
 import Searchbar from "../general/searchbar";
 import AddBudgetCodeDialog from "../BudgetCodes/add-budgetCode-dialogue";
 import { Dialog } from "../ui/dialog";
+import AddBudgetCodeTypeDialog from "../BudgetCodeTypes/add-budget-type";
 
 /*
 Admin dashboard component
@@ -18,6 +19,7 @@ const BudgetActions = () => {
               </div>
               <div className="flex flex-wrap gap-2 shrink-0">
                 <AddBudgetCodeDialog/>
+                <AddBudgetCodeTypeDialog />
               </div>
             </div>
           </div>

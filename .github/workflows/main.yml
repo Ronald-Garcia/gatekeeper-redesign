@@ -1,0 +1,13 @@
+# Source for original workflow creator: https://www.youtube.com/watch?v=gIHBVpJhmEk
+name: Testing and deployment
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_WEB_ID }}
+on:
+
+  workflow_dispatch:
+jobs:
+  call-workflow-api-deploy:
+    uses: ./.github/workflows/api_deploy.yaml
+  call-workflow-web-deploy:
+    uses: ./.github/workflows/web_deploy.yaml

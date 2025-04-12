@@ -2,11 +2,20 @@
 
 const WEB_URL = "http://localhost:5173";
 
-// User with machine access for LATHE 5000
+// Admin with machine access for LATHE 5000
 const userWithAccessCard = "1234567890777777";
-// User without machine access
+// Admin without machine access
 const userWithoutAccessCard = "1234567890444444";
 
+// Users should not have access
+
+// Admins without training cannot turn on active machine
+
+// Admins with training cannot turn on inactive machine
+
+// Admins with training can turn on active machines
+
+// Admins without training cannot turn on inactive machine
 
 describe("Interlock Page E2E", () => {
   beforeEach(() => {
