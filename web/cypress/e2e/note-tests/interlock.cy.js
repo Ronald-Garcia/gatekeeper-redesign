@@ -2,10 +2,13 @@
 
 const WEB_URL = "http://localhost:5173";
 
-// Admin with machine access for LATHE 5000
-const userWithAccessCard = "1234567890777777";
+// Admin with machine access and training for LATHE 5000
+const adminWithAccessCard = "1234567890777777"; // Admin with access
 // Admin without machine access
-const userWithoutAccessCard = "1234567890444444";
+const adminWithoutAccessCard = "1234567890444444"; // admin without access
+// User types
+const studentUser = "1234567890123456"
+// Admin with machine access
 
 // Users should not have access
 
@@ -24,8 +27,8 @@ describe("Interlock Page E2E", () => {
 
   });
 
-  context("User with machine access", () => {
-    it("allows the user to select a budget code and start the machine", () => {
+  context("Admin with machine access", () => {
+    it("allows the Admin to select a budget code and start the machine", () => {
 
       // homepage should be check for interlock button
       cy.get('[data-cy="interlock-button"]')
@@ -35,7 +38,7 @@ describe("Interlock Page E2E", () => {
       cy.get('[data-cy="interlock-button"]').click();
 
       // type in username
-      cy.get('[data-cy="cardnum-input"]').type(`;${userWithAccessCard};`)
+      cy.get('[data-cy="cardnum-input"]').type(`;${adminWithAccessCard};`)
       cy.get('[data-cy="cardnum-input"]').type("\n");
 
       // ensure start is not disabled
@@ -63,8 +66,8 @@ describe("Interlock Page E2E", () => {
     })
   });
 
-  context("User without machine access", () => {
-    it("Does not allow user to log in", () => {
+  context("Admin without machine access", () => {
+    it("Does not allow Admin to log in", () => {
 
       // homepage should be check for interlock button
       cy.get('[data-cy="interlock-button"]')
@@ -74,7 +77,7 @@ describe("Interlock Page E2E", () => {
       cy.get('[data-cy="interlock-button"]').click();
 
       // type in username (without access)
-      cy.get('[data-cy="cardnum-input"]').type(`;${userWithoutAccessCard};`)
+      cy.get('[data-cy="cardnum-input"]').type(`;${adminWithoutAccessCard};`)
       cy.get('[data-cy="cardnum-input"]').type("\n");
 
       //Log in as the user as user with no access to LATHE 5000
@@ -86,8 +89,8 @@ describe("Interlock Page E2E", () => {
     });
   });
 
-  context("User with machine access turns on active machine", () => {
-    it("allows the user to log into an active machine and begin use", () => {
+  context("Admin with machine access turns on active machine", () => {
+    it("allows the Admin to log into an active machine and begin use", () => {
 
       // user should be in the correct route
       // cy.url().should("include", "/interlock")
@@ -100,7 +103,7 @@ describe("Interlock Page E2E", () => {
       cy.get('[data-cy="interlock-button"]').click();
 
       // type in username
-      cy.get('[data-cy="cardnum-input"]').type(`;${userWithAccessCard};`)
+      cy.get('[data-cy="cardnum-input"]').type(`;${adminWithAccessCard};`)
       cy.get('[data-cy="cardnum-input"]').type("\n");
 
       cy.get('[data-cy="toggle-budget"]')
@@ -123,8 +126,8 @@ describe("Interlock Page E2E", () => {
     })
   });
 
-  context("User without machine access", () => {
-    it("Does not allow user to log in", () => {
+  context("Admin without machine access", () => {
+    it("Does not allow Admin to log in", () => {
       // homepage should be check for interlock button
       cy.get('[data-cy="interlock-button"]')
       .should("exist")
@@ -135,14 +138,14 @@ describe("Interlock Page E2E", () => {
       //Log in as the user as user with no access to LATHE 5000
       cy.get('[data-cy="cardnum-input"]')
         .clear()
-        .type(`;${userWithoutAccessCard};{enter}`);
+        .type(`;${adminWithoutAccessCard};{enter}`);
 
       cy.get('[data-cy="cardnum-input"]').should("have.value", "")
     });
   });
 
-  context("User with machine access does not turn on inactive machine", () => {
-    it("prevents user from logging into an inactive machine", () => {
+  context("Admin with machine access does not turn on inactive machine", () => {
+    it("prevents Admin from logging into an inactive machine", () => {
       
       // homepage should be check for interlock button
       cy.get('[data-cy="interlock-button"]')
@@ -152,7 +155,7 @@ describe("Interlock Page E2E", () => {
       cy.get('[data-cy="interlock-button"]').click();
 
       // user tries to log into an inactive machine
-      cy.get('[data-cy="cardnum-input"]').type(`;${userWithAccessCard};`)
+      cy.get('[data-cy="cardnum-input"]').type(`;${adminWithAccessCard};`)
       cy.get('[data-cy="cardnum-input"]').type("\n");
 
       // user should be blocked from logging in; user stays on the log in page and an error message should pop up
@@ -161,4 +164,3 @@ describe("Interlock Page E2E", () => {
     })
   });
 });
-
