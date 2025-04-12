@@ -81,8 +81,9 @@ const AddBudgetCodeDialog = () => {
       const newCode: BudgetCode = {
         code: budgetCode,
         id: -1,
-        name: name, 
-        type: selectedType
+        name: name,
+        type: selectedType,
+        active: 0
       }
       
       await addNewBudgetCode(newCode);
