@@ -4,6 +4,7 @@ env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_WEB_ID }}
 on:
+
   workflow_dispatch:
   workflow_call:
 
@@ -24,5 +25,5 @@ jobs:
           cd web/
           npm install --global vercel@latest
           vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-          vercel deploy --token=${{ secrets.VERCEL_TOKEN }}
-          vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }}            
+          vercel deploy --token=${{ secrets.VERCEL_TOKEN }} --force
+          vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} --force         

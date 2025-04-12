@@ -134,13 +134,21 @@ If testing newly added users, make sure to put a random charcter in the beginnin
 
 When creating a user, keep in mind that card numbers must be 16 digits and mark the checkbox if the user is an admin, which for the purposes of iteration 1 should be marked to test the user stories implented with this user.
 
+##### Deleting User
+
+When a user is deleted, they are no longer on the active tab, to see the deactivated user you can navigate to the inactive tab and look for the user on the pages, or search for them on the search bar. 
+
 ##### Creating a BudgetCode
 
 When creating a BudgetCode, keep in mind that the code must be 8 characters long. 
 
+##### Deleting BudgetCode 
+
+When a budgetCode is deleted, they are no longer on the active tab, to see the deactivated budgetCode you can navigate to the inactive tab and look for the user on the pages, or search for them on the search bar. 
+
 #### Interlock
 
-To run the interlock side of the program (what is mounted on each machine), we must first simulate being a machine
+To run the interlock side of the program (what is mounted on each machine), we must first simulate being a machine, then you login and select a budget code to use with the machine. 
 
 ##### Machine API
 
@@ -158,8 +166,19 @@ rm .env # this is the machine data
 Then, go on the web app and log in with the card number. It will prompt you to select a machine for this system (as it does not recognize one as being stored). Choose a machine, and you will be taken to the interlock page. From here, you can select a budget code and press start. A `turn-on` request should be sent to the machine API. A timer should also display. When the finish button is pressed, a financial statement is created and the page goes back to the start page.
 
 ##### Financial Statements
+For the financial statements, you have to be logged in as an admin on the kiosk. Then, when you open the dialog you have to select an interval on the calendar to view the financial statements of that interval, or send the financial statements of that interval to the email you input in the input box. To set an automated email schedule, you go to the automate tab and select the day on the calendar that you want the statements to be sent to every month. 
 
-Then, to view the financial statements, reconfigure the machine as a kiosk (with a similar process to before). Then, when in the admin dashboard, a button at the top titled "Send Financial Statements" will opena  dialog that allows for an email to be sent of all the financial statements. Currently, because of the Resend API, only the account owners email can be a receiver. To view them in the dashboard, a button is on the dialog. A list of all financial statements can be seen.
+
+##### Machines
+To see the machines, you can navigate to the machines tab from the admin kiosk. Here you can add a machinetype, which is then used when creating a machine. When creating a machine you must select a type and give the machine a name along with an hourly rate greater than 0. 
+
+
+####  Machine Issues
+
+To test machine issues, login as a user on the interlock. 
+
+Then you can report an issue in the homepage, when using a machine, and during the machine execution. 
+Once a machine issue is created, you can login as an admin on the kiosk page, then navigate to the macnine issues page and see the new issue there, which should be marked as unresolved. To resolve an issue, simply click on the text "resolve issue" and its status should be updated along with changing the status color from yellow to green. 
 
 
 
