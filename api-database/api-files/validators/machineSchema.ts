@@ -6,7 +6,7 @@ export const queryMachinesSchema = z.object({
     type: z.string().optional(),
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().optional(),
-    active: z.coerce.number().int().min(0).max(1).optional().default(1)
+    active: z.coerce.number().int().min(0).max(1).optional()
 });
 
 export const getMachineSchema = z.object({
