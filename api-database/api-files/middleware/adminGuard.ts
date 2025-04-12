@@ -9,7 +9,7 @@ export const adminGuard = async (c: Context, next: Next) => {
   }
   
  else if (!user.isAdmin) {
-    throw new HTTPException(403, { message: "Forbidden: Admins only" });
+    throw new HTTPException(403, { message: "Unauthorized: Admins only" });
   }
   return next();
 };

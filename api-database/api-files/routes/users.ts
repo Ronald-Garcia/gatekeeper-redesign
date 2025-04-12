@@ -206,7 +206,7 @@ userRoutes.get("/users/:cardNum",
     
    // Check if exists. If not, throw error.
    // Also, do a check to see if this is an old jcard scan attempt. If yes, deny.
-   if (!user || user.lastDigitOfCardNum > lastDigitOfCardNum) {    
+   if (!user) {    
        throw new HTTPException(404, { message: "User not found" });
    }
   
@@ -217,6 +217,8 @@ userRoutes.get("/users/:cardNum",
            .set({lastDigitOfCardNum})
            .where(eq(users.id, user.id))
            .returning();
+   } else if (user.lastDigitOfCardNum < lastDigitOfCardNum) {
+        throw new HTTPException(404, { message: "Error: Please update your J-Card" });
    }
   
     // Create a session using Lucia.
