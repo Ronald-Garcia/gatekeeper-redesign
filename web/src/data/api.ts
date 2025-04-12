@@ -710,7 +710,7 @@ export const getAllMachines = async (
   if (active === -1) {
     activeQuery = ""
   }
-  const response = await fetch(`${API_DB_URL}/machines?search=${search}&limit=${limit}&page=${page}&sort=${sort}&type=${type}&active=${active}`, {
+  const response = await fetch(`${API_DB_URL}/machines?search=${search}&limit=${limit}&page=${page}&sort=${sort}&type=${type}${activeQuery}`, {
     credentials: "include",
   });
 

@@ -4,6 +4,7 @@ import { useState } from "react";
 import useQueryUsers from "@/hooks/use-query-users";
 import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
+import { setActiveTab } from "@/data/store";
 
 /*
     This is the actual format of the start page, just takes toggles if you do route or not based on parent.
@@ -31,6 +32,7 @@ const UserStartPage = () => {
       e.currentTarget.value = "";
       validateUser(Number.parseInt(newCardNum), callPython).then(s => {
         if (s === "users") {
+            setActiveTab(-1);
             redirectPage($router, "userDashboardMachinesStatus");   
         }
         else {
