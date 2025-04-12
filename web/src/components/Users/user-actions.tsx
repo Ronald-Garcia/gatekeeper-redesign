@@ -80,7 +80,7 @@ export default function UserActions({ user }: UserActionsProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        { user.active === 1 && <DropdownMenuItem onClick={handleTraining}>
+        { user.active === 1 && <DropdownMenuItem data-cy={`user-training-${user.cardNum}`}  onClick={handleTraining}>
           Training
         </DropdownMenuItem>}
         { user.active === 1 && <DropdownMenuItem data-cy={`user-budget-code-${user.cardNum}`} onClick={handleBudgetCode}>
