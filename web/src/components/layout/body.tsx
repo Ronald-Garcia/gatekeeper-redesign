@@ -11,6 +11,8 @@ import KioskStartPage from "../pages/kiosk-start-page";
 import ErrorPage from "./errorPage";
 import InProgress from "../pages/in-progress";
 import HomePage from "../pages/home-page";
+import UserStartPage from "../pages/user-dashboard-start-page";
+import UserDashboard from "../pages/user-dashboard";
 
 /*
 Body component of the application
@@ -44,6 +46,7 @@ const Body = () => {
   }
   
 // following pages are only acessible to admin users
+
   else return (
 
     <>
@@ -61,6 +64,10 @@ const Body = () => {
       {router.route === "timer" && <InProgress></InProgress>}
 
       {router.route === "interlockLogin" && <StartPage></StartPage>}
+
+      {router.route === "userDashboard" && <UserStartPage></UserStartPage>}
+
+      {(router.route === "userDashboardMachinesStatus" || router.route == "userDashboardUserStats") && <UserDashboard></UserDashboard>}
 
     </>
   )  

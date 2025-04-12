@@ -114,12 +114,17 @@ function useQueryMachines(reload: boolean) {
     page: number = 1,
     limit: number = 10,
     search: string = "",
-    type: string = "") => {
+    type: string = "",
+    active: number = 0) => {
     try {
+      var activeParam = activeTab
+      if (active === -1) {
+        activeParam = -1
+      }
       const {
         data: fetchedMachines,
         meta: fetchedMetaData
-      } = await getAllMachines(sort, page, limit, search, type, activeTab);
+      } = await getAllMachines(sort, page, limit, search, type, activeParam);
       setMetaData(fetchedMetaData);
       setMachines(fetchedMachines);
     } catch (e) {

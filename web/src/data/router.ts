@@ -12,5 +12,8 @@ export const $router = createRouter({
   interlockLogin: `${BASE_URL}interlock-login`,
   financial_statements: `${BASE_URL}statements`,
   timer: `${BASE_URL}timer`,
-  machineIssues: `${BASE_URL}issues`
+  machineIssues: `${BASE_URL}issues`,
+  userDashboard: `${BASE_URL}user-dashboard`,
+  userDashboardMachinesStatus: `${BASE_URL}user-dashboard/machines-status`,
+  userDashboardUserStats: `${BASE_URL}user-dashboard/user-stats`
 });

@@ -27,6 +27,9 @@ const Searchbar = () => {
             case "machines":
                 loadMachines(undefined, undefined, undefined, localSearch);
                 break;
+            case "userDashboardMachinesStatus":
+                loadMachines(undefined, undefined, undefined, localSearch);
+                break;
             default:
         }
     }

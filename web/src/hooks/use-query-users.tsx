@@ -44,7 +44,7 @@ function useQueryUsers(reload: boolean) {
       }
     };
 
-  const validateUser = async (cardNum: number, callPython:number): Promise<"machine_login" | "users" | "start_page" | "interlock" | "kiosk">  => {
+  const validateUser = async (cardNum: number, callPython:number): Promise<"machine_login" | "users" | "start_page" | "interlock" | "kiosk" | "userDashboard">  => {
     try {
       const {
         data
