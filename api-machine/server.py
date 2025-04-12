@@ -2,6 +2,11 @@ from flask import Flask, request
 # import gpiozero
 from flask_cors import CORS, cross_origin
 import os
+import time
+
+AUTO_SHUTOFF_TIME = 10 * 60
+
+start_time = time.time()
 
 app = Flask(__name__)
 
@@ -46,6 +51,7 @@ def turn_off():
         "success": True,
         "message": "Machine turned off successfully"
     }
+
 @app.route("/whoami", methods=['POST'])
 def whoami_post():
     req_data = request.get_json()
@@ -102,7 +108,25 @@ def clear_data():
             "message": "No machine data found!"
         }
 
+@app.route("/timer", methods=['POST'])
+def timer():
+
+    remaining_time = AUTO_SHUTOFF_TIME - (time.time() - start_time)
+
+    
+    return {
+        "message": "Fetched remaining time.",
+        "success": True,
+        "data": 0 if remaining_time < 0 else remaining_time       
+    }
+
+
+
 
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
+    while True:
+        if "aa":
+            start_time = time.time()
+
