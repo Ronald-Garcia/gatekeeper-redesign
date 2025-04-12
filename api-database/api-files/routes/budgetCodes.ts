@@ -2,7 +2,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { queryBudgetCodesParamsSchema, createBudgetCode, deleteBudgetCodeSchema, updateBudgetCodeSchema, getBudgetCodeSchema } from "../validators/schemas.js";
 import { SQL, desc, asc, eq, and, count, ilike } from "drizzle-orm";
-import { budgetCodes } from "../db/schema.js";
+import { budgetCodes, budgetCodeType } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
 import { Context } from "../lib/context.js";
@@ -62,8 +62,21 @@ budgetCodesRoutes.get("/budget-codes",
 
     const [allBudgetCodes, [{ totalCount }]] = await Promise.all([
         db
-            .select()
-            .from(budgetCodes)
+            .select({
+                id: budgetCodes.id,
+                name: budgetCodes.name,
+                code: budgetCodes.code,
+                active: budgetCodes.active,
+                type: {
+                  id: budgetCodeType.id,
+                  name: budgetCodeType.name,
+                },
+              })
+            .from(budgetCodes) 
+            .innerJoin(
+                budgetCodeType,
+                eq(budgetCodes.budgetCodeTypeId, budgetCodeType.id)
+              )
             .where(and(...whereClause))
             .orderBy(...orderByClause)
             .limit(limit)
@@ -100,7 +113,16 @@ budgetCodesRoutes.post("/budget-codes",
     adminGuard,
     zValidator("json", createBudgetCode), async (c)=>{
 
-    const { name, code } = c.req.valid("json");
+    const { name, code, budgetCodeTypeId } = c.req.valid("json");
+
+     const [budgetCodeCheck1] = await db
+            .select()
+            .from(budgetCodeType)
+            .where(eq(budgetCodeType.id, budgetCodeTypeId))
+        
+        if (!budgetCodeCheck1) {
+            throw new HTTPException(404, { message: "Invalid machine type" });
+        }
 
     //Check if there is a duplicate.
     const [budgetCodeCheck] = await db
@@ -116,7 +138,8 @@ budgetCodesRoutes.post("/budget-codes",
         .insert(budgetCodes)
         .values({
             name,
-            code
+            code,
+            budgetCodeTypeId
         })
         .returning();
 

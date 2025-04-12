@@ -1,7 +1,7 @@
 import { API_DB_URL, API_MACHINE_URL } from "../env";
 import { User } from "./types/user";
 import { Training } from "./types/training"; 
-import { BudgetCode } from "./types/budgetCode"; 
+import { BudgetCode, budgetCodeType } from "./types/budgetCode"; 
 import { Machine } from "./types/machine";
 import { MachineType } from "./types/machineType";
 import { SortBudgetType, SortMachineType, SortType } from "./types/sort";
@@ -464,11 +464,13 @@ export const createBudgetCode = async (budget: BudgetCode): Promise<{
   message: string,
   data: BudgetCode
 }> => {
+
+    const { name, code, type } = budget;
   const response = await fetch(`${API_DB_URL}/budget-codes`,{
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      ...budget
+      name, code, budgetCodeTypeId: type.id,
     }),
     credentials: "include"
   })
@@ -855,6 +857,8 @@ export const getMachineTypes = async ( sort: SortType = "asc",
   return { message, data, meta };
 }
 
+
+
 /**
  * Retrieves a machine by its ID.
  * @param {number} id - The ID of the machine.
@@ -1226,3 +1230,78 @@ export const updateUserStatus = async (id: number, active: number, graduationYea
   return { message, data };
 }
 
+
+/**
+ * Retrieves machine types with optional sorting, pagination, and search.
+ * @param {SortType} sort - Sorting order, default "asc".
+ * @param {number} page - Page number, default 1.
+ * @param {number} limit - Number of machine types per page, default 10.
+ * @param {string} search - Search term, default empty string.
+ * @returns {Promise<{message: string, data: MachineType[]}>} A promise that resolves with a message and an array of machine types.
+ * @throws {Error} If the response is not ok, throws an error with the response message.
+ */
+export const getBudgetCodeType = async ( sort: SortType = "asc",
+  page: number = 1,
+  limit: number = 10,
+  search: string = ""
+
+): Promise<{
+  message: string;
+  data: budgetCodeType[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+  };
+}> => {
+  const response = await fetch(`${API_DB_URL}/budget-code-types?search=${search}&limit=${limit}&page=${page}&sort=${sort}`, {
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string} = await response.json();
+    throw new Error(message);
+  }
+
+  const { message, data, meta }: { 
+    message: string; 
+    data: budgetCodeType[];
+    meta: {
+      page: number;
+      limit: number;
+      total: number;
+    };
+  } = await response.json();
+
+  return { message, data, meta };
+}
+
+
+/**
+ * Creates a new machine type.
+ * @param {string} type - The machine type string.
+ * @returns {Promise<{message: string, data: MachineType}>} A promise that resolves with a message and the created machine type.
+ * @throws {Error} If the response is not ok, throws an error with the response message.
+ */
+export const createBudgetType = async (type: string): Promise<{
+  message: string;
+  data: budgetCodeType
+}> => {
+  const response = await fetch(`${API_DB_URL}/budget-code-types`,{
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      name: type
+    }),
+    credentials: "include"
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string} = await response.json();
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string, data: budgetCodeType } = await response.json();
+
+  return { message, data };
+}
