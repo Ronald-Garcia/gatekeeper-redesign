@@ -32,8 +32,8 @@ const InactiveTab = () => {
 
         <Tabs defaultValue="active" data-cy="active-tabs" className="tabs">
                     <TabsList className="w-full">
-                        <TabsTrigger onClick={() => {setActiveTab(1); resetSearch()}} value="active" className="w-full"> Active </TabsTrigger>
-                        <TabsTrigger onClick={() => {setActiveTab(0); resetSearch()}} value="inactive" className="w-full"> Inactive </TabsTrigger>
+                        <TabsTrigger data-cy= "active-tab" onClick={() => {setActiveTab(1); resetSearch()}} value="active" className="w-full"> Active </TabsTrigger>
+                        <TabsTrigger data-cy= "inactive-tab" onClick={() => {setActiveTab(0); resetSearch()}} value="inactive" className="w-full"> Inactive </TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="active">

@@ -117,4 +117,27 @@ describe('Deleting Budget Code tests', () => {
       cy.get(`[data-cy="no-codes"]`).should('be.visible');
     });
   });
+
+
+  
+
+it('Activating Deactivated code displays them on active tab and removes them from inactive tab ', () =>{
+
+
+})
+
 });
+
+
+
+
+describe('UI test', () => {
+
+  
+it('Test pagination, scrolling to the next page displays appropiate next page. ', () =>{
+
+
+})
+
+
+})

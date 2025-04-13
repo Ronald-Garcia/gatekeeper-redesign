@@ -1,10 +1,9 @@
 /// <reference types="cypress" />
 
-
-
 const API_DB_URL = "http://localhost:3000"
 
 let admin_card_num = "1234567890777777";
+
 describe('Add user tests', () => {
   let test_user_cardnum = "8987816946561711"
   beforeEach(() => {
@@ -18,29 +17,26 @@ describe('Add user tests', () => {
   it('Add a user and have it show up on the dashboard', () => {
 
     cy.request({
-      url: `http://localhost:3000/users/${test_user_cardnum}`,
+      url: `${API_DB_URL}/users/${test_user_cardnum}`,
       failOnStatusCode: false,
     }).then((req) => {
       //If we found a user, DELETE THEM. Otherwise, they are fine.
       
       //This is to resign in as an admin
-      cy.request(`http://localhost:3000/users/${admin_card_num}`);
+      cy.request(`${API_DB_URL}/users/${admin_card_num}`);
 
       if (req.status === 200) {
-    
         //Get the specific user id, then delete them.
         const foundUser = req.body.data
         const userId = foundUser.id
         cy.request({
           method: 'DELETE',
-          url: `http://localhost:3000/users/${userId}`,
+          url: `${API_DB_URL}/users/${userId}`,
         })
       }
     })
 
-    //Get the current length of users.
-    //const usersLength = cy.get('[data-cy=users-component]').get(length)
-    // Get add user button and click it. Assert form shows up.
+    //Get add user button and click it. Assert form shows up.
     cy.get('[data-cy="add-user-button"]').click()
     // Fill out the form.
     cy.get('[data-cy = "enter-student-name"]').type("THE_TESTING_USER_44")
@@ -65,15 +61,15 @@ describe('Remove user tests', () => {
     //Before each test, go to our locally running app and use the testing carNum "1234567890777777"
     cy.visit('http://localhost:5173/kiosk')
     cy.get('[data-cy= "kiosk-button"]').click();
-    cy.get('[data-cy="cardnum-input"]').type(`;1234567890777777;`)
+    cy.get('[data-cy="cardnum-input"]').type(`;${admin_card_num};`)
     cy.get('[data-cy="cardnum-input"]').type("\n")
 
     cy.request({
-      url: `http://localhost:3000/users/${test_user_cardnum}`,
+      url: `${API_DB_URL}/users/${test_user_cardnum}`,
       failOnStatusCode: false,
     }).then((req) => {
       //This is to resign in as an admin
-      cy.request(`http://localhost:3000/users/${admin_card_num}`);
+      cy.request(`${API_DB_URL}/users/${admin_card_num}`);
 
       //If we found a user, DELETE THEM. Otherwise, they are fine.
       if (req.status === 200) {
@@ -82,19 +78,18 @@ describe('Remove user tests', () => {
         const userId = foundUser.id
         cy.request({
           method: 'DELETE',
-          url: `http://localhost:3000/users/${userId}`,
+          url: `${API_DB_URL}/users/${userId}`,
         })
       }
     })
   })
 
-  it('Remove a user and have them not show up on the dashboard', () => {
+  it('Making a user inactive has them not show up on the dashboard in active tab, but yes on inactive tab', () => {
     
-    // Let's make sure to the user we are about to make does not exist by deleting them
-    let us = 1;
+    // Let's make sure the user we are about to add does not exist by deleting them first (if they do)
     cy.request({
       method: "POST",
-      url: `http://localhost:3000/users`,
+      url: `${API_DB_URL}/users`,
       failOnStatusCode: false,
       body: {
         name: "test",
@@ -103,20 +98,157 @@ describe('Remove user tests', () => {
         graduationYear: 2030,
         isAdmin: 1
       }
-    }).then(res => {
-        us = res.body.data.cardNum
-            // Search for component, confirm it is there.
-        cy.get('[data-cy = "searchbar"]').type("test\n");
-        cy.get(`[data-cy = ${test_user_cardnum.substring(0,15)}]`).should("be.visible").not();
+    }).then((res) => {
+      // Capture a unique identifier if needed; here we assume cardNum is sufficient.
+      const userIdentifier = res.body.data.cardNum;
+      
+      // Search for component, confirm it is there.
+      cy.get('[data-cy="searchbar"]').clear({ force: true }).type("test\n");
+      cy.get(`[data-cy="${test_user_cardnum.substring(0,15)}"]`).should("be.visible");
+      
+      // Open the user options to trigger deletion (this assumes the user trigger's data-cy uses the userIdentifier)
+      cy.get(`[data-cy="user-trigger-${userIdentifier}"]`).click();
+    });
 
-        cy.get(`[data-cy = "user-trigger-${us}"]`).click()
-    })
-    //Get the current length of users.
-    //const usersLength = cy.get('[data-cy=users-component]').get(length)
-    // Get add user button and click it. Assert form shows up.
+    // Get delete button and click it. Assert form shows up.
     cy.get('[data-cy = "user-delete"]').click()
     cy.get('[data-cy = "user-delete-confirm"]').click()
+
+    // Wait for deletion and UI refresh if necessary.
+    cy.wait(1000);
     
+    // Look up deleted user on active search and assert it does NOT exist.
+    cy.get('[data-cy="searchbar"]').clear({ force: true }).type("test\n");
+    cy.get(`[data-cy="${test_user_cardnum.substring(0,15)}"]`).should("not.exist");
+
+    cy.wait(1000);
+
+    // Switch to inactive tab and search here and assert its present. Use force click if needed.
+    cy.get('[data-cy="inactive-tab"]').click({ force: true });
+    cy.get('[data-cy="searchbar"]').clear({ force: true }).type("test\n");
+    cy.get(`[data-cy="${test_user_cardnum.substring(0,15)}"]`).should("be.visible");
+  
+  })
+
+
+  it('Activating Deactivated user displays them on active tab and removes them from inactive tab ', () => {
+        // Let's make sure the user we are about to add does not exist by deleting them first (if they do)
+    cy.request({
+      method: "POST",
+      url: `${API_DB_URL}/users`,
+      failOnStatusCode: false,
+      body: {
+        name: "test",
+        cardNum: test_user_cardnum,
+        JHED: "ttest01",
+        graduationYear: 2030,
+        isAdmin: 1
+      }
+    }).then((res) => {
+      // Capture a unique identifier if needed; here we assume cardNum is sufficient.
+      const userIdentifier = res.body.data.cardNum;
+      
+      // Search for component, confirm it is there.
+      cy.get('[data-cy="searchbar"]').clear({ force: true }).type("test\n");
+      cy.get(`[data-cy="${test_user_cardnum.substring(0,15)}"]`).should("be.visible");
+      
+      // Open the user options to trigger deletion (this assumes the user trigger's data-cy uses the userIdentifier)
+      cy.get(`[data-cy="user-trigger-${userIdentifier}"]`).click();
+    });
+
+    // Get delete button and click it. Assert form shows up.
+    cy.get('[data-cy = "user-delete"]').click()
+    cy.get('[data-cy = "user-delete-confirm"]').click()
+
+    // Wait for deletion and UI refresh if necessary.
+    cy.wait(1000);
+    
+    // Look up deleted user on active search and assert it does NOT exist.
+    cy.get('[data-cy="searchbar"]').clear({ force: true }).type("test\n");
+    cy.get(`[data-cy="${test_user_cardnum.substring(0,15)}"]`).should("not.exist");
+
+    cy.wait(1000);
+
+    // Switch to inactive tab and search here and assert its present. Use force click if needed.
+    cy.get('[data-cy="inactive-tab"]').click({ force: true });
+    cy.get('[data-cy="searchbar"]').clear({ force: true }).type("test\n");
+    cy.get(`[data-cy="${test_user_cardnum.substring(0,15)}"]`).should("be.visible");
+
+
+    // activate them
+
+
+    // assert on the active tab
   
   })
 })
+
+
+describe('UI test', () => {
+
+  // Adding proper kiosk login for pagination test using context from the previous tests.
+  beforeEach(() => {
+    cy.visit('http://localhost:5173/kiosk')
+    cy.get('[data-cy= "kiosk-button"]').click();
+    cy.get('[data-cy="cardnum-input"]').type(`;${admin_card_num};`)
+    cy.get('[data-cy="cardnum-input"]').type("\n")
+  })
+    
+  it('Test pagination, scrolling to the next page displays appropiate next page. ', () => {
+    // Ensure we are logged in with admin credentials for API calls.
+    cy.request(`${API_DB_URL}/users/${admin_card_num}`).then(() => {
+      // Now ensure there's enough active users for pagination (assumes limit=10 so at least 11 records are needed)
+      cy.request('GET', `${API_DB_URL}/users?search=&limit=100&page=1&sort=name_asc&active=1`)
+        .then(response => {
+          const currentActiveUsers = response.body.data.length;
+          const numUsersToAdd = Math.max(0, 11 - currentActiveUsers);
+          if(numUsersToAdd > 0) {
+            Cypress._.times(numUsersToAdd, (i) => {
+              // Create a unique 16-digit card number using a base value plus random offset.
+              const randomOffset = Cypress._.random(100000, 999999);
+              const cardNum = (7000000000000000 + randomOffset + i).toString();
+              cy.request({
+                method: 'POST',
+                url: `${API_DB_URL}/users`,
+                body: {
+                  name: `PAG_TEST_USER_${i}`,
+                  cardNum: cardNum,
+                  JHED: `pagtest${i}`,
+                  graduationYear: 2030,
+                  isAdmin: 1
+                },
+                failOnStatusCode: false
+              });
+            });
+          }
+        })
+        .then(() => {
+          //Set up intercept before loading for new GET request
+          cy.intercept('GET', `${API_DB_URL}/users*`).as('getUsers');
+      
+          //wait for page to load and get a peek of proper response form the user 
+          cy.wait('@getUsers').then((initialInterception) => {
+            const initialPage = initialInterception.response.body.currentPage || 1;
+            cy.get('[data-cy="pagination-current"]').should("contain.text", `${initialPage}`);
+          });
+      
+          // Click the "next" arrow to move to the next page.
+          cy.get('[data-cy="pagination-next"]').last().click();
+      
+          // Wait for the API to load page 2 data.
+          cy.wait('@getUsers').then((page2Interception) => {
+            //Verify that the API call was successful.
+            expect(page2Interception.response.statusCode).to.eq(200);
+            
+            //Get the current page number from the response
+            const page2 = page2Interception.response.body.currentPage || 2;
+            
+            // Assert that the pagination UI now shows the new current page.
+            cy.get('[data-cy="pagination-current"]').should("contain.text", `${page2}`);
+            
+         
+          });
+        });
+    });
+  });
+});
