@@ -11,6 +11,10 @@ export const createStatementSchema = z.object({
       .coerce.number().int().nonnegative(),
 });
 
+export const getStatementsOfUser = z.object({
+  id: z.coerce.number().int().positive()
+})
+
 export const queryFinStatementParamsSchema = z.object({
     to: z.coerce.date().optional(),
     from: z.coerce.date().optional(),
