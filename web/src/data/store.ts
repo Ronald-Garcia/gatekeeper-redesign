@@ -22,7 +22,7 @@ export const $hasMoreUserTrainings = atom<boolean>(false);
 export const $currentPage = atom<number>(1);
 export const $activeTab = atom<number>(1);
 export const $machine_issues = atom<MachineIssue[]>([]);
-
+export const $chart_data = atom<financialStatement[]>([]);
 
 export function setMachineIssues(issues: MachineIssue[]) {
   $machine_issues.set(issues);
@@ -446,6 +446,14 @@ export function setLimit(limit: number) {
 export const $total = atom<number>(0);
 export function setTotal(total: number) {
   $total.set(total);
+}
+
+export function setChartData(data: financialStatement[]) {
+  $chart_data.set(data);
+}
+
+export function resetChartData() {
+  $chart_data.set([]);
 }
 
 export const $max_page = atom<number>(1);
