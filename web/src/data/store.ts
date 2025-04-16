@@ -137,7 +137,6 @@ export function toggleTrainingQueue(bc: number) {
     addTrainingQueue(bc);
   }
 }
-export const $statements = atom<financialStatement[]>([]);
 
 
 
@@ -373,8 +372,19 @@ export function resetSearch() {
   $activeSearch.set("")
 }
 
+export const $statements = atom<financialStatement[]>([]);
 export function setFinancialStatements(statements: financialStatement[]) {
   $statements.set(statements);
+}
+
+export const $curStatementId = atom<number>(-1);
+export function setCurStatement(id:number) {
+  $curStatementId.set(id);
+}
+
+export const $madeStatement = atom<boolean>(false);
+export function setMadeStatement(bool:boolean) {
+  $madeStatement.set(bool);
 }
 
 logger({ $budget_code_queue })

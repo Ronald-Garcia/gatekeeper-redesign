@@ -8,7 +8,7 @@ export const createStatementSchema = z.object({
     machineId: z
       .coerce.number().int().positive(),
     timeSpent: z
-      .coerce.number().int().positive(),
+      .coerce.number().int().nonnegative(),
 });
 
 export const getStatementsOfUser = z.object({
@@ -23,3 +23,11 @@ export const queryFinStatementParamsSchema = z.object({
     limit: z.coerce.number().int().positive().optional(),
 
 });
+
+export const validateFinancialStatementIdSchema = z.object({
+  id: z.coerce.number().int().positive()
+})
+
+export const validateTimeSchema = z.object({
+  timeSpent: z.coerce.number().int().nonnegative()
+})

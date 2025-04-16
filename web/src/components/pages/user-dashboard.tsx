@@ -29,6 +29,7 @@ const UserDashboard = () => {
   const budgetLoadFunction = loadBudgets as (sort?: SearchQuerySorts, page?: number, limit?: number, search?: string) => void  
 
   const activeSearch = useStore($activeSearch);
+  
 
   useEffect(() => {
     if(!validCurrentUser()) {

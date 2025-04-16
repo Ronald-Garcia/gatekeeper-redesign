@@ -710,7 +710,7 @@ export const getAllMachines = async (
   if (active === -1) {
     activeQuery = ""
   }
-  const response = await fetch(`${API_DB_URL}/machines?search=${search}&limit=${limit}&page=${page}&sort=${sort}&type=${type}&active=${active}`, {
+  const response = await fetch(`${API_DB_URL}/machines?search=${search}&limit=${limit}&page=${page}&sort=${sort}&type=${type}${activeQuery}`, {
     credentials: "include",
   });
 
@@ -1040,6 +1040,31 @@ export const createFinancialStatements = async (userId: number, machineId: numbe
       userId,
       machineId,
       budgetCode,
+      timeSpent
+    })
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string; data: financialStatement } =
+    await response.json();
+
+  return { message, data };
+}
+
+export const updateFinancialStatements = async (statementId: number, timeSpent: number ): Promise<{
+  message: string,
+  data: financialStatement
+}> => {
+  const response = await fetch(`${API_DB_URL}/fin-statements/${statementId}`, {
+    method: "PATCH",
+    headers: {"Content-Type": "application/json"},
+    credentials: "include",
+    body: JSON.stringify({
       timeSpent
     })
   });

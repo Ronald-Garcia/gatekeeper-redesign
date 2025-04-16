@@ -119,6 +119,7 @@ function useQueryMachines(reload: boolean) {
     try {
       var activeParam = activeTab
       if (active === -1) {
+        console.log("HEY")
         activeParam = -1
       }
       const {

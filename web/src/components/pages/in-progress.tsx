@@ -6,26 +6,41 @@ import { Button } from "@/components/ui/button";
 import useMutationStatements from "@/hooks/use-mutation-financial-statements";
 import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
-import { $currentUser, $currentMachine } from "@/data/store";
+import { $currentUser, $currentMachine, setMadeStatement, $madeStatement } from "@/data/store";
 import ConfirmReportModal from "@/components/modals/ConfirmReportModal"; 
 import useMutationMachineIssue from "@/hooks/use-mutation-machineIssue";
 
 const InProgress = () => {
+    // Time, in seconds, that a financial statement is updated in.
+    const timeResolution = 10
 
     const curUser = useStore($currentUser);
     const curMachine = useStore($currentMachine);
     const { reportIssue } = useMutationMachineIssue();
 
-    const { curBudget, createStatement } = useMutationStatements();
+    const { curBudget, createStatement, updateStatement } = useMutationStatements();
     
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const [time, setTime] = useState<number>(0);
 
+    const madeStatement = useStore($madeStatement);
+
+    //If a statement hasn't been made yet or timer hit a 60 second interval.
+    
     useEffect(() => {
         const interval = setInterval(()=> {
             setTime(time => time + 1);
-        }, 1000)
+            if (!madeStatement) {
+                console.log("BILL");
+                setMadeStatement(true);
+                createStatement(0);
+            } else if ((time % timeResolution === 0)){
+                console.log(time);
+                console.log("Check3");
+                updateStatement(time);
+            }
+        }, 1000);
         return () => {
             clearInterval(interval)
         };
@@ -47,9 +62,11 @@ const InProgress = () => {
 
     
     const onSubmit = async () => {
-        await createStatement(time);
+        await updateStatement(time);
         redirectPage($router, "interlockLogin")
-    }
+    };
+    
+
     return (
         <>
             <Card>
@@ -64,18 +81,18 @@ const InProgress = () => {
                 <CardContent>
                     <div data-cy="timer" 
                         
-                        className="flex justify-center font-bold text-5xl">
+                        className="flex justify-center text-5xl font-bold">
                         <Timer time={time}></Timer>
                     </div>
                     </CardContent>
-                    <CardFooter className="relative flex justify-end items-center w-full" data-cy="submit">
-                        <Button className="bg-yellow-400 text-black px-4 py-2 ml-4" variant="ghost" onClick={(e) => { 
+                    <CardFooter className="relative flex items-center justify-end w-full" data-cy="submit">
+                        <Button className="px-4 py-2 ml-4 text-black bg-yellow-400" variant="ghost" onClick={(e) => { 
                             e.stopPropagation();  // Prevent the click from bubbling up to the CardFooter's onClick
                             handleReportIssue(); 
                         }}> 
                             Report Issue 
                         </Button>
-                        <Button className="absolute left-1/2 transform -translate-x-1/2" onClick={onSubmit}>
+                        <Button className="absolute transform -translate-x-1/2 left-1/2" onClick={onSubmit}>
                             Tap when finished!
                         </Button>
                     </CardFooter>
