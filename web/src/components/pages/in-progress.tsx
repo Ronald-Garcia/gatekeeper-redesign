@@ -7,7 +7,7 @@ import useMutationStatements from "@/hooks/use-mutation-financial-statements";
 import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 import { $currentUser, $currentMachine } from "@/data/store";
-import ReportFormModal from "@/components/modals/ReportFormmodal"; 
+import ReportFormModal from "@/components/modals/ReportFormModal"; 
 
 const InProgress = () => {
   const curUser = useStore($currentUser);
