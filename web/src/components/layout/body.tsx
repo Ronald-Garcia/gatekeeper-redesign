@@ -13,6 +13,7 @@ import InProgress from "../pages/in-progress";
 import HomePage from "../pages/home-page";
 import UserStartPage from "../pages/user-dashboard-start-page";
 import UserDashboard from "../pages/user-dashboard";
+import LostConnectionPage from "../pages/lost-connection-page";
 
 /*
 Body component of the application
@@ -64,6 +65,8 @@ const Body = () => {
       {router.route === "timer" && <InProgress></InProgress>}
 
       {router.route === "interlockLogin" && <StartPage></StartPage>}
+
+      {router.route === "lostConnectionPage" && <LostConnectionPage></LostConnectionPage>}
 
       {router.route === "userDashboard" && <UserStartPage></UserStartPage>}
 

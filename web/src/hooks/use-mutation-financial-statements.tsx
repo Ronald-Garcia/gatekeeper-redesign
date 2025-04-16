@@ -1,7 +1,9 @@
-import { createFinancialStatements, updateFinancialStatements } from "@/data/api";
+import { createFinancialStatements, turnOffMachine, updateFinancialStatements } from "@/data/api";
 import { $currentBudget, $currentMachine, $currentUser, $curStatementId, setCurStatement } from "@/data/store";
 import { useStore } from "@nanostores/react";
 import { useToast } from "./use-toast";
+import { redirectPage } from "@nanostores/router";
+import { $router } from "@/data/router";
 
 const useMutationStatements = () => {
     const curBudget = useStore($currentBudget);
@@ -37,13 +39,16 @@ const useMutationStatements = () => {
                 title: "✅ Success 😊!",
                 description: "Financial statement created successfully!"
             });
-        } catch (e) {
+        } catch (e) { // IF we lose connection, start sending an off request to the server.
             const errorMessage = (e as Error).message;
             toast({
                 variant: "destructive", 
-                title: "❌ Sorry! There was an error creating the financial statement 🙁",
+                title: "❌ Sorry! There was an error updating the financial statement 🙁",
                 description: errorMessage
             });
+
+            turnOffMachine();
+            redirectPage($router, "lostConnectionPage");
         }
     }
 

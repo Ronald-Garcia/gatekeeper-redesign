@@ -27,24 +27,27 @@ const InProgress = () => {
     const madeStatement = useStore($madeStatement);
 
     //If a statement hasn't been made yet or timer hit a 60 second interval.
+
     
     useEffect(() => {
+        
         const interval = setInterval(()=> {
             setTime(time => time + 1);
-            if (!madeStatement) {
-                console.log("BILL");
-                setMadeStatement(true);
-                createStatement(0);
-            } else if ((time % timeResolution === 0)){
-                console.log(time);
-                console.log("Check3");
-                updateStatement(time);
-            }
         }, 1000);
         return () => {
             clearInterval(interval)
         };
     }, []);
+
+    useEffect(() => {
+        if (!madeStatement) {
+            setMadeStatement(true);
+            createStatement(0);
+        } else if ((time % timeResolution === 0)){
+            updateStatement(time);
+        }
+
+    }, [time]);
 
     const handleReportIssue = () => {
         setIsModalOpen(true);
