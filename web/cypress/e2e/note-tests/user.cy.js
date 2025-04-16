@@ -226,16 +226,16 @@ describe('UI test', () => {
           //Set up intercept before loading for new GET request
           cy.intercept('GET', `${API_DB_URL}/users*`).as('getUsers');
       
-          //wait for page to load and get a peek of proper response form the user 
+          //wait for page to load check response form the user 
           cy.wait('@getUsers').then((initialInterception) => {
             const initialPage = initialInterception.response.body.currentPage || 1;
             cy.get('[data-cy="pagination-current"]').should("contain.text", `${initialPage}`);
           });
       
-          // Click the "next" arrow to move to the next page.
+          // go to the next page
           cy.get('[data-cy="pagination-next"]').last().click();
       
-          // Wait for the API to load page 2 data.
+          // ait for the API to load page data
           cy.wait('@getUsers').then((page2Interception) => {
             //Verify that the API call was successful.
             expect(page2Interception.response.statusCode).to.eq(200);
@@ -243,7 +243,7 @@ describe('UI test', () => {
             //Get the current page number from the response
             const page2 = page2Interception.response.body.currentPage || 2;
             
-            // Assert that the pagination UI now shows the new current page.
+            //Assert that the pagination UI now shows the new current page
             cy.get('[data-cy="pagination-current"]').should("contain.text", `${page2}`);
             
          
