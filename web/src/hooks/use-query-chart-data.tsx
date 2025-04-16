@@ -49,6 +49,11 @@ export function useQueryChart() {
         getChartFinancialStatements();
     }, [])
 
+    // getting & adding time for each day for all days within range
+    const getAllTimeChartData = async () => {
+      
+    }
+
     return { chartData, getChartFinancialStatements }
 }
 
