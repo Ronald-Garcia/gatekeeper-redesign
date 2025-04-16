@@ -1,6 +1,5 @@
 import { $router } from "@/data/router";
 import { useStore } from "@nanostores/react";
-import BudgetCodes from "../BudgetCodes/budgetCodes";
 import BudgetActions from "./budget-actions";
 import { ScrollArea } from "../ui/scroll-area";
 import PaginationBar from "../general/pagination-bar";
@@ -13,6 +12,7 @@ import UserSidebar from "../layout/user-sidebar";
 import useQueryMachines from "@/hooks/use-query-machines";
 import UserMachinesComponent from "../userDashboard/userDashboardMachines";
 import UserMachineActions from "../userDashboard/userDashboardMachineActions";
+import UserDashboardStats from "./user-dashboard-stats";
 
 /*
 User dashboard component
@@ -64,7 +64,7 @@ const UserDashboard = () => {
       <div className="admin-dashboard">
         <BudgetActions/>
         <ScrollArea className={`${activeSearch ? 'scroll-component-search' : 'scroll-component'}`}>
-          <BudgetCodes/>
+          <UserDashboardStats/>
         </ScrollArea>
         <PaginationBar loadFunction={budgetLoadFunction}/>
 
