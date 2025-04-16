@@ -44,7 +44,7 @@ function useQueryUsers(reload: boolean) {
       }
     };
 
-  const validateUser = async (cardNum: number, callPython:number): Promise<"machine_login" | "users" | "start_page" | "interlock" | "kiosk" | "userDashboard">  => {
+  const validateUser = async (cardNum: number, callPython:number): Promise<"machine_login" | "users" | "start_page" | "interlock" | "kiosk" | "userDashboard" | "userDashboardMachinesStatus">  => {
     try {
       const {
         data
@@ -55,14 +55,19 @@ function useQueryUsers(reload: boolean) {
 
       setCurrentUser(data);
 
-      let curMachine: Machine | "kiosk" | undefined | 0
+      let curMachine: Machine | "kiosk" | undefined | 0 
       // Call python refers to calling the machine api backend. If we are not
       // on a machine, aka we are online, don't call the machine-api, since it 
       // does not exist. Just default to kiosk
       if (callPython){
         curMachine = await getSavedMachine();
       } else {
-        curMachine = "kiosk";
+        // If we are in the user dashboard sign in, redirect that way. Otherwise, kiosk.
+        if(router?.route === "kiosk") {
+          curMachine = "kiosk";
+        } else if (router?.route === "userDashboard") {
+          return "userDashboardMachinesStatus"; 
+        }
       }
 
       // if curMachine === 0, then machine is inactive or not found

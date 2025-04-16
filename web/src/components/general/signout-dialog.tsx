@@ -11,16 +11,22 @@ import { signOut } from "@/data/api";
 import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 import { resetStores } from "@/data/store";
+import { useStore } from "@nanostores/react";
 
  
 // function that handles state of the dialogue, error handling from api
 const SignOutDialog = () => {
+    const router = useStore($router);
+  
 
     const handleSignOut = () => {
         signOut();
         resetStores();
-        redirectPage($router, "kiosk");
-
+        if (router?.route === "kiosk"){
+          redirectPage($router, "kiosk");
+        } else {
+          redirectPage($router, "userDashboard");          
+        }
     }
 
   return (
