@@ -8,6 +8,8 @@ import { SortBudgetType, SortMachineType, SortType } from "./types/sort";
 import { financialStatement } from "./types/financialStatement";
 import { MetaType } from "./types/meta";
 import { MachineIssue } from "./types/machineIssues";
+import { userStats } from "./types/user-stats";
+import { PrecisionType } from "./types/precision-type";
 
 /**
  * Turns on the machine.
@@ -1256,3 +1258,46 @@ export const updateUserStatus = async (id: number, active: number, graduationYea
   return { message, data };
 }
 
+export const getUserStatistics = async (
+  page: number = 1,
+  limit: number = 10,
+  to: Date,
+  from: Date,
+  precision: PrecisionType = "m",
+  budgetCode: number | undefined,
+  machineId: number | undefined,
+): Promise<{
+  data: userStats[],
+  message: string
+}> => {
+  const query = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+    to: to.toString(),
+    from: from.toString(),
+    precision: precision.toString(),
+  });
+
+  if (budgetCode) {
+    query.append("budgetCode", budgetCode.toString());
+  }
+
+  if (machineId) {
+    query.append("machineId", machineId.toString());
+  }
+  
+  const response = await fetch(`${API_DB_URL}/stats?${query.toString() }`, {
+    credentials: "include"}
+  )
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+
+    throw new Error(message);
+  }
+
+
+  const { message, data }: { message: string; data: userStats[] } = await response.json();
+
+  return { message, data };
+}

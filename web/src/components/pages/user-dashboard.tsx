@@ -67,8 +67,6 @@ const UserDashboard = () => {
         <ScrollArea className={`${activeSearch ? 'scroll-component-search' : 'scroll-component'}`}>
           <UserDashboardStats/>
         </ScrollArea>
-        <PaginationBar loadFunction={budgetLoadFunction}/>
-
       </div>
     </div>
     )

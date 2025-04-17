@@ -18,30 +18,19 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 import useQueryChart from "@/hooks/use-query-chart-data"
+import { useState } from "react"
 
-
-
-
-
-
-
-const chartConfig = {
-
+const timeChartConfig = {
   timeSpent: {
-    label: "Time",
+    label: "Minutes",
   },
 
-  dateAdded: {
-    label: "Month"
-  }
-
-
-  
 } satisfies ChartConfig
 
 export function UserDashboardStats() {
 
-  const { chartData } = useQueryChart();
+  const { chartData, filteredChartData, precision, setPrecision } = useQueryChart();
+  
   return (
     <Card>
       <CardHeader>
@@ -49,10 +38,10 @@ export function UserDashboardStats() {
         <CardDescription>January - June 2024</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
+        <ChartContainer config={timeChartConfig}>
           <LineChart
             accessibilityLayer
-            data={chartData}
+            data={filteredChartData}
             margin={{
               left: 12,
               right: 12,
@@ -82,7 +71,7 @@ export function UserDashboardStats() {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Trending up by 5.2% this month <TrendingUp className="w-4 h-4" />
         </div>
         <div className="leading-none text-muted-foreground">
           Showing total visitors for the last 6 months
