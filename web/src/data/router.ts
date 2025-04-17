@@ -18,3 +18,6 @@ export const $router = createRouter({
   userDashboardMachinesStatus: `${BASE_URL}user-dashboard/machines-status`,
   userDashboardUserStats: `${BASE_URL}user-dashboard/user-stats`
 });
+
+export type kioskRoutes = "users" | "budgetCodes" | "machines" | "statements" | "machineIssues"
+export type userDashboardRoutes = "userDashboardUserStats" | "userDashboardMachinesStatus" | "userDashboard"
