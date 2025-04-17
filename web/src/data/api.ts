@@ -1262,8 +1262,8 @@ export const getUserStatistics = async (
   to: Date,
   from: Date,
   precision: "m" | "h" | "d" | "w" = "m",
-  budgetCode: number | null,
-  machineId: number | null,
+  budgetCode: number | undefined,
+  machineId: number | undefined,
 ): Promise<{
   data: userStats[],
   message: string

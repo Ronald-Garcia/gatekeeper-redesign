@@ -109,7 +109,7 @@ function useQueryUsers(reload: boolean) {
       const errorMessage = (e as Error).message;
       toast({
         variant: "destructive",
-        title: "❌ Sorry! There was an error 🙁",
+        title: "❌ Sorry! There was an error; please see an admin for help 🙁",
         description: errorMessage
       });
       return (router!.route as "start_page" | "kiosk");

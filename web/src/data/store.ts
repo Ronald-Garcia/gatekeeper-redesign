@@ -8,6 +8,7 @@ import { MachineIssue } from "./types/machineIssues"
 import { logger } from "@nanostores/logger"
 import { DateRange } from "react-day-picker";
 import { MetaType } from "./types/meta";
+import { userStats } from "./types/user-stats";
 
 export const $users = atom<User[]>([]);
 export const $codes = atom<BudgetCode[]>([]);
@@ -22,7 +23,7 @@ export const $hasMoreUserTrainings = atom<boolean>(false);
 export const $currentPage = atom<number>(1);
 export const $activeTab = atom<number>(1);
 export const $machine_issues = atom<MachineIssue[]>([]);
-export const $chart_data = atom<financialStatement[]>([]);
+export const $userChart = atom<userStats[]>([]);
 
 export function setMachineIssues(issues: MachineIssue[]) {
   $machine_issues.set(issues);
@@ -449,11 +450,11 @@ export function setTotal(total: number) {
 }
 
 export function setChartData(data: financialStatement[]) {
-  $chart_data.set(data);
+  $userChart.set(data);
 }
 
 export function resetChartData() {
-  $chart_data.set([]);
+  $userChart.set([]);
 }
 
 export const $max_page = atom<number>(1);
