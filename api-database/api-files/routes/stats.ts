@@ -26,18 +26,23 @@ statsRoutes.get("/stats",
 
         switch (precision) {
             case "m":
-                castedDateAdded = sql<Date>`cast("financial_statements_table"."dateAdded" as date)`;
+                castedDateAdded = sql<Date>`to_char("financial_statements_table"."dateAdded", 'YYYY-MM-DD-HH-MI')`;
                 break;
             case "h":
-
+                castedDateAdded = sql<Date>`to_char("financial_statements_table"."dateAdded", 'YYYY-MM-DD-HH')`;
                 break;
             case "d":
                 castedDateAdded = sql<Date>`cast("financial_statements_table"."dateAdded" as date)`;
                 break;
             case "w":
+                castedDateAdded = sql<Date>`to_char("financial_statements_table"."dateAdded", 'YYYY-MM-WW')`;
                 break;
+            case "mo":
+                castedDateAdded = sql<Date>`to_char("financial_statements_table"."dateAdded", 'YYYY-MM')`;
+                break;
+            default:
+                castedDateAdded = sql<Date>`to_char("financial_statements_table"."dateAdded", 'YYYY')`;
         }
-        castedDateAdded = sql<Date>`cast("financial_statements_table"."dateAdded" as date)`;
 
         orderByClause.push(asc(castedDateAdded));
 
@@ -100,14 +105,14 @@ statsRoutes.get("/stats",
       ,
     
       db.select({
-        dateAdded: sql<Date>`cast("financial_statements_table"."dateAdded" as date)`,
+        dateAdded: castedDateAdded,
         totalTime: sum(financialStatementsTable.timeSpent)
       }).from(financialStatementsTable)
       .innerJoin(users, eq(users.id, financialStatementsTable.userId))
       .innerJoin(budgetCodes, eq(budgetCodes.id, financialStatementsTable.budgetCode))
       .innerJoin(machines, eq(machines.id, financialStatementsTable.machineId))
       .where(and(...whereClause))
-      .groupBy(sql<Date>`cast("financial_statements_table"."dateAdded" as date)`)
+      .groupBy(castedDateAdded)
       .orderBy(...orderByClause)
     ]
     );
@@ -115,7 +120,6 @@ statsRoutes.get("/stats",
 
     
     
-    const filteredStats = allStats.map(s => { return { ...s, timeSpent: s.timeSpent / 60,} });
     
     
     return c.json({
