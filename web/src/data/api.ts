@@ -8,6 +8,7 @@ import { SortBudgetType, SortMachineType, SortType } from "./types/sort";
 import { financialStatement } from "./types/financialStatement";
 import { MetaType } from "./types/meta";
 import { MachineIssue } from "./types/machineIssues";
+import { userStats } from "./types/user-stats";
 
 /**
  * Turns on the machine.
@@ -1255,3 +1256,31 @@ export const updateUserStatus = async (id: number, active: number, graduationYea
   return { message, data };
 }
 
+export const getUserStatistics = async (
+  page: number = 1,
+  limit: number = 10,
+  to: Date,
+  from: Date,
+  precision: "m" | "h" | "d" | "w" = "m",
+  budgetCode: number | null,
+  machineId: number | null,
+): Promise<{
+  data: userStats[],
+  message: string
+}> => {
+
+  const response = await fetch(`${API_DB_URL}/stats?page=${page}&limit=${limit}&to=${to}&from=${from}&precision=${precision}&budgetCode=${budgetCode}&machineId=${machineId}`, {
+    credentials: "include"}
+  )
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+
+    throw new Error(message);
+  }
+
+
+  const { message, data }: { message: string; data: userStats[] } = await response.json();
+
+  return { message, data };
+}
