@@ -89,7 +89,7 @@ export default function UserActions({ user }: UserActionsProps) {
         {user.active === 1 && <DropdownMenuItem onClick={handleDelete} className="delete-text-red" data-cy="user-delete">
           Deactivate
         </DropdownMenuItem>}
-        {user.active === 0 && <DropdownMenuItem onClick={handleActivate} className="delete-text-red" data-cy="user-delete">
+        {user.active === 0 && <DropdownMenuItem onClick={handleActivate} className="delete-text-red" data-cy="user-activate">
           Activate
         </DropdownMenuItem>}
         {user.active === 1 &&<DropdownMenuItem onClick={handleTimeout} className="delete-text-red" data-cy="user-timeout">

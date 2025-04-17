@@ -7,7 +7,7 @@ let admin_card_num = "1234567890777777";
 describe('Add user tests', () => {
   let test_user_cardnum = "8987816946561711"
   beforeEach(() => {
-    //Before each test, go to our locally running app and use the testing carNum "1234567890777777"
+    //Before each test, go to our locally running app and use the testing cardNum "1234567890777777"
     cy.visit('http://localhost:5173/kiosk')
     cy.get('[data-cy= "kiosk-button"]').click();
     cy.get('[data-cy="cardnum-input"]').type(`;${admin_card_num};`)
@@ -22,7 +22,7 @@ describe('Add user tests', () => {
     }).then((req) => {
       //If we found a user, DELETE THEM. Otherwise, they are fine.
       
-      //This is to resign in as an admin
+      //This is to re‑sign in as an admin
       cy.request(`${API_DB_URL}/users/${admin_card_num}`);
 
       if (req.status === 200) {
@@ -49,16 +49,18 @@ describe('Add user tests', () => {
     
     // Search for component, confirm it is there.
     cy.get('[data-cy = "searchbar"]').type("THE_TESTING_USER_44\n");
-    cy.get(`[data-cy = ${test_user_cardnum.substring(0,15)}]`).should("be.visible");
-  
+    
+    // now assert the new user ID cell is visible
+    cy.get(`[data-cy="${test_user_cardnum.substring(0,15)}"]`)
+      
+      .should("be.visible");
   })
 })
-
 
 describe('Remove user tests', () => {
   let test_user_cardnum = "8987816946561711"
   beforeEach(() => {
-    //Before each test, go to our locally running app and use the testing carNum "1234567890777777"
+    //Before each test, go to our locally running app and use the testing cardNum "1234567890777777"
     cy.visit('http://localhost:5173/kiosk')
     cy.get('[data-cy= "kiosk-button"]').click();
     cy.get('[data-cy="cardnum-input"]').type(`;${admin_card_num};`)
@@ -68,7 +70,7 @@ describe('Remove user tests', () => {
       url: `${API_DB_URL}/users/${test_user_cardnum}`,
       failOnStatusCode: false,
     }).then((req) => {
-      //This is to resign in as an admin
+      //This is to re‑sign in as an admin
       cy.request(`${API_DB_URL}/users/${admin_card_num}`);
 
       //If we found a user, DELETE THEM. Otherwise, they are fine.
@@ -86,13 +88,67 @@ describe('Remove user tests', () => {
 
   it('Making a user inactive has them not show up on the dashboard in active tab, but yes on inactive tab', () => {
     
+    // Let's make sure the user we are about to add does not exist by deleting them first 
+    cy.request({
+      method: "POST",
+      url: `${API_DB_URL}/users`,
+      failOnStatusCode: false,
+      body: {
+        name: "Atest",
+        cardNum: test_user_cardnum,
+        JHED: "ttest01",
+        graduationYear: 2030,
+        isAdmin: 1
+      }
+    }).then((res) => {
+      // Capture a unique identifier if needed; here we assume cardNum is sufficient.
+      const userIdentifier = res.body.data.cardNum;
+      
+      // Search for component, confirm it is there.
+      cy.get('[data-cy="searchbar"]').clear({ force: true }).type("THE_TESTING_USER_44\n");
+      
+      // scroll container to bottom before grabbing the row
+      cy.get(`[data-cy="${test_user_cardnum.substring(0,15)}"]`)
+        .should("be.visible");
+      
+      // Open the user options to trigger deletion (this assumes the user trigger's data-cy uses the userIdentifier)
+      cy.get(`[data-cy="user-trigger-${userIdentifier}"]`).click();
+    });
+
+    // Get delete button and click it. Assert form shows up.
+    cy.get('[data-cy = "user-delete"]').click()
+    cy.get('[data-cy = "user-delete-confirm"]').click()
+
+    // Wait for deletion and UI refresh if necessary.
+    cy.wait(1000);
+    
+    // Look up deleted user on active search and assert it does NOT exist.
+    cy.get('[data-cy="searchbar"]').clear({ force: true }).type("THE_TESTING_USER_44\n");
+    // scroll container again
+
+    cy.get(`[data-cy="${test_user_cardnum.substring(0,15)}"]`).should("not.exist");
+
+    cy.wait(1000);
+
+    // Switch to inactive tab and search here and assert its present. Use force click if needed.
+    cy.get('[data-cy="inactive-tab"]').click({ force: true });
+    cy.get('[data-cy="searchbar"]').clear({ force: true }).type("THE_TESTING_USER_44\n");
+    // scroll container in inactive view
+
+    cy.get(`[data-cy="${test_user_cardnum.substring(0,15)}"]`)
+      
+      .should("be.visible");
+  })
+
+
+  it('Activating Deactivated user displays them on active tab and removes them from inactive tab ', () => {
     // Let's make sure the user we are about to add does not exist by deleting them first (if they do)
     cy.request({
       method: "POST",
       url: `${API_DB_URL}/users`,
       failOnStatusCode: false,
       body: {
-        name: "test",
+        name: "Atest",
         cardNum: test_user_cardnum,
         JHED: "ttest01",
         graduationYear: 2030,
@@ -103,7 +159,7 @@ describe('Remove user tests', () => {
       const userIdentifier = res.body.data.cardNum;
       
       // Search for component, confirm it is there.
-      cy.get('[data-cy="searchbar"]').clear({ force: true }).type("test\n");
+      cy.get('[data-cy="searchbar"]').clear({ force: true }).type("THE_TESTING_USER_44\n");
       cy.get(`[data-cy="${test_user_cardnum.substring(0,15)}"]`).should("be.visible");
       
       // Open the user options to trigger deletion (this assumes the user trigger's data-cy uses the userIdentifier)
@@ -118,71 +174,33 @@ describe('Remove user tests', () => {
     cy.wait(1000);
     
     // Look up deleted user on active search and assert it does NOT exist.
-    cy.get('[data-cy="searchbar"]').clear({ force: true }).type("test\n");
+    cy.get('[data-cy="searchbar"]').clear({ force: true }).type("THE_TESTING_USER_44\n");
     cy.get(`[data-cy="${test_user_cardnum.substring(0,15)}"]`).should("not.exist");
 
     cy.wait(1000);
 
     // Switch to inactive tab and search here and assert its present. Use force click if needed.
     cy.get('[data-cy="inactive-tab"]').click({ force: true });
-    cy.get('[data-cy="searchbar"]').clear({ force: true }).type("test\n");
+    cy.get('[data-cy="searchbar"]').clear({ force: true }).type("THE_TESTING_USER_44\n");
     cy.get(`[data-cy="${test_user_cardnum.substring(0,15)}"]`).should("be.visible");
-  
-  })
 
 
-  it('Activating Deactivated user displays them on active tab and removes them from inactive tab ', () => {
-        // Let's make sure the user we are about to add does not exist by deleting them first (if they do)
-    cy.request({
-      method: "POST",
-      url: `${API_DB_URL}/users`,
-      failOnStatusCode: false,
-      body: {
-        name: "test",
-        cardNum: test_user_cardnum,
-        JHED: "ttest01",
-        graduationYear: 2030,
-        isAdmin: 1
-      }
-    }).then((res) => {
-      // Capture a unique identifier if needed; here we assume cardNum is sufficient.
-      const userIdentifier = res.body.data.cardNum;
-      
-      // Search for component, confirm it is there.
-      cy.get('[data-cy="searchbar"]').clear({ force: true }).type("test\n");
-      cy.get(`[data-cy="${test_user_cardnum.substring(0,15)}"]`).should("be.visible");
-      
-      // Open the user options to trigger deletion (this assumes the user trigger's data-cy uses the userIdentifier)
-      cy.get(`[data-cy="user-trigger-${userIdentifier}"]`).click();
-    });
-
-    // Get delete button and click it. Assert form shows up.
-    cy.get('[data-cy = "user-delete"]').click()
-    cy.get('[data-cy = "user-delete-confirm"]').click()
-
-    // Wait for deletion and UI refresh if necessary.
-    cy.wait(1000);
     
-    // Look up deleted user on active search and assert it does NOT exist.
-    cy.get('[data-cy="searchbar"]').clear({ force: true }).type("test\n");
-    cy.get(`[data-cy="${test_user_cardnum.substring(0,15)}"]`).should("not.exist");
+    // Open the user options to trigger deletion 
 
     cy.wait(1000);
-
-    // Switch to inactive tab and search here and assert its present. Use force click if needed.
-    cy.get('[data-cy="inactive-tab"]').click({ force: true });
-    cy.get('[data-cy="searchbar"]').clear({ force: true }).type("test\n");
-    cy.get(`[data-cy="${test_user_cardnum.substring(0,15)}"]`).should("be.visible");
+    cy.get(`[data-cy="user-trigger-${test_user_cardnum.substring(0,15)}"]`).click({ force: true });
+    cy.get('[data-cy = "user-activate"]').click()
+    cy.get('[data-cy = "user-activate-confirm"]').click()
 
 
-    // activate them
-
-
-    // assert on the active tab
-  
+   // assert on the active tab
+   cy.get('[data-cy="active-tab"]').click({ force: true });
+   cy.get('[data-cy="searchbar"]').clear({ force: true }).type("THE_TESTING_USER_44\n");
+   cy.get(`[data-cy="${test_user_cardnum.substring(0,15)}"]`).should("be.visible");
+ 
   })
 })
-
 
 describe('UI test', () => {
 

@@ -17,7 +17,7 @@ export default function Users() {
           {userList.length === 0 ? (
             <p data-cy="no-users">No users found!</p>
           ) : 
-          <div className="space-y-4">
+          <div  className="space-y-4">
               {userList.map((user) => (
                 <UserComponent key={user.id} user={user} />
               ))}

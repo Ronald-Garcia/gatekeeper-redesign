@@ -44,7 +44,7 @@ import ActivateBudgetCodeDialog from "./activate-budgetcode";
           {budgetcode.active === 1 && <DropdownMenuItem onClick={handleDelete} className="delete-text-red" data-cy={`budget-code-delete-${budgetcode.id}`} >
             Deactivate
           </DropdownMenuItem>}
-          {budgetcode.active === 0 && <DropdownMenuItem onClick={handleActivate} className="" data-cy={`budget-code-delete-${budgetcode.id}`} >
+          {budgetcode.active === 0 && <DropdownMenuItem onClick={handleActivate} className="" data-cy={`budget-code-activate-${budgetcode.id}`} >
             Activate
           </DropdownMenuItem>}
         </DropdownMenuContent>
