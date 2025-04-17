@@ -12,6 +12,6 @@ export type userStats = {
         name: string;
         hourlyRate: number;
     };
-    dateAdded: string;
+    dateAdded: Date;
     timeSpent: number;
 }

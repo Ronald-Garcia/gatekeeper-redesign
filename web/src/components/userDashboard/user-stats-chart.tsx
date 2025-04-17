@@ -29,7 +29,7 @@ const timeChartConfig = {
 
 export function UserDashboardStats() {
 
-  const { chartData } = useQueryChart();
+  const { chartData, filteredChartData, precision, setPrecision } = useQueryChart();
   
   return (
     <Card>
@@ -41,7 +41,7 @@ export function UserDashboardStats() {
         <ChartContainer config={timeChartConfig}>
           <LineChart
             accessibilityLayer
-            data={chartData}
+            data={filteredChartData}
             margin={{
               left: 12,
               right: 12,

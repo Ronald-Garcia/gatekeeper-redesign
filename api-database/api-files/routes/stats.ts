@@ -70,31 +70,26 @@ statsRoutes.get("/stats",
         
     const offset = (page - 1) * limit;
     
-    const [allStats, [{ totalCount }], aggregateTime] = await Promise.all([
-        db.select({
-            user: {
-                name: users.name,
-                JHED: users.JHED,
-            },
-            budgetCode: {
-              name: budgetCodes.name,
-              code: budgetCodes.code
-            },
-            machine: {
-              name: machines.name,
-              hourlyRate: machines.hourlyRate
-            },
-            dateAdded: financialStatementsTable.dateAdded,
-            timeSpent: financialStatementsTable.timeSpent
+    const aggregateTimeSQL = db.select({
+            id: users.id,
+            dateAdded: castedDateAdded.as("date"),
+            totalTime: sum(financialStatementsTable.timeSpent).as("time"),
           }).from(financialStatementsTable)
-                                          .innerJoin(users, eq(users.id, financialStatementsTable.userId))
-                                          .innerJoin(budgetCodes, eq(budgetCodes.id, financialStatementsTable.budgetCode))
-                                          .innerJoin(machines, eq(machines.id, financialStatementsTable.machineId))
-                                          .where(and(...whereClause))
-                                          .limit(limit)
-                                          .offset(offset)
-                                          .orderBy(...orderByClause),
+          .innerJoin(users, eq(users.id, financialStatementsTable.userId))
+          .innerJoin(budgetCodes, eq(budgetCodes.id, financialStatementsTable.budgetCode))
+          .innerJoin(machines, eq(machines.id, financialStatementsTable.machineId))
+          .where(and(...whereClause))
+          .groupBy(users.id, castedDateAdded).as("stats")
 
+    
+
+    // const aggregateTimeSQL = db.select({
+    //     dateAdded: castedDateAdded.as("agasdf"),
+    //     totalTime: sum(financialStatementsTable.timeSpent).as("total_time")      
+    // }).from(financialStatementsTable)
+    // .groupBy(castedDateAdded).as("aggregateTimeSQL");
+
+    const [[{ totalCount }], aggregateTime] = await Promise.all([
         db
           .select({ totalCount: count() })
           .from(financialStatementsTable)
@@ -104,17 +99,27 @@ statsRoutes.get("/stats",
           .where(and(...whereClause))
       ,
     
-      db.select({
-        dateAdded: castedDateAdded,
-        totalTime: sum(financialStatementsTable.timeSpent)
-      }).from(financialStatementsTable)
-      .innerJoin(users, eq(users.id, financialStatementsTable.userId))
-      .innerJoin(budgetCodes, eq(budgetCodes.id, financialStatementsTable.budgetCode))
-      .innerJoin(machines, eq(machines.id, financialStatementsTable.machineId))
-      .where(and(...whereClause))
-      .groupBy(castedDateAdded)
-      .orderBy(...orderByClause)
-    ]
+        db
+            .select({
+                user: {
+                    name: users.name,
+                    JHED: users.JHED,
+                },
+                budgetCode: {
+                name: budgetCodes.name,
+                code: budgetCodes.code
+                },
+                machine: {
+                name: machines.name,
+                hourlyRate: machines.hourlyRate
+                },
+                dateAdded: aggregateTimeSQL.dateAdded,
+                timeSpent: aggregateTimeSQL.totalTime
+          }).from(aggregateTimeSQL)
+            .where(and(...whereClause))
+          
+
+        ]
     );
 
 
@@ -124,7 +129,7 @@ statsRoutes.get("/stats",
     
     return c.json({
         success:true,
-        data: aggregateTime,
+        data: aggregateTimeSQL,
         meta: {
             page,
             limit,

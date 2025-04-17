@@ -9,6 +9,7 @@ import { financialStatement } from "./types/financialStatement";
 import { MetaType } from "./types/meta";
 import { MachineIssue } from "./types/machineIssues";
 import { userStats } from "./types/user-stats";
+import { PrecisionType } from "./types/precision-type";
 
 /**
  * Turns on the machine.
@@ -1261,7 +1262,7 @@ export const getUserStatistics = async (
   limit: number = 10,
   to: Date,
   from: Date,
-  precision: "m" | "h" | "d" | "w" = "m",
+  precision: PrecisionType = "m",
   budgetCode: number | undefined,
   machineId: number | undefined,
 ): Promise<{
