@@ -382,11 +382,6 @@ export function setCurStatement(id:number) {
   $curStatementId.set(id);
 }
 
-export const $madeStatement = atom<boolean>(false);
-export function setMadeStatement(bool:boolean) {
-  $madeStatement.set(bool);
-}
-
 logger({ $budget_code_queue })
 export const $curbudgets = atom<BudgetCode[]>([])
 export function setCurBudgets(newBudgetCodes: BudgetCode[]) {

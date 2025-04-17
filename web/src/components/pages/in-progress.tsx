@@ -6,25 +6,26 @@ import { Button } from "@/components/ui/button";
 import useMutationStatements from "@/hooks/use-mutation-financial-statements";
 import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
-import { $currentUser, $currentMachine, setMadeStatement, $madeStatement } from "@/data/store";
+import { $currentUser } from "@/data/store";
 import ConfirmReportModal from "@/components/modals/ConfirmReportModal"; 
 import useMutationMachineIssue from "@/hooks/use-mutation-machineIssue";
+import useMutationMachines from "@/hooks/use-mutation-machines";
 
 const InProgress = () => {
     // Time, in seconds, that a financial statement is updated in.
-    const timeResolution = 10
+    const timeResolution = 450 // Update every 7 and a half minutes.
 
     const curUser = useStore($currentUser);
-    const curMachine = useStore($currentMachine);
     const { reportIssue } = useMutationMachineIssue();
 
     const { curBudget, createStatement, updateStatement } = useMutationStatements();
+    const {curMachine, modifyMachine} = useMutationMachines();
     
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const [time, setTime] = useState<number>(0);
 
-    const madeStatement = useStore($madeStatement);
+    const [madeStatement, setMadeStatement] = useState(false);
 
     //If a statement hasn't been made yet or timer hit a 60 second interval.
 
@@ -39,12 +40,18 @@ const InProgress = () => {
         };
     }, []);
 
+    const handleCreation = async () => {
+        await createStatement(0);
+        setMadeStatement(true);
+    
+    }
     useEffect(() => {
-        if (!madeStatement) {
-            setMadeStatement(true);
-            createStatement(0);
-        } else if ((time % timeResolution === 0)){
+        if (!madeStatement && time == 1) {
+            handleCreation();
+        } else if ((time % timeResolution === 0) && madeStatement){
             updateStatement(time);
+            const curDate = new Date();
+            modifyMachine(curMachine.id, 1, curDate );
         }
 
     }, [time]);
@@ -65,7 +72,9 @@ const InProgress = () => {
 
     
     const onSubmit = async () => {
-        await updateStatement(time);
+        if (time > 0) {
+            await updateStatement(time);
+        }
         redirectPage($router, "interlockLogin")
     };
     

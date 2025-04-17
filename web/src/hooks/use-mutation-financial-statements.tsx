@@ -15,6 +15,7 @@ const useMutationStatements = () => {
     const createStatement = async (timeSpent: number) => {
         try {
             const {data} = await createFinancialStatements(currentUser.id, currentMachine.id, curBudget.id, timeSpent);
+            console.log("Making statement");
             setCurStatement(data.id);
             toast({
                 variant: "default",
@@ -33,11 +34,12 @@ const useMutationStatements = () => {
 
     const updateStatement = async (timeSpent: number) => {
         try {
+            console.log(currentStatementId);
             await updateFinancialStatements(currentStatementId, timeSpent);
             toast({
                 variant: "default",
                 title: "✅ Success 😊!",
-                description: "Financial statement created successfully!"
+                description: "Financial statement updated successfully!"
             });
         } catch (e) { // IF we lose connection, start sending an off request to the server.
             const errorMessage = (e as Error).message;

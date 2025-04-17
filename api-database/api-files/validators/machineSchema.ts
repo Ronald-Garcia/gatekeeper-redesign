@@ -22,7 +22,8 @@ export const createMachineSchema = z.object({
     name: z.string(),
     machineTypeId: z.coerce.number().positive().int(),
     hourlyRate: z.coerce.number().positive().int().max(1000),
-    active: z.coerce.number().int().min(0).max(1)
+    active: z.coerce.number().int().min(0).max(1),
+    lastTimeUsed: z.coerce.date().optional(),
 });
 
 export const updateMachineSchema = createMachineSchema.partial();

@@ -1,12 +1,14 @@
 import {  updateMachine, createMachine, createMachineType, deleteMachine, saveCurrentMachine } from "@/data/api";
-import { addNewMachineType, appendMachine, deleteOldMachineType, removeMachine, setCurrentMachine, setKiosk } from "@/data/store";
+import { $currentMachine, addNewMachineType, appendMachine, deleteOldMachineType, removeMachine, setCurrentMachine, setKiosk } from "@/data/store";
 import { Machine } from "@/data/types/machine";
 import { useToast } from "./use-toast";
+import { useStore } from "@nanostores/react";
 
 //primarily has functions handling state of decks after app is loaded, pretty much what's on posts UI but for this application
 
 function useMutationMachines() {
     const { toast } = useToast();
+    const curMachine = useStore($currentMachine);
 
     /**
       Hook to save machine
@@ -77,9 +79,9 @@ function useMutationMachines() {
     }
 
 
-  const modifyMachine = async (machine_id: number, active: number) => {
+  const modifyMachine = async (machine_id: number, active: number, lastTimeUsed?: Date) => {
     try {
-      await updateMachine(machine_id, active);
+      await updateMachine(machine_id, active, lastTimeUsed);
       toast({
         variant: "default",
         title: `✅ Success 😊!`, 
@@ -163,7 +165,7 @@ function useMutationMachines() {
         } 
     }
 
-    return { saveMachine, makeKiosk, removeMachineById, addMachine, addMachineType, deleteMachineType, modifyMachine}
+    return { curMachine, saveMachine, makeKiosk, removeMachineById, addMachine, addMachineType, deleteMachineType, modifyMachine}
 }
 
 export default useMutationMachines;

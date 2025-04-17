@@ -950,13 +950,14 @@ export const deleteMachine = async (id: number) => {
  * @returns {Promise<{message: string, data: Machine}>} A promise that resolves with a message and the updated machine.
  * @throws {Error} If the response is not ok, throws an error with the response message.
  */
-export const updateMachine = async (id: number, active: number) => {
+export const updateMachine = async (id: number, active: number, lastTimeUsed?:Date ) => {
   const response = await fetch(`${API_DB_URL}/machines/${id}`,{
     method: "PATCH",
     headers: {"Content-Type": "application/json"},
     credentials:"include",
     body: JSON.stringify({
-      active: active
+      active: active,
+      lastTimeUsed
     })
   });
 
