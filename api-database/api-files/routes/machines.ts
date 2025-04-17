@@ -82,7 +82,8 @@ machineRoutes.get("/machines",
             machineType: {
                 id: machineTypes.id,
                 name: machineTypes.name
-            }
+            },
+            lastTimeUsed: machines.lastTimeUsed,
         })
         .from(machines)
         .innerJoin(machineTypes, eq(machineTypes.id, machines.machineTypeId))
@@ -130,7 +131,8 @@ machineRoutes.get("/machines/:id",
             machineType: {
                 id: machineTypes.id,
                 name: machineTypes.name
-            }
+            },
+            lastTimeUsed: machines.lastTimeUsed,
         })
         .from(machines)
         .innerJoin(machineTypes, eq(machines.machineTypeId, machineTypes.id))
@@ -181,7 +183,7 @@ machineRoutes.post("/machines",
             name,
             machineTypeId,
             active,
-            hourlyRate
+            hourlyRate,
         })
         .returning();
 
@@ -200,7 +202,8 @@ machineRoutes.post("/machines",
             hourlyRate: newMachine.hourlyRate,
             machineType: machineType,
             id: newMachine.id,
-            active: newMachine.active
+            active: newMachine.active,
+            lastTimeUsed: newMachine.lastTimeUsed
         }
 
     }, 201);

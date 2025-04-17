@@ -66,7 +66,6 @@ const AddMachineDialog = () => {
     //async function with editing logic, including error handling
     const handleAddMachine = async () => {
         if (!validateFields()) {
-            console.log("nope");
             return;
         }
 

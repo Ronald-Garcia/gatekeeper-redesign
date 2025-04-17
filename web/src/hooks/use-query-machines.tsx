@@ -1,5 +1,5 @@
 import { fetchCurrentMachine, getAllMachines, getAllTrainingsOfUser, getMachine, getMachineTypes } from "@/data/api"
-import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes, appendMachineTypes, $activeTab, setMetaData } from "@/data/store";
+import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes, appendMachineTypes, $mix_active, setMetaData, $activeTab } from "@/data/store";
 import { Machine } from "@/data/types/machine";
 import { MachineType } from "@/data/types/machineType";
 
@@ -15,8 +15,9 @@ function useQueryMachines(reload: boolean) {
   const [machineTypesIsLoading, setMachineTypesIsLoading] = useState(false);
   const { toast } = useToast();
 
+  const mixActive = useStore($mix_active);
   const activeTab = useStore($activeTab);
-
+  
   const getSavedMachine = async (): Promise<Machine | "kiosk" | undefined | 0> => {
     try {
       const { data } = await fetchCurrentMachine();
@@ -114,12 +115,10 @@ function useQueryMachines(reload: boolean) {
     page: number = 1,
     limit: number = 10,
     search: string = "",
-    type: string = "",
-    active: number = 0) => {
+    type: string = "") => {
     try {
-      var activeParam = activeTab
-      if (active === -1) {
-        console.log("HEY")
+      var activeParam = activeTab;
+      if (mixActive) {
         activeParam = -1
       }
       const {

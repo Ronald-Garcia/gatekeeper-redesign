@@ -26,7 +26,6 @@ function useQueryMachineIssues(reload: boolean) {
       setIsLoading(true);
 
       const { data, meta } = await getMachineIssues(sort, page, limit);
-      console.log(data);
 
       const formatted: MachineIssue[] = data.map((issue: MachineIssue) => ({
         ...issue,

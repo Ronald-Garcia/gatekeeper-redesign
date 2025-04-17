@@ -189,6 +189,7 @@ const defaultMachine: Machine = {
   },
   hourlyRate: 0,
   active:-1,
+  lastTimeUsed: "",
 }
 
 const defaultBudget: BudgetCode = {
@@ -458,11 +459,16 @@ export function setMaxPage(max_page: number) {
 }
 logger({ $activeTab, $users })
 
+export const $mix_active = atom<boolean>(false);
+export function setMixActive(status: boolean) {
+  $mix_active.set(status);
+}
+
 export function resetStores() {
   resetDashboardSearch();
   resetDate();
   resetDateRange();
   resetSearch();
   clearCurrentUser();
-  
+  setMixActive(false);
 }

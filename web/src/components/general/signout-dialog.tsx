@@ -22,10 +22,10 @@ const SignOutDialog = () => {
     const handleSignOut = () => {
         signOut();
         resetStores();
-        if (router?.route === "kiosk"){
-          redirectPage($router, "kiosk");
-        } else {
+        if (router?.route === "userDashboardUserStats" || router?.route === "userDashboardMachinesStatus" ){
           redirectPage($router, "userDashboard");          
+        } else {
+          redirectPage($router, "kiosk");
         }
     }
 

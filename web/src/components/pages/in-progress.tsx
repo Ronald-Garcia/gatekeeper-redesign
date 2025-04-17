@@ -13,7 +13,7 @@ import useMutationMachines from "@/hooks/use-mutation-machines";
 
 const InProgress = () => {
     // Time, in seconds, that a financial statement is updated in.
-    const timeResolution = 450 // Update every 7 and a half minutes.
+    const timeResolution = 450; // Update every 7 and a half minutes.
 
     const curUser = useStore($currentUser);
     const { reportIssue } = useMutationMachineIssue();
@@ -42,6 +42,8 @@ const InProgress = () => {
 
     const handleCreation = async () => {
         await createStatement(0);
+        const curDate = new Date();
+        await modifyMachine(curMachine.id, 1, curDate );
         setMadeStatement(true);
     
     }
@@ -74,6 +76,8 @@ const InProgress = () => {
     const onSubmit = async () => {
         if (time > 0) {
             await updateStatement(time);
+            const curDate = new Date();
+            await modifyMachine(curMachine.id, 1, curDate );    
         }
         redirectPage($router, "interlockLogin")
     };

@@ -44,13 +44,8 @@ export const turnOnMachine = async (): Promise<boolean> => {
     headers: {"Content-Type": "application/json"},
     credentials: "include",
   });
-  console.log("after response await")
-  console.log(response);
   const { message }: { message: string } = await response.json();
-  console.log("print response")
-  console.log(response.ok)
   if (!response.ok) {
-    console.log(response)
     throw new Error(message);
   }
 
@@ -211,7 +206,7 @@ export const getUser = async (cardNum: number): Promise<{
  */
 // Sign out a user
 export const signOut = async (): Promise<boolean> => {
-  const response = await fetch(`${API_DB_URL}/sign-out`, {
+  const response = await fetch(`${API_DB_URL}/logout`, {
     method: "POST",
     credentials: "include", 
   });
