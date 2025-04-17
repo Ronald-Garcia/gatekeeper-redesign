@@ -449,7 +449,7 @@ export function setTotal(total: number) {
   $total.set(total);
 }
 
-export function setChartData(data: financialStatement[]) {
+export function setChartData(data: userStats[]) {
   $userChart.set(data);
 }
 

@@ -1268,8 +1268,23 @@ export const getUserStatistics = async (
   data: userStats[],
   message: string
 }> => {
+  const query = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+    to: to.toString(),
+    from: from.toString(),
+    precision: precision.toString(),
+  });
 
-  const response = await fetch(`${API_DB_URL}/stats?page=${page}&limit=${limit}&to=${to}&from=${from}&precision=${precision}&budgetCode=${budgetCode}&machineId=${machineId}`, {
+  if (budgetCode) {
+    query.append("budgetCode", budgetCode.toString());
+  }
+
+  if (machineId) {
+    query.append("machineId", machineId.toString());
+  }
+  
+  const response = await fetch(`${API_DB_URL}/stats?${query.toString() }`, {
     credentials: "include"}
   )
 

@@ -18,9 +18,9 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 import useQueryChart from "@/hooks/use-query-chart-data"
+import { useState } from "react"
 
 const timeChartConfig = {
-
   timeSpent: {
     label: "Minutes",
   },
@@ -30,11 +30,6 @@ const timeChartConfig = {
 export function UserDashboardStats() {
 
   const { chartData } = useQueryChart();
-
-
-
-
-
   
   return (
     <Card>
