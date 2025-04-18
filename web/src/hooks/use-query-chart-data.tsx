@@ -1,29 +1,35 @@
 import { getUserStatistics } from "@/data/api";
-import { $userChart, $date_range, resetDateRange, setChartData, setDateRange } from "@/data/store";
+import { $userChart, $date_range, setChartData, $filtered_chart, setFilteredChart, clearFilteredChart } from "@/data/store";
 import { useStore } from "@nanostores/react";
 import { toast } from "./use-toast";
 import { useEffect, useState } from "react";
 import { PrecisionType } from "@/data/types/precision-type";
+import { userStats } from "@/data/types/user-stats";
 
 
 export function useQueryChart() {
 
     const dateRange = useStore($date_range);
     const chartData = useStore($userChart);
+    const filteredChartData = useStore($filtered_chart)
     const [precision, setPrecision] = useState<PrecisionType>("d");
-    const [filteredChartData, setFilteredChartData] = useState<{ dateAdded: Date, totalTime: number }[]>([]);
 
 
-    // use Effect should update when user stats change
-    useEffect(() => {
+    const fetchChartData = async () => {
+
       let newXAxis: Date[] = [];
-
-      getUserChartData();
 
       if (!dateRange || !dateRange.to || !dateRange.from) {
         return;
       }
-      let date = new Date(dateRange.from);
+
+      const localChartData = await getUserChartData()
+
+      if (!localChartData) {
+        return;
+      }
+      let date: Date = new Date(dateRange.from);
+
 
       while (date <= dateRange.to) {
           newXAxis = newXAxis.concat(new Date(date));
@@ -52,18 +58,18 @@ export function useQueryChart() {
 
 
 
-      const chartDataLength = chartData.length;
+      const chartDataLength = localChartData.length;
 
       let i = 0;
 
-      const newChartData: { dateAdded: Date, totalTime: number }[] = newXAxis.map(date => {
+      const newChartData: userStats[] = newXAxis.map(date => {
 
         const defaultData = { dateAdded: date, totalTime: 0};
         if (i >= chartDataLength) {
           return defaultData;
         }
 
-        const chartDate = new Date(chartData[i].dateAdded);
+        const chartDate = new Date(localChartData[i].dateAdded);
         let check;
 
         switch (precision) {
@@ -87,33 +93,36 @@ export function useQueryChart() {
             break;
         }
         if (check) {
-          return { dateAdded: new Date(chartData[i].dateAdded), totalTime: chartData[i++].totalTime }; 
+          return { dateAdded: new Date(localChartData[i].dateAdded), totalTime: localChartData[i++].totalTime }; 
         } else {
           return defaultData;
         }
       })
 
-      setFilteredChartData(newChartData);
+      setFilteredChart(newChartData);
+    }
 
-      console.log(newChartData);
+    // use Effect should update when user stats change
+    useEffect(() => {
       
+      fetchChartData().then(() => {
 
-
+      })
+      
     }, [precision, dateRange])
 
-
     useEffect(() => {
-        getUserChartData();
+      clearFilteredChart()
     }, [])
 
     // getting & adding time for each day for all days within range
     const getUserChartData = async (
       page: number = 1,
-      limit: number = 10,
-      precision: "m" | "h" | "d" | "w" = "d",
+      limit: number = 100,
+      precision: PrecisionType = "d",
       budgetCode: number | undefined = undefined,
       machineId: number | undefined = undefined,
-    ) => {
+    ): Promise<userStats[] | undefined> => {
       try {
 
         // getting the date
@@ -123,9 +132,14 @@ export function useQueryChart() {
         const to = dateRange && dateRange.to ? dateRange.to : now;
         const from = dateRange && dateRange.from ? dateRange.from : past;
 
+
+
         // setting chart data
         const { data } = await getUserStatistics(page, limit, to, from, precision, budgetCode, machineId)
-        setChartData(data)
+        await setChartData(data)
+
+        return data;
+
       } catch (e) {
         const errorMessage = (e as Error).message;
         toast({
