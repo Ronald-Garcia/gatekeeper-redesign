@@ -34,7 +34,6 @@ const timeChartConfig = {
 export function UserDashboardStats() {
 
   const { filteredChartData, precision } = useQueryChart();
-  
   return (
     <Card>
       <CardHeader>
@@ -62,14 +61,15 @@ export function UserDashboardStats() {
               tickFormatter={(value: Date) => value.toLocaleDateString("en-US", { month: "numeric", day: "numeric", year: "numeric"})}
             />
             <ChartTooltip
-              cursor={true}
-              content={<ChartTooltipContent 
+              cursor
+              content={<ChartTooltipContent
               />}
             />
 
             {/* <ChartLegend content={<ChartLegendContent/>}></ChartLegend> */}
             <Bar
               dataKey="totalTime"
+              fill="#002d72"
               strokeWidth={2}
             />
           </BarChart>
