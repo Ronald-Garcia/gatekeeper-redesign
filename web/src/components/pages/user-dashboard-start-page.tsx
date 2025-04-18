@@ -27,7 +27,7 @@ const UserStartPage = () => {
     if (e.key === "Enter" && cardNum) {
       e.preventDefault();
 
-      const newCardNum = cardNum.substring(1, cardNum.length - 1);
+      const newCardNum = cardNum;
       
       e.currentTarget.value = "";
       validateUser(Number.parseInt(newCardNum), callPython).then(s => {
@@ -47,16 +47,11 @@ const UserStartPage = () => {
       <div className="flex flex-col justify-center items-center h-[100vp] w-[100vp]">
         <h1 className="text-3xl">Sign into User Dashboard</h1>
         <h2 className="w-2/4 text-center border-b border-black leading-none my-2.5">
-          <span className="px-2 bg-white">or</span>
         </h2>
-        <Button
-          className="size-"
-        >
-          JHUOAuth
-        </Button>
+
         <Input
           onChange={handleOnChange}
-          placeholder="Swipe your card!"
+          placeholder="Type in your card!"
           onKeyDown={handleSubmitOnEnter}
           data-cy="cardnum-input"
         >
