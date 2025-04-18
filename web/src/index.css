@@ -145,6 +145,10 @@
 
 /*Admin dashboard syling*/
 
+.kiosk-card{
+  min-width: 480px; 
+}
+
 .admin-dashboard{
   flex: 1 1 0%;
   min-width: 250px;

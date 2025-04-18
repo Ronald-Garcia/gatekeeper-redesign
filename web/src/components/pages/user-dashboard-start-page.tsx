@@ -4,6 +4,7 @@ import useQueryUsers from "@/hooks/use-query-users";
 import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 import { setActiveTab } from "@/data/store";
+import { Button } from "../ui/button";
 
 /*
     This is the actual format of the start page, just takes toggles if you do route or not based on parent.
@@ -58,12 +59,13 @@ const UserStartPage = () => {
             data-cy="cardnum-input"
           />
           
-          <button
+          <Button
             onClick={() => handleSubmitOnEnter({ key: "Enter" } as any)}
-            className="w-full py-3 font-semibold text-white transition duration-300 bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500"
+            className="text-lg jhu-blue-button"
+            variant={"ghost"}
           >
             Sign In
-          </button>
+          </Button>
         </div>
       </div>
     </div>
