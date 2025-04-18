@@ -1,4 +1,4 @@
 export type userStats = {
-    dateAdded: number;
+    dateAdded: Date;
     totalTime: number;
 }

@@ -103,7 +103,7 @@ statsRoutes.get("/stats",
 
 
 
-    const aggregateDateTime = aggregateTime.map(s => { return { dateAdded: new Date(s.dateAdded).getTime(), totalTime: Math.floor(Number.parseInt(s.totalTime as string) / 60)}});
+    const aggregateDateTime = aggregateTime.map(s => { return { dateAdded: new Date(s.dateAdded), totalTime: Math.floor(Number.parseInt(s.totalTime as string) / 60)}});
     
 
     

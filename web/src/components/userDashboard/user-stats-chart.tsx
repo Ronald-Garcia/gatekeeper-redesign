@@ -29,7 +29,7 @@ const timeChartConfig = {
 
 export function UserDashboardStats() {
 
-  const { chartData, filteredChartData, precision, setPrecision } = useQueryChart();
+  const { filteredChartData, precision } = useQueryChart();
   
   return (
     <Card>

@@ -1268,8 +1268,8 @@ export const getUserStatistics = async (
   const query = new URLSearchParams({
     page: page.toString(),
     limit: limit.toString(),
-    to: to.toString(),
-    from: from.toString(),
+    to: to.toUTCString(),
+    from: from.toUTCString(),
     precision: precision.toString(),
   });
 
