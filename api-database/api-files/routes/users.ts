@@ -1,8 +1,8 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { queryUsersParamsSchema, createUserSchema, getUserSchema, getUserByCardNumSchema, enableUserSchema } from "../validators/schemas.js";
-import { SQL, or, desc, asc, eq, and, count, ilike, gt } from "drizzle-orm";
-import { users } from "../db/schema.js";
+import { SQL, or, desc, asc, eq, and, count, ilike, gt, exists } from "drizzle-orm";
+import { userBudgetCodeTable, users } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
 import { lucia } from "../db/auth.js";
@@ -40,7 +40,7 @@ userRoutes.get("/users",
      inactivateGraduatedUsers,
      timeoutUserHandle,
      zValidator("query", queryUsersParamsSchema), async (c) => {
-    const { page = 1, limit = 20, sort, search, active } = c.req.valid("query");
+    const { page = 1, limit = 20, sort, search, active, gradYear, budgetCodeId } = c.req.valid("query");
 
     const whereClause: (SQL | undefined)[] = [];
 
@@ -50,6 +50,30 @@ userRoutes.get("/users",
             eq(users.active, active)
         );
     }
+
+    // filtering for gradYear 
+    if (gradYear !== undefined) {
+        whereClause.push(eq(users.graduationYear, gradYear));
+      }
+
+
+    // filtering for users associated for budgetCodes
+    if (budgetCodeId !== undefined) {
+        whereClause.push(
+          exists(
+            db
+              .select()
+              .from(userBudgetCodeTable)
+              .where(
+                and(
+                  eq(userBudgetCodeTable.userId, users.id),
+                  eq(userBudgetCodeTable.budgetCodeId, budgetCodeId)
+                )
+              )
+          )
+        );
+      }
+
 
     if (search) {
         whereClause.push(
