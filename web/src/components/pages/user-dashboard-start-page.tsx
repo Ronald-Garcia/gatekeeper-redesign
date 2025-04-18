@@ -1,4 +1,3 @@
-import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useState } from "react";
 import useQueryUsers from "@/hooks/use-query-users";
@@ -43,21 +42,31 @@ const UserStartPage = () => {
   }
 
   return (
-    <>
-      <div className="flex flex-col justify-center items-center h-[100vp] w-[100vp]">
-        <h1 className="text-3xl">Sign into User Dashboard</h1>
-        <h2 className="w-2/4 text-center border-b border-black leading-none my-2.5">
-        </h2>
+    <div className="items-center sign-in-container ">
+      <div className="p-6 space-y-6 rounded-lg shadow-xl ">
+        <h1 className="text-4xl font-bold text-center jhu-blue">
+          Sign into User Dashboard
+        </h1>
+        <h2 className="text-lg text-center text-black">Please enter your card number below to sign in.</h2>
 
-        <Input
-          onChange={handleOnChange}
-          placeholder="Type in your card!"
-          onKeyDown={handleSubmitOnEnter}
-          data-cy="cardnum-input"
-        >
-        </Input>
+        <div className="flex flex-col space-y-4">
+          <Input
+            onChange={handleOnChange}
+            placeholder="Enter your card number"
+            onKeyDown={handleSubmitOnEnter}
+            className="border-2"
+            data-cy="cardnum-input"
+          />
+          
+          <button
+            onClick={() => handleSubmitOnEnter({ key: "Enter" } as any)}
+            className="w-full py-3 font-semibold text-white transition duration-300 bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500"
+          >
+            Sign In
+          </button>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 

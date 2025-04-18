@@ -109,6 +109,10 @@
   }
 }
 
+.jhu-blue{
+  color: #002d72;
+}
+
 /*Some modifications to shad buttons for JHU blue*/
 .jhu-blue-button{
   color: white;
@@ -182,6 +186,15 @@
 }
 
 /*User dashboard syling*/
+
+.sign-in-container{
+  display: flex;
+  justify-content: center;
+  padding-top: 2.5rem /* 40px */;
+  padding-bottom: 2.5rem /* 40px */;
+  min-height: calc(100vh - 120px);
+  min-width: 520px;
+}
 
 .toggle-component{
   transition-property: all;
