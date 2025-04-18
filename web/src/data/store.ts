@@ -456,8 +456,6 @@ export function setTotal(total: number) {
 
 export function setChartData(data: userStats[]) {
   $userChart.set(data);
-  console.log("SET DATA");
-
 }
 
 export function resetChartData() {

@@ -1,7 +1,7 @@
 "use client"
 
-import { TrendingUp } from "lucide-react"
-import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
+import { Clock, TrendingUp } from "lucide-react"
+import { Bar, BarChart, CartesianGrid, Line, LineChart, XAxis } from "recharts"
 
 import {
   Card,
@@ -14,6 +14,8 @@ import {
 import {
   ChartConfig,
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
@@ -22,6 +24,8 @@ import DatePickerWithRange from "../financialStatements/datepicker"
 
 const timeChartConfig = {
   totalTime: {
+    icon: Clock,
+    color: "#002d72",
     label: "Minutes",
   },
 
@@ -41,7 +45,7 @@ export function UserDashboardStats() {
       </CardHeader>
       <CardContent>
         <ChartContainer config={timeChartConfig}>
-          <LineChart
+          <BarChart
             accessibilityLayer
             data={filteredChartData}
             margin={{
@@ -53,22 +57,22 @@ export function UserDashboardStats() {
             <XAxis
               dataKey="dateAdded"
               tickLine={true}
-              axisLine={false}
+              axisLine={true}
               tickMargin={8}
-              tickFormatter={(value) => value.toDateString()}
+              tickFormatter={(value: Date) => value.toLocaleDateString("en-US", { month: "numeric", day: "numeric", year: "numeric"})}
             />
             <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
+              cursor={true}
+              content={<ChartTooltipContent 
+              />}
             />
-            <Line
+
+            {/* <ChartLegend content={<ChartLegendContent/>}></ChartLegend> */}
+            <Bar
               dataKey="totalTime"
-              type="linear"
-              stroke="red"
               strokeWidth={2}
-              dot={true}
             />
-          </LineChart>
+          </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
