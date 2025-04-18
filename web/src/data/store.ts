@@ -189,6 +189,7 @@ const defaultMachine: Machine = {
   },
   hourlyRate: 0,
   active:-1,
+  lastTimeUsed: "",
 }
 
 const defaultBudget: BudgetCode = {
@@ -383,11 +384,6 @@ export function setCurStatement(id:number) {
   $curStatementId.set(id);
 }
 
-export const $madeStatement = atom<boolean>(false);
-export function setMadeStatement(bool:boolean) {
-  $madeStatement.set(bool);
-}
-
 logger({ $budget_code_queue })
 export const $curbudgets = atom<BudgetCode[]>([])
 export function setCurBudgets(newBudgetCodes: BudgetCode[]) {
@@ -463,11 +459,16 @@ export function setMaxPage(max_page: number) {
 }
 logger({ $activeTab, $users })
 
+export const $mix_active = atom<boolean>(false);
+export function setMixActive(status: boolean) {
+  $mix_active.set(status);
+}
+
 export function resetStores() {
   resetDashboardSearch();
   resetDate();
   resetDateRange();
   resetSearch();
   clearCurrentUser();
-  
+  setMixActive(false);
 }

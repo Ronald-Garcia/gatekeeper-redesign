@@ -4,8 +4,7 @@ import BudgetActions from "./budget-actions";
 import { ScrollArea } from "../ui/scroll-area";
 import PaginationBar from "../general/pagination-bar";
 import { SearchQuerySorts } from "@/data/types/sort";
-import useQueryBudgets from "@/hooks/use-query-budgetCodes";
-import { $activeSearch, validCurrentUser } from "@/data/store";
+import { $activeSearch, setMixActive, validCurrentUser } from "@/data/store";
 import { useEffect } from "react";
 import { redirectPage } from "@nanostores/router";
 import UserSidebar from "../layout/user-sidebar";
@@ -25,11 +24,9 @@ const UserDashboard = () => {
   const {loadMachines} = useQueryMachines(false);
   const machineLoadFunction = loadMachines as (sort?: SearchQuerySorts, page?: number, limit?: number, search?: string) => void
 
-  const {loadBudgets} = useQueryBudgets(false);
-  const budgetLoadFunction = loadBudgets as (sort?: SearchQuerySorts, page?: number, limit?: number, search?: string) => void  
 
   const activeSearch = useStore($activeSearch);
-  
+  setMixActive(true);
 
   useEffect(() => {
     if(!validCurrentUser()) {

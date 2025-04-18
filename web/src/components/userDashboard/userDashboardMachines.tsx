@@ -1,7 +1,7 @@
 import { useStore } from "@nanostores/react";
 import { $machines } from "@/data/store";
 import useQueryMachines from "@/hooks/use-query-machines";
-import MachineAdmin from "../machines/machine-admin";
+import MachineUserDashboard from "./machineUserDashboard";
 
 export default function UserMachinesComponent() {
   useQueryMachines(true);
@@ -16,7 +16,7 @@ export default function UserMachinesComponent() {
       <div className="space-y-4">
 
         {machineList.map((m) => (
-          <MachineAdmin key={m.id} machine={m}/>
+          <MachineUserDashboard key={m.id} machine={m} dateLastReload={new Date()}/>
         ))}
         </div>
       }
