@@ -23,8 +23,13 @@ export function useQueryChart() {
         return;
       }
 
-      await getUserChartData()
+      const localChartData = await getUserChartData()
+
+      if (!localChartData) {
+        return;
+      }
       let date: Date = new Date(dateRange.from);
+
 
       while (date <= dateRange.to) {
           newXAxis = newXAxis.concat(new Date(date));
@@ -53,7 +58,7 @@ export function useQueryChart() {
 
 
 
-      const chartDataLength = chartData.length;
+      const chartDataLength = localChartData.length;
 
       let i = 0;
 
@@ -64,7 +69,7 @@ export function useQueryChart() {
           return defaultData;
         }
 
-        const chartDate = new Date(chartData[i].dateAdded);
+        const chartDate = new Date(localChartData[i].dateAdded);
         let check;
 
         switch (precision) {
@@ -88,7 +93,7 @@ export function useQueryChart() {
             break;
         }
         if (check) {
-          return { dateAdded: new Date(chartData[i].dateAdded), totalTime: chartData[i++].totalTime }; 
+          return { dateAdded: new Date(localChartData[i].dateAdded), totalTime: localChartData[i++].totalTime }; 
         } else {
           return defaultData;
         }
@@ -117,7 +122,7 @@ export function useQueryChart() {
       precision: PrecisionType = "d",
       budgetCode: number | undefined = undefined,
       machineId: number | undefined = undefined,
-    ) => {
+    ): Promise<userStats[] | undefined> => {
       try {
 
         // getting the date
@@ -127,11 +132,14 @@ export function useQueryChart() {
         const to = dateRange && dateRange.to ? dateRange.to : now;
         const from = dateRange && dateRange.from ? dateRange.from : past;
 
-        console.log({to, from});
+
 
         // setting chart data
         const { data } = await getUserStatistics(page, limit, to, from, precision, budgetCode, machineId)
         await setChartData(data)
+
+        return data;
+
       } catch (e) {
         const errorMessage = (e as Error).message;
         toast({
