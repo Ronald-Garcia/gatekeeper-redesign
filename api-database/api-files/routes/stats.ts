@@ -68,20 +68,7 @@ statsRoutes.get("/stats",
         whereClause.push(eq(users.id, user.id));
 
         
-    const offset = (page - 1) * limit;
-    
-    const aggregateTimeSQL = db.select({
-            id: users.id,
-            dateAdded: castedDateAdded.as("date"),
-            totalTime: sum(financialStatementsTable.timeSpent).as("time"),
-          }).from(financialStatementsTable)
-          .innerJoin(users, eq(users.id, financialStatementsTable.userId))
-          .innerJoin(budgetCodes, eq(budgetCodes.id, financialStatementsTable.budgetCode))
-          .innerJoin(machines, eq(machines.id, financialStatementsTable.machineId))
-          .where(and(...whereClause))
-          .groupBy(users.id, castedDateAdded).as("stats")
-
-    
+    const offset = (page - 1) * limit;    
 
     // const aggregateTimeSQL = db.select({
     //     dateAdded: castedDateAdded.as("agasdf"),
@@ -99,37 +86,30 @@ statsRoutes.get("/stats",
           .where(and(...whereClause))
       ,
     
-        db
-            .select({
-                user: {
-                    name: users.name,
-                    JHED: users.JHED,
-                },
-                budgetCode: {
-                name: budgetCodes.name,
-                code: budgetCodes.code
-                },
-                machine: {
-                name: machines.name,
-                hourlyRate: machines.hourlyRate
-                },
-                dateAdded: aggregateTimeSQL.dateAdded,
-                timeSpent: aggregateTimeSQL.totalTime
-          }).from(aggregateTimeSQL)
-            .where(and(...whereClause))
-          
-
+      db.select({
+        id: users.id,
+        dateAdded: castedDateAdded,
+        totalTime: sum(financialStatementsTable.timeSpent),
+      }).from(financialStatementsTable)
+      .innerJoin(users, eq(users.id, financialStatementsTable.userId))
+      .innerJoin(budgetCodes, eq(budgetCodes.id, financialStatementsTable.budgetCode))
+      .innerJoin(machines, eq(machines.id, financialStatementsTable.machineId))
+      .where(and(...whereClause))
+      .groupBy(users.id, castedDateAdded)
+      .orderBy(...orderByClause)
         ]
     );
 
 
+
+
+    const aggregateDateTime = aggregateTime.map(s => { return { dateAdded: new Date(s.dateAdded).getTime(), totalTime: Math.floor(Number.parseInt(s.totalTime as string) / 60)}});
     
-    
-    
+
     
     return c.json({
         success:true,
-        data: aggregateTimeSQL,
+        data: aggregateDateTime,
         meta: {
             page,
             limit,

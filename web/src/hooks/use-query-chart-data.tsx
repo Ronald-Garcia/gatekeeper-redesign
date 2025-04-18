@@ -4,7 +4,6 @@ import { useStore } from "@nanostores/react";
 import { toast } from "./use-toast";
 import { useEffect, useState } from "react";
 import { PrecisionType } from "@/data/types/precision-type";
-import { userStats } from "@/data/types/user-stats";
 
 
 export function useQueryChart() {
@@ -12,13 +11,14 @@ export function useQueryChart() {
     const dateRange = useStore($date_range);
     const chartData = useStore($userChart);
     const [precision, setPrecision] = useState<PrecisionType>("d");
-    const [filteredChartData, setFilteredChartData] = useState<{dateAdded: Date, timeSpent: number}[]>([]);
+    const [filteredChartData, setFilteredChartData] = useState<{ dateAdded: Date, totalTime: number }[]>([]);
 
 
     // use Effect should update when user stats change
     useEffect(() => {
       let newXAxis: Date[] = [];
 
+      getUserChartData();
 
       if (!dateRange || !dateRange.to || !dateRange.from) {
         return;
@@ -48,30 +48,61 @@ export function useQueryChart() {
               break;
           }
       }
+          
 
 
-      const newChartData: {dateAdded: Date, timeSpent: number}[] = newXAxis.map(x => {
-        
-        let cur_y: userStats | undefined = chartData.find(d => {
-          if (d.dateAdded === x) {
-            return d;
-          }
-        });        
 
-        
-        return  { timeSpent: cur_y ? cur_y.timeSpent : 0, dateAdded: x }; 
-      });
+      const chartDataLength = chartData.length;
+
+      let i = 0;
+
+      const newChartData: { dateAdded: Date, totalTime: number }[] = newXAxis.map(date => {
+
+        const defaultData = { dateAdded: date, totalTime: 0};
+        if (i >= chartDataLength) {
+          return defaultData;
+        }
+
+        const chartDate = new Date(chartData[i].dateAdded);
+        let check;
+
+        switch (precision) {
+          case "m":
+            check = (date.getMonth() === chartDate.getMonth() && date.getFullYear() === chartDate.getFullYear() && date.getDate() === chartDate.getDate()) && date.getMinutes() >= chartDate.getMinutes();           
+            break;
+          case "d":
+            check = (date.getMonth() === chartDate.getMonth() && date.getFullYear() === chartDate.getFullYear()) && date.getDate() >= chartDate.getDate()
+            break;
+          case "h":
+            check = (date.getMonth() === chartDate.getMonth() && date.getFullYear() === chartDate.getFullYear() && date.getDate() === chartDate.getDate()) && date.getHours() >= chartDate.getHours();           
+            break;
+          case "mo":
+            check = (date.getFullYear() === chartDate.getFullYear()) && date.getMonth() >= chartDate.getMonth();           
+            break;
+          case "w":
+            check = (date.getMonth() === chartDate.getMonth() && date.getFullYear() === chartDate.getFullYear()) && (Math.floor(date.getDate() / 7) === Math.floor(chartDate.getDate() / 7)) && date.getDay() >= chartDate.getDay();
+            break;
+          case "y":
+            check = date.getFullYear() >= chartDate.getFullYear();
+            break;
+        }
+        if (check) {
+          return { dateAdded: new Date(chartData[i].dateAdded), totalTime: chartData[i++].totalTime }; 
+        } else {
+          return defaultData;
+        }
+      })
 
       setFilteredChartData(newChartData);
 
+      console.log(newChartData);
       
 
 
-    }, [chartData, precision, dateRange])
+    }, [precision, dateRange])
 
 
     useEffect(() => {
-        resetDateRange();
         getUserChartData();
     }, [])
 
@@ -79,7 +110,7 @@ export function useQueryChart() {
     const getUserChartData = async (
       page: number = 1,
       limit: number = 10,
-      precision: "m" | "h" | "d" | "w" = "m",
+      precision: "m" | "h" | "d" | "w" = "d",
       budgetCode: number | undefined = undefined,
       machineId: number | undefined = undefined,
     ) => {
@@ -88,10 +119,9 @@ export function useQueryChart() {
         // getting the date
         const now = new Date();
         const past = new Date();
-        past.setFullYear(now.getFullYear() - 1);
+        past.setMonth(now.getMonth() - 1);
         const to = dateRange && dateRange.to ? dateRange.to : now;
         const from = dateRange && dateRange.from ? dateRange.from : past;
-        setDateRange({to, from})
 
         // setting chart data
         const { data } = await getUserStatistics(page, limit, to, from, precision, budgetCode, machineId)
