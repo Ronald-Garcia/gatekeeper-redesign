@@ -16,7 +16,7 @@ export function useQueryChart() {
 
     // use Effect should update when user stats change
     useEffect(() => {
-      const newXAxis: Date[];
+      const newXAxis: Date[] = [];
 
     }, [chartData, precision, dateRange])
 
