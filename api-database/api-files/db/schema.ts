@@ -44,7 +44,14 @@ export const machines = pgTable("machines_table", {
   hourlyRate: integer().notNull(),
   name: text().notNull(),
   machineTypeId: serial().notNull().references(() => machineTypes.id, {onDelete:"cascade"}),
-  active: integer().notNull()
+  active: integer().notNull(),
+  lastTimeUsed:timestamp({ precision: 3, withTimezone: true }).notNull().defaultNow()
+})
+
+
+export const budgetCodeType = pgTable("budgetCodeType", {
+  id: serial().primaryKey(),
+  name: text().unique().notNull()
 })
 
 /**
@@ -57,6 +64,7 @@ export const budgetCodes = pgTable("budgetCodes" , {
   id: serial().primaryKey(),
   code: text().notNull().unique(),
   name: text().notNull(),
+  budgetCodeTypeId: serial().notNull().references(() => budgetCodeType.id, {onDelete:"cascade"}),
   active: integer().notNull().default(1)
 })
 
@@ -137,8 +145,5 @@ export const machineIssues = pgTable("machine_issues", {
   machineId: integer().notNull().references(() => machines.id, { onDelete: "cascade" }),
   reportedAt: timestamp({ precision: 3, withTimezone: true }).notNull().defaultNow(),
   resolved: integer().notNull().default(0), // 0 = Not Resolved, 1 = Resolved
+  description: text("description")
 });
-
-
-
-

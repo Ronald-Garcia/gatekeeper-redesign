@@ -88,7 +88,7 @@ financialStatementRoutes.get("/fin-statements",
 });
 
 
-// getting all financial statements
+// getting all financial statements for a user.
 financialStatementRoutes.get("/fin-statements/user/:id",
     adminGuard,
     zValidator("param", getStatementsOfUser),

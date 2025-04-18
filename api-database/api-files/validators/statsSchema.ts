@@ -5,7 +5,7 @@ export const queryStatsParamsSchema = z.object({
     from: z.coerce.date().optional(),
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().optional(),
-    precision: z.enum(["m", "h", "d", "w", "mo", "y"]).default("m"),
+    precision: z.enum(["m", "h", "d", "w", "mo", "y"]).default("mo"),
     budgetCode: z.coerce.number().int().positive().optional(),
     machineId: z.coerce.number().int().positive().optional(),
 });

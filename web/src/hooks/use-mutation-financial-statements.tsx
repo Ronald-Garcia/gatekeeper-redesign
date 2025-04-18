@@ -37,7 +37,7 @@ const useMutationStatements = () => {
             toast({
                 variant: "default",
                 title: "✅ Success 😊!",
-                description: "Financial statement created successfully!"
+                description: "Financial statement updated successfully!"
             });
         } catch (e) { // IF we lose connection, start sending an off request to the server.
             const errorMessage = (e as Error).message;

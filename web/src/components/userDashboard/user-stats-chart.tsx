@@ -18,10 +18,10 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 import useQueryChart from "@/hooks/use-query-chart-data"
-import { useState } from "react"
+import DatePickerWithRange from "../financialStatements/datepicker"
 
 const timeChartConfig = {
-  timeSpent: {
+  totalTime: {
     label: "Minutes",
   },
 
@@ -29,19 +29,21 @@ const timeChartConfig = {
 
 export function UserDashboardStats() {
 
-  const { chartData } = useQueryChart();
+  const { filteredChartData, precision } = useQueryChart();
   
   return (
     <Card>
       <CardHeader>
         <CardTitle>Line Chart - Linear</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardDescription>{precision}</CardDescription>
+
+        <DatePickerWithRange></DatePickerWithRange>
       </CardHeader>
       <CardContent>
         <ChartContainer config={timeChartConfig}>
           <LineChart
             accessibilityLayer
-            data={chartData}
+            data={filteredChartData}
             margin={{
               left: 12,
               right: 12,
@@ -50,7 +52,7 @@ export function UserDashboardStats() {
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="dateAdded"
-              tickLine={false}
+              tickLine={true}
               axisLine={false}
               tickMargin={8}
               tickFormatter={(value) => value.toDateString()}
@@ -60,11 +62,11 @@ export function UserDashboardStats() {
               content={<ChartTooltipContent hideLabel />}
             />
             <Line
-              dataKey="desktop"
+              dataKey="totalTime"
               type="linear"
-              stroke="var(--color-desktop)"
+              stroke="red"
               strokeWidth={2}
-              dot={false}
+              dot={true}
             />
           </LineChart>
         </ChartContainer>

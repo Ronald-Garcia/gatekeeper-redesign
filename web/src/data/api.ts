@@ -9,6 +9,7 @@ import { financialStatement } from "./types/financialStatement";
 import { MetaType } from "./types/meta";
 import { MachineIssue } from "./types/machineIssues";
 import { userStats } from "./types/user-stats";
+import { PrecisionType } from "./types/precision-type";
 
 /**
  * Turns on the machine.
@@ -43,13 +44,8 @@ export const turnOnMachine = async (): Promise<boolean> => {
     headers: {"Content-Type": "application/json"},
     credentials: "include",
   });
-  console.log("after response await")
-  console.log(response);
   const { message }: { message: string } = await response.json();
-  console.log("print response")
-  console.log(response.ok)
   if (!response.ok) {
-    console.log(response)
     throw new Error(message);
   }
 
@@ -210,7 +206,7 @@ export const getUser = async (cardNum: number): Promise<{
  */
 // Sign out a user
 export const signOut = async (): Promise<boolean> => {
-  const response = await fetch(`${API_DB_URL}/sign-out`, {
+  const response = await fetch(`${API_DB_URL}/logout`, {
     method: "POST",
     credentials: "include", 
   });
@@ -951,13 +947,14 @@ export const deleteMachine = async (id: number) => {
  * @returns {Promise<{message: string, data: Machine}>} A promise that resolves with a message and the updated machine.
  * @throws {Error} If the response is not ok, throws an error with the response message.
  */
-export const updateMachine = async (id: number, active: number) => {
+export const updateMachine = async (id: number, active: number, lastTimeUsed?:Date ) => {
   const response = await fetch(`${API_DB_URL}/machines/${id}`,{
     method: "PATCH",
     headers: {"Content-Type": "application/json"},
     credentials:"include",
     body: JSON.stringify({
-      active: active
+      active: active,
+      lastTimeUsed
     })
   });
 
@@ -1261,7 +1258,7 @@ export const getUserStatistics = async (
   limit: number = 10,
   to: Date,
   from: Date,
-  precision: "m" | "h" | "d" | "w" = "m",
+  precision: PrecisionType = "m",
   budgetCode: number | undefined,
   machineId: number | undefined,
 ): Promise<{
@@ -1271,8 +1268,8 @@ export const getUserStatistics = async (
   const query = new URLSearchParams({
     page: page.toString(),
     limit: limit.toString(),
-    to: to.toString(),
-    from: from.toString(),
+    to: to.toUTCString(),
+    from: from.toUTCString(),
     precision: precision.toString(),
   });
 
