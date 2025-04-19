@@ -1,13 +1,15 @@
-import { getAllBudgets, getAllBudgetsOfUser } from "@/data/api";
+import { getAllBudgets, getAllBudgetsOfUser, getBudgetCodeType } from "@/data/api";
 import { $codes, 
   setBudgetCodes,
   setCurBudgets,
   appendBudgetCodes,
   setMetaData,
-  $activeTab,
+  setBudgetCodeTypes,
+  appendBudgetCodeType,
+  $activeTab
 } from "@/data/store";
 import { BudgetCode } from "@/data/types/budgetCode";
-import { SortBudgetType } from "@/data/types/sort";
+import { SortBudgetType, SortType } from "@/data/types/sort";
 import { useStore } from "@nanostores/react";
 import { useEffect, useState } from "react";
 import { useToast } from "./use-toast";
@@ -19,6 +21,12 @@ function useQueryBudgets(reload: boolean) {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const activeTab = useStore($activeTab)
+
+
+  const [BudgetCodeTypeCurrentPage, setBudgetCodeTypeCurrentPage] = useState(1);
+  const [BudgetCodeTypeHasMore, setBudgetCodeTypeHasMore] = useState(false);
+  const [BudgetCodeTypeIsLoading, setBudgetCodeTypeIsLoading] = useState(false);
+
 
   const loadBudgets = async (
     sort: SortBudgetType = "name_asc",
@@ -75,6 +83,45 @@ function useQueryBudgets(reload: boolean) {
     }
   }
 
+
+  
+    const loadBudgetCodeType = async (
+      sort: SortType = "asc",
+      page: number = 1,
+      limit: number = 10,
+      search: string = "",
+      append: boolean = false
+    ) => {
+      try {
+        setBudgetCodeTypeIsLoading(true);
+        const {
+          data: fetchedBudgetCodeType,
+          meta
+        } = await getBudgetCodeType(sort, page, limit, search);
+        
+        if (append) {
+          appendBudgetCodeType(fetchedBudgetCodeType);
+        } else {
+          setBudgetCodeTypes(fetchedBudgetCodeType);
+        }
+        
+        setBudgetCodeTypeHasMore(page * limit < meta.total);
+        setBudgetCodeTypeCurrentPage(page);
+        
+      } catch (e) {
+        const errorMessage = (e as Error).message;
+        toast({
+          variant: "destructive",
+          title: "❌ Sorry! There was an error fetching Machine Types 🙁",
+          description: errorMessage
+        });
+      } finally {
+        setBudgetCodeTypeIsLoading(false);
+      }
+    };
+
+    
+
   useEffect(() => {
     if (reload) {
       loadBudgets();
@@ -87,7 +134,11 @@ function useQueryBudgets(reload: boolean) {
     getBudgetsOfUser,
     currentPage,
     hasMore,
-    isLoading
+    isLoading,
+    BudgetCodeTypeCurrentPage,
+    BudgetCodeTypeHasMore,
+    BudgetCodeTypeIsLoading, 
+    loadBudgetCodeType
   };
 }
 

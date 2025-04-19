@@ -1,6 +1,7 @@
 import { updateBudgetCode, createBudgetCode, 
+    createBudgetType, 
     deleteBudgetCode } from "../data/api";
-import { addBudgetCode, deleteBudgetCodeById } from "../data/store";
+import { addBudgetCode, addNewBudgetCodeTypes, deleteBudgetCodeById } from "../data/store";
 import { BudgetCode } from "@/data/types/budgetCode";
 import { useToast } from "./use-toast";
 
@@ -64,11 +65,37 @@ function useMutationBudgetCodes() {
     }
   };
 
+
+  /*
+      Hook to add MachineType
+      * @param type: name of the new type of macine to be added
+      */
+      const addNewBudgetCodeType = async (type:string) => {
+          try {
+              const {data } = await createBudgetType(type);
+              addNewBudgetCodeTypes(data);
+              toast({
+                  variant: "default",
+                  title: "✅ Success 😊!",
+                  description: "Budget type added successfully!"
+              });
+          } catch (e) {
+              const errorMessage = (e as Error).message;
+              toast({
+                  variant: "destructive",
+                  title: "❌ Sorry! There was an error adding the Budget Type 🙁",
+                  description: errorMessage
+              });
+          } 
+      }
+  
+
   return {
     addNewBudgetCode,
     removeBudgetCode,
    // updateBudgetCode,
    modifyBudgetCode,
+   addNewBudgetCodeType
   };
 }
 

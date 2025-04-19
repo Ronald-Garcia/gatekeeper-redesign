@@ -9,6 +9,8 @@ import { $router } from "@/data/router";
 import { $currentUser } from "@/data/store";
 import ConfirmReportModal from "@/components/modals/ConfirmReportModal"; 
 import useMutationMachineIssue from "@/hooks/use-mutation-machineIssue";
+import ReportFormModal from "@/components/modals/ReportFormmodal";
+
 import useMutationMachines from "@/hooks/use-mutation-machines";
 
 const InProgress = () => {
@@ -22,6 +24,8 @@ const InProgress = () => {
     const {curMachine, modifyMachine} = useMutationMachines();
     
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+
 
     const [time, setTime] = useState<number>(0);
 
@@ -64,13 +68,15 @@ const InProgress = () => {
 
     const handleConfirmReport = async () => {
         setIsModalOpen(false);
-      
+        
         const result = await reportIssue(curUser.id, curMachine.id); 
-      
+    
         if (result) {
-          console.log("Reported issue:", result);
+            console.log("Reported issue:", result);
+            setIsFormModalOpen(true); // open the QR modal after reporting
         }
     };
+    
 
     
     const onSubmit = async () => {
@@ -120,8 +126,14 @@ const InProgress = () => {
                 onClose={() => setIsModalOpen(false)}
                 onConfirm={handleConfirmReport}
             />
+            <ReportFormModal
+                isOpen={isFormModalOpen}
+                onClose={() => setIsFormModalOpen(false)}
+            />
+
         </>
     );
 }
 
 export default InProgress;
+

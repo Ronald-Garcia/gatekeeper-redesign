@@ -1,5 +1,5 @@
 import { getUserStatistics } from "@/data/api";
-import { $userChart, $date_range, setChartData, $filtered_chart, setFilteredChart, clearFilteredChart, $date } from "@/data/store";
+import { $userChart, $date_range, setChartData, $filtered_chart, setFilteredChart, clearFilteredChart, $date, $hour } from "@/data/store";
 import { useStore } from "@nanostores/react";
 import { toast } from "./use-toast";
 import { useEffect, useState } from "react";
@@ -14,6 +14,62 @@ export function useQueryChart() {
     const chartData = useStore($userChart);
     const filteredChartData = useStore($filtered_chart)
     const [precision, setPrecision] = useState<PrecisionType>("d");
+
+    
+    const fetchChartDataMinute = async () => {
+      let newXAxis: Date[] = [];
+
+      if (!dateChoice) {
+        return;
+      }
+
+      const localChartData = await getUserChartData(1, 100, "m");
+
+      if (!localChartData) {
+        return;
+      }
+      let date: Date = new Date(dateChoice);
+
+      date.setMinutes(0);
+      date.setSeconds(0);
+      
+      let endDate: Date = new Date(dateChoice);
+      endDate.setHours(endDate.getHours() + 1);
+      endDate.setMinutes(0);
+      endDate.setSeconds(0);
+
+
+      while (date <= endDate) {
+          newXAxis = newXAxis.concat(new Date(date));
+          date.setMinutes(date.getMinutes() + 1);
+      }
+          
+
+
+
+      const chartDataLength = localChartData.length;
+
+      let i = 0;
+
+      const newChartData: userStats[] = newXAxis.map(date => {
+
+        const defaultData = { dateAdded: date, totalTime: 0};
+        if (i >= chartDataLength) {
+          return defaultData;
+        }
+
+        const chartDate = new Date(localChartData[i].dateAdded);
+        const check = (date.getMonth() === chartDate.getMonth() && date.getFullYear() === chartDate.getFullYear() && date.getDate() === chartDate.getDate()) && date.getHours() === chartDate.getHours() && date.getMinutes() >= chartDate.getMinutes()
+        if (check) {
+          return { dateAdded: new Date(localChartData[i].dateAdded), totalTime: localChartData[i++].totalTime }; 
+        } else {
+          return defaultData;
+        }
+      })
+
+      setFilteredChart(newChartData);
+    }
+
 
     const fetchChartDataHour = async () => {
       let newXAxis: Date[] = [];
@@ -126,6 +182,9 @@ export function useQueryChart() {
         case "h":
           await fetchChartDataHour();
           break;
+        case "m":
+          await fetchChartDataMinute();
+          break;
         
       }
     }
@@ -183,12 +242,12 @@ export function useQueryChart() {
 
         if (precision === "m") {
           const toDate = dateChoice ? new Date(dateChoice.getTime()) : new Date();
-          toDate.setHours(23);
-          toDate.setMinutes(59);
-          toDate.setSeconds(59);
+          toDate.setHours(toDate.getHours() + 1);
+          toDate.setMinutes(0);
+          toDate.setSeconds(0);
 
           const fromDate = new Date(toDate.getTime());
-          fromDate.setHours(0);
+          fromDate.setHours(toDate.getHours() - 1);
           fromDate.setMinutes(0);
           fromDate.setSeconds(0);
 
@@ -217,7 +276,7 @@ export function useQueryChart() {
       }
     }
 
-    return { filteredChartData, precision, setPrecision, chartData, getUserChartData }
+    return { filteredChartData, precision, setPrecision, chartData, getUserChartData, dateChoice }
 }
 
 export default useQueryChart;

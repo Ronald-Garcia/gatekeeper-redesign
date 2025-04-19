@@ -39,7 +39,7 @@ export function UserDashboardStats() {
   const setPrecisionValue = (value: PrecisionType) => {
     setPrecision(value);
   }
-  const { filteredChartData, precision, setPrecision } = useQueryChart();
+  const { filteredChartData, precision, setPrecision, dateChoice } = useQueryChart();
   return (
     <Card className="h-screen">
       <CardHeader className="flex flex-row items-center gap-2 py-5 space-y-0 ">
@@ -48,16 +48,17 @@ export function UserDashboardStats() {
           <CardDescription></CardDescription>
 
         </div>
+        {/* {precision === "m" && <TimePickerInput date={dateChoice} setDate={setDate} picker="hours"></TimePickerInput>} */}
         {precision === "d" && <DatePickerWithRange></DatePickerWithRange>}
-        {precision === "h" && <DatePicker></DatePicker>}
+        {precision === "h" || precision === "m" && <DatePicker></DatePicker>}
         <Select value={precision} onValueChange={setPrecisionValue}>
           <SelectTrigger>
             <SelectValue placeholder="Days" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="m">
+            {/* <SelectItem value="m">
               Minutes
-            </SelectItem>
+            </SelectItem> */}
             <SelectItem value="h">
               Hours
             </SelectItem>
