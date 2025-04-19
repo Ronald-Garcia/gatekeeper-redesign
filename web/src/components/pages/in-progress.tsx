@@ -7,10 +7,7 @@ import useMutationStatements from "@/hooks/use-mutation-financial-statements";
 import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 import { $currentUser } from "@/data/store";
-import ConfirmReportModal from "@/components/modals/ConfirmReportModal"; 
-import useMutationMachineIssue from "@/hooks/use-mutation-machineIssue";
-import ReportFormModal from "@/components/modals/ReportFormmodal";
-
+import ReportFormModal from "@/components/modals/ReportFormModal"; 
 import useMutationMachines from "@/hooks/use-mutation-machines";
 
 const InProgress = () => {
@@ -62,78 +59,69 @@ const InProgress = () => {
 
     }, [time]);
 
-    const handleReportIssue = () => {
-        setIsModalOpen(true);
-    };
+  const handleReportIssue = () => {
+    setIsFormModalOpen(true);
+  };
 
-    const handleConfirmReport = async () => {
-        setIsModalOpen(false);
-        
-        const result = await reportIssue(curUser.id, curMachine.id); 
-    
-        if (result) {
-            console.log("Reported issue:", result);
-            setIsFormModalOpen(true); // open the QR modal after reporting
-        }
-    };
-    
-
-    
-    const onSubmit = async () => {
+  const onSubmit = async () => {
         if (time > 0) {
-            await updateStatement(time);
+        await updateStatement(time);
             const curDate = new Date();
             await modifyMachine(curMachine.id, 1, curDate );    
         }
-        redirectPage($router, "interlockLogin")
-    };
+    redirectPage($router, "interlockLogin");
+  };
+;
     
 
-    return (
-        <>
-            <Card>
-                <CardHeader>
-                        <CardTitle>
-                            Time spent
-                        </CardTitle>
-                        <CardDescription>
-                            Below is the amount of time that will be billed to {curBudget.name}.
-                        </CardDescription>
-                    </CardHeader>
-                <CardContent>
-                    <div data-cy="timer" 
-                        
-                        className="flex justify-center text-5xl font-bold">
-                        <Timer time={time}></Timer>
-                    </div>
-                    </CardContent>
-                    <CardFooter className="relative flex items-center justify-end w-full" data-cy="submit">
-                        <Button className="px-4 py-2 ml-4 text-black bg-yellow-400" variant="ghost" onClick={(e) => { 
-                            e.stopPropagation();  // Prevent the click from bubbling up to the CardFooter's onClick
-                            handleReportIssue(); 
-                        }}> 
-                            Report Issue 
-                        </Button>
-                        <Button className="absolute transform -translate-x-1/2 left-1/2" onClick={onSubmit}>
-                            Tap when finished!
-                        </Button>
-                    </CardFooter>
-            </Card>
+  return (
+    <>
+      <Card>
+        <CardHeader>
+          <CardTitle>Time spent</CardTitle>
+          <CardDescription>
+            Below is the amount of time that will be billed to {curBudget.name}.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div
+            data-cy="timer"
+            className="flex justify-center text-5xl font-bold"
+          >
+            <Timer time={time} />
+          </div>
+        </CardContent>
+        <CardFooter className="relative flex items-center justify-end w-full" data-cy="submit">
+          <Button
+            className="px-4 py-2 ml-4 text-black bg-yellow-400"
+            variant="ghost"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleReportIssue();
+            }}
+          >
+            Report Issue
+          </Button>
+          <Button
+            className="absolute transform -translate-x-1/2 left-1/2"
+            onClick={onSubmit}
+          >
+            Tap when finished!
+          </Button>
+        </CardFooter>
+      </Card>
 
-            {/* Report Issue Confirmation Modal */}
-            <ConfirmReportModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                onConfirm={handleConfirmReport}
-            />
-            <ReportFormModal
-                isOpen={isFormModalOpen}
-                onClose={() => setIsFormModalOpen(false)}
-            />
+      <ReportFormModal
+        isOpen={isFormModalOpen}
+        onClose={() => setIsFormModalOpen(false)}
+        userId={curUser.id}
+        machineId={curMachine.id}
+        />
 
-        </>
-    );
-}
+    </>
+  );
+};
 
 export default InProgress;
+
 

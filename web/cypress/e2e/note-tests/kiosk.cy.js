@@ -11,7 +11,9 @@ const user_num = "5748372737435832"
 describe('Entering kiosk testing', () => {
     beforeEach(() => {
         //Before each test, go to our locally running app.
+   
       cy.visit(`${WEB_URL}/kiosk`)
+      cy.get('[data-cy= "kiosk-button"]').click();
     })
   
     it('Able to type into input field (for current testing)', () => {

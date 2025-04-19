@@ -71,7 +71,6 @@ const AdminDashboard = () => {
         <UsersActions/>
         <InactiveTab/>
         <ScrollArea className={`${activeSearch ? 'scroll-component-search' : 'scroll-component'}`}>
-
           <Users/>
         </ScrollArea>
         <PaginationBar loadFunction={userLoadFunction}/>

@@ -72,8 +72,9 @@ export const getAllUsers = async (
   page: number = 1,
   limit: number = 10,
   search: string = "",
-  active: number = 1
-
+  active: number = 1,
+  graduationYear?: number[], 
+  budgetCodeId?: number[], 
 ): Promise<{
   message: string;
   data: User[];
@@ -83,7 +84,13 @@ export const getAllUsers = async (
     total: number;
   };
 }> => {
-  const response = await fetch(`${API_DB_URL}/users?search=${search}&limit=${limit}&page=${page}&sort=${sort}&active=${active}`, {
+  let url = `${API_DB_URL}/users?search=${search}&limit=${limit}&page=${page}&sort=${sort}&active=${active}`
+  if (graduationYear  !== undefined) {for (const y of graduationYear) {
+    url += `&gradYear=${y}`
+  }}
+  if (budgetCodeId    !== undefined) url += `&budgetCodeId=${budgetCodeId}`;
+  
+  const response = await fetch(url, {
     credentials: "include",
   });
 
@@ -353,7 +360,8 @@ export const getAllBudgets = async (
   page: number = 1,
   limit: number = 10,
   search: string = "",
-  active: number = 1
+  active: number = 1, 
+  budgCodeType?:number[]
 ): Promise<{
   message: string;
   data: BudgetCode[];
@@ -363,7 +371,9 @@ export const getAllBudgets = async (
     total: number;
   };
 }> => {
-  const response = await fetch(`${API_DB_URL}/budget-codes?search=${search}&limit=${limit}&page=${page}&sort=${sort}&active=${active}`, {
+  let url = `${API_DB_URL}/budget-codes?search=${search}&limit=${limit}&page=${page}&sort=${sort}&active=${active}`
+  if (budgCodeType !== undefined) url += `&budgetCodeTypeId=${budgCodeType}`
+  const response = await fetch(url, {
     credentials: "include",
   });
 
@@ -698,7 +708,8 @@ export const getAllMachines = async (
   limit: number = 10,
   search: string = "",
   type: string = "",
-  active: number = 1
+  active: number = 1, 
+  machineTypeFilter?: number
 
 ): Promise<{
   message: string;
@@ -709,7 +720,9 @@ export const getAllMachines = async (
   if (active === -1) {
     activeQuery = ""
   }
-  const response = await fetch(`${API_DB_URL}/machines?search=${search}&limit=${limit}&page=${page}&sort=${sort}&type=${type}${activeQuery}`, {
+  let url =`${API_DB_URL}/machines?search=${search}&limit=${limit}&page=${page}&sort=${sort}&type=${type}${activeQuery}`
+  if (machineTypeFilter  !== undefined) url += `&machineTypeId=${machineTypeFilter}`
+  const response = await fetch(url, {
     credentials: "include",
   });
 
@@ -1125,30 +1138,35 @@ export const automateEmail = async (email: string, date: Date): Promise<boolean>
   return true;
   
 }
-export const createMachineIssue = async (userId: number, machineId: number): Promise<{
-  message: string,
-  data: MachineIssue
+export const createMachineIssue = async (
+  userId: number,
+  machineId: number,
+  description?: string
+): Promise<{
+  message: string;
+  data: MachineIssue;
 }> => {
   const response = await fetch(`${API_DB_URL}/machine-issues`, {
     method: "POST",
-    headers: {"Content-Type": "application/json"},
+    headers: { "Content-Type": "application/json" },
     credentials: "include",
     body: JSON.stringify({
       userId,
-      machineId
-    })
+      machineId,
+      ...(description && { description }), // only include if present
+    }),
   });
 
   if (!response.ok) {
     const { message }: { message: string } = await response.json();
-
     throw new Error(message);
   }
 
   const { message, data }: { message: string; data: MachineIssue } = await response.json();
 
   return { message, data };
-}
+};
+
 
 export const getMachineIssues = async(
   sort: "asc" | "desc",
