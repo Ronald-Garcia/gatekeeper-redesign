@@ -337,6 +337,13 @@ export function setMachines(machines: Machine[]) {
   $machines.set(machines);
 }
 
+
+export const $machine = atom<Machine>(defaultMachine);
+//This is for when you need to set a single machine for something like a the form page.
+export function setMachine(machine: Machine) {
+  $machine.set(machine);
+}
+
 export function clearMachines() {
   $machines.set([]);
 }
@@ -462,6 +469,7 @@ export function setMaxPage(max_page: number) {
   $max_page.set(max_page);
 }
 logger({ $activeTab, $users })
+
 
 export function resetStores() {
   resetDashboardSearch();

@@ -25,7 +25,7 @@ const Body = () => {
   //validate user when using the application, else rerouted to start page
   useEffect(() => {
     // This is our error page, don't want to make calls.
-    if (!router || router.route === "errorPage") {
+    if (!router || router.route === "errorPage" || router.route === "reportForm") {
 
     }
     else if (!validCurrentMachine() && !validCurrentUser()) {
@@ -66,7 +66,8 @@ const Body = () => {
 
       {router.route === "interlockLogin" && <StartPage></StartPage>}
 
-      {router.route === "reportForm" && <FormPage></FormPage>}
+      {router.route === "reportForm" && <FormPage userId={router.params.userId} machineId={router.params.machineId} />}
+
 
     </>
   )  
