@@ -8,7 +8,7 @@ import { MachineIssue } from "./types/machineIssues"
 import { logger } from "@nanostores/logger"
 import { DateRange } from "react-day-picker";
 import { MetaType } from "./types/meta";
-import { userStats } from "./types/user-stats";
+import { userBudgetStats, userMachinesStats } from "./types/user-stats";
 
 export const $users = atom<User[]>([]);
 export const $codes = atom<BudgetCode[]>([]);
@@ -23,9 +23,13 @@ export const $hasMoreUserTrainings = atom<boolean>(false);
 export const $currentPage = atom<number>(1);
 export const $activeTab = atom<number>(1);
 export const $machine_issues = atom<MachineIssue[]>([]);
-export const $userChart = atom<userStats[]>([]);
-export const $filtered_chart = atom<userStats[]>([]);
+export const $userChart = atom<(userBudgetStats | userMachinesStats)[]>([]);
+export const $filtered_chart = atom<(userBudgetStats | userMachinesStats)[]>([]);
 export const $hour = atom<number>(-1);
+
+export function addFunctionToChart(func: userBudgetStats | userMachinesStats) {
+  $filtered_chart.set([...$filtered_chart.get(), func])
+}
 
 export function setHour(hour: number) {
   $hour.set(hour % 24);
@@ -43,7 +47,7 @@ export function resetMachineIssues() {
 }
 export const $budgetCodeTypes = atom<budgetCodeType[]>([]);
 
-export function setFilteredChart(chart: userStats[]) {
+export function setFilteredChart(chart: (userBudgetStats | userMachinesStats)[]) {
   $filtered_chart.set(chart);
 }
 
@@ -540,7 +544,7 @@ export function setTotal(total: number) {
   $total.set(total);
 }
 
-export function setChartData(data: userStats[]) {
+export function setChartData(data: (userBudgetStats | userMachinesStats)[]) {
   $userChart.set(data);
 }
 

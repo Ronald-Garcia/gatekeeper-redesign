@@ -8,7 +8,7 @@ import { SortBudgetType, SortMachineType, SortType } from "./types/sort";
 import { financialStatement } from "./types/financialStatement";
 import { MetaType } from "./types/meta";
 import { MachineIssue } from "./types/machineIssues";
-import { userStats } from "./types/user-stats";
+import { userBudgetStats, userMachinesStats, userStats } from "./types/user-stats";
 import { PrecisionType } from "./types/precision-type";
 
 /**
@@ -1359,7 +1359,7 @@ export const getUserStatistics = async (
   budgetCodeFilter?: number[] | null,
   machineTypeFilter?: number[] | null,
 ): Promise<{
-  data: userStats[],
+  data: (userBudgetStats | userMachinesStats)[],
   message: string
 }> => {
   const query = new URLSearchParams({
@@ -1392,7 +1392,7 @@ export const getUserStatistics = async (
   }
 
 
-  const { message, data }: { message: string; data: userStats[] } = await response.json();
+  const { message, data }: { message: string; data: (userBudgetStats | userMachinesStats)[] } = await response.json();
 
   return { message, data };
 }

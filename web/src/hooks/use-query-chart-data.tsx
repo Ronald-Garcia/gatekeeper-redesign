@@ -1,11 +1,10 @@
-import { getAllTrainingsOfUser, getUserStatistics } from "@/data/api";
-import { $userChart, $date_range, setChartData, $filtered_chart, setFilteredChart, clearFilteredChart, $date, $userBudgetFilter, $machineTypeFilter, $currentUser, setTrainingQueue } from "@/data/store";
+import { getUserStatistics } from "@/data/api";
+import { $userChart, $date_range, setChartData, $filtered_chart, clearFilteredChart, $date, $userBudgetFilter, $machineTypeFilter, $currentUser, setTrainingQueue, addFunctionToChart } from "@/data/store";
 import { useStore } from "@nanostores/react";
 import { toast } from "./use-toast";
 import { useEffect, useState } from "react";
 import { PrecisionType } from "@/data/types/precision-type";
-import { userStats } from "@/data/types/user-stats";
-import { BudgetCode } from "@/data/types/budgetCode";
+import { userBudgetStats, userMachinesStats, userStats } from "@/data/types/user-stats";
 import useQueryMachines from "./use-query-machines";
 import useQueryBudgets from "./use-query-budgetCodes";
 
@@ -31,9 +30,9 @@ export function useQueryChart() {
         return;
       }
 
-      const localChartData = await getUserChartData(1, 100, "m");
+      const localChartDatas = await getUserChartData(1, 100, "m");
 
-      if (!localChartData) {
+      if (!localChartDatas) {
         return;
       }
       let date: Date = new Date(dateChoice);
@@ -51,29 +50,33 @@ export function useQueryChart() {
           newXAxis = newXAxis.concat(new Date(date));
           date.setMinutes(date.getMinutes() + 1);
       }
-          
-      const chartDataLength = localChartData.length;
 
-      let i = 0;
+      for (let j = 0; j < localChartDatas.length; j++) {
+        const localChartData = localChartDatas[j].data; 
+        const chartDataLength = localChartData.length;
 
-      const newChartData: userStats[] = newXAxis.map(date => {
+        let i = 0;
 
-        const defaultData = { dateAdded: date, totalTime: 0};
-        if (i >= chartDataLength) {
-          return defaultData;
-        }
+        const newChartData: userStats[] = newXAxis.map(date => {
 
-        const chartDate = new Date(localChartData[i].dateAdded);
-        const check = (date.getMonth() === chartDate.getMonth() && date.getFullYear() === chartDate.getFullYear() && date.getDate() === chartDate.getDate()) && date.getHours() === chartDate.getHours() && date.getMinutes() >= chartDate.getMinutes()
-        if (check) {
-          return { dateAdded: new Date(localChartData[i].dateAdded), totalTime: localChartData[i++].totalTime }; 
-        } else {
-          return defaultData;
-        }
-      })
+          const defaultData = { dateAdded: date, totalTime: 0};
+          if (i >= chartDataLength) {
+            return defaultData;
+          }
 
-      setFilteredChart(newChartData);
+          const chartDate = new Date(localChartData[i].dateAdded);
+          const check = (date.getMonth() === chartDate.getMonth() && date.getFullYear() === chartDate.getFullYear() && date.getDate() === chartDate.getDate()) && date.getHours() === chartDate.getHours() && date.getMinutes() >= chartDate.getMinutes()
+          if (check) {
+            return { dateAdded: new Date(localChartData[i].dateAdded), totalTime: localChartData[i++].totalTime }; 
+          } else {
+            return defaultData;
+          }
+        })
+
+        addFunctionToChart({ ...localChartDatas[j], data: newChartData });
     }
+
+  }
 
 
     const fetchChartDataHour = async () => {
@@ -83,9 +86,9 @@ export function useQueryChart() {
         return;
       }
 
-      const localChartData = await getUserChartData(1, 100, "h");
+      const localChartDatas = await getUserChartData(1, 100, "h");
 
-      if (!localChartData) {
+      if (!localChartDatas) {
         return;
       }
       let date: Date = new Date(dateChoice);
@@ -106,29 +109,31 @@ export function useQueryChart() {
       }
           
 
+      for (let j = 0; j < localChartDatas.length; j++) {
+        const localChartData = localChartDatas[j].data;
+        const chartDataLength = localChartData.length;
+
+        let i = 0;
+  
+        const newChartData: userStats[] = newXAxis.map(date => {
+  
+          const defaultData = { dateAdded: date, totalTime: 0};
+          if (i >= chartDataLength) {
+            return defaultData;
+          }
+  
+          const chartDate = new Date(localChartData[i].dateAdded);
+          const check = (date.getMonth() === chartDate.getMonth() && date.getFullYear() === chartDate.getFullYear() && date.getDate() === chartDate.getDate()) && date.getHours() >= chartDate.getHours()
+          if (check) {
+            return { dateAdded: new Date(localChartData[i].dateAdded), totalTime: localChartData[i++].totalTime }; 
+          } else {
+            return defaultData;
+          }
+        })
+        addFunctionToChart({ ...localChartDatas[j], data: newChartData });
+      }
 
 
-      const chartDataLength = localChartData.length;
-
-      let i = 0;
-
-      const newChartData: userStats[] = newXAxis.map(date => {
-
-        const defaultData = { dateAdded: date, totalTime: 0};
-        if (i >= chartDataLength) {
-          return defaultData;
-        }
-
-        const chartDate = new Date(localChartData[i].dateAdded);
-        const check = (date.getMonth() === chartDate.getMonth() && date.getFullYear() === chartDate.getFullYear() && date.getDate() === chartDate.getDate()) && date.getHours() >= chartDate.getHours()
-        if (check) {
-          return { dateAdded: new Date(localChartData[i].dateAdded), totalTime: localChartData[i++].totalTime }; 
-        } else {
-          return defaultData;
-        }
-      })
-
-      setFilteredChart(newChartData);
     }
 
     const fetchChartDataDay = async () => {
@@ -139,9 +144,9 @@ export function useQueryChart() {
         return;
       }
 
-      const localChartData = await getUserChartData()
+      const localChartDatas = await getUserChartData()
 
-      if (!localChartData) {
+      if (!localChartDatas) {
         return;
       }
       let date: Date = new Date(dateRange.from);
@@ -155,27 +160,32 @@ export function useQueryChart() {
 
 
 
-      const chartDataLength = localChartData.length;
+      for (let j = 0; j < localChartDatas.length; j++) {
+        const localChartData = localChartDatas[j].data; 
+        const chartDataLength = localChartData.length;
 
-      let i = 0;
+        let i = 0;
+  
+        const newChartData: userStats[] = newXAxis.map(date => {
+  
+          const defaultData = { dateAdded: date, totalTime: 0};
+          if (i >= chartDataLength) {
+            return defaultData;
+          }
+  
+          const chartDate = new Date(localChartData[i].dateAdded);
+          const check = (date.getMonth() === chartDate.getMonth() && date.getFullYear() === chartDate.getFullYear()) && date.getDate() >= chartDate.getDate()
+          if (check) {
+            return { dateAdded: new Date(localChartData[i].dateAdded), totalTime: localChartData[i++].totalTime }; 
+          } else {
+            return defaultData;
+          }
+        })
+  
+        addFunctionToChart({...localChartDatas[j], data: newChartData });
+      }
 
-      const newChartData: userStats[] = newXAxis.map(date => {
 
-        const defaultData = { dateAdded: date, totalTime: 0};
-        if (i >= chartDataLength) {
-          return defaultData;
-        }
-
-        const chartDate = new Date(localChartData[i].dateAdded);
-        const check = (date.getMonth() === chartDate.getMonth() && date.getFullYear() === chartDate.getFullYear()) && date.getDate() >= chartDate.getDate()
-        if (check) {
-          return { dateAdded: new Date(localChartData[i].dateAdded), totalTime: localChartData[i++].totalTime }; 
-        } else {
-          return defaultData;
-        }
-      })
-
-      setFilteredChart(newChartData);
     }
 
     const fetchChartData = async () => {
@@ -217,7 +227,7 @@ export function useQueryChart() {
       page: number = 1,
       limit: number = 100,
       precision: PrecisionType = "d",
-    ): Promise<userStats[] | undefined> => {
+    ): Promise<(userBudgetStats | userMachinesStats)[] | undefined> => {
       try {
         const now = new Date();
         const past = new Date();

@@ -72,7 +72,12 @@ statsRoutes.get("/stats",
     // .groupBy(castedDateAdded).as("aggregateTimeSQL");
 
     let totalBudgetTime: {budgetCode: number, data: {id: number, dateAdded: Date, totalTime: string | null}[]}[] = [];
+    let totalMachineTime: {machineId: number, data: {id: number, dateAdded: Date, totalTime: string | null}[]}[] = [];
 
+    
+    const userMachines = machineId ? await db.select().from(machines).where(and(inArray(machines.machineTypeId, machineId))) : undefined;
+    const machinesId = userMachines ? userMachines.map(m => m.id) : undefined;
+    
     for (let i = 0; budgetCode && i < budgetCode.length; i++) {
 
         
@@ -107,8 +112,9 @@ statsRoutes.get("/stats",
 
         totalBudgetTime = [...totalBudgetTime, { budgetCode: budgetCode[i], data: aggregateTime }];
     }
+    
 
-    for (let i = 0; machineId && i < machineId.length; i++) {
+    for (let i = 0; machinesId && i < machinesId.length; i++) {
 
         
     
@@ -132,20 +138,19 @@ statsRoutes.get("/stats",
         .innerJoin(users, eq(users.id, financialStatementsTable.userId))
         .innerJoin(budgetCodes, eq(budgetCodes.id, financialStatementsTable.budgetCode))
         .innerJoin(userBudgetCodeTable, eq(userBudgetCodeTable.budgetCodeId, financialStatementsTable.budgetCode))
-        .innerJoin(userMachineType, eq(userMachineType.machineTypeId, financialStatementsTable.machineId))
         .innerJoin(machines, eq(machines.id, financialStatementsTable.machineId))
-        .where(and(...whereClause, eq(userMachineType.machineTypeId, machineId[i])))
+        .where(and(...whereClause, eq(machines.id, machinesId[i])))
         .groupBy(castedDateAdded, users.id, budgetCodes.name, machines.name)
         .orderBy(...orderByClause)
         .offset(offset)
             ]
         );
 
-        totalBudgetTime = [...totalBudgetTime, { budgetCode: budgetCode[i], data: aggregateTime }];
+        totalMachineTime = [...totalMachineTime, { machineId: machinesId[i], data: aggregateTime }];
     }
     
 
-    const aggregateDateTime = totalTime.map(s => { return s.data.map(d => { return { dateAdded: new Date(d.dateAdded), totalTime: Math.floor(Number.parseInt(d.totalTime as string) / 60)}})});
+    const aggregateDateTime = [...totalMachineTime, ...totalBudgetTime];
     
 
     
