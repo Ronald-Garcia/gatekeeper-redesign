@@ -75,8 +75,10 @@ export const getAllUsers = async (
   active: number = 1,
   graduationYear?: number[], 
   budgetCodeId?: number[], 
+  training?:number[],
 ): Promise<{
   message: string;
+  gradYears: number[];
   data: User[];
   meta: {
     page: number;
@@ -85,10 +87,23 @@ export const getAllUsers = async (
   };
 }> => {
   let url = `${API_DB_URL}/users?search=${search}&limit=${limit}&page=${page}&sort=${sort}&active=${active}`
-  if (graduationYear  !== undefined) {for (const y of graduationYear) {
+  if (graduationYear !== undefined) {
+    for (const y of graduationYear) {
     url += `&gradYear=${y}`
-  }}
-  if (budgetCodeId    !== undefined) url += `&budgetCodeId=${budgetCodeId}`;
+      }
+    }
+
+  if (budgetCodeId !== undefined) {
+    for (const b of budgetCodeId){
+    url += `&budgetCodeId=${b}`;
+    }
+  }
+
+  if (training !== undefined) {
+    for (const t of training){
+    url += `&machinTypeId=${t}`;
+    }
+  }
   
   const response = await fetch(url, {
     credentials: "include",
@@ -100,9 +115,12 @@ export const getAllUsers = async (
     throw new Error(message);
   }
 
-  const { message, data, meta }: { 
+  
+
+  const { message, gradYears,data, meta }: { 
     message: string; 
     data: User[],
+    gradYears: number[],
     meta: {
       page: number;
       limit: number;
@@ -111,7 +129,8 @@ export const getAllUsers = async (
    } =
     await response.json();
 
-  return { message, data, meta };
+   
+  return { message, gradYears, data, meta };
 };
 
 

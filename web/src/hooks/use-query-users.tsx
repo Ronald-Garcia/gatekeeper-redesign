@@ -4,6 +4,7 @@ import { $activeTab, $gradYearFilter, $userBudgetFilter, $users,
   setCurrentUser, 
   setMetaData, 
   setUsers,
+  setYears,
  } from "@/data/store";
 import { User } from "@/data/types/user";
 import { useStore } from "@nanostores/react";
@@ -32,10 +33,12 @@ function useQueryUsers(reload: boolean) {
   ) => {
     try {
       const {
+        gradYears,
         data: fetchedUsers,
         meta
       } = await getAllUsers(sort,page,limit,search, activeTab, gradYear ?? undefined, budgetCodeFilter ?? undefined);
       setUsers(fetchedUsers);
+      setYears(gradYears);
       setMetaData(meta);
     }  catch (e) {
         const errorMessage = (e as Error).message;
