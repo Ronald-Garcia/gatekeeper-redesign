@@ -38,7 +38,7 @@ machineIssueRoute.get(
       db
         .select({
           id: machineIssues.id,
-          description: machineIssues.description, // ✅ include description
+          description: machineIssues.description, 
           user: {
             id: machineIssues.userId,
             name: users.name,

@@ -1,7 +1,7 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { queryUsersParamsSchema, createUserSchema, getUserSchema, getUserByCardNumSchema, enableUserSchema } from "../validators/schemas.js";
-import { SQL, or, desc, asc, eq, and, count, ilike, gt, exists } from "drizzle-orm";
+import { SQL, or, desc, asc, eq, and, count, ilike, gt, exists, inArray } from "drizzle-orm";
 import { userBudgetCodeTable, users } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
@@ -11,6 +11,7 @@ import { Context } from "../lib/context.js";
 import {User} from "../lib/types.js";
 import { inactivateGraduatedUsers } from "../middleware/gradYearRemoval.js";
 import { timeoutUserHandle } from "../middleware/timeoutHandle.js";
+import { unique } from "drizzle-orm/mysql-core/unique-constraint.js";
 
 /**
  * Routes for budget code operations.
@@ -53,20 +54,20 @@ userRoutes.get("/users",
 
     // filtering for gradYear 
     if (gradYear !== undefined) {
-        whereClause.push(or(...gradYear.map((year) => eq(users.graduationYear, year))));
+        whereClause.push(or(inArray(users.graduationYear, gradYear)));
       }
 
 
     // filtering for users associated for budgetCodes
     if (budgetCodeId !== undefined) {
-        whereClause.push( or( ... budgetCodeId.map((id)=>
+        whereClause.push( or(
           exists(db.select().from(userBudgetCodeTable).where(and(
                   eq(userBudgetCodeTable.userId, users.id),
-                  eq(userBudgetCodeTable.budgetCodeId, id)
+                  inArray(userBudgetCodeTable.budgetCodeId, budgetCodeId)
                 )
               )
             )
-        )
+           
         
           )
         );
@@ -78,6 +79,14 @@ userRoutes.get("/users",
             or(ilike(users.name, `%${search}%`), ilike(users.JHED, `%${search}%`))
         );
     }
+
+    //get grad years for the filter options 
+    const years = 
+    (await db.selectDistinct({ graduationYear: users.graduationYear })  
+    .from(users).orderBy(users.graduationYear) ).map(({ graduationYear }) => graduationYear).filter((curr) => curr !== null);
+    
+     
+      
 
     const orderByClause: SQL[] = [];
 
@@ -134,6 +143,7 @@ userRoutes.get("/users",
     {
     success:true,
     data: allUsers,
+    gradYears: years, 
     meta: {
         page,
         limit,
