@@ -11,6 +11,26 @@ export const queryUsersParamsSchema = z.object({
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().optional(),
     active: z.coerce.number().int().min(0).max(1).optional().default(1),
+    gradYear: z.union([
+      z.array(z.coerce.number().int().min(0)),
+      z.coerce.number().int().min(0),
+    ])
+    .optional()
+    // wrap single number into an array 
+    .transform((val) => {
+      if (val === undefined) return undefined;
+      return Array.isArray(val) ? val : [val];
+    }),
+
+    budgetCodeId: z.union([
+      z.array(z.coerce.number().int().min(0)),
+      z.coerce.number().int().min(0),
+    ]).optional()
+     // wrap single number into an array 
+    .transform((val) => {
+      if (val === undefined) return undefined;
+      return Array.isArray(val) ? val : [val];
+    })
 });
 
 export const enableUserSchema = z.object({
@@ -66,7 +86,8 @@ export const queryBudgetCodesParamsSchema = z.object({
     limit: z.coerce.number().int().positive().optional(),
     budgetCode: z.coerce.number().int().positive().optional(),
     name: z.string().optional(),
-    active: z.coerce.number().int().min(0).max(1).optional().default(1)
+    active: z.coerce.number().int().min(0).max(1).optional().default(1),
+    budgetTypeId: z.coerce.number().int().optional() 
 });
 
 export const createBudgetCode = z.object({

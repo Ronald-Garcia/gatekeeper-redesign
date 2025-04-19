@@ -29,7 +29,7 @@ export const budgetCodesRoutes = new Hono<Context>();
 budgetCodesRoutes.get("/budget-codes",
      adminGuard, 
      zValidator("query", queryBudgetCodesParamsSchema), async (c) => {
-    const { page = 1, limit = 20, search, sort, active } = c.req.valid("query");
+    const { page = 1, limit = 20, search, sort, active, budgetTypeId } = c.req.valid("query");
 
     const whereClause: (SQL | undefined)[] = [];
 
@@ -40,6 +40,11 @@ budgetCodesRoutes.get("/budget-codes",
     if (active !== undefined) {
         whereClause.push(eq(budgetCodes.active, active));
     }
+
+    if (budgetTypeId !== undefined) {
+        whereClause.push(eq(budgetCodes.budgetCodeTypeId, budgetTypeId));
+    }
+
 
         const orderByClause: SQL[] = [];
     
