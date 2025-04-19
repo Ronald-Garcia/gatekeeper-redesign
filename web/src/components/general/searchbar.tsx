@@ -45,7 +45,7 @@ const Searchbar = () => {
     };
 
     return (
-        <div className="relative w-full">
+        <div className="relative w-64">
             <div className="relative">
                 <Search className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
                 <input
