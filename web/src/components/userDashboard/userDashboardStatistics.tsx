@@ -40,8 +40,8 @@ export function UserDashboardStats() {
   }
   const { filteredChartData, precision, setPrecision } = useQueryChart();
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center gap-2 space-y-0 py-5 ">
+    <Card className="h-screen">
+      <CardHeader className="flex flex-row items-center gap-2 py-5 space-y-0 ">
         <div className="grid flex-1 gap-1 text-center sm:text-left">
           <CardTitle></CardTitle>
           <CardDescription></CardDescription>
@@ -76,7 +76,7 @@ export function UserDashboardStats() {
         </Select>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={timeChartConfig}>
+        <ChartContainer config={timeChartConfig} className="min-h-fit min-w-fit">
           <BarChart
             accessibilityLayer
             data={filteredChartData}

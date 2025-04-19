@@ -60,9 +60,11 @@ const UserDashboard = () => {
     <div className="flex">
       <UserSidebar />
       <div className="admin-dashboard">
-        <ScrollArea className={`${activeSearch ? 'scroll-component-search' : 'scroll-component'}`}>
+        {/* <ScrollArea className={`${activeSearch ? 'scroll-component-search' : 'scroll-component'}`}> */}
+          <div>
           <UserDashboardStats/>
-        </ScrollArea>
+          </div>
+        {/* </ScrollArea> */}
       </div>
     </div>
     )

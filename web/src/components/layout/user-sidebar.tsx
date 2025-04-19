@@ -38,7 +38,7 @@ const UserSidebar = () => {
                     variant="ghost" 
                     className={cn(
                         "w-full justify-start transition-colors duration-200 text-lg",
-                        (!router?.route || router.route === "users") && "bg-blue-50 text-blue-600 hover:bg-blue-100"
+                        (!router?.route || router.route === "userDashboardMachinesStatus") && "bg-blue-50 text-blue-600 hover:bg-blue-100"
                     )}
                     onClick={handleClickOnViewMachines}
                 >
@@ -49,7 +49,7 @@ const UserSidebar = () => {
                     variant="ghost"
                     className={cn(
                         "w-full justify-start transition-colors duration-200 text-lg",
-                        router?.route === "budgetCodes" && "bg-blue-50 text-blue-600 hover:bg-blue-100"
+                        router?.route === "userDashboardUserStats" && "bg-blue-50 text-blue-600 hover:bg-blue-100"
                     )}
                     onClick={handleClickOnViewUserStats}
                 >
