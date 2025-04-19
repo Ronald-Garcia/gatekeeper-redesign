@@ -55,7 +55,7 @@ const handleOnChange = (e:React.ChangeEvent<HTMLTextAreaElement>) => {
   };
 
   const handleGoHome = () => {
-    redirectPage($router, "start_page")    
+    redirectPage($router, "userDashboard")    
   }
   
   // className={errors.name ? "border-red-500" : ""}
