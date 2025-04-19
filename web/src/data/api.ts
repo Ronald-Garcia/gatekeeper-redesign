@@ -76,8 +76,8 @@ export const getAllUsers = async (
   limit: number = 10,
   search: string = "",
   active: number = 1,
-  graduationYear?: number, 
-  budgetCodeId?: number, 
+  graduationYear?: number[], 
+  budgetCodeId?: number[], 
 ): Promise<{
   message: string;
   data: User[];
@@ -88,7 +88,9 @@ export const getAllUsers = async (
   };
 }> => {
   let url = `${API_DB_URL}/users?search=${search}&limit=${limit}&page=${page}&sort=${sort}&active=${active}`
-  if (graduationYear  !== undefined) url += `&graduationYear=${graduationYear}`;
+  if (graduationYear  !== undefined) {for (const y of graduationYear) {
+    url += `&gradYear=${y}`
+  }}
   if (budgetCodeId    !== undefined) url += `&budgetCodeId=${budgetCodeId}`;
   
   const response = await fetch(url, {
@@ -361,7 +363,8 @@ export const getAllBudgets = async (
   page: number = 1,
   limit: number = 10,
   search: string = "",
-  active: number = 1
+  active: number = 1, 
+  budgCodeType?:number[]
 ): Promise<{
   message: string;
   data: BudgetCode[];
@@ -371,7 +374,9 @@ export const getAllBudgets = async (
     total: number;
   };
 }> => {
-  const response = await fetch(`${API_DB_URL}/budget-codes?search=${search}&limit=${limit}&page=${page}&sort=${sort}&active=${active}`, {
+  let url = `${API_DB_URL}/budget-codes?search=${search}&limit=${limit}&page=${page}&sort=${sort}&active=${active}`
+  if (budgCodeType !== undefined) url += `&budgetCodeTypeId=${budgCodeType}`
+  const response = await fetch(url, {
     credentials: "include",
   });
 
@@ -706,14 +711,17 @@ export const getAllMachines = async (
   limit: number = 10,
   search: string = "",
   type: string = "",
-  active: number = 1
+  active: number = 1, 
+  machineTypeFilter?: number
 
 ): Promise<{
   message: string;
   data: Machine[];
   meta: MetaType
 }> => {
-  const response = await fetch(`${API_DB_URL}/machines?search=${search}&limit=${limit}&page=${page}&sort=${sort}&type=${type}&active=${active}`, {
+  let url =`${API_DB_URL}/machines?search=${search}&limit=${limit}&page=${page}&sort=${sort}&type=${type}&active=${active}`
+  if (machineTypeFilter  !== undefined) url += `&machineTypeId=${machineTypeFilter}`
+  const response = await fetch(url, {
     credentials: "include",
   });
 

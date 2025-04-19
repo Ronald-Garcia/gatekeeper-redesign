@@ -1,15 +1,60 @@
 import { WritableAtom } from "nanostores";
+import { $budgetCodeTypes, $budgetTypeFilter, $codes, $gradYearFilter, $machine_types, $machineTypeFilter, $userBudgetFilter } from "../store";
+import { budgetCodeType } from "./budgetCode";
 
 export type UserFilters = "gradYear" |"budgetCodeId" | "machineTypeId";
 export type BudgetFilters = "budgetTypeId";
-export type MachineFilters = "MachineTypeId";
+export type MachineFilters = "machineTypeId";
 //export type FinancialFilters =
 
 export type FilterQueries = UserFilters | MachineFilters | BudgetFilters 
 
-export type FilterSortGeneralized= {
-    label:string;
-    store: WritableAtom<number | null> |WritableAtom<number[]>
-    options: () => {id: number; label: string}[];
-    mult?:boolean;
-}
+type FilterRenderConfig = {
+    label: string;
+    store: WritableAtom<number | null | number[]| string>;
+    getOptions: () => { label: string; value: number |budgetCodeType }[];
+    multi?: boolean;
+  };
+  
+
+export const filterConfigMap: Record<FilterQueries, FilterRenderConfig> = {
+  gradYear: {
+    label: "Graduation Year",
+    store: $gradYearFilter,
+    getOptions: () =>
+      [2024, 2025, 2026, 2027].map((year) => ({
+        label: String(year),
+        value: year,
+  
+      })),
+      multi: true,
+  },
+  budgetCodeId: {
+    label: "Budget Code",
+    store: $userBudgetFilter,
+    getOptions: () => $codes.get().map((id) => ({
+      label: `${id.name}`,
+      value: id
+    })),
+    multi: true,
+  },
+  machineTypeId: {
+    label: "Machine Type",
+    store: $machineTypeFilter,
+    getOptions: () => $machine_types.get().map((id) => ({
+      label: `${id.name}`,
+      value: id
+    })),
+    multi: true,
+  },
+  budgetTypeId: {
+    label: "Budget Type",
+    store: $budgetTypeFilter,
+    getOptions: () => $budgetCodeTypes.get().map((id) => ({
+      label: `${id.name}`,
+      value: id.id
+    })),
+    multi: true,
+  },
+};
+

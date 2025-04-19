@@ -205,7 +205,7 @@ describe('UI test', () => {
       // intercept
       cy.intercept('GET', `${API_DB_URL}/budget-codes*`).as('getBudgetCodes')
 
-      //  kiosk → budgets
+      //  kiosk, budgets
       cy.visit('http://localhost:5173/kiosk')
       cy.get('[data-cy="kiosk-button"]').click()
       cy.get('[data-cy="cardnum-input"]')

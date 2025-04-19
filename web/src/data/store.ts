@@ -393,18 +393,18 @@ export function resetSearch() {
 }
 
 // filter stores 
+export const $gradYearFilter = atom<number []| null>(null);
+export const $userBudgetFilter = atom<number []| null>(null);
+export const $machineTypeFilter = atom<number []| null>(null);
+export const $budgetTypeFilter = atom<number []| null>(null);
 
-export const $gradYearFilter = atom<number | null>(null);
-export const $userBudgetFilter = atom<number | null>(null);
-export const $budgetTypeFilter = atom<number | null>(null);
-
-export function setYearFilter(year: number) {
+export function setYearFilter(year: number[]) {
   $gradYearFilter.set(year);
 
 }
 
-export function setBudgetFilter(budget: number) {
-  $gradYearFilter.set(budget);
+export function setBudgetFilter(budget: number[]) {
+  $userBudgetFilter.set(budget);
 }
 
 export function clearYearFilter() {
@@ -413,7 +413,32 @@ export function clearYearFilter() {
 }
 
 export function clearBudgetFilter() {
-  $gradYearFilter.set(null);
+  $userBudgetFilter.set(null);
+}
+
+export function setMachineTypeFilter(type: number[]) {
+  $machineTypeFilter.set(type);
+
+}
+
+
+export function clearMachineTypeFilter() {
+  $machineTypeFilter.set(null);
+}
+
+export function setBudgetTypeFilter(type: number[]) {
+  $budgetTypeFilter.set(type);
+}
+
+export function clearBudgetTypeFilter() {
+  $budgetTypeFilter.set(null);
+}
+
+export function clearFilters(){
+  clearBudgetTypeFilter();
+  clearMachineTypeFilter();
+  clearYearFilter();
+  clearBudgetFilter();
 }
 
 export function setFinancialStatements(statements: financialStatement[]) {

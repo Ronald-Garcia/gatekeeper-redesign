@@ -53,23 +53,21 @@ userRoutes.get("/users",
 
     // filtering for gradYear 
     if (gradYear !== undefined) {
-        whereClause.push(eq(users.graduationYear, gradYear));
+        whereClause.push(or(...gradYear.map((year) => eq(users.graduationYear, year))));
       }
 
 
     // filtering for users associated for budgetCodes
     if (budgetCodeId !== undefined) {
-        whereClause.push(
-          exists(
-            db
-              .select()
-              .from(userBudgetCodeTable)
-              .where(
-                and(
+        whereClause.push( or( ... budgetCodeId.map((id)=>
+          exists(db.select().from(userBudgetCodeTable).where(and(
                   eq(userBudgetCodeTable.userId, users.id),
-                  eq(userBudgetCodeTable.budgetCodeId, budgetCodeId)
+                  eq(userBudgetCodeTable.budgetCodeId, id)
                 )
               )
+            )
+        )
+        
           )
         );
       }

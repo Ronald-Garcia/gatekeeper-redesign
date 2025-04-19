@@ -1,5 +1,5 @@
 import { getAllUsers, getUser, validateTraining } from "@/data/api";
-import { $activeTab, $budgetTypeFilter, $gradYearFilter, $users, 
+import { $activeTab, $gradYearFilter, $userBudgetFilter, $users, 
   clearCurrentUser, 
   setCurrentUser, 
   setMetaData, 
@@ -20,7 +20,7 @@ function useQueryUsers(reload: boolean) {
   const { getSavedMachine } = useQueryMachines(false);
   const activeTab = useStore($activeTab);
   const gradYear = useStore($gradYearFilter);
-  const budgetCodeFilter = useStore($budgetTypeFilter);
+  const budgetCodeFilter = useStore($userBudgetFilter);
   
   const { toast } = useToast();
 
