@@ -3,6 +3,10 @@ import ToggleableItem from "../Users/toggleable-item";
 
 export default function FinancialComponent({ statement }: { statement: financialStatement }) {
   return (
+    <div className="">
+      <div>
+        
+      </div>
     <ToggleableItem
       title={statement.user.name}
       subtitle={`${statement.dateAdded.toLocaleDateString()}`}
@@ -15,5 +19,6 @@ export default function FinancialComponent({ statement }: { statement: financial
       ]}
       dataCy={`financial-statement-${statement.user}`}
     />
+    </div>
   );
 }
