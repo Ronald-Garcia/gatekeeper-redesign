@@ -1,5 +1,6 @@
 /*
-    This is the actual format of the start page, just takes toggles if you do route or not based on parent.
+
+This is the actual format of the start page, just takes toggles if you do route or not based on parent.
 */
 
 import { redirectPage } from "@nanostores/router";

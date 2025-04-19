@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/chart"
 import useQueryChart from "@/hooks/use-query-chart-data"
 import DatePickerWithRange from "../financialStatements/datepicker"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
+import { PrecisionType } from "@/data/types/precision-type"
 
 const timeChartConfig = {
   totalTime: {
@@ -33,14 +35,45 @@ const timeChartConfig = {
 
 export function UserDashboardStats() {
 
-  const { filteredChartData, precision } = useQueryChart();
+  const setPrecisionValue = (value: PrecisionType) => {
+    setPrecision(value);
+  }
+  const { filteredChartData, precision, setPrecision } = useQueryChart();
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Line Chart - Linear</CardTitle>
-        <CardDescription>{precision}</CardDescription>
+      <CardHeader className="flex flex-row items-center gap-2 space-y-0 py-5 ">
+        <div className="grid flex-1 gap-1 text-center sm:text-left">
+          <CardTitle></CardTitle>
+          <CardDescription></CardDescription>
 
-        <DatePickerWithRange></DatePickerWithRange>
+        </div>
+        {precision === "d" && <DatePickerWithRange></DatePickerWithRange>}
+        <Select value={precision} onValueChange={setPrecisionValue}>
+          <SelectTrigger>
+            <SelectValue placeholder="Days" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="m">
+              Minutes
+            </SelectItem>
+            <SelectItem value="h">
+              Hours
+            </SelectItem>
+            <SelectItem value="d">
+              Days
+            </SelectItem>
+            <SelectItem value="w">
+              Weeks
+            </SelectItem>
+            <SelectItem value="mo">
+              Months
+            </SelectItem>
+            <SelectItem value="y">
+              Years
+            </SelectItem>
+          </SelectContent>
+
+        </Select>
       </CardHeader>
       <CardContent>
         <ChartContainer config={timeChartConfig}>
@@ -77,7 +110,6 @@ export function UserDashboardStats() {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         {/* <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="w-4 h-4" />
         </div> */}
         <div className="leading-none text-muted-foreground">
           Showing total machine use
