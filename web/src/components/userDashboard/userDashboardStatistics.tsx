@@ -24,6 +24,7 @@ import DatePickerWithRange from "../financialStatements/datepicker"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { PrecisionType } from "@/data/types/precision-type"
 import { DatePicker } from "../financialStatements/datepick"
+import GeneralizedFilter from "../general/filtering"
 
 const timeChartConfig = {
   totalTime: {
@@ -39,7 +40,7 @@ export function UserDashboardStats() {
   const setPrecisionValue = (value: PrecisionType) => {
     setPrecision(value);
   }
-  const { filteredChartData, precision, setPrecision, dateChoice } = useQueryChart();
+  const { filteredChartData, precision, setPrecision } = useQueryChart();
   return (
     <Card className="h-screen">
       <CardHeader className="flex flex-row items-center gap-2 py-5 space-y-0 ">
@@ -48,9 +49,10 @@ export function UserDashboardStats() {
           <CardDescription></CardDescription>
 
         </div>
+        <GeneralizedFilter filters={["userMachineType", "userBudgetType"]}></GeneralizedFilter>
         {/* {precision === "m" && <TimePickerInput date={dateChoice} setDate={setDate} picker="hours"></TimePickerInput>} */}
         {precision === "d" && <DatePickerWithRange></DatePickerWithRange>}
-        {precision === "h" || precision === "m" && <DatePicker></DatePicker>}
+        { (precision === "h" || precision === "m") && <DatePicker></DatePicker>}
         <Select value={precision} onValueChange={setPrecisionValue}>
           <SelectTrigger>
             <SelectValue placeholder="Days" />

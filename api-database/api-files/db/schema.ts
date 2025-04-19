@@ -54,12 +54,6 @@ export const budgetCodeType = pgTable("budgetCodeType", {
   name: text().unique().notNull()
 })
 
-
-export const budgetCodeType = pgTable("budgetCodeType", {
-  id: serial().primaryKey(),
-  name: text().unique().notNull()
-})
-
 /**
  * The table that stores the budget codes registered with the app.
  * @primary id          the database ID of the budget code.

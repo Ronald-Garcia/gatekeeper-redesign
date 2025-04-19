@@ -1,20 +1,28 @@
-import { getUserStatistics } from "@/data/api";
-import { $userChart, $date_range, setChartData, $filtered_chart, setFilteredChart, clearFilteredChart, $date, $hour } from "@/data/store";
+import { getAllTrainingsOfUser, getUserStatistics } from "@/data/api";
+import { $userChart, $date_range, setChartData, $filtered_chart, setFilteredChart, clearFilteredChart, $date, $userBudgetFilter, $machineTypeFilter, $currentUser, setTrainingQueue } from "@/data/store";
 import { useStore } from "@nanostores/react";
 import { toast } from "./use-toast";
 import { useEffect, useState } from "react";
 import { PrecisionType } from "@/data/types/precision-type";
 import { userStats } from "@/data/types/user-stats";
+import { BudgetCode } from "@/data/types/budgetCode";
+import useQueryMachines from "./use-query-machines";
+import useQueryBudgets from "./use-query-budgetCodes";
 
 
 export function useQueryChart() {
 
+    const { getTrainingsOfUser } = useQueryMachines(false);
+    const { getBudgetsOfUser } = useQueryBudgets(false);
     const dateRange = useStore($date_range);
     const dateChoice = useStore($date);
     const chartData = useStore($userChart);
-    const filteredChartData = useStore($filtered_chart)
+    const filteredChartData = useStore($filtered_chart);
+    const machineTypeFilter = useStore($machineTypeFilter);
+    const budgetCodeFilter = useStore($userBudgetFilter);
     const [precision, setPrecision] = useState<PrecisionType>("d");
 
+    const curUser = useStore($currentUser);
     
     const fetchChartDataMinute = async () => {
       let newXAxis: Date[] = [];
@@ -44,9 +52,6 @@ export function useQueryChart() {
           date.setMinutes(date.getMinutes() + 1);
       }
           
-
-
-
       const chartDataLength = localChartData.length;
 
       let i = 0;
@@ -199,16 +204,19 @@ export function useQueryChart() {
     }, [precision, dateRange, dateChoice])
 
     useEffect(() => {
+
+      getTrainingsOfUser(curUser.id)
       clearFilteredChart()
+
+      getBudgetsOfUser(curUser.id)
     }, [])
+
 
     // getting & adding time for each day for all days within range
     const getUserChartData = async (
       page: number = 1,
       limit: number = 100,
       precision: PrecisionType = "d",
-      budgetCode: number | undefined = undefined,
-      machineId: number | undefined = undefined,
     ): Promise<userStats[] | undefined> => {
       try {
         const now = new Date();
@@ -260,7 +268,7 @@ export function useQueryChart() {
 
 
         // setting chart data
-        const { data } = await getUserStatistics(page, limit, to as Date, from as Date, precision, budgetCode, machineId)
+        const { data } = await getUserStatistics(page, limit, to as Date, from as Date, precision, budgetCodeFilter, machineTypeFilter)
         await setChartData(data)
 
         console.log(data)

@@ -6,6 +6,23 @@ export const queryStatsParamsSchema = z.object({
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().optional(),
     precision: z.enum(["m", "h", "d", "w", "mo", "y"]).default("mo"),
-    budgetCode: z.coerce.number().int().positive().optional(),
-    machineId: z.coerce.number().int().positive().optional(),
+    budgetCode: z.union([
+        z.array(z.coerce.number().int().min(0)),
+        z.coerce.number().int().min(0),
+      ]).optional()
+      // wrap single number into an array 
+      .transform((val) => {
+        if (val === undefined) return undefined;
+        return Array.isArray(val) ? val : [val];
+      }),
+    machineId: z.union([
+        z.array(z.coerce.number().int().min(0)),
+        z.coerce.number().int().min(0),
+      ])
+      .optional()
+      // wrap single number into an array 
+      .transform((val) => {
+        if (val === undefined) return undefined;
+        return Array.isArray(val) ? val : [val];
+      })
 });

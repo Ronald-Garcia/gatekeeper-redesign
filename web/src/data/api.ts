@@ -709,7 +709,7 @@ export const getAllMachines = async (
   search: string = "",
   type: string = "",
   active: number = 1, 
-  machineTypeFilter?: number
+  machineTypeFilter?: number[]
 
 ): Promise<{
   message: string;
@@ -1356,8 +1356,8 @@ export const getUserStatistics = async (
   to: Date,
   from: Date,
   precision: PrecisionType = "m",
-  budgetCode: number | undefined,
-  machineId: number | undefined,
+  budgetCodeFilter?: number[] | null,
+  machineTypeFilter?: number[] | null,
 ): Promise<{
   data: userStats[],
   message: string
@@ -1370,15 +1370,18 @@ export const getUserStatistics = async (
     precision: precision.toString(),
   });
 
-  if (budgetCode) {
-    query.append("budgetCode", budgetCode.toString());
+  let url = `${API_DB_URL}/stats?${query.toString()}`;
+
+
+  for (const y in machineTypeFilter) {
+    url += `&machineId=${y}`;
   }
 
-  if (machineId) {
-    query.append("machineId", machineId.toString());
+  for (const y in budgetCodeFilter) {
+    url += `&budgetCode=${y}`;
   }
   
-  const response = await fetch(`${API_DB_URL}/stats?${query.toString() }`, {
+  const response = await fetch(url, {
     credentials: "include"}
   )
 
