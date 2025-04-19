@@ -1,5 +1,5 @@
 import { fetchCurrentMachine, getAllMachines, getAllTrainingsOfUser, getMachine, getMachineTypes } from "@/data/api"
-import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes, appendMachineTypes, $activeTab, setMetaData } from "@/data/store";
+import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes, appendMachineTypes, $activeTab, setMetaData, setPage } from "@/data/store";
 import { Machine } from "@/data/types/machine";
 import { MachineType } from "@/data/types/machineType";
 
@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import { SortMachineType, SortType } from "@/data/types/sort";
 import { useStore } from "@nanostores/react";
 import { useToast } from "./use-toast";
+import { $router } from "@/data/router";
+import { redirectPage } from "@nanostores/router";
 
 function useQueryMachines(reload: boolean) {
   // Pagination state for machine types (used for infinite scroll)
@@ -53,6 +55,24 @@ function useQueryMachines(reload: boolean) {
       return 0;
     }    
   }
+
+  const getMachineName = async (id:number): Promise<Machine | undefined> => {
+    try {
+      const { data } = await getMachine(id);
+      return data
+
+    } catch (e) {
+      const errorMessage = (e as Error).message;
+      toast({
+        variant: "destructive",
+        title: "❌ Sorry! There was an error fetching the Machine 🙁",
+        description: errorMessage
+      });
+      redirectPage($router, "start_page");      
+      return;
+    }    
+  }
+
 
   const loadMachineTypes = async (
     sort: SortType = "asc",
@@ -145,6 +165,7 @@ function useQueryMachines(reload: boolean) {
     loadMachines, 
     loadMachineTypes, 
     getTrainingsOfUser,
+    getMachineName,
     // Only expose machine types pagination for infinite scroll
     currentPage: machineTypesCurrentPage,
     hasMore: machineTypesHasMore,

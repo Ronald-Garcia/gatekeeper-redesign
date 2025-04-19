@@ -11,6 +11,8 @@ import KioskStartPage from "../pages/kiosk-start-page";
 import ErrorPage from "./errorPage";
 import InProgress from "../pages/in-progress";
 import HomePage from "../pages/home-page";
+import FormPage from "@/components/pages/form";
+
 
 /*
 Body component of the application
@@ -23,7 +25,7 @@ const Body = () => {
   //validate user when using the application, else rerouted to start page
   useEffect(() => {
     // This is our error page, don't want to make calls.
-    if (!router) {
+    if (!router || router.route === "errorPage") {
 
     }
     else if (!validCurrentMachine() && !validCurrentUser()) {
@@ -47,6 +49,8 @@ const Body = () => {
   else return (
 
     <>
+
+      {router.route === "errorPage" && <ErrorPage></ErrorPage>}
     
       {router.route === "machine_login" && <MachineLogin></MachineLogin>}
 
@@ -61,6 +65,8 @@ const Body = () => {
       {router.route === "timer" && <InProgress></InProgress>}
 
       {router.route === "interlockLogin" && <StartPage></StartPage>}
+
+      {router.route === "reportForm" && <FormPage></FormPage>}
 
     </>
   )  

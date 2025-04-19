@@ -13,5 +13,9 @@ export const $router = createRouter({
   financial_statements: `${BASE_URL}statements`,
   timer: `${BASE_URL}timer`,
   machineIssues: `${BASE_URL}issues`,
-  reportForm: `${BASE_URL}form/:userID/:machineID`
+  reportForm: `${BASE_URL}form/:userId/:machineId`,
+  errorPage: `${BASE_URL}/404`,
+
 });
+
+

@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import useMutationMachineIssue from "@/hooks/use-mutation-machineIssue";
+import { Textarea } from "../ui/textarea";
+import useQueryMachines from "@/hooks/use-query-machines";
 
 const FormPage = () => {
   const [userID, setUserID] = useState<number | null>(null);
@@ -10,16 +11,9 @@ const FormPage = () => {
   const [description, setDescription] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-  const { reportIssue } = useMutationMachineIssue();
+  const { reportIssue  } = useMutationMachineIssue();
+  const { loadMachines } = useQueryMachines(false);
 
-  useEffect(() => {
-    const parts = window.location.pathname.split("/");
-    const uID = parseInt(parts[parts.length - 2]);
-    const mID = parseInt(parts[parts.length - 1]);
-
-    if (!isNaN(uID)) setUserID(uID);
-    if (!isNaN(mID)) setMachineID(mID);
-  }, []);
 
   const handleSubmit = async () => {
     if (!userID || !machineID || !description.trim()) return;
@@ -29,6 +23,8 @@ const FormPage = () => {
       setSubmitted(true);
     }
   };
+
+  const curMachine = loadMachines(undefined, undefined, undefined, "")
 
   if (submitted) {
     return (
@@ -40,23 +36,24 @@ const FormPage = () => {
   }
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-50">
+    <div className="flex items-center justify-center h-screen bg-gray-50">
       <Card className="w-[500px]">
         <CardHeader>
           <CardTitle>Maintenance Report</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <p className="text-sm text-gray-600">
-            Reporting for user <strong>{userID}</strong> on machine <strong>{machineID}</strong>
+            Reporting for machine <strong>{machineID}</strong>
           </p>
-          <Input
+          <Textarea
+            className="resize-none"
             placeholder="Describe the issue..."
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
           <Button
             onClick={handleSubmit}
-            className="bg-red-500 text-white hover:bg-red-600"
+            className="text-white bg-red-500 hover:bg-red-600"
             disabled={!description.trim()}
           >
             Submit Report
