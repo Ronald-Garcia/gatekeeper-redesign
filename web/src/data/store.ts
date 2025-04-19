@@ -392,6 +392,30 @@ export function resetSearch() {
   $activeSearch.set("")
 }
 
+// filter stores 
+
+export const $gradYearFilter = atom<number | null>(null);
+export const $userBudgetFilter = atom<number | null>(null);
+export const $budgetTypeFilter = atom<number | null>(null);
+
+export function setYearFilter(year: number) {
+  $gradYearFilter.set(year);
+
+}
+
+export function setBudgetFilter(budget: number) {
+  $gradYearFilter.set(budget);
+}
+
+export function clearYearFilter() {
+  $gradYearFilter.set(null);
+
+}
+
+export function clearBudgetFilter() {
+  $gradYearFilter.set(null);
+}
+
 export function setFinancialStatements(statements: financialStatement[]) {
   $statements.set(statements);
 }

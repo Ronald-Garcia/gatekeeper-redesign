@@ -75,8 +75,9 @@ export const getAllUsers = async (
   page: number = 1,
   limit: number = 10,
   search: string = "",
-  active: number = 1
-
+  active: number = 1,
+  graduationYear?: number, 
+  budgetCodeId?: number, 
 ): Promise<{
   message: string;
   data: User[];
@@ -86,7 +87,11 @@ export const getAllUsers = async (
     total: number;
   };
 }> => {
-  const response = await fetch(`${API_DB_URL}/users?search=${search}&limit=${limit}&page=${page}&sort=${sort}&active=${active}`, {
+  let url = `${API_DB_URL}/users?search=${search}&limit=${limit}&page=${page}&sort=${sort}&active=${active}`
+  if (graduationYear  !== undefined) url += `&graduationYear=${graduationYear}`;
+  if (budgetCodeId    !== undefined) url += `&budgetCodeId=${budgetCodeId}`;
+  
+  const response = await fetch(url, {
     credentials: "include",
   });
 

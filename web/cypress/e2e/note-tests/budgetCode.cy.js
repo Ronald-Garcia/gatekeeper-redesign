@@ -200,23 +200,23 @@ it('Activating Deactivated code displays them on active tab and removes them fro
 });
 describe('UI test', () => {
   it('Test pagination, scrolling to the next page displays appropriate next page.', () => {
-    // 1) sign in
+    // sign in
     cy.request(`${API_DB_URL}/users/${admin_card_num}`).then(() => {
-      // 2) intercept
+      // intercept
       cy.intercept('GET', `${API_DB_URL}/budget-codes*`).as('getBudgetCodes')
 
-      // 3) kiosk → budgets
+      //  kiosk → budgets
       cy.visit('http://localhost:5173/kiosk')
       cy.get('[data-cy="kiosk-button"]').click()
       cy.get('[data-cy="cardnum-input"]')
         .type(`;${admin_card_num};{enter}`)
       cy.get('[data-cy="view-budget-codes"]').last().click()
 
-      // 4) initial load → page 1
+      // initial load page 1
       cy.wait('@getBudgetCodes').its('response.statusCode').should('eq', 200)
       cy.get('[data-cy="pagination-current"]').should('contain.text', '1')
 
-      // 5) click Next (only the last “Next”), wait again → page 2
+      // click Next for page 2
       cy.get('[data-cy="pagination-next"]').last().click({ force: true })
       cy.wait('@getBudgetCodes').its('response.statusCode').should('eq', 200)
       cy.get('[data-cy="pagination-current"]').should('contain.text', '2')
