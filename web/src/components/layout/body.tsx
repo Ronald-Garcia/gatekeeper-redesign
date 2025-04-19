@@ -13,6 +13,9 @@ import InProgress from "../pages/in-progress";
 import HomePage from "../pages/home-page";
 import FormPage from "@/components/pages/form";
 
+import UserStartPage from "../pages/user-dashboard-start-page";
+import UserDashboard from "../pages/user-dashboard";
+import LostConnectionPage from "../pages/lost-connection-page";
 
 /*
 Body component of the application
@@ -46,6 +49,7 @@ const Body = () => {
   }
   
 // following pages are only acessible to admin users
+
   else return (
 
     <>
@@ -68,6 +72,11 @@ const Body = () => {
 
       {router.route === "reportForm" && <FormPage userId={router.params.userId} machineId={router.params.machineId} />}
 
+      {router.route === "lostConnectionPage" && <LostConnectionPage></LostConnectionPage>}
+
+      {router.route === "userDashboard" && <UserStartPage></UserStartPage>}
+
+      {(router.route === "userDashboardMachinesStatus" || router.route == "userDashboardUserStats") && <UserDashboard></UserDashboard>}
 
     </>
   )  

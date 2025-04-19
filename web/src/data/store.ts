@@ -8,6 +8,7 @@ import { MachineIssue } from "./types/machineIssues"
 import { logger } from "@nanostores/logger"
 import { DateRange } from "react-day-picker";
 import { MetaType } from "./types/meta";
+import { userBudgetStats, userMachinesStats } from "./types/user-stats";
 
 export const $users = atom<User[]>([]);
 export const $codes = atom<BudgetCode[]>([]);
@@ -22,7 +23,21 @@ export const $hasMoreUserTrainings = atom<boolean>(false);
 export const $currentPage = atom<number>(1);
 export const $activeTab = atom<number>(1);
 export const $machine_issues = atom<MachineIssue[]>([]);
+export const $userChart = atom<(userBudgetStats | userMachinesStats)[]>([]);
+export const $filtered_chart = atom<(userBudgetStats | userMachinesStats)[]>([]);
+export const $hour = atom<number>(-1);
 
+export function addFunctionToChart(func: userBudgetStats | userMachinesStats) {
+  $filtered_chart.set([...$filtered_chart.get(), func])
+}
+
+export function setHour(hour: number) {
+  $hour.set(hour % 24);
+}
+
+export function resetHours() {
+  $hour.set(-1);
+}
 
 export function setMachineIssues(issues: MachineIssue[]) {
   $machine_issues.set(issues);
@@ -31,6 +46,14 @@ export function resetMachineIssues() {
   $machine_issues.set([]);
 }
 export const $budgetCodeTypes = atom<budgetCodeType[]>([]);
+
+export function setFilteredChart(chart: (userBudgetStats | userMachinesStats)[]) {
+  $filtered_chart.set(chart);
+}
+
+export function clearFilteredChart() {
+  $filtered_chart.set([]);
+}
 
 export function setActiveTab(tab: number) {
   $activeTab.set(tab);
@@ -142,7 +165,6 @@ export function toggleTrainingQueue(bc: number) {
     addTrainingQueue(bc);
   }
 }
-export const $statements = atom<financialStatement[]>([]);
 
 
 
@@ -194,6 +216,7 @@ const defaultMachine: Machine = {
   },
   hourlyRate: 0,
   active:-1,
+  lastTimeUsed: "",
 }
 
 const defaultBudget: BudgetCode = {
@@ -401,6 +424,7 @@ export function resetSearch() {
 export const $gradYearFilter = atom<number []| null>(null);
 export const $userBudgetFilter = atom<number []| null>(null);
 export const $machineTypeFilter = atom<number []| null>(null);
+export const $userMachineFilter = atom<number []| null>(null);
 export const $budgetTypeFilter = atom<number []| null>(null);
 export const $gradYears = atom<number[]>([]);
 
@@ -412,6 +436,10 @@ export function setYears(year: number[]) {
   $gradYears.set(year);
 }
 
+export function setUserMachineFilter(machine: number[]) {
+  $userMachineFilter.set(machine);
+}
+ 
 export function setBudgetFilter(budget: number[]) {
   $userBudgetFilter.set(budget);
 }
@@ -419,6 +447,10 @@ export function setBudgetFilter(budget: number[]) {
 export function clearYearFilter() {
   $gradYearFilter.set(null);
 
+}
+
+export function clearUserMachineFilter() {
+  $userMachineFilter.set(null);
 }
 
 export function clearBudgetFilter() {
@@ -448,10 +480,16 @@ export function clearFilters(){
   clearMachineTypeFilter();
   clearYearFilter();
   clearBudgetFilter();
+  clearUserMachineFilter();
 }
-
+export const $statements = atom<financialStatement[]>([]);
 export function setFinancialStatements(statements: financialStatement[]) {
   $statements.set(statements);
+}
+
+export const $curStatementId = atom<number>(-1);
+export function setCurStatement(id:number) {
+  $curStatementId.set(id);
 }
 
 logger({ $budget_code_queue })
@@ -515,12 +553,24 @@ export function setTotal(total: number) {
   $total.set(total);
 }
 
+export function setChartData(data: (userBudgetStats | userMachinesStats)[]) {
+  $userChart.set(data);
+}
+
+export function resetChartData() {
+  $userChart.set([]);
+}
+
 export const $max_page = atom<number>(1);
 export function setMaxPage(max_page: number) {
   $max_page.set(max_page);
 }
 logger({ $activeTab, $users })
 
+export const $mix_active = atom<boolean>(false);
+export function setMixActive(status: boolean) {
+  $mix_active.set(status);
+}
 
 export function resetStores() {
   resetDashboardSearch();
@@ -528,5 +578,5 @@ export function resetStores() {
   resetDateRange();
   resetSearch();
   clearCurrentUser();
-  
+  setMixActive(false);
 }

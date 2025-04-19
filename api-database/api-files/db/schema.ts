@@ -44,7 +44,8 @@ export const machines = pgTable("machines_table", {
   hourlyRate: integer().notNull(),
   name: text().notNull(),
   machineTypeId: serial().notNull().references(() => machineTypes.id, {onDelete:"cascade"}),
-  active: integer().notNull()
+  active: integer().notNull(),
+  lastTimeUsed:timestamp({ precision: 3, withTimezone: true }).notNull().defaultNow()
 })
 
 
@@ -146,7 +147,3 @@ export const machineIssues = pgTable("machine_issues", {
   resolved: integer().notNull().default(0), // 0 = Not Resolved, 1 = Resolved
   description: text("description")
 });
-
-
-
-

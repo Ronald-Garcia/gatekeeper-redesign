@@ -41,7 +41,6 @@ const ActivateUserDialog = ({
     e.stopPropagation();
 
     if (!isFaculty && (!graduationYear || graduationYear <  new Date().getFullYear())) {
-      console.log("BILL");
       setGradYearError(true);
       return
     }

@@ -3,7 +3,7 @@ import { Hono } from "hono";
 import { like, SQL, or, desc, asc, eq, and, count, ilike, exists } from "drizzle-orm";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
-import { createMachineSchema, enableMachineSchema, getMachineSchema, queryMachinesSchema, validateMachineIdSchema } from "../validators/machineSchema.js";
+import { createMachineSchema, enableMachineSchema, getMachineSchema, queryMachinesSchema, updateMachineSchema, validateMachineIdSchema } from "../validators/machineSchema.js";
 import { machines, machineTypes } from "../db/schema.js";
 import { Context } from "../lib/context.js";
 import { adminGuard } from "../middleware/adminGuard.js";
@@ -88,7 +88,8 @@ machineRoutes.get("/machines",
             machineType: {
                 id: machineTypes.id,
                 name: machineTypes.name
-            }
+            },
+            lastTimeUsed: machines.lastTimeUsed,
         })
         .from(machines)
         .innerJoin(machineTypes, eq(machineTypes.id, machines.machineTypeId))
@@ -136,7 +137,8 @@ machineRoutes.get("/machines/:id",
             machineType: {
                 id: machineTypes.id,
                 name: machineTypes.name
-            }
+            },
+            lastTimeUsed: machines.lastTimeUsed,
         })
         .from(machines)
         .innerJoin(machineTypes, eq(machines.machineTypeId, machineTypes.id))
@@ -187,7 +189,7 @@ machineRoutes.post("/machines",
             name,
             machineTypeId,
             active,
-            hourlyRate
+            hourlyRate,
         })
         .returning();
 
@@ -206,7 +208,8 @@ machineRoutes.post("/machines",
             hourlyRate: newMachine.hourlyRate,
             machineType: machineType,
             id: newMachine.id,
-            active: newMachine.active
+            active: newMachine.active,
+            lastTimeUsed: newMachine.lastTimeUsed
         }
 
     }, 201);
@@ -302,21 +305,21 @@ machineRoutes.delete("/machines/:id",
 machineRoutes.patch("/machines/:id",
     adminGuard,
     zValidator("param", getMachineSchema),
-    zValidator("json", enableMachineSchema), 
+    zValidator("json", updateMachineSchema), 
     async (c) => {
         const { id } = c.req.valid("param");
-        const { active } = c.req.valid("json");
+        const { active,lastTimeUsed } = c.req.valid("json");
         const [machine] = await db.select().from(machines).where(eq(machines.id, id));
         
         if (!machine) {
             throw new HTTPException(404, { message: "Machine not found" });
         }
 
-        const [updatedMachine] = await db.update(machines).set({ active }).where(eq(machines.id, id)).returning();
+        const [updatedMachine] = await db.update(machines).set({ active, lastTimeUsed }).where(eq(machines.id, id)).returning();
 
         return c.json({
             success: true,
-            message: "Machine status has been updated",
+            message: "Machine has been updated",
             data: updatedMachine
         });
     }
