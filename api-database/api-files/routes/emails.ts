@@ -46,7 +46,7 @@ function getValidDate(year: number, month: number, day: number): Date {
 }
 
 
-async function sendEmail(email: string, scheduled: boolean, startDate?:Date, endDate?:Date, date?:Date) : Promise<StatementType[]> {
+async function sendEmail(email: string, scheduled: boolean, user: string, startDate?:Date, endDate?:Date, date?:Date, ) : Promise<StatementType[]> {
 
    if(scheduled) {
 
@@ -126,9 +126,9 @@ async function sendEmail(email: string, scheduled: boolean, startDate?:Date, end
       transporter.sendMail({
           to: email,
           subject: "Financial Statements",
-          html: "<h1>Financial Statements</h1>",
+          html: `<h1>Financial Statements</h1>\n<h2>Financial Statements from ${startDate} to ${endDate} were requested by ${user}` ,
           attachments: [{
-            filename: "statement.xlsx",
+            filename: "financialStatement.xlsx",
             content: file
           }]
       })
@@ -160,10 +160,13 @@ emailRoutes.post("/statement-email/:email",
 
       const { email } = c.req.valid("param");
       const { startDate, endDate } = c.req.valid("json");
+      const  user = c.get("user") 
+      const [{ username }] = await db
+        .select({ username: users.name })
+        .from(users)
+        .where(eq(users.id, user!.id))     
       
-      
-      
-      const statements = await sendEmail(email, false , startDate, endDate)
+      const statements = await sendEmail(email, false , username, startDate, endDate)
       .then(() => {
         success = true;
         message = "Successfully sent an email";
@@ -188,19 +191,18 @@ emailRoutes.post("/statement-email/schedule/:email",
   async (c) => {
     const { email } = c.req.valid("param");
     const { date } = c.req.valid("json");
-
-
-
+    const  user = c.get("user") 
+    const [{ username }] = await db
+      .select({ username: users.name })
+      .from(users)
+      .where(eq(users.id, user!.id)) 
     //Create a Bree instance, might need to do singleton instancem for prod
-    
-
-
 
     try {
       
       if (!j) {
         j = schedule.scheduleJob(`0 0 ${date.getDay()} * *`, async () => {
-          await sendEmail(email, true, undefined, undefined, date);
+          await sendEmail(email, true, username, undefined, undefined, date);
         });  
       } else {
         j.reschedule(`0 0 ${date.getDay()} * *`);

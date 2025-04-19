@@ -1,4 +1,3 @@
-
 import { Machine } from "@/data/types/machine";
 import { JSX, useState } from "react";
 import { cn } from "@/lib/utils";

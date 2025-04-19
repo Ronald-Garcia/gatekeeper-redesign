@@ -1,4 +1,4 @@
-import UserStatsChart from "../userDashboard/user-stats-chart";
+import UserStatsChart from "../userDashboard/userDashboardStatistics";
 
 
 const UserDashboardStats = () => {
