@@ -75,10 +75,13 @@ export const getAllUsers = async (
   page: number = 1,
   limit: number = 10,
   search: string = "",
-  active: number = 1
-
+  active: number = 1,
+  graduationYear?: number[], 
+  budgetCodeId?: number[], 
+  training?:number[],
 ): Promise<{
   message: string;
+  gradYears: number[];
   data: User[];
   meta: {
     page: number;
@@ -86,7 +89,26 @@ export const getAllUsers = async (
     total: number;
   };
 }> => {
-  const response = await fetch(`${API_DB_URL}/users?search=${search}&limit=${limit}&page=${page}&sort=${sort}&active=${active}`, {
+  let url = `${API_DB_URL}/users?search=${search}&limit=${limit}&page=${page}&sort=${sort}&active=${active}`
+  if (graduationYear !== undefined) {
+    for (const y of graduationYear) {
+    url += `&gradYear=${y}`
+      }
+    }
+
+  if (budgetCodeId !== undefined) {
+    for (const b of budgetCodeId){
+    url += `&budgetCodeId=${b}`;
+    }
+  }
+
+  if (training !== undefined) {
+    for (const t of training){
+    url += `&machinTypeId=${t}`;
+    }
+  }
+  
+  const response = await fetch(url, {
     credentials: "include",
   });
 
@@ -96,9 +118,12 @@ export const getAllUsers = async (
     throw new Error(message);
   }
 
-  const { message, data, meta }: { 
+  
+
+  const { message, gradYears,data, meta }: { 
     message: string; 
     data: User[],
+    gradYears: number[],
     meta: {
       page: number;
       limit: number;
@@ -107,7 +132,8 @@ export const getAllUsers = async (
    } =
     await response.json();
 
-  return { message, data, meta };
+   
+  return { message, gradYears, data, meta };
 };
 
 
@@ -356,7 +382,8 @@ export const getAllBudgets = async (
   page: number = 1,
   limit: number = 10,
   search: string = "",
-  active: number = 1
+  active: number = 1, 
+  budgCodeType?:number[]
 ): Promise<{
   message: string;
   data: BudgetCode[];
@@ -366,7 +393,9 @@ export const getAllBudgets = async (
     total: number;
   };
 }> => {
-  const response = await fetch(`${API_DB_URL}/budget-codes?search=${search}&limit=${limit}&page=${page}&sort=${sort}&active=${active}`, {
+  let url = `${API_DB_URL}/budget-codes?search=${search}&limit=${limit}&page=${page}&sort=${sort}&active=${active}`
+  if (budgCodeType !== undefined) url += `&budgetCodeTypeId=${budgCodeType}`
+  const response = await fetch(url, {
     credentials: "include",
   });
 
@@ -701,14 +730,17 @@ export const getAllMachines = async (
   limit: number = 10,
   search: string = "",
   type: string = "",
-  active: number = 1
+  active: number = 1, 
+  machineTypeFilter?: number
 
 ): Promise<{
   message: string;
   data: Machine[];
   meta: MetaType
 }> => {
-  const response = await fetch(`${API_DB_URL}/machines?search=${search}&limit=${limit}&page=${page}&sort=${sort}&type=${type}&active=${active}`, {
+  let url =`${API_DB_URL}/machines?search=${search}&limit=${limit}&page=${page}&sort=${sort}&type=${type}&active=${active}`
+  if (machineTypeFilter  !== undefined) url += `&machineTypeId=${machineTypeFilter}`
+  const response = await fetch(url, {
     credentials: "include",
   });
 

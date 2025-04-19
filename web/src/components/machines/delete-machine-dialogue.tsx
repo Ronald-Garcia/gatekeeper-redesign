@@ -57,8 +57,8 @@ const DeleteMachineDialog = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={handleCancel}>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDeleteUser}>
+          <AlertDialogCancel data-cy = "delete-machine-cancel" onClick={handleCancel}>Cancel</AlertDialogCancel>
+          <AlertDialogAction data-cy = "delete-machine-confirm" onClick={handleDeleteUser}>
             Deactivate
           </AlertDialogAction>
         </AlertDialogFooter>

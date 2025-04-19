@@ -55,12 +55,12 @@ export default function MachineActions({ machine }: MachineActionsProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-        {machine.active ? <DropdownMenuItem onClick={handleDelete} className="delete-text-red">
+        {machine.active ? <DropdownMenuItem data-cy={`machine-deactivate-${machine.id}`} onClick={handleDelete} className="delete-text-red">
           Deactivate
-        </DropdownMenuItem> : <DropdownMenuItem onClick={handleActiveStatus}>
+        </DropdownMenuItem> : <DropdownMenuItem  data-cy={`machine-activate-${machine.id}`} onClick={handleActiveStatus}>
           Activate
         </DropdownMenuItem>}
-        <DropdownMenuItem onClick={handleMaintenance} className="delete-text-red">
+        <DropdownMenuItem onClick={handleMaintenance} data-cy={`machine-maintenance-${machine.id}`} className="delete-text-red">
           Maintenance
         </DropdownMenuItem>
         

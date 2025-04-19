@@ -103,6 +103,7 @@ const EditBudgetCodeDialog = ({ userId, setShowEditBudgetCode }: EditBudgetCodeD
                           <ToggleGroupItem
                             key={type.id}
                             value={type.id.toString()}
+                            data-cy={`toggle-budget-code-${type.code}`}
                             onClick={() => toggleBudgetCodeQueue(type.id)}
                             className={`flex items-center justify-center h-12 w-full text-sm transition-colors border-y border-solid border-stone-200 hover:bg-stone-50 hover:border-stone-300 cursor-pointer rounded-md ${
                               budgetCodeQueue.some(b => b === type.id) ?

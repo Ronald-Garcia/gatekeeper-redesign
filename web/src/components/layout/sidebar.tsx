@@ -48,6 +48,7 @@ const Sidebar = () => {
             <nav className="space-y-2">
                 <Button 
                     variant="ghost" 
+                      data-cy='view-users'
                     className={cn(
                         "w-full justify-start transition-colors duration-200 text-lg",
                         (!router?.route || router.route === "users") && "bg-blue-50 text-blue-600 hover:bg-blue-100"
@@ -59,6 +60,7 @@ const Sidebar = () => {
                 
                 <Button 
                     variant="ghost"
+                    data-cy='view-budget-codes'
                     className={cn(
                         "w-full justify-start transition-colors duration-200 text-lg",
                         router?.route === "budgetCodes" && "bg-blue-50 text-blue-600 hover:bg-blue-100"
@@ -70,6 +72,7 @@ const Sidebar = () => {
 
                 <Button 
                     variant="ghost"
+                        data-cy='view-machines'
                     className={cn(
                         "w-full justify-start transition-colors duration-200 text-lg",
                         router?.route === "machines" && "bg-blue-50 text-blue-600 hover:bg-blue-100"
@@ -82,6 +85,7 @@ const Sidebar = () => {
                 <div className="pt-4 border-t border-gray-200">
                 <Button 
                     variant="ghost"
+                        data-cy='view-machine-issues'
                     className={cn(
                         "w-full justify-start transition-colors duration-200 text-lg",
                         router?.route === "machineIssues" && "bg-blue-50 text-blue-600 hover:bg-blue-100"

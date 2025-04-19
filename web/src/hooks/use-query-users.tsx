@@ -1,9 +1,10 @@
 import { getAllUsers, getUser, validateTraining } from "@/data/api";
-import { $activeTab, $users, 
+import { $activeTab, $gradYearFilter, $userBudgetFilter, $users, 
   clearCurrentUser, 
   setCurrentUser, 
   setMetaData, 
   setUsers,
+  setYears,
  } from "@/data/store";
 import { User } from "@/data/types/user";
 import { useStore } from "@nanostores/react";
@@ -19,6 +20,9 @@ function useQueryUsers(reload: boolean) {
   const router = useStore($router);
   const { getSavedMachine } = useQueryMachines(false);
   const activeTab = useStore($activeTab);
+  const gradYear = useStore($gradYearFilter);
+  const budgetCodeFilter = useStore($userBudgetFilter);
+  
   const { toast } = useToast();
 
   const loadUsers = async (
@@ -29,10 +33,12 @@ function useQueryUsers(reload: boolean) {
   ) => {
     try {
       const {
+        gradYears,
         data: fetchedUsers,
         meta
-      } = await getAllUsers(sort,page,limit,search, activeTab);
+      } = await getAllUsers(sort,page,limit,search, activeTab, gradYear ?? undefined, budgetCodeFilter ?? undefined);
       setUsers(fetchedUsers);
+      setYears(gradYears);
       setMetaData(meta);
     }  catch (e) {
         const errorMessage = (e as Error).message;

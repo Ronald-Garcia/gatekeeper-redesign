@@ -12,11 +12,12 @@ export default function Users() {
   const userList = useStore($users);
 
   return (
-    <div className="user-collection p-4">
+    <div className="user-collection p-4"     data-cy= "users-component">
+
           {userList.length === 0 ? (
             <p data-cy="no-users">No users found!</p>
           ) : 
-          <div className="space-y-4">
+          <div  className="space-y-4">
               {userList.map((user) => (
                 <UserComponent key={user.id} user={user} />
               ))}

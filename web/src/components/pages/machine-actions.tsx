@@ -2,6 +2,7 @@ import Searchbar from "../general/searchbar";
 import { Dialog } from "../ui/dialog";
 import AddMachineDialog from "../machines/add-machine-dialog.tsx";
 import AddMachineTypeDialog from "../machine_types/add-machine-type-dialog.tsx";
+import GeneralizedFilter from "../general/filtering.tsx";
 
 /*
 Admin dashboard component
@@ -18,6 +19,7 @@ const MachineActions = () => {
                 <Searchbar/>
               </div>
               <div className="flex flex-wrap gap-2 shrink-0">
+              <GeneralizedFilter filters={["machineTypeId"]} />
                 <AddMachineDialog/>
                 <AddMachineTypeDialog/>
               </div>

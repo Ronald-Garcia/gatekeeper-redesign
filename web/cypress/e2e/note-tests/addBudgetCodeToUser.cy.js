@@ -12,19 +12,20 @@ const makeFreshUserThenLogin = () => {
         url: `http://localhost:3000/users`,
         method: "POST",
         body: {
-            name:test_user_name,
-            cardNum:`${test_user_num}`,
-            JHED:"billfre1",
-            isAdmin:0,
-            graduationYear:2060
+            name: test_user_name,
+            cardNum: `${test_user_num}`,
+            JHED: "billfre1",
+            isAdmin: 0,
+            graduationYear: 2060
         }
-    }).then(()=>{
+    }).then(() => {
         login();
     });
 }
 const login = () => {
     //Before each test, go to our locally running app and sign in.
-    cy.visit(`${WEB_URL}/kiosk`)
+    cy.visit(`${WEB_URL}`)
+    cy.get('[data-cy= "kiosk-button"]').click();
     cy.get('[data-cy="cardnum-input"]').type(`;${admin_num};`)
     cy.get('[data-cy="cardnum-input"]').should("have.value", `;${admin_num};`)
     cy.get('[data-cy="cardnum-input"]').type("\n")
@@ -45,8 +46,8 @@ describe('budget code user relation tests', () => {
         failOnStatusCode: false,
         body:
         {
-            name:"atestcode1",
-            code:`${test_code_1}`
+            name: "atestcode1",
+            code: `${test_code_1}`
         },
       })
       cy.request({
@@ -55,8 +56,8 @@ describe('budget code user relation tests', () => {
         failOnStatusCode: false,
         body:
         {
-            name:"atestcode2",
-            code:`${test_code_2}`
+            name: "atestcode2",
+            code: `${test_code_2}`
         },
       })
         //Lets also make a fresh test user with no trainings.
@@ -76,7 +77,7 @@ describe('budget code user relation tests', () => {
                 method: 'DELETE',
                 url: `http://localhost:3000/users/${userId}`,
             })
-            .then(()=>{
+            .then(() => {
                 // After deletion, create fresh guy.
                 makeFreshUserThenLogin();
             });
@@ -97,14 +98,17 @@ describe('budget code user relation tests', () => {
             }
         }).then(() => {
         //first, ensure no budget codes on user.
-        cy.request(`${API_DB_URL}/user-budgets/${userId}`).then((res)=>{
-            console.log("ho",res.body.data,res.body.data.length);
+        cy.request(`${API_DB_URL}/user-budgets/${userId}`).then((res) => {
+            console.log("ho", res.body.data, res.body.data.length);
             assert(res.body.data.length === 0);
             //Simple test. Just click actions -> budgetCodes -> first budget code.
             cy.get(`[data-cy = user-trigger-${test_user_num.substring(0,15)} ]`).click();
             cy.get(`[data-cy = user-budget-code-${test_user_num.substring(0,15)} ]`).click();
-            cy.get(`[data-cy = toggle-budget-code-${test_code_1} ]`).click().then(() => {
+            cy.get(`[data-cy = toggle-budget-code-${test_code_1} ]`).click({ force: true })
+            .should('have.attr', 'data-state', 'on').then(() => {
                 //Check budget code button is on.
+                cy.get(`[data-cy = toggle-budget-code-${test_code_1} ]`).should("have.attr", "data-state", "on"); 
+
                 cy.get(`[data-cy = add-budget-code-save ]`).click()
                 cy.get(`[data-cy = user-trigger-${test_user_num.substring(0,15)} ]`).click();
                 cy.get(`[data-cy = user-budget-code-${test_user_num.substring(0,15)} ]`).click();
@@ -115,27 +119,23 @@ describe('budget code user relation tests', () => {
 
 
     })
-    it('Delete a budget code from a user', () => {
-        //First, add one budget codes to the user.
-        cy.request(`${API_DB_URL}/user-budgets/${userId}`).then((res)=>{
-            assert(res.body.data.length === 0);
-            //Simple test. Just click actions -> budgetCodes -> first budget code.
-            cy.get(`[data-cy = user-trigger-${test_user_num.substring(0,15)} ]`).click();
-            cy.get(`[data-cy = user-budget-code-${test_user_num.substring(0,15)} ]`).click();
-            cy.get(`[data-cy = toggle-budget-code-${test_code_1} ]`);
-            cy.get(`[data-cy = toggle-budget-code-${test_code_1} ]`).click();
-            cy.get(`[data-cy = add-budget-code-save ]`).click();
+    it('Turn off a budget code from a user', () => {
+        //First, add one budget code to the user.
+        cy.request(`${API_DB_URL}/user-budgets/${userId}`).then((res) => {
             //Check budget code button is on.
             cy.get(`[data-cy = user-trigger-${test_user_num.substring(0,15)} ]`).click();
             cy.get(`[data-cy = user-budget-code-${test_user_num.substring(0,15)} ]`).click();
             cy.get(`[data-cy = toggle-budget-code-${test_code_1} ]`).should("have.attr", "data-state", "on");
-              cy.get(`[data-cy = add-budget-code-save ]`).click();
-              // pm jere just open the user trigegr agaiono and then asser that its off for the budget code on it
-              cy.get(`[data-cy=user-trigger-${test_user_num.substring(0,15)}]`).click({force: true});
+            // Turn the budget code off.
+            cy.get(`[data-cy=toggle-budget-code-${test_code_1}]`).click({ force: true })
+              .should('have.attr', 'data-state', 'off');
+            // Save the changes after toggling off.
+            cy.get(`[data-cy=add-budget-code-save]`).click();
+              // Open the user again and then assert that it's off for the budget code on it.
+              cy.get(`[data-cy=user-trigger-${test_user_num.substring(0,15)}]`).click({ force: true });
               cy.get(`[data-cy=user-budget-code-${test_user_num.substring(0,15)}]`).click();
               cy.get(`[data-cy=toggle-budget-code-${test_code_1}]`)
                 .should("have.attr", "data-state", "off");
     })
   })
-  }
-  )
+})

@@ -78,6 +78,7 @@ const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogP
                     <ToggleGroup type="multiple" className="flex-col w-full">
                       {trainingsList.map((type) => (
                         <ToggleGroupItem
+                          data-cy = {`toggle-training-${type.name}`}
                           key={type.id}
                           value={type.id.toString()}
                           onClick={() => toggleTrainingQueue(type.id)}
@@ -100,7 +101,7 @@ const EditTrainingDialog = ({ userId, setShowEditTraining }: EditTrainingDialogP
           </div>
           <DialogFooter>
             <Button data-cy="user-traning-cancel" onClick={() => setShowEditTraining(false)}>Cancel</Button>
-            <Button data-cy="user-training-add" onClick={handleEditTraining}>Save Changes</Button>
+            <Button data-cy="training-save" onClick={handleEditTraining}>Save Changes</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

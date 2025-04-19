@@ -58,10 +58,10 @@ const ActivateBudgetCodeDialog = ({
           </AlertDialogHeader>
 
           <AlertDialogFooter>
-            <AlertDialogCancel data-cy="budget-code-activate-cancel" onClick={handleCancel}>
+            <AlertDialogCancel data-cy="budget-activate-cancel" onClick={handleCancel}>
               Cancel
             </AlertDialogCancel>
-            <AlertDialogAction data-cy="budget-code-activate-confirm" onClick={handleActivateBudgetCode}>
+            <AlertDialogAction data-cy="budget-activate-confirm" onClick={handleActivateBudgetCode}>
               Activate
             </AlertDialogAction>
           </AlertDialogFooter>

@@ -142,6 +142,7 @@ const AddBudgetCodeDialog = () => {
               <ToggleGroup type="single" className="flex-col w-full">
                 {typeList.map((type) => (
                   <ToggleGroupItem
+                    data-cy = {type.name}
                     key={type.id}
                     value={type.id.toString()}
                     onClick={() => handleClickOnBudgetType(type.id)}

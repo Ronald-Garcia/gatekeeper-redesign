@@ -1,5 +1,6 @@
 import { fetchCurrentMachine, getAllMachines, getAllTrainingsOfUser, getMachine, getMachineTypes } from "@/data/api"
-import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes, appendMachineTypes, $activeTab, setMetaData, setMachine } from "@/data/store";
+import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes, appendMachineTypes, $activeTab, setMetaData, setMachine, $machineTypeFilter } from "@/data/store";
+
 import { Machine } from "@/data/types/machine";
 import { MachineType } from "@/data/types/machineType";
 import { useEffect, useState } from "react";
@@ -15,6 +16,7 @@ function useQueryMachines(reload: boolean) {
   const { toast } = useToast();
 
   const activeTab = useStore($activeTab);
+  const machineTypeFilter = useStore($machineTypeFilter)
 
   const getSavedMachine = async (): Promise<Machine | "kiosk" | undefined | 0> => {
     try {
@@ -118,7 +120,7 @@ function useQueryMachines(reload: boolean) {
       const {
         data: fetchedMachines,
         meta: fetchedMetaData
-      } = await getAllMachines(sort, page, limit, search, type, activeTab);
+      } = await getAllMachines(sort, page, limit, search, type, activeTab, machineTypeFilter ?? undefined);
       setMetaData(fetchedMetaData);
       setMachines(fetchedMachines);
     } catch (e) {

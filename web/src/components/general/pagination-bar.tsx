@@ -59,27 +59,27 @@ const PaginationBar = ({loadFunction}: PagProps) => {
         <Pagination>
         <PaginationContent>
             
-            <PaginationItem onClick={handleClickBack}>
+            <PaginationItem data-cy= "pagination-next" onClick={handleClickBack}>
             <PaginationPrevious href="#"/>
             </PaginationItem>
     
     
         {prevEleId > 0 && (
-            <PaginationItem id = {`${prevEleId}`} onClick={handleClick}>
+            <PaginationItem data-cy = "pagination-prevEl" id = {`${prevEleId}`} onClick={handleClick}>
                 <PaginationLink href="#">
                     {prevEleId}
                 </PaginationLink>
             </PaginationItem>
         )}
 
-            <PaginationItem  id = {`${curEleId}`} onClick={handleClick}>
+            <PaginationItem data-cy = "pagination-current" id = {`${curEleId}`} onClick={handleClick}>
                 <PaginationLink href="#" isActive>
                     {curEleId}
                 </PaginationLink>
             </PaginationItem>
             {secondEleId <= maxPage && (
 
-            <PaginationItem id = {`${secondEleId}`} onClick={handleClick}>
+            <PaginationItem data-cy = "pagination-nextEl" id = {`${secondEleId}`} onClick={handleClick}>
                 <PaginationLink href="#">
                     {secondEleId}
                 </PaginationLink>
@@ -87,7 +87,7 @@ const PaginationBar = ({loadFunction}: PagProps) => {
             )}
 
 
-            <PaginationItem onClick={handleClickNext}>
+            <PaginationItem data-cy = "pagination-next" onClick={handleClickNext}>
             <PaginationNext href="#"/>
             </PaginationItem>
         </PaginationContent>
