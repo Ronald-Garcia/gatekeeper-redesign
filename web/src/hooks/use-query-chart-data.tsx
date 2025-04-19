@@ -14,8 +14,7 @@ export function useQueryChart() {
     const filteredChartData = useStore($filtered_chart)
     const [precision, setPrecision] = useState<PrecisionType>("d");
 
-
-    const fetchChartData = async () => {
+    const fetchChartDataDay = async () => {
 
       let newXAxis: Date[] = [];
 
@@ -33,26 +32,7 @@ export function useQueryChart() {
 
       while (date <= dateRange.to) {
           newXAxis = newXAxis.concat(new Date(date));
-          switch (precision) {
-            case "m":
-              date.setMinutes(date.getMinutes() + 1);
-              break;
-            case "d":
-              date.setDate(date.getDate() + 1);
-              break;
-            case "h":
-              date.setHours(date.getHours() + 1);
-              break;
-            case "mo":
-              date.setMonth(date.getMonth() + 1);
-              break;
-            case "w":
-              date.setDate(date.getDate() + 7);
-              break;
-            case "y":
-              date.setFullYear(date.getFullYear() + 1);
-              break;
-          }
+          date.setDate(date.getDate() + 1);
       }
           
 
@@ -70,28 +50,7 @@ export function useQueryChart() {
         }
 
         const chartDate = new Date(localChartData[i].dateAdded);
-        let check;
-
-        switch (precision) {
-          case "m":
-            check = (date.getMonth() === chartDate.getMonth() && date.getFullYear() === chartDate.getFullYear() && date.getDate() === chartDate.getDate()) && date.getMinutes() >= chartDate.getMinutes();           
-            break;
-          case "d":
-            check = (date.getMonth() === chartDate.getMonth() && date.getFullYear() === chartDate.getFullYear()) && date.getDate() >= chartDate.getDate()
-            break;
-          case "h":
-            check = (date.getMonth() === chartDate.getMonth() && date.getFullYear() === chartDate.getFullYear() && date.getDate() === chartDate.getDate()) && date.getHours() >= chartDate.getHours();           
-            break;
-          case "mo":
-            check = (date.getFullYear() === chartDate.getFullYear()) && date.getMonth() >= chartDate.getMonth();           
-            break;
-          case "w":
-            check = (date.getMonth() === chartDate.getMonth() && date.getFullYear() === chartDate.getFullYear()) && (Math.floor(date.getDate() / 7) === Math.floor(chartDate.getDate() / 7)) && date.getDay() >= chartDate.getDay();
-            break;
-          case "y":
-            check = date.getFullYear() >= chartDate.getFullYear();
-            break;
-        }
+        const check = (date.getMonth() === chartDate.getMonth() && date.getFullYear() === chartDate.getFullYear()) && date.getDate() >= chartDate.getDate()
         if (check) {
           return { dateAdded: new Date(localChartData[i].dateAdded), totalTime: localChartData[i++].totalTime }; 
         } else {
@@ -100,6 +59,15 @@ export function useQueryChart() {
       })
 
       setFilteredChart(newChartData);
+    }
+
+    const fetchChartData = async () => {
+      switch(precision) {
+        case "d":
+          await fetchChartDataDay();
+          break;
+        
+      }
     }
 
     // use Effect should update when user stats change
