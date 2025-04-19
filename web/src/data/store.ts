@@ -318,8 +318,6 @@ export function deleteBudgetCodeByNum(codeNum: string) {
   );
 }
 
-
-
 //machine store functions 
 export function appendMachine(machine: Machine) {
   $machines.set(
@@ -397,10 +395,14 @@ export const $gradYearFilter = atom<number []| null>(null);
 export const $userBudgetFilter = atom<number []| null>(null);
 export const $machineTypeFilter = atom<number []| null>(null);
 export const $budgetTypeFilter = atom<number []| null>(null);
+export const $gradYears = atom<number[]>([]);
 
 export function setYearFilter(year: number[]) {
   $gradYearFilter.set(year);
+}
 
+export function setYears(year: number[]) {
+  $gradYears.set(year);
 }
 
 export function setBudgetFilter(budget: number[]) {

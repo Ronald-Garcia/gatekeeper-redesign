@@ -1,5 +1,5 @@
 import { WritableAtom } from "nanostores";
-import { $budgetCodeTypes, $budgetTypeFilter, $codes, $gradYearFilter, $machine_types, $machineTypeFilter, $userBudgetFilter } from "../store";
+import { $budgetCodeTypes, $budgetTypeFilter, $codes, $gradYearFilter, $gradYears, $machine_types, $machineTypeFilter, $userBudgetFilter } from "../store";
 import { budgetCodeType } from "./budgetCode";
 
 export type UserFilters = "gradYear" |"budgetCodeId" | "machineTypeId";
@@ -21,8 +21,7 @@ export const filterConfigMap: Record<FilterQueries, FilterRenderConfig> = {
   gradYear: {
     label: "Graduation Year",
     store: $gradYearFilter,
-    getOptions: () =>
-      [2024, 2025, 2026, 2027].map((year) => ({
+    getOptions: () => $gradYears.get().map((year) => ({
         label: String(year),
         value: year,
   
