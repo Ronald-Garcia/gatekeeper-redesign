@@ -1,5 +1,5 @@
 import { getUserStatistics } from "@/data/api";
-import { $userChart, $date_range, setChartData, $filtered_chart, setFilteredChart, clearFilteredChart } from "@/data/store";
+import { $userChart, $date_range, setChartData, $filtered_chart, setFilteredChart, clearFilteredChart, $date } from "@/data/store";
 import { useStore } from "@nanostores/react";
 import { toast } from "./use-toast";
 import { useEffect, useState } from "react";
@@ -10,9 +10,65 @@ import { userStats } from "@/data/types/user-stats";
 export function useQueryChart() {
 
     const dateRange = useStore($date_range);
+    const dateChoice = useStore($date);
     const chartData = useStore($userChart);
     const filteredChartData = useStore($filtered_chart)
     const [precision, setPrecision] = useState<PrecisionType>("d");
+
+    const fetchChartDataHour = async () => {
+      let newXAxis: Date[] = [];
+
+      if (!dateChoice) {
+        return;
+      }
+
+      const localChartData = await getUserChartData(1, 100, "h");
+
+      if (!localChartData) {
+        return;
+      }
+      let date: Date = new Date(dateChoice);
+
+      date.setHours(0);
+      date.setMinutes(0);
+      date.setSeconds(0);
+      
+      let endDate: Date = new Date(dateChoice);
+      endDate.setHours(23);
+      endDate.setMinutes(59);
+      endDate.setSeconds(59);
+
+
+      while (date <= endDate) {
+          newXAxis = newXAxis.concat(new Date(date));
+          date.setHours(date.getHours() + 1);
+      }
+          
+
+
+
+      const chartDataLength = localChartData.length;
+
+      let i = 0;
+
+      const newChartData: userStats[] = newXAxis.map(date => {
+
+        const defaultData = { dateAdded: date, totalTime: 0};
+        if (i >= chartDataLength) {
+          return defaultData;
+        }
+
+        const chartDate = new Date(localChartData[i].dateAdded);
+        const check = (date.getMonth() === chartDate.getMonth() && date.getFullYear() === chartDate.getFullYear() && date.getDate() === chartDate.getDate()) && date.getHours() >= chartDate.getHours()
+        if (check) {
+          return { dateAdded: new Date(localChartData[i].dateAdded), totalTime: localChartData[i++].totalTime }; 
+        } else {
+          return defaultData;
+        }
+      })
+
+      setFilteredChart(newChartData);
+    }
 
     const fetchChartDataDay = async () => {
 
@@ -62,9 +118,13 @@ export function useQueryChart() {
     }
 
     const fetchChartData = async () => {
+      clearFilteredChart()
       switch(precision) {
         case "d":
           await fetchChartDataDay();
+          break;
+        case "h":
+          await fetchChartDataHour();
           break;
         
       }
@@ -77,7 +137,7 @@ export function useQueryChart() {
 
       })
       
-    }, [precision, dateRange])
+    }, [precision, dateRange, dateChoice])
 
     useEffect(() => {
       clearFilteredChart()
@@ -92,20 +152,59 @@ export function useQueryChart() {
       machineId: number | undefined = undefined,
     ): Promise<userStats[] | undefined> => {
       try {
-
-        // getting the date
         const now = new Date();
         const past = new Date();
-        past.setMonth(now.getMonth() - 1);
-        const to = dateRange && dateRange.to ? dateRange.to : now;
-        const from = dateRange && dateRange.from ? dateRange.from : past;
+        
+        let to;
+        let from;
+        
+        if (precision === "d") {
+          past.setMonth(now.getMonth() - 1);
+          to = dateRange && dateRange.to ? dateRange.to : now;
+          from = dateRange && dateRange.from ? dateRange.from : past;  
+        }
+
+        if (precision === "h") {
+
+          const toDate = dateChoice ? new Date(dateChoice.getTime()) : new Date();
+
+          toDate.setHours(23);
+          toDate.setMinutes(59);
+          toDate.setSeconds(59);
+
+          const fromDate = new Date(toDate.getTime());
+          fromDate.setHours(0);
+          fromDate.setMinutes(0);
+          fromDate.setSeconds(0);
+
+          to = toDate;
+          from = fromDate;
+        }
+
+        if (precision === "m") {
+          const toDate = dateChoice ? new Date(dateChoice.getTime()) : new Date();
+          toDate.setHours(23);
+          toDate.setMinutes(59);
+          toDate.setSeconds(59);
+
+          const fromDate = new Date(toDate.getTime());
+          fromDate.setHours(0);
+          fromDate.setMinutes(0);
+          fromDate.setSeconds(0);
+
+          to = toDate;
+          from = fromDate;
+        }
+
+
 
 
 
         // setting chart data
-        const { data } = await getUserStatistics(page, limit, to, from, precision, budgetCode, machineId)
+        const { data } = await getUserStatistics(page, limit, to as Date, from as Date, precision, budgetCode, machineId)
         await setChartData(data)
 
+        console.log(data)
         return data;
 
       } catch (e) {

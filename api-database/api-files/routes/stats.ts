@@ -26,10 +26,10 @@ statsRoutes.get("/stats",
 
         switch (precision) {
             case "m":
-                castedDateAdded = sql<Date>`to_char("financial_statements_table"."dateAdded", 'YYYY-MM-DD-HH-MI')`;
+                castedDateAdded = sql<Date>`to_char("financial_statements_table"."dateAdded", 'YYYY-MM-DD HH24:MI:00')`;
                 break;
             case "h":
-                castedDateAdded = sql<Date>`to_char("financial_statements_table"."dateAdded", 'YYYY-MM-DD-HH')`;
+                castedDateAdded = sql<Date>`to_char("financial_statements_table"."dateAdded", 'YYYY-MM-DD HH24:00:00')`;
                 break;
             case "d":
                 castedDateAdded = sql<Date>`cast("financial_statements_table"."dateAdded" as date)`;
@@ -84,6 +84,7 @@ statsRoutes.get("/stats",
           .innerJoin(budgetCodes, eq(budgetCodes.id, financialStatementsTable.budgetCode))
           .innerJoin(machines, eq(machines.id, financialStatementsTable.machineId))
           .where(and(...whereClause))
+
       ,
     
       db.select({
@@ -97,11 +98,11 @@ statsRoutes.get("/stats",
       .where(and(...whereClause))
       .groupBy(users.id, castedDateAdded)
       .orderBy(...orderByClause)
+      .offset(offset)
         ]
     );
 
-
-
+    console.log(aggregateTime);
 
     const aggregateDateTime = aggregateTime.map(s => { return { dateAdded: new Date(s.dateAdded), totalTime: Math.floor(Number.parseInt(s.totalTime as string) / 60)}});
     

@@ -25,6 +25,15 @@ export const $activeTab = atom<number>(1);
 export const $machine_issues = atom<MachineIssue[]>([]);
 export const $userChart = atom<userStats[]>([]);
 export const $filtered_chart = atom<userStats[]>([]);
+export const $hour = atom<number>(-1);
+
+export function setHour(hour: number) {
+  $hour.set(hour % 24);
+}
+
+export function resetHours() {
+  $hour.set(-1);
+}
 
 export function setMachineIssues(issues: MachineIssue[]) {
   $machine_issues.set(issues);

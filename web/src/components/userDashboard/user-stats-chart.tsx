@@ -1,7 +1,7 @@
 "use client"
 
-import { Clock, TrendingUp } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, Line, LineChart, XAxis } from "recharts"
+import { Clock } from "lucide-react"
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 
 import {
   Card,
@@ -23,6 +23,7 @@ import useQueryChart from "@/hooks/use-query-chart-data"
 import DatePickerWithRange from "../financialStatements/datepicker"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { PrecisionType } from "@/data/types/precision-type"
+import { DatePicker } from "../financialStatements/datepick"
 
 const timeChartConfig = {
   totalTime: {
@@ -48,6 +49,7 @@ export function UserDashboardStats() {
 
         </div>
         {precision === "d" && <DatePickerWithRange></DatePickerWithRange>}
+        {precision === "h" && <DatePicker></DatePicker>}
         <Select value={precision} onValueChange={setPrecisionValue}>
           <SelectTrigger>
             <SelectValue placeholder="Days" />
@@ -72,7 +74,6 @@ export function UserDashboardStats() {
               Years
             </SelectItem>
           </SelectContent>
-
         </Select>
       </CardHeader>
       <CardContent>
