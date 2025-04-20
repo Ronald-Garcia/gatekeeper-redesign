@@ -116,7 +116,7 @@ const GeneralizedFilter: React.FC<Props> = ({ filters }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="ghost" data-cy="filter-trigger">
+        <Button className="h-[40px]" variant="ghost" data-cy="filter-trigger">
           Filter
         </Button>
       </DialogTrigger>
@@ -129,8 +129,8 @@ const GeneralizedFilter: React.FC<Props> = ({ filters }) => {
 
             return (
               <div key={key}>
-                <p className="font-bold text-sm">{label}</p>
-                <div className="space-y-1 max-h-48 overflow-y-auto">
+                <p className="text-sm font-bold">{label}</p>
+                <div className="space-y-1 overflow-y-auto max-h-48">
                   {options.map((opt) => {
                     const val =
                       typeof opt.value === "object" ? opt.value.id : opt.value;
@@ -153,7 +153,7 @@ const GeneralizedFilter: React.FC<Props> = ({ filters }) => {
             );
           })}
         </div>
-        <div className="pt-4 flex justify-end">
+        <div className="flex justify-end pt-4">
           <DialogClose asChild>
             <Button onClick={applyFilters} data-cy="apply-filters">
               Apply Filters

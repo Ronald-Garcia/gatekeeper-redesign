@@ -1,6 +1,7 @@
 import { Machine } from "@/data/types/machine";
 import { JSX, useState } from "react";
 import { cn } from "@/lib/utils";
+import { Circle } from "lucide-react";
 
 type machineUserDashboardProps = {
     machine: Machine,
@@ -32,7 +33,7 @@ if (machine.active === 0){
 
 const details = [{ label: "Hourly Rate", value: `$${machine.hourlyRate}` },
     { label: "Status", value: machine.active === 1 ? "Active" : "Inactive" },
-    { label: "Last Used: ", value: `${timeSinceActive / 60} minutes ago` }
+    { label: "Last Used: ", value: `${Math.round(timeSinceActive / 3600)} hours ago` }
 
 ]
 let actions:JSX.Element;
@@ -40,16 +41,37 @@ let styling:string;
 let borderstyling:string;
 
 if (machineStatus === machineStatuses.Inactive) {
-    actions = <div>Inactive</div>
-    styling = "toggle-component-inactive"
-    borderstyling = "toggle-boarder-inactive"
+    actions = <div className="flex flex-row items-center gap-3">
+      Inactive
+      <Circle
+          size={12}
+          className={"text-red-500"}
+          fill={"currentColor"}
+        />
+    </div>
+    styling = "toggle-component"
+    borderstyling = "toggle-boarder"
 } else if (machineStatus === machineStatuses.InUse) {
-    actions = <div>In Use</div>
-    styling = "toggle-component-inuse"
-    borderstyling = "toggle-boarder-inuse"
+    actions = <div className="flex flex-row items-center gap-3">
+      In Use
+      <Circle
+          size={12}
+          className={"text-yellow-500"}
+          fill={"currentColor"}
+        />
+    </div>
+    styling = "toggle-component"
+    borderstyling = "toggle-boarder"
 
 } else {
-    actions = <div>Available</div>
+    actions = <div className="flex flex-row items-center gap-3">
+      Available
+      <Circle
+          size={12}
+          className={"text-green-500"}
+          fill={"currentColor"}
+        />
+      </div>
     styling = "toggle-component"
     borderstyling = "toggle-boarder"
 }

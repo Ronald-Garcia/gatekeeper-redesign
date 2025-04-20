@@ -138,7 +138,7 @@ const AddUserDialog = () => {
       <Dialog open={open} onOpenChange={handleOpenClose}>
         <DialogTrigger asChild>
           <Button data-cy="add-user-button" className="jhu-blue-button add-button h-[40px]" variant={"ghost"} size="default">
-            Add User
+            <b>+</b> Add User
           </Button>
         </DialogTrigger>
         <DialogContent>
