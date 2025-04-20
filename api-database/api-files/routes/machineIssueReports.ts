@@ -79,7 +79,7 @@ machineIssueRoute.get(
   }
 );
 
-// ✅ POST new machine issue report
+
 machineIssueRoute.post(
     "/machine-issues",
     authGuard,

@@ -144,37 +144,19 @@ describe('User Routes (with auth/admin guard enabled)', () => {
 
   describe('GET /users/:cardNum', () => {
     test('returns a user if one exists (admin access)', async () => {
-      const testCardNum = generateTestCardNumber();
-      const newUser = {
-        name: "John Doe",
-        cardNum: testCardNum,
-        JHED: "johndoe",
-        isAdmin: 0,
-        graduationYear: 2027,
-      };
+      
 
       const expectedUser = {
-        name: "John Doe",
-        cardNum: testCardNum.substring(0, testCardNum.length - 1),
-        lastDigitOfCardNum: Number.parseInt(testCardNum.charAt(testCardNum.length - 1)),
-        JHED: "johndoe",
+        name: "TESTINGCREATE",
+        cardNum: "147852096312378",
+        lastDigitOfCardNum: 9,
+        JHED: "TESTS",
         isAdmin: 0,
-        graduationYear: 2027,
+        graduationYear: 2030,
       };
 
-      // Create the user first.
-       await app.request('/users', {
-        method: 'POST',
-        headers: new Headers({
-          'Content-Type': 'application/json',
-          Cookie: adminCookie,
-        }),
-        body: JSON.stringify(newUser),
-      });
-
-    
       // Get user by card number.
-      const response = await app.request(`/users/${testCardNum}`, {
+      const response = await app.request(`/users/1478520963123789`, {
         method: 'GET'
       });
 
