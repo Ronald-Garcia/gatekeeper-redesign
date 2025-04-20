@@ -101,7 +101,7 @@ export const getAllUsers = async (
 
   if (training !== undefined) {
     for (const t of training){
-    url += `&machinTypeId=${t}`;
+    url += `&machineTypeId=${t}`;
     }
   }
   
@@ -391,7 +391,11 @@ export const getAllBudgets = async (
   };
 }> => {
   let url = `${API_DB_URL}/budget-codes?search=${search}&limit=${limit}&page=${page}&sort=${sort}&active=${active}`
-  if (budgCodeType !== undefined) url += `&budgetCodeTypeId=${budgCodeType}`
+  if (budgCodeType !== undefined) {
+    for (const b of budgCodeType){
+    url += `&budgetTypeId=${b}`;
+    }
+  }
   const response = await fetch(url, {
     credentials: "include",
   });
@@ -740,7 +744,13 @@ export const getAllMachines = async (
     activeQuery = ""
   }
   let url =`${API_DB_URL}/machines?search=${search}&limit=${limit}&page=${page}&sort=${sort}&type=${type}${activeQuery}`
-  if (machineTypeFilter  !== undefined) url += `&machineTypeId=${machineTypeFilter}`
+  if (machineTypeFilter  !== undefined) {
+     for (const m of machineTypeFilter) {
+     url += `&machineTypeId=${m}`;
+     }
+  }
+    
+   
   const response = await fetch(url, {
     credentials: "include",
   });

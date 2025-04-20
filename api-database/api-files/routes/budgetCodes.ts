@@ -1,7 +1,7 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { queryBudgetCodesParamsSchema, createBudgetCode, deleteBudgetCodeSchema, updateBudgetCodeSchema, getBudgetCodeSchema } from "../validators/schemas.js";
-import { SQL, desc, asc, eq, and, count, ilike } from "drizzle-orm";
+import { SQL, desc, asc, eq, and, count, ilike, or, inArray } from "drizzle-orm";
 import { budgetCodes, budgetCodeType } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
@@ -42,7 +42,7 @@ budgetCodesRoutes.get("/budget-codes",
     }
 
     if (budgetTypeId !== undefined) {
-        whereClause.push(eq(budgetCodes.budgetCodeTypeId, budgetTypeId));
+        whereClause.push((or(inArray(budgetCodes.budgetCodeTypeId, budgetTypeId))));
     }
 
 
