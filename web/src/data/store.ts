@@ -9,6 +9,7 @@ import { logger } from "@nanostores/logger"
 import { DateRange } from "react-day-picker";
 import { MetaType } from "./types/meta";
 import { userBudgetStats, userMachinesStats, userStats } from "./types/user-stats";
+import { PrecisionType } from "./types/precision-type";
 
 export const $users = atom<User[]>([]);
 export const $codes = atom<BudgetCode[]>([]);
@@ -29,11 +30,27 @@ export const $userMachineChart = atom<userMachinesStats[]>([]);
 export const $filtered_total_chart = atom<userStats[]>([]);
 export const $filtered_budget_chart = atom<userBudgetStats[]>([]);
 export const $filtered_machine_chart = atom<userMachinesStats[]>([]);
+export const $precision = atom<PrecisionType>("d")
+
+export function setPrecision(p: PrecisionType)  {
+  $precision.set(p);
+}
+
+export function clearPrecision() {
+  $precision.set("d");
+}
+
 
 export function addFunctionToMachineChart(func: userMachinesStats) {
+  if ($filtered_machine_chart.get().some(d => d.machineType === func.machineType)) {
+    return;
+  }
   $filtered_machine_chart.set([...$filtered_machine_chart.get(), func])
 }
 export function addFunctionToBudgetChart(func: userBudgetStats) {
+  if ($filtered_budget_chart.get().some(d => d.budgetCode === func.budgetCode)) {
+    return;
+  }
   $filtered_budget_chart.set([...$filtered_budget_chart.get(), func])
 }
 
@@ -53,6 +70,16 @@ export function clearFilteredMachineChart() {
 }
 export function clearFilteredTotalChart() {
   $filtered_total_chart.set([]);
+}
+
+export function clearBudgetChart() {
+  $userBudgetChart.set([]);
+}
+export function clearMachineChart() {
+  $userMachineChart.set([]);
+}
+export function clearTotalChart() {
+  $userTotalChart.set([]);
 }
 
 export function setActiveTab(tab: number) {
@@ -601,3 +628,5 @@ export function resetStores() {
   clearCurrentUser();
   setMixActive(false);
 }
+
+logger({ $currentUser, $filtered_budget_chart })

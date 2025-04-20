@@ -11,6 +11,7 @@ import useQueryMachines from "@/hooks/use-query-machines";
 import UserMachinesComponent from "../userDashboard/userDashboardMachines";
 import UserMachineActions from "../userDashboard/userDashboardMachineActions";
 import UserDashboardStats from "./user-dashboard-stats";
+import UserDashboardChartHeader from "../userDashboard/userDashboardChartHeader";
 
 /*
 User dashboard component
@@ -59,6 +60,8 @@ const UserDashboard = () => {
     <div className="flex">
       <UserSidebar />
       <div className="admin-dashboard">
+        <UserDashboardChartHeader></UserDashboardChartHeader>        
+
         <ScrollArea className={`${activeSearch ? 'scroll-component-search' : 'scroll-component'}`}>
           <div>
           <UserDashboardStats/>
