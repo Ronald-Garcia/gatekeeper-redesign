@@ -129,8 +129,8 @@ const GeneralizedFilter: React.FC<Props> = ({ filters }) => {
 
             return (
               <div key={key}>
-                <p className="font-bold text-sm">{label}</p>
-                <div className="space-y-1 max-h-48 overflow-y-auto">
+                <p className="text-sm font-bold">{label}</p>
+                <div className="space-y-1 overflow-y-auto max-h-48">
                   {options.map((opt) => {
                     const val =
                       typeof opt.value === "object" ? opt.value.id : opt.value;
@@ -140,6 +140,7 @@ const GeneralizedFilter: React.FC<Props> = ({ filters }) => {
                         className="flex items-center gap-2 cursor-pointer"
                       >
                         <input
+                          data-cy={`box-${opt.label}`}
                           type="checkbox"
                           checked={selected.has(val)}
                           onChange={() => toggleCheckbox(key, val)}
@@ -153,7 +154,7 @@ const GeneralizedFilter: React.FC<Props> = ({ filters }) => {
             );
           })}
         </div>
-        <div className="pt-4 flex justify-end">
+        <div className="flex justify-end pt-4">
           <DialogClose asChild>
             <Button onClick={applyFilters} data-cy="apply-filters">
               Apply Filters
