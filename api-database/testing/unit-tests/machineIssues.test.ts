@@ -1,7 +1,3 @@
-import dotenv from "dotenv";
-dotenv.config({ path: "./api-database/.env" }); 
-//needs to be loaded first
-
 import { Hono } from "hono";
 import { machineIssueRoute } from "../../api-files/routes/machineIssueReports";
 import { userRoutes } from "../../api-files/routes/users"; 

@@ -6,8 +6,7 @@ import { users, budgetCodes } from "../../api-files/db/schema.js";
 import { eq, asc, desc, count, ilike, and } from "drizzle-orm";
 import { Context } from "../../api-files/lib/context.js";
 import { auth } from "../../api-files/middleware/auth.js";
-import { adminGuard } from "../../api-files/middleware/adminGuard.js";
-import { HTTPException } from "hono/http-exception";
+
 
 // Admin login helper – exactly as in your training tests.
 async function adminLogin(app: Hono<Context>): Promise<string> {
@@ -24,6 +23,8 @@ async function adminLogin(app: Hono<Context>): Promise<string> {
 async function userLogin(app: Hono<Context>, cardNum: string): Promise<string> {
   const response = await app.request(`/users/${cardNum}`);
   if (response.status !== 200) {
+    console.log(response)
+    console.log(response.body)
     console.error("Non-admin login response:", await response.text());
     throw new Error("User login failed for cardNum=" + cardNum);
   }
@@ -64,10 +65,10 @@ beforeAll(async () => {
   adminCookie = await adminLogin(app);
 
   // Create a test user with a fixed 16‑digit card number.
-  const testUserCard = "9990000000000002"; // 16 digits
+  const testUserCard = generateTestCardNumber(); // 16 digits
   const [insertedUser] = await db.insert(users).values({
     name: "Test Budget User",
-    cardNum: testUserCard,
+    cardNum: (testUserCard.slice(0, -1)),
     lastDigitOfCardNum: parseInt(testUserCard.slice(-1)),
     JHED: "budgetuser",
     isAdmin: 0,
@@ -84,6 +85,7 @@ beforeAll(async () => {
   const [insertedBudget] = await db.insert(budgetCodes).values({
     name: randomBudgetName,
     code: randomBudgetCode,
+    budgetCodeTypeId: 1
   }).returning();
   testBudgetCodeId = insertedBudget.id;
 });
@@ -123,6 +125,7 @@ describe("Budget Codes Routes", () => {
       const newBudget = {
         name: "TEST_BUDGET_" + Math.floor(Math.random() * 1e8).toString().padStart(8, "0"),
         code: Math.floor(Math.random() * 1e8).toString().padStart(8, "0"),
+        budgetCodeTypeId: 1
       };
       const response = await app.request("/budget-codes", {
         method: "POST",
@@ -156,25 +159,15 @@ describe("Budget Codes Routes", () => {
     });
 
     test("returns 403 Forbidden when non-admin session is used", async () => {
-      const testCardNum = generateTestCardNumber();
-      const nonAdminUser = {
-        name: "Non Admin",
-        cardNum: testCardNum,
-        JHED: "nonadmin",
-        isAdmin: 0,
-        graduationYear: 2025,
-      };
-      // Create non-admin user using admin access.
-      await app.request('/users', {
-        method: 'POST',
-        headers: new Headers({ 'Content-Type': 'application/json', Cookie: adminCookie }),
-        body: JSON.stringify(nonAdminUser),
-      });
-      // Simulate non-admin login.
-      const nonAdminLoginResponse = await app.request(`/users/${nonAdminUser.cardNum}`, {
-        headers: new Headers({ Cookie: adminCookie })
-      });
-      const nonAdminCookie = nonAdminLoginResponse.headers.get("set-cookie")?.split(";")[0] || "";
+     // non-admin login.
+     const nonAdminLoginResponse = await app.request(`/users/1198347981913945`, {
+      method: 'GET',
+    });
+
+    const nonAdminCookie = nonAdminLoginResponse.headers.get("set-cookie")?.split(";")[0] || "";
+   
+
+
       const newBudget = {
         name: "TEST_BUDGET_" + Math.floor(Math.random() * 1e8).toString().padStart(8, "0"),
         code: Math.floor(Math.random() * 1e8).toString().padStart(8, "0"),
@@ -222,26 +215,15 @@ describe("Budget Codes Routes", () => {
     });
 
     test("returns 403 Forbidden when a non-admin session is used", async () => {
-      const testCardNum = generateTestCardNumber();
-      const nonAdminUser = {
-        name: "Non Admin",
-        cardNum: testCardNum,
-        JHED: "nonadmin",
-        isAdmin: 0,
-        graduationYear: 2025,
-      };
-      // Create non-admin user using admin access.
-      await app.request('/users', {
-        method: 'POST',
-        headers: new Headers({ 'Content-Type': 'application/json', Cookie: adminCookie }),
-        body: JSON.stringify(nonAdminUser),
-      });
+      
+
       // non-admin login.
-      const nonAdminLoginResponse = await app.request(`/users/${nonAdminUser.cardNum}`, {
-        headers: new Headers({ Cookie: adminCookie })
+      const nonAdminLoginResponse = await app.request(`/users/1198347981913945`, {
+        method: 'GET',
       });
+      
       const nonAdminCookie = nonAdminLoginResponse.headers.get("set-cookie")?.split(";")[0] || "";
-      console.log("Non-admin cookie for DELETE:", nonAdminCookie);
+   
   
       const response = await app.request(`/budget-codes/9999999`, {
         method: "DELETE",
@@ -253,6 +235,54 @@ describe("Budget Codes Routes", () => {
     });
   });
 });
+
+
+describe("GET /budget-codes filtering", () => {
+  test("filters by name search, active flag, and budgetTypeId (admin access)", async () => {
+    // setup for filtering test
+    const matchingName = "FILTER_ME_" + Math.floor(Math.random()*1e6);
+    const nonMatchingName = "DO_NOT_FILTER_" + Math.floor(Math.random()*1e6);
+
+    // matching code test active=1, type=1
+    const [{ id: matchId }] = await db.insert(budgetCodes).values({
+      name: matchingName,
+      code: Math.floor(Math.random()*1e8).toString().padStart(8, "0"),
+      budgetCodeTypeId: 1,
+      active: 1,
+    }).returning();
+
+    //non-matching code tests with different name, inactive, type=2
+    const [{ id: nonMatchId }] = await db.insert(budgetCodes).values({
+      name: nonMatchingName,
+      code: Math.floor(Math.random()*1e8).toString().padStart(8, "0"),
+      budgetCodeTypeId: 2,
+      active: 0,
+    }).returning();
+
+    // Fetch with all three filters at once.
+    const url = `/budget-codes`
+      + `?page=1&limit=10`
+      + `&search=${encodeURIComponent("FILTER_ME")}`
+      + `&active=1`
+      + `&budgetTypeId=1`;
+    const res = await app.request(url, {
+      method: "GET",
+      headers: { Cookie: adminCookie },
+    });
+    expect(res.status).toBe(200);
+    const body = await res.json();
+
+    // Only the matching budget code should appear
+    const ids = body.data.map((b: any) => b.id);
+    expect(ids).toContain(matchId);
+    expect(ids).not.toContain(nonMatchId);
+
+    
+    await db.delete(budgetCodes).where(eq(budgetCodes.id, matchId)).execute();
+    await db.delete(budgetCodes).where(eq(budgetCodes.id, nonMatchId)).execute();
+  });
+});
+
 
 // clean test data
 afterAll(async () => {

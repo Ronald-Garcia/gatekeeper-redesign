@@ -42,7 +42,7 @@ app.onError((err, c) => {
 //Global variable to hold test machine type ID.
 let testMachineTypeId: number;
 let adminCookie = "";
-const invalidMachineTypeId = 999999; // An invalid machine type id
+//const invalidMachineTypeId = 999999; // An invalid machine type id
 
 // Before all tests, log in as admin and insert test data.
 beforeAll(async () => {
