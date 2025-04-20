@@ -1,5 +1,5 @@
 import { getUserStatistics } from "@/data/api";
-import { $date_range, $date, $userBudgetFilter, $machineTypeFilter, $currentUser, setTotalChartData, setBudgetChartData, setMachineChartData, addFunctionToBudgetChart, addFunctionToMachineChart, clearFilteredBudgetChart, clearFilteredMachineChart, clearFilteredTotalChart, $filtered_total_chart, $filtered_budget_chart, $filtered_machine_chart, $userTotalChart, $userMachineChart, setFilteredTotalChartData, $precision } from "@/data/store";
+import { $date_range, $date, $userBudgetFilter, $currentUser, setTotalChartData, setBudgetChartData, setMachineChartData, addFunctionToBudgetChart, addFunctionToMachineChart, clearFilteredBudgetChart, clearFilteredMachineChart, clearFilteredTotalChart, $filtered_total_chart, $filtered_budget_chart, $filtered_machine_chart, $userTotalChart, $userMachineChart, setFilteredTotalChartData, $precision, clearMachineChart, clearBudgetChart, clearTotalChart, $userMachineFilter } from "@/data/store";
 import { useStore } from "@nanostores/react";
 import { toast } from "./use-toast";
 import { useEffect } from "react";
@@ -21,11 +21,9 @@ export function useQueryChart() {
     const totalChartData = useStore($userTotalChart);
     const budgetChartData = useStore($userBudgetFilter);
     const machineChartData = useStore($userMachineChart);
-    const machineTypeFilter = useStore($machineTypeFilter);
+    const userMachineFilter = useStore($userMachineFilter);
     const budgetCodeFilter = useStore($userBudgetFilter);
     const precision = useStore($precision);
-
-    const curUser = useStore($currentUser);
     
     const fetchChartDataMinute = async () => {
       let newXAxis: Date[] = [];
@@ -368,17 +366,28 @@ export function useQueryChart() {
 
       })
       
-    }, [precision, dateRange, dateChoice, machineTypeFilter, budgetCodeFilter])
+    }, [precision, dateRange, dateChoice, userMachineFilter, budgetCodeFilter])
 
     useEffect(() => {
-      getTrainingsOfUser(curUser.id)
       clearFilteredBudgetChart()
       clearFilteredMachineChart()
       clearFilteredTotalChart()
+      clearBudgetChart()
+      clearMachineChart()
+      clearTotalChart()
 
-      getBudgetsOfUser(curUser.id)
+
     }, [])
+    useEffect(() => {
+      getTrainingsOfUser($currentUser.get().id).then(() => {
+        getBudgetsOfUser($currentUser.get().id).then(() => {
+          
+        })
 
+      }
+      )
+
+    }, [$currentUser])
 
     // getting & adding time for each day for all days within range
     const getUserChartData = async (
@@ -436,7 +445,7 @@ export function useQueryChart() {
 
 
         // setting chart data
-        const { data } = await getUserStatistics(page, limit, to as Date, from as Date, precision, budgetCodeFilter, machineTypeFilter)
+        const { data } = await getUserStatistics(page, limit, to as Date, from as Date, precision, budgetCodeFilter, userMachineFilter)
 
         await setTotalChartData(data.total);
         await setBudgetChartData(data.budgetCode);

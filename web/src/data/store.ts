@@ -42,9 +42,15 @@ export function clearPrecision() {
 
 
 export function addFunctionToMachineChart(func: userMachinesStats) {
+  if ($filtered_machine_chart.get().some(d => d.machineType === func.machineType)) {
+    return;
+  }
   $filtered_machine_chart.set([...$filtered_machine_chart.get(), func])
 }
 export function addFunctionToBudgetChart(func: userBudgetStats) {
+  if ($filtered_budget_chart.get().some(d => d.budgetCode === func.budgetCode)) {
+    return;
+  }
   $filtered_budget_chart.set([...$filtered_budget_chart.get(), func])
 }
 
@@ -64,6 +70,16 @@ export function clearFilteredMachineChart() {
 }
 export function clearFilteredTotalChart() {
   $filtered_total_chart.set([]);
+}
+
+export function clearBudgetChart() {
+  $userBudgetChart.set([]);
+}
+export function clearMachineChart() {
+  $userMachineChart.set([]);
+}
+export function clearTotalChart() {
+  $userTotalChart.set([]);
 }
 
 export function setActiveTab(tab: number) {
@@ -612,3 +628,5 @@ export function resetStores() {
   clearCurrentUser();
   setMixActive(false);
 }
+
+logger({ $currentUser, $filtered_budget_chart })

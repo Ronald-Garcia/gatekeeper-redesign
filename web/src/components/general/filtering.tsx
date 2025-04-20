@@ -4,6 +4,9 @@ import {
   DialogTrigger,
   DialogContent,
   DialogClose,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
 import { useStore } from "@nanostores/react";
@@ -121,6 +124,17 @@ const GeneralizedFilter: React.FC<Props> = ({ filters }) => {
         </Button>
       </DialogTrigger>
       <DialogContent>
+
+      <DialogHeader>
+        <DialogTitle>
+          Filter your search.
+        </DialogTitle>
+        <DialogDescription>
+          Choose your optional filters.
+        </DialogDescription>
+
+      </DialogHeader>
+
         <div className="space-y-4">
           {filters.map((key) => {
             const { label, getOptions } = filterConfigMap[key];
