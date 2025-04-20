@@ -6,10 +6,8 @@ import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card"
 import {
   ChartConfig,
@@ -41,21 +39,16 @@ export function UserDashboardStats() {
   const { filteredBudgetChartData, filteredTotalChartData, filteredMachineChartData, precision, setPrecision } = useQueryChart();
   return (
     <Card className="h-screen">
-      <CardHeader className="flex flex-row items-center gap-2 py-5 space-y-0 ">
-        <div className="grid flex-1 gap-1 text-center sm:text-left">
-          <CardTitle></CardTitle>
-          <CardDescription></CardDescription>
-
-        </div>
+      <CardHeader className="left-0 flex flex-row items-center justify-start gap-2 py-5 space-y-0">
         <GeneralizedFilter filters={["userMachineType", "userBudgetType"]}></GeneralizedFilter>
         {/* {precision === "m" && <TimePickerInput date={dateChoice} setDate={setDate} picker="hours"></TimePickerInput>} */}
         {precision === "d" && <DatePickerWithRange></DatePickerWithRange>}
         { (precision === "h" || precision === "m") && <DatePicker></DatePicker>}
         <Select value={precision} onValueChange={setPrecisionValue}>
-          <SelectTrigger>
+          <SelectTrigger className="w-32">
             <SelectValue placeholder="Days" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent >
             {/* <SelectItem value="m">
               Minutes
             </SelectItem> */}
@@ -84,7 +77,7 @@ export function UserDashboardStats() {
           if (chartData.data.length === 0) {
             return (
               <p>
-                jjj
+                No data retrieved
               </p>
             )
           }
@@ -130,82 +123,78 @@ export function UserDashboardStats() {
 if (chartData.data.length === 0) {
   return (
     <p>
-      jjj
+      No data retrieved
     </p>
   )
 }
 return (
   
   <ChartContainer config={timeChartConfig} className="min-h-fit min-w-fit">
-  <BarChart
-    accessibilityLayer
-    data={chartData.data}
-    margin={{
-      left: 12,
-      right: 12,
-    }}
-  >
-    <CartesianGrid vertical={false} />
-    <XAxis
-      dataKey="dateAdded"
-      tickLine={true}
-      axisLine={true}
-      tickMargin={8}
-      tickFormatter={(value: Date) => value.toLocaleDateString("en-US", { month: "numeric", day: "numeric", year: "numeric"})}
-    />
-    <ChartTooltip
-      cursor
-      content={<ChartTooltipContent
-      />}
-    />
+      <BarChart
+        accessibilityLayer
+        data={chartData.data}
+        margin={{
+          left: 12,
+          right: 12,
+        }}
+      >
+        <CartesianGrid vertical={false} />
+        <XAxis
+          dataKey="dateAdded"
+          tickLine={true}
+          axisLine={true}
+          tickMargin={8}
+          tickFormatter={(value: Date) => value.toLocaleDateString("en-US", { month: "numeric", day: "numeric", year: "numeric"})}
+        />
+        <ChartTooltip
+          cursor
+          content={<ChartTooltipContent
+          />}
+        />
 
-    {/* <ChartLegend content={<ChartLegendContent/>}></ChartLegend> */}
-    
-    <Bar
-      dataKey="totalTime"
-      fill="#002d72"
-      strokeWidth={2}
-    />
-  </BarChart>
-</ChartContainer>
-)
-})}
+        {/* <ChartLegend content={<ChartLegendContent/>}></ChartLegend> */}
+        
+        <Bar
+          dataKey="totalTime"
+          fill="#002d72"
+          strokeWidth={2}
+        />
+      </BarChart>
+  </ChartContainer>
+    )
+    })}  
+          <ChartContainer config={timeChartConfig} className="min-h-fit min-w-fit">
+          <BarChart
+            accessibilityLayer
+            data={filteredTotalChartData}
+            margin={{
+              left: 12,
+              right: 12,
+            }}
+          >
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="dateAdded"
+              tickLine={true}
+              axisLine={true}
+              tickMargin={8}
+              tickFormatter={(value: Date) => value.toLocaleDateString("en-US", { month: "numeric", day: "numeric", year: "numeric"})}
+            />
+            <ChartTooltip
+              cursor
+              content={<ChartTooltipContent
+              />}
+            />
 
-  
-  <ChartContainer config={timeChartConfig} className="min-h-fit min-w-fit">
-  <BarChart
-    accessibilityLayer
-    data={filteredTotalChartData}
-    margin={{
-      left: 12,
-      right: 12,
-    }}
-  >
-    <CartesianGrid vertical={false} />
-    <XAxis
-      dataKey="dateAdded"
-      tickLine={true}
-      axisLine={true}
-      tickMargin={8}
-      tickFormatter={(value: Date) => value.toLocaleDateString("en-US", { month: "numeric", day: "numeric", year: "numeric"})}
-    />
-    <ChartTooltip
-      cursor
-      content={<ChartTooltipContent
-      />}
-    />
-
-    {/* <ChartLegend content={<ChartLegendContent/>}></ChartLegend> */}
-    
-    <Bar
-      dataKey="totalTime"
-      fill="#002d72"
-      strokeWidth={2}
-    />
-  </BarChart>
-</ChartContainer>
-
-
+            {/* <ChartLegend content={<ChartLegendContent/>}></ChartLegend> */}
+            
+            <Bar
+              dataKey="totalTime"
+              fill="#002d72"
+              strokeWidth={2}
+            />
+          </BarChart>
+        </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         {/* <div className="flex gap-2 font-medium leading-none">
@@ -217,6 +206,5 @@ return (
     </Card>
   )
 }
-
 
 export default UserDashboardStats;

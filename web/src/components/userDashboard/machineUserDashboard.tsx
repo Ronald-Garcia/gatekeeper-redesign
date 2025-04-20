@@ -41,7 +41,7 @@ let styling:string;
 let borderstyling:string;
 
 if (machineStatus === machineStatuses.Inactive) {
-    actions = <div className="flex flex-row items-center gap-3">
+    actions = <div className="flex flex-row items-center gap-5">
       Inactive
       <Circle
           size={12}
@@ -52,7 +52,7 @@ if (machineStatus === machineStatuses.Inactive) {
     styling = "toggle-component"
     borderstyling = "toggle-boarder"
 } else if (machineStatus === machineStatuses.InUse) {
-    actions = <div className="flex flex-row items-center gap-3">
+    actions = <div className="flex flex-row items-center gap-5">
       In Use
       <Circle
           size={12}
@@ -64,7 +64,7 @@ if (machineStatus === machineStatuses.Inactive) {
     borderstyling = "toggle-boarder"
 
 } else {
-    actions = <div className="flex flex-row items-center gap-3">
+    actions = <div className="flex flex-row items-center gap-5">
       Available
       <Circle
           size={12}
