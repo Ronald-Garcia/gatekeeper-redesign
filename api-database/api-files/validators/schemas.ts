@@ -30,6 +30,16 @@ export const queryUsersParamsSchema = z.object({
     .transform((val) => {
       if (val === undefined) return undefined;
       return Array.isArray(val) ? val : [val];
+    }),
+    machineTypeId:z.union([
+      z.array(z.coerce.number().int().min(0)),
+      z.coerce.number().int().min(0),
+    ])
+    .optional()
+    // wrap single number into an array 
+    .transform((val) => {
+      if (val === undefined) return undefined;
+      return Array.isArray(val) ? val : [val];
     })
 });
 
@@ -87,7 +97,16 @@ export const queryBudgetCodesParamsSchema = z.object({
     budgetCode: z.coerce.number().int().positive().optional(),
     name: z.string().optional(),
     active: z.coerce.number().int().min(0).max(1).optional().default(1),
-    budgetTypeId: z.coerce.number().int().optional() 
+    budgetTypeId: z.union([
+      z.array(z.coerce.number().int().min(0)),
+      z.coerce.number().int().min(0),
+    ])
+    .optional()
+    // wrap single number into an array 
+    .transform((val) => {
+      if (val === undefined) return undefined;
+      return Array.isArray(val) ? val : [val];
+    })
 });
 
 export const createBudgetCode = z.object({

@@ -1,5 +1,5 @@
 import { getAllUsers, getUser, validateTraining } from "@/data/api";
-import { $activeTab, $gradYearFilter, $userBudgetFilter, $users, 
+import { $activeTab, $gradYearFilter, $machineTypeFilter, $userBudgetFilter, $users, 
   clearCurrentUser, 
   setCurrentUser, 
   setMetaData, 
@@ -22,6 +22,7 @@ function useQueryUsers(reload: boolean) {
   const activeTab = useStore($activeTab);
   const gradYear = useStore($gradYearFilter);
   const budgetCodeFilter = useStore($userBudgetFilter);
+  const machinesTypes = useStore($machineTypeFilter)
   
   const { toast } = useToast();
 
@@ -36,7 +37,7 @@ function useQueryUsers(reload: boolean) {
         gradYears,
         data: fetchedUsers,
         meta
-      } = await getAllUsers(sort,page,limit,search, activeTab, gradYear ?? undefined, budgetCodeFilter ?? undefined);
+      } = await getAllUsers(sort,page,limit,search, activeTab, gradYear ?? undefined, budgetCodeFilter ?? undefined, machinesTypes ?? undefined);
       setUsers(fetchedUsers);
       setYears(gradYears);
       setMetaData(meta);
