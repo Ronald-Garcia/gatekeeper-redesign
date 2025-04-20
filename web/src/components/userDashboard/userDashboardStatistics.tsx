@@ -14,8 +14,6 @@ import {
 import {
   ChartConfig,
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
@@ -40,7 +38,7 @@ export function UserDashboardStats() {
   const setPrecisionValue = (value: PrecisionType) => {
     setPrecision(value);
   }
-  const { filteredChartData, precision, setPrecision } = useQueryChart();
+  const { filteredBudgetChartData, filteredTotalChartData, filteredMachineChartData, precision, setPrecision } = useQueryChart();
   return (
     <Card className="h-screen">
       <CardHeader className="flex flex-row items-center gap-2 py-5 space-y-0 ">
@@ -80,37 +78,134 @@ export function UserDashboardStats() {
         </Select>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={timeChartConfig} className="min-h-fit min-w-fit">
-          <BarChart
-            accessibilityLayer
-            data={filteredChartData}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
-          >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="dateAdded"
-              tickLine={true}
-              axisLine={true}
-              tickMargin={8}
-              tickFormatter={(value: Date) => value.toLocaleDateString("en-US", { month: "numeric", day: "numeric", year: "numeric"})}
-            />
-            <ChartTooltip
-              cursor
-              content={<ChartTooltipContent
-              />}
-            />
+        
+        {filteredBudgetChartData.map(chartData => {
 
-            {/* <ChartLegend content={<ChartLegendContent/>}></ChartLegend> */}
-            <Bar
-              dataKey="totalTime"
-              fill="#002d72"
-              strokeWidth={2}
-            />
-          </BarChart>
-        </ChartContainer>
+          if (chartData.data.length === 0) {
+            return (
+              <p>
+                jjj
+              </p>
+            )
+          }
+          return (
+            
+            <ChartContainer config={timeChartConfig} className="min-h-fit min-w-fit">
+            <BarChart
+              accessibilityLayer
+              data={chartData.data}
+              margin={{
+                left: 12,
+                right: 12,
+              }}
+            >
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="dateAdded"
+                tickLine={true}
+                axisLine={true}
+                tickMargin={8}
+                tickFormatter={(value: Date) => value.toLocaleDateString("en-US", { month: "numeric", day: "numeric", year: "numeric"})}
+              />
+              <ChartTooltip
+                cursor
+                content={<ChartTooltipContent
+                />}
+              />
+  
+              {/* <ChartLegend content={<ChartLegendContent/>}></ChartLegend> */}
+              
+              <Bar
+                dataKey="totalTime"
+                fill="#002d72"
+                strokeWidth={2}
+              />
+            </BarChart>
+          </ChartContainer>
+          )
+        })}
+
+{filteredMachineChartData.map(chartData => {
+
+if (chartData.data.length === 0) {
+  return (
+    <p>
+      jjj
+    </p>
+  )
+}
+return (
+  
+  <ChartContainer config={timeChartConfig} className="min-h-fit min-w-fit">
+  <BarChart
+    accessibilityLayer
+    data={chartData.data}
+    margin={{
+      left: 12,
+      right: 12,
+    }}
+  >
+    <CartesianGrid vertical={false} />
+    <XAxis
+      dataKey="dateAdded"
+      tickLine={true}
+      axisLine={true}
+      tickMargin={8}
+      tickFormatter={(value: Date) => value.toLocaleDateString("en-US", { month: "numeric", day: "numeric", year: "numeric"})}
+    />
+    <ChartTooltip
+      cursor
+      content={<ChartTooltipContent
+      />}
+    />
+
+    {/* <ChartLegend content={<ChartLegendContent/>}></ChartLegend> */}
+    
+    <Bar
+      dataKey="totalTime"
+      fill="#002d72"
+      strokeWidth={2}
+    />
+  </BarChart>
+</ChartContainer>
+)
+})}
+
+  
+  <ChartContainer config={timeChartConfig} className="min-h-fit min-w-fit">
+  <BarChart
+    accessibilityLayer
+    data={filteredTotalChartData}
+    margin={{
+      left: 12,
+      right: 12,
+    }}
+  >
+    <CartesianGrid vertical={false} />
+    <XAxis
+      dataKey="dateAdded"
+      tickLine={true}
+      axisLine={true}
+      tickMargin={8}
+      tickFormatter={(value: Date) => value.toLocaleDateString("en-US", { month: "numeric", day: "numeric", year: "numeric"})}
+    />
+    <ChartTooltip
+      cursor
+      content={<ChartTooltipContent
+      />}
+    />
+
+    {/* <ChartLegend content={<ChartLegendContent/>}></ChartLegend> */}
+    
+    <Bar
+      dataKey="totalTime"
+      fill="#002d72"
+      strokeWidth={2}
+    />
+  </BarChart>
+</ChartContainer>
+
+
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         {/* <div className="flex gap-2 font-medium leading-none">

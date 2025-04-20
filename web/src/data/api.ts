@@ -1359,7 +1359,7 @@ export const getUserStatistics = async (
   budgetCodeFilter?: number[] | null,
   machineTypeFilter?: number[] | null,
 ): Promise<{
-  data: (userBudgetStats | userMachinesStats)[],
+  data: { total: userStats[], budgetCode: userBudgetStats[], machine: userMachinesStats[]},
   message: string
 }> => {
   const query = new URLSearchParams({
@@ -1372,13 +1372,15 @@ export const getUserStatistics = async (
 
   let url = `${API_DB_URL}/stats?${query.toString()}`;
 
-
-  for (const y in machineTypeFilter) {
-    url += `&machineId=${y}`;
+  if (machineTypeFilter) {
+    for (const y of machineTypeFilter) {
+      url += `&machineId=${y}`;
+    }  
   }
-
-  for (const y in budgetCodeFilter) {
-    url += `&budgetCode=${y}`;
+  if (budgetCodeFilter) {
+    for (const y of budgetCodeFilter) {
+      url += `&budgetCode=${y}`;
+    }
   }
   
   const response = await fetch(url, {
@@ -1392,7 +1394,7 @@ export const getUserStatistics = async (
   }
 
 
-  const { message, data }: { message: string; data: (userBudgetStats | userMachinesStats)[] } = await response.json();
+  const { message, data }: { message: string; data: { total: userStats[], budgetCode: userBudgetStats[], machine: userMachinesStats[]} } = await response.json();
 
   return { message, data };
 }
