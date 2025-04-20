@@ -9,6 +9,7 @@ import { logger } from "@nanostores/logger"
 import { DateRange } from "react-day-picker";
 import { MetaType } from "./types/meta";
 import { userBudgetStats, userMachinesStats, userStats } from "./types/user-stats";
+import { PrecisionType } from "./types/precision-type";
 
 export const $users = atom<User[]>([]);
 export const $codes = atom<BudgetCode[]>([]);
@@ -29,6 +30,16 @@ export const $userMachineChart = atom<userMachinesStats[]>([]);
 export const $filtered_total_chart = atom<userStats[]>([]);
 export const $filtered_budget_chart = atom<userBudgetStats[]>([]);
 export const $filtered_machine_chart = atom<userMachinesStats[]>([]);
+export const $precision = atom<PrecisionType>("d")
+
+export function setPrecision(p: PrecisionType)  {
+  $precision.set(p);
+}
+
+export function clearPrecision() {
+  $precision.set("d");
+}
+
 
 export function addFunctionToMachineChart(func: userMachinesStats) {
   $filtered_machine_chart.set([...$filtered_machine_chart.get(), func])
