@@ -14,6 +14,7 @@ export const $router = createRouter({
   financial_statements: `${BASE_URL}statements`,
   timer: `${BASE_URL}timer`,
   machineIssues: `${BASE_URL}issues`,
+  reportForm: `${BASE_URL}form/:userID/:machineID`,
   userDashboard: `${BASE_URL}user-dashboard`,
   userDashboardMachinesStatus: `${BASE_URL}user-dashboard/machines-status`,
   userDashboardUserStats: `${BASE_URL}user-dashboard/user-stats`

@@ -1,6 +1,6 @@
 import { User } from "./types/user";
 import { atom, map } from "nanostores";
-import { BudgetCode } from "./types/budgetCode"; 
+import { BudgetCode, budgetCodeType } from "./types/budgetCode"; 
 import { Machine } from "./types/machine";
 import { MachineType } from "./types/machineType";
 import { financialStatement } from "./types/financialStatement";
@@ -8,7 +8,7 @@ import { MachineIssue } from "./types/machineIssues"
 import { logger } from "@nanostores/logger"
 import { DateRange } from "react-day-picker";
 import { MetaType } from "./types/meta";
-import { userStats } from "./types/user-stats";
+import { userBudgetStats, userMachinesStats, userStats } from "./types/user-stats";
 
 export const $users = atom<User[]>([]);
 export const $codes = atom<BudgetCode[]>([]);
@@ -23,8 +23,19 @@ export const $hasMoreUserTrainings = atom<boolean>(false);
 export const $currentPage = atom<number>(1);
 export const $activeTab = atom<number>(1);
 export const $machine_issues = atom<MachineIssue[]>([]);
-export const $userChart = atom<userStats[]>([]);
-export const $filtered_chart = atom<userStats[]>([]);
+export const $userTotalChart = atom<userStats[]>([]);
+export const $userBudgetChart = atom<userBudgetStats[]>([]);
+export const $userMachineChart = atom<userMachinesStats[]>([]);
+export const $filtered_total_chart = atom<userStats[]>([]);
+export const $filtered_budget_chart = atom<userBudgetStats[]>([]);
+export const $filtered_machine_chart = atom<userMachinesStats[]>([]);
+
+export function addFunctionToMachineChart(func: userMachinesStats) {
+  $filtered_machine_chart.set([...$filtered_machine_chart.get(), func])
+}
+export function addFunctionToBudgetChart(func: userBudgetStats) {
+  $filtered_budget_chart.set([...$filtered_budget_chart.get(), func])
+}
 
 export function setMachineIssues(issues: MachineIssue[]) {
   $machine_issues.set(issues);
@@ -32,13 +43,16 @@ export function setMachineIssues(issues: MachineIssue[]) {
 export function resetMachineIssues() {
   $machine_issues.set([]);
 }
+export const $budgetCodeTypes = atom<budgetCodeType[]>([]);
 
-export function setFilteredChart(chart: userStats[]) {
-  $filtered_chart.set(chart);
+export function clearFilteredBudgetChart() {
+  $filtered_budget_chart.set([]);
 }
-
-export function clearFilteredChart() {
-  $filtered_chart.set([]);
+export function clearFilteredMachineChart() {
+  $filtered_machine_chart.set([]);
+}
+export function clearFilteredTotalChart() {
+  $filtered_total_chart.set([]);
 }
 
 export function setActiveTab(tab: number) {
@@ -108,6 +122,9 @@ export function toggleBudgetCodeQueue(bc: number) {
   }
 }
 
+export function addNewBudgetCodeTypes(type: budgetCodeType) {
+  $budgetCodeTypes.set([...$budgetCodeTypes.get(), type]);
+}
 
 export function setTrainingQueue(bcs: number[]) {
   $training_queue.set(bcs);
@@ -137,6 +154,7 @@ export function toggleMachineTypeQueue(bc: number) {
     addTrainingQueue(bc);
   }
 }
+
 
 export function toggleTrainingQueue(bc: number) {
   const bcs =  $training_queue.get();
@@ -202,10 +220,14 @@ const defaultMachine: Machine = {
 }
 
 const defaultBudget: BudgetCode = {
-  id: -1, 
+  id: -1,
   name: "invalid",
   code: "invalid",
-  active:-1
+  type: {
+    id: -1,
+    name: ""
+  },
+  active: 0
 }
 
 
@@ -363,6 +385,16 @@ export function appendMachineTypes(typeList: MachineType[]) {
   $machine_types.set([...$machine_types.get(), ...typeList]);
 }
 
+
+export function setBudgetCodeTypes(typeList: budgetCodeType[]) {
+  $budgetCodeTypes.set(typeList);
+}
+
+export function appendBudgetCodeType(typeList: budgetCodeType[]) {
+  $budgetCodeTypes.set([...$budgetCodeTypes.get(), ...typeList]);
+}
+
+
 // *** SERACH STORES ***
 
 //The "local" search for a user, aka state control of the search bar.
@@ -383,6 +415,64 @@ export function resetSearch() {
   $activeSearch.set("")
 }
 
+// filter stores 
+export const $gradYearFilter = atom<number []| null>(null);
+export const $userBudgetFilter = atom<number []| null>(null);
+export const $machineTypeFilter = atom<number []| null>(null);
+export const $userMachineFilter = atom<number []| null>(null);
+export const $budgetTypeFilter = atom<number []| null>(null);
+
+export function setYearFilter(year: number[]) {
+  $gradYearFilter.set(year);
+
+}
+
+export function setUserMachineFilter(machine: number[]) {
+  $userMachineFilter.set(machine);
+}
+ 
+export function setBudgetFilter(budget: number[]) {
+  $userBudgetFilter.set(budget);
+}
+
+export function clearYearFilter() {
+  $gradYearFilter.set(null);
+
+}
+
+export function clearUserMachineFilter() {
+  $userMachineFilter.set(null);
+}
+
+export function clearBudgetFilter() {
+  $userBudgetFilter.set(null);
+}
+
+export function setMachineTypeFilter(type: number[]) {
+  $machineTypeFilter.set(type);
+
+}
+
+
+export function clearMachineTypeFilter() {
+  $machineTypeFilter.set(null);
+}
+
+export function setBudgetTypeFilter(type: number[]) {
+  $budgetTypeFilter.set(type);
+}
+
+export function clearBudgetTypeFilter() {
+  $budgetTypeFilter.set(null);
+}
+
+export function clearFilters(){
+  clearBudgetTypeFilter();
+  clearMachineTypeFilter();
+  clearYearFilter();
+  clearBudgetFilter();
+  clearUserMachineFilter();
+}
 export const $statements = atom<financialStatement[]>([]);
 export function setFinancialStatements(statements: financialStatement[]) {
   $statements.set(statements);
@@ -454,12 +544,33 @@ export function setTotal(total: number) {
   $total.set(total);
 }
 
-export function setChartData(data: userStats[]) {
-  $userChart.set(data);
+export function setTotalChartData(data: userStats[]) {
+  $userTotalChart.set(data);
+}
+export function setBudgetChartData(data: userBudgetStats[]) {
+  $userBudgetChart.set(data);
+}
+export function setMachineChartData(data: userMachinesStats[]) {
+  $userMachineChart.set(data);
+}
+export function setFilteredTotalChartData(data: userStats[]) {
+  $filtered_total_chart.set(data);
+}
+export function setFilteredBudgetChartData(data: userBudgetStats[]) {
+  $filtered_budget_chart.set(data);
+}
+export function setFilteredMachineChartData(data: userMachinesStats[]) {
+  $filtered_machine_chart.set(data);
 }
 
-export function resetChartData() {
-  $userChart.set([]);
+export function resetTotalChartData() {
+  $userTotalChart.set([]);
+}
+export function resetBudgetChartData() {
+  $userBudgetChart.set([]);
+}
+export function resetMachineChartData() {
+  $userMachineChart.set([]);
 }
 
 export const $max_page = atom<number>(1);

@@ -4,12 +4,15 @@ import { $router } from "@/data/router";
 import { Dialog } from "../ui/dialog";
 import ErrorPage from "../layout/errorPage";
 import Searchbar from "../general/searchbar";
+import GeneralizedFilter from "../general/filtering";
 
 /*
 Admin dashboard component
 Displays BudgetCodes or Users based on routing. 
 */
 const UsersActions = () => {
+
+  
   const router = useStore($router);
 
   if (!router) {
@@ -24,7 +27,11 @@ const UsersActions = () => {
             <div className="flex-1 w-full">
               <Searchbar/>
             </div>
+          
             <div className="flex flex-wrap gap-2 shrink-0">
+            
+              <GeneralizedFilter filters={["gradYear", "budgetCodeId", "machineTypeId"]} />
+            
               <AddUserDialog/>
             </div>
           </div>

@@ -80,7 +80,7 @@ export default function UserActions({ user }: UserActionsProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        { user.active === 1 && <DropdownMenuItem onClick={handleTraining}>
+        { user.active === 1 && <DropdownMenuItem data-cy={`user-training-${user.cardNum}`}  onClick={handleTraining}>
           Training
         </DropdownMenuItem>}
         { user.active === 1 && <DropdownMenuItem data-cy={`user-budget-code-${user.cardNum}`} onClick={handleBudgetCode}>
@@ -89,7 +89,7 @@ export default function UserActions({ user }: UserActionsProps) {
         {user.active === 1 && <DropdownMenuItem onClick={handleDelete} className="delete-text-red" data-cy="user-delete">
           Deactivate
         </DropdownMenuItem>}
-        {user.active === 0 && <DropdownMenuItem onClick={handleActivate} className="delete-text-red" data-cy="user-delete">
+        {user.active === 0 && <DropdownMenuItem onClick={handleActivate} className="delete-text-red" data-cy="user-activate">
           Activate
         </DropdownMenuItem>}
         {user.active === 1 &&<DropdownMenuItem onClick={handleTimeout} className="delete-text-red" data-cy="user-timeout">

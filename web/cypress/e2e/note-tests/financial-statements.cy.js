@@ -41,4 +41,24 @@ describe("Create a financial statements", () => {
         cy.url().should("include", "/statements");
       });
 
+
+
+      it("log in as admin, navigate to financial statements, set automated schedule for financial statements", () => {
+        // Log in as admin via the kiosk input.
+        cy.get('[data-cy="cardnum-input"]')
+          .clear()
+          .type(`;${adminCardNum};{enter}`);
+    
+        // see the admin dashboard
+        
+        cy.get('[data-cy="admin-dashboard"]').should("be.visible");
+    
+        // click financial statemnt button 
+        cy.get('[data-cy="financial-statements-dialog"]').click();
+    
+        cy.get('[data-cy="statement-tabs"]').should("be.visible");
+
+     
+      });
+
     });

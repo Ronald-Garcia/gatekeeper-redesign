@@ -9,11 +9,11 @@ export default function MachinesComponent() {
   const machineList = useStore($machines);
 
   return (
-        <div className="max-h-[20vh] p-4">
+        <div data-cy="no-machines" className="max-h-[20vh] p-4">
         {machineList.length === 0 ? (
         <p> No machines found. Please add some!  </p>
       ) : 
-      <div className="space-y-4">
+      <div data-cy={`machines`}  className="space-y-4">
 
         {machineList.map((m) => (
           <MachineAdmin key={m.id} machine={m}/>

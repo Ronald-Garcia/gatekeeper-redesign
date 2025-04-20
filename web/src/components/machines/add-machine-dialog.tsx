@@ -98,7 +98,7 @@ const AddMachineDialog = () => {
     <div data-cy="user-dialog">
       <Dialog open={open} onOpenChange={handleOpenClose}>
         <DialogTrigger asChild>
-          <Button data-cy="add-user-button" className="jhu-blue-button add-button h-[40px]" variant={"ghost"} size="default">
+          <Button data-cy="add-machine-button" className="jhu-blue-button add-button h-[40px]" variant={"ghost"} size="default">
             Add Machine
           </Button>
         </DialogTrigger>
@@ -124,6 +124,7 @@ const AddMachineDialog = () => {
         <ToggleGroup type="single" className="flex-col">
               {typesList.map((type) => (
                 <ToggleGroupItem
+                  data-cy= {`machine-${type.name}`}
                   key={type.id}
                   value={type.id.toString()}
                   onClick={() => handleClickOnMachineId(type.id)}

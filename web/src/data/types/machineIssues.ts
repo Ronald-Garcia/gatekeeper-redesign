@@ -1,7 +1,8 @@
 export type MachineIssue = {
   id: number;
-  reportedAt: Date;
+  reportedAt: Date | string;
   resolved: boolean;
+  description: string; 
   user: {
     id: number;
     name: string;

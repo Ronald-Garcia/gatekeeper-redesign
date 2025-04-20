@@ -1,5 +1,5 @@
 import { fetchCurrentMachine, getAllMachines, getAllTrainingsOfUser, getMachine, getMachineTypes } from "@/data/api"
-import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes, appendMachineTypes, $mix_active, setMetaData, $activeTab } from "@/data/store";
+import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes, appendMachineTypes, $mix_active, setMetaData, $activeTab , $machineTypeFilter} from "@/data/store";
 import { Machine } from "@/data/types/machine";
 import { MachineType } from "@/data/types/machineType";
 
@@ -17,6 +17,7 @@ function useQueryMachines(reload: boolean) {
 
   const mixActive = useStore($mix_active);
   const activeTab = useStore($activeTab);
+  const machineTypeFilter = useStore($machineTypeFilter)
   
   const getSavedMachine = async (): Promise<Machine | "kiosk" | undefined | 0> => {
     try {
@@ -124,7 +125,7 @@ function useQueryMachines(reload: boolean) {
       const {
         data: fetchedMachines,
         meta: fetchedMetaData
-      } = await getAllMachines(sort, page, limit, search, type, activeParam);
+      } = await getAllMachines(sort, page, limit, search, type, activeParam, machineTypeFilter ?? undefined);
       setMetaData(fetchedMetaData);
       setMachines(fetchedMachines);
     } catch (e) {

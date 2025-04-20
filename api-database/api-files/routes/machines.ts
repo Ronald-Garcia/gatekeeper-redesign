@@ -33,7 +33,7 @@ export const machineRoutes = new Hono<Context>();
 machineRoutes.get("/machines",
     authGuard,  
      zValidator("query", queryMachinesSchema), async (c) => {
-    const { page = 1, limit = 20, search, sort, type, active } = c.req.valid("query");
+    const { page = 1, limit = 20, search, sort, type, active, machineTypeId } = c.req.valid("query");
 
     const whereClause: (SQL | undefined)[] = [];
 
@@ -44,6 +44,12 @@ machineRoutes.get("/machines",
     if (active !== undefined) {
         whereClause.push(eq(machines.active, active));
     }
+
+    if (machineTypeId !== undefined) {
+        whereClause.push(eq(machines.machineTypeId, machineTypeId));
+    }
+
+    
 
     if (type) {
         const types = await db
@@ -140,7 +146,7 @@ machineRoutes.get("/machines/:id",
         ;
 
     if (!machine) {
-        throw new HTTPException(404, { message: "Machine not found!"});
+        throw new HTTPException(404, { message: "Machine not found."});
     }
     if (machine.active == 0) {
         throw new HTTPException(503, {message: "Machine is not open for use."});
