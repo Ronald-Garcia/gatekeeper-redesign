@@ -1,5 +1,5 @@
 import { Input } from "../ui/input";
-import { useState } from "react";
+import React, { useState } from "react";
 import useQueryUsers from "@/hooks/use-query-users";
 import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
@@ -42,6 +42,18 @@ const UserStartPage = () => {
     }
   }
 
+  const handleOnClick = () => {
+      const newCardNum = cardNum;
+      const input = inputRef.current! ;
+      input.value = "";
+        validateUser(Number.parseInt(newCardNum), callPython).then(s => {        
+          redirectPage($router, s);
+        });
+      
+    }
+  const inputRef = React.useRef<HTMLInputElement>(null);
+    
+
   return (
     <div className="items-center sign-in-container ">
       <div className="p-6 space-y-6 rounded-lg shadow-xl ">
@@ -52,6 +64,7 @@ const UserStartPage = () => {
 
         <div className="flex flex-col space-y-4">
           <Input
+            ref = {inputRef}
             onChange={handleOnChange}
             placeholder="Enter your card number"
             onKeyDown={handleSubmitOnEnter}
@@ -60,7 +73,7 @@ const UserStartPage = () => {
           />
           
           <Button
-            onClick={() => handleSubmitOnEnter({ key: "Enter" } as any)}
+            onClick={handleOnClick}
             className="text-lg jhu-blue-button"
             variant={"ghost"}
           >

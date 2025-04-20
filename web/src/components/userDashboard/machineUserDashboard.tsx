@@ -29,10 +29,11 @@ if (machine.active === 0){
     machineStatus = machineStatuses.Available;
 }
 
+// If you want to display the minutes since last used, then use this in labels.
+// { label: "Last Used", value: `${Math.round(timeSinceActive / 60)} minutes ago` }
 
 const details = [{ label: "Hourly Rate", value: `$${machine.hourlyRate}` },
     { label: "Status", value: machine.active === 1 ? "Active" : "Inactive" },
-    { label: "Last Used: ", value: `${timeSinceActive / 60} minutes ago` }
 
 ]
 let actions:JSX.Element;
@@ -40,16 +41,16 @@ let styling:string;
 let borderstyling:string;
 
 if (machineStatus === machineStatuses.Inactive) {
-    actions = <div>Inactive</div>
+    actions = <div data-cy={`inactive-${machine.id}`}>Inactive</div>
     styling = "toggle-component-inactive"
     borderstyling = "toggle-boarder-inactive"
 } else if (machineStatus === machineStatuses.InUse) {
-    actions = <div>In Use</div>
+    actions = <div data-cy={`in-use-${machine.id}`}>In Use</div>
     styling = "toggle-component-inuse"
     borderstyling = "toggle-boarder-inuse"
 
 } else {
-    actions = <div>Available</div>
+    actions = <div data-cy={`available-${machine.id}`}>Available</div>
     styling = "toggle-component"
     borderstyling = "toggle-boarder"
 }
