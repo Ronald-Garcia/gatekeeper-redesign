@@ -5,14 +5,16 @@ import {
   $userBudgetFilter,
   $machineTypeFilter,
   clearFilters,
+  $budgetTypeFilter,
 } from "@/data/store";
 
 export default function ClearFiltering() {
   const gradYear = useStore($gradYearFilter);
   const budget   = useStore($userBudgetFilter);
   const machine  = useStore($machineTypeFilter);
+  const budgetType = useStore($budgetTypeFilter)
 
-  const hasAny = (gradYear?.length ?? 0) > 0 ||(budget?.length   ?? 0) > 0 ||(machine?.length  ?? 0) > 0;
+  const hasAny = (gradYear?.length ?? 0) > 0 ||(budget?.length   ?? 0) > 0 ||(machine?.length  ?? 0) > 0 || (budgetType?.length  ?? 0) > 0;
 
   if (!hasAny) return null;
   

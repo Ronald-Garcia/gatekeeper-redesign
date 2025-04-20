@@ -3,6 +3,7 @@ import AddBudgetCodeDialog from "../BudgetCodes/add-budgetCode-dialogue";
 import { Dialog } from "../ui/dialog";
 import AddBudgetCodeTypeDialog from "../BudgetCodeTypes/add-budget-type";
 import GeneralizedFilter from "../general/filtering";
+import ClearFiltering from "../general/clear-filtering";
 
 /*
 Admin dashboard component
@@ -19,6 +20,7 @@ const BudgetActions = () => {
                 <Searchbar/>
               </div>
               <div className="flex flex-wrap gap-2 shrink-0">
+                  <ClearFiltering />  
                <GeneralizedFilter filters={["budgetTypeId"]} />
                 <AddBudgetCodeDialog/>
                 <AddBudgetCodeTypeDialog />
