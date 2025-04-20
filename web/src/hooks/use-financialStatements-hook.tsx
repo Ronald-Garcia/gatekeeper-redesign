@@ -36,7 +36,6 @@ function useQueryStatements(reload: boolean) {
       });
     }
   };
-
   useEffect(() => {
     if (reload) {
       loadFinancialStatements();

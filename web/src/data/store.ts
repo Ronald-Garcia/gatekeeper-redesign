@@ -8,6 +8,8 @@ import { MachineIssue } from "./types/machineIssues"
 import { logger } from "@nanostores/logger"
 import { DateRange } from "react-day-picker";
 import { MetaType } from "./types/meta";
+import { userBudgetStats, userMachinesStats, userStats } from "./types/user-stats";
+import { PrecisionType } from "./types/precision-type";
 
 export const $users = atom<User[]>([]);
 export const $codes = atom<BudgetCode[]>([]);
@@ -22,7 +24,35 @@ export const $hasMoreUserTrainings = atom<boolean>(false);
 export const $currentPage = atom<number>(1);
 export const $activeTab = atom<number>(1);
 export const $machine_issues = atom<MachineIssue[]>([]);
+export const $userTotalChart = atom<userStats[]>([]);
+export const $userBudgetChart = atom<userBudgetStats[]>([]);
+export const $userMachineChart = atom<userMachinesStats[]>([]);
+export const $filtered_total_chart = atom<userStats[]>([]);
+export const $filtered_budget_chart = atom<userBudgetStats[]>([]);
+export const $filtered_machine_chart = atom<userMachinesStats[]>([]);
+export const $precision = atom<PrecisionType>("d")
 
+export function setPrecision(p: PrecisionType)  {
+  $precision.set(p);
+}
+
+export function clearPrecision() {
+  $precision.set("d");
+}
+
+
+export function addFunctionToMachineChart(func: userMachinesStats) {
+  if ($filtered_machine_chart.get().some(d => d.machineType === func.machineType)) {
+    return;
+  }
+  $filtered_machine_chart.set([...$filtered_machine_chart.get(), func])
+}
+export function addFunctionToBudgetChart(func: userBudgetStats) {
+  if ($filtered_budget_chart.get().some(d => d.budgetCode === func.budgetCode)) {
+    return;
+  }
+  $filtered_budget_chart.set([...$filtered_budget_chart.get(), func])
+}
 
 export function setMachineIssues(issues: MachineIssue[]) {
   $machine_issues.set(issues);
@@ -31,6 +61,26 @@ export function resetMachineIssues() {
   $machine_issues.set([]);
 }
 export const $budgetCodeTypes = atom<budgetCodeType[]>([]);
+
+export function clearFilteredBudgetChart() {
+  $filtered_budget_chart.set([]);
+}
+export function clearFilteredMachineChart() {
+  $filtered_machine_chart.set([]);
+}
+export function clearFilteredTotalChart() {
+  $filtered_total_chart.set([]);
+}
+
+export function clearBudgetChart() {
+  $userBudgetChart.set([]);
+}
+export function clearMachineChart() {
+  $userMachineChart.set([]);
+}
+export function clearTotalChart() {
+  $userTotalChart.set([]);
+}
 
 export function setActiveTab(tab: number) {
   $activeTab.set(tab);
@@ -142,7 +192,6 @@ export function toggleTrainingQueue(bc: number) {
     addTrainingQueue(bc);
   }
 }
-export const $statements = atom<financialStatement[]>([]);
 
 
 
@@ -194,6 +243,7 @@ const defaultMachine: Machine = {
   },
   hourlyRate: 0,
   active:-1,
+  lastTimeUsed: "",
 }
 
 const defaultBudget: BudgetCode = {
@@ -335,6 +385,13 @@ export function setMachines(machines: Machine[]) {
   $machines.set(machines);
 }
 
+
+export const $machine = atom<Machine>(defaultMachine);
+//This is for when you need to set a single machine for something like a the form page.
+export function setMachine(machine: Machine) {
+  $machine.set(machine);
+}
+
 export function clearMachines() {
   $machines.set([]);
 }
@@ -394,6 +451,7 @@ export function resetSearch() {
 export const $gradYearFilter = atom<number []| null>(null);
 export const $userBudgetFilter = atom<number []| null>(null);
 export const $machineTypeFilter = atom<number []| null>(null);
+export const $userMachineFilter = atom<number []| null>(null);
 export const $budgetTypeFilter = atom<number []| null>(null);
 export const $gradYears = atom<number[]>([]);
 
@@ -405,6 +463,10 @@ export function setYears(year: number[]) {
   $gradYears.set(year);
 }
 
+export function setUserMachineFilter(machine: number[]) {
+  $userMachineFilter.set(machine);
+}
+ 
 export function setBudgetFilter(budget: number[]) {
   $userBudgetFilter.set(budget);
 }
@@ -412,6 +474,10 @@ export function setBudgetFilter(budget: number[]) {
 export function clearYearFilter() {
   $gradYearFilter.set(null);
 
+}
+
+export function clearUserMachineFilter() {
+  $userMachineFilter.set(null);
 }
 
 export function clearBudgetFilter() {
@@ -441,10 +507,16 @@ export function clearFilters(){
   clearMachineTypeFilter();
   clearYearFilter();
   clearBudgetFilter();
+  clearUserMachineFilter();
 }
-
+export const $statements = atom<financialStatement[]>([]);
 export function setFinancialStatements(statements: financialStatement[]) {
   $statements.set(statements);
+}
+
+export const $curStatementId = atom<number>(-1);
+export function setCurStatement(id:number) {
+  $curStatementId.set(id);
 }
 
 logger({ $budget_code_queue })
@@ -508,11 +580,45 @@ export function setTotal(total: number) {
   $total.set(total);
 }
 
+export function setTotalChartData(data: userStats[]) {
+  $userTotalChart.set(data);
+}
+export function setBudgetChartData(data: userBudgetStats[]) {
+  $userBudgetChart.set(data);
+}
+export function setMachineChartData(data: userMachinesStats[]) {
+  $userMachineChart.set(data);
+}
+export function setFilteredTotalChartData(data: userStats[]) {
+  $filtered_total_chart.set(data);
+}
+export function setFilteredBudgetChartData(data: userBudgetStats[]) {
+  $filtered_budget_chart.set(data);
+}
+export function setFilteredMachineChartData(data: userMachinesStats[]) {
+  $filtered_machine_chart.set(data);
+}
+
+export function resetTotalChartData() {
+  $userTotalChart.set([]);
+}
+export function resetBudgetChartData() {
+  $userBudgetChart.set([]);
+}
+export function resetMachineChartData() {
+  $userMachineChart.set([]);
+}
+
 export const $max_page = atom<number>(1);
 export function setMaxPage(max_page: number) {
   $max_page.set(max_page);
 }
 logger({ $activeTab, $users })
+
+export const $mix_active = atom<boolean>(false);
+export function setMixActive(status: boolean) {
+  $mix_active.set(status);
+}
 
 export function resetStores() {
   resetDashboardSearch();
@@ -520,5 +626,7 @@ export function resetStores() {
   resetDateRange();
   resetSearch();
   clearCurrentUser();
-  
+  setMixActive(false);
 }
+
+logger({ $currentUser, $filtered_budget_chart })

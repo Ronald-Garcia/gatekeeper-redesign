@@ -1,0 +1,1 @@
+ALTER TABLE "machines_table" ADD COLUMN "lastTimeUsed" timestamp (3) with time zone DEFAULT now() NOT NULL;

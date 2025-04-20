@@ -1,4 +1,5 @@
 export type financialStatement = {
+    id:number,
     user: {
         name: string;
         JHED: string;

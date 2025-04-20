@@ -31,6 +31,7 @@ export default function DatePickerWithRange({
        <Popover modal={true}>
         <PopoverTrigger asChild>
           <Button
+            data-cy="financial-date-trigger"
             id="date"
             variant={"outline"}
             className={cn(
@@ -53,7 +54,7 @@ export default function DatePickerWithRange({
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
+        <PopoverContent data-cy="financial-date-popover" className="w-auto p-0" align="start">
           <Calendar
             initialFocus
             mode="range"
@@ -61,6 +62,8 @@ export default function DatePickerWithRange({
             selected={date}
             onSelect={setDate}
             numberOfMonths={2}
+
+            
           />
         </PopoverContent>
       </Popover>

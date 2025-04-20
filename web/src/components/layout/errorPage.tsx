@@ -19,7 +19,7 @@ const ErrorPage = () => {
               <p className="text-lg freight-text-medium">
                 Oops! The page you are looking for does not exist.
               </p>
-              <Button  className="jhu-blue-button" onClick={handleClickOnGoHome}>
+              <Button  className="jhu-blue-button" variant={"ghost"} onClick={handleClickOnGoHome}>
                 Go back to Home
               </Button>
             </div>

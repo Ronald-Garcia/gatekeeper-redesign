@@ -8,6 +8,8 @@ import { SortBudgetType, SortMachineType, SortType } from "./types/sort";
 import { financialStatement } from "./types/financialStatement";
 import { MetaType } from "./types/meta";
 import { MachineIssue } from "./types/machineIssues";
+import { userBudgetStats, userMachinesStats, userStats } from "./types/user-stats";
+import { PrecisionType } from "./types/precision-type";
 
 /**
  * Turns on the machine.
@@ -42,13 +44,8 @@ export const turnOnMachine = async (): Promise<boolean> => {
     headers: {"Content-Type": "application/json"},
     credentials: "include",
   });
-  console.log("after response await")
-  console.log(response);
   const { message }: { message: string } = await response.json();
-  console.log("print response")
-  console.log(response.ok)
   if (!response.ok) {
-    console.log(response)
     throw new Error(message);
   }
 
@@ -104,7 +101,7 @@ export const getAllUsers = async (
 
   if (training !== undefined) {
     for (const t of training){
-    url += `&machinTypeId=${t}`;
+    url += `&machineTypeId=${t}`;
     }
   }
   
@@ -235,7 +232,7 @@ export const getUser = async (cardNum: number): Promise<{
  */
 // Sign out a user
 export const signOut = async (): Promise<boolean> => {
-  const response = await fetch(`${API_DB_URL}/sign-out`, {
+  const response = await fetch(`${API_DB_URL}/logout`, {
     method: "POST",
     credentials: "include", 
   });
@@ -394,7 +391,11 @@ export const getAllBudgets = async (
   };
 }> => {
   let url = `${API_DB_URL}/budget-codes?search=${search}&limit=${limit}&page=${page}&sort=${sort}&active=${active}`
-  if (budgCodeType !== undefined) url += `&budgetCodeTypeId=${budgCodeType}`
+  if (budgCodeType !== undefined) {
+    for (const b of budgCodeType){
+    url += `&budgetTypeId=${b}`;
+    }
+  }
   const response = await fetch(url, {
     credentials: "include",
   });
@@ -731,15 +732,25 @@ export const getAllMachines = async (
   search: string = "",
   type: string = "",
   active: number = 1, 
-  machineTypeFilter?: number
+  machineTypeFilter?: number[]
 
 ): Promise<{
   message: string;
   data: Machine[];
   meta: MetaType
 }> => {
-  let url =`${API_DB_URL}/machines?search=${search}&limit=${limit}&page=${page}&sort=${sort}&type=${type}&active=${active}`
-  if (machineTypeFilter  !== undefined) url += `&machineTypeId=${machineTypeFilter}`
+  var activeQuery = `&active=${active}`
+  if (active === -1) {
+    activeQuery = ""
+  }
+  let url =`${API_DB_URL}/machines?search=${search}&limit=${limit}&page=${page}&sort=${sort}&type=${type}${activeQuery}`
+  if (machineTypeFilter  !== undefined) {
+     for (const m of machineTypeFilter) {
+     url += `&machineTypeId=${m}`;
+     }
+  }
+    
+   
   const response = await fetch(url, {
     credentials: "include",
   });
@@ -982,13 +993,14 @@ export const deleteMachine = async (id: number) => {
  * @returns {Promise<{message: string, data: Machine}>} A promise that resolves with a message and the updated machine.
  * @throws {Error} If the response is not ok, throws an error with the response message.
  */
-export const updateMachine = async (id: number, active: number) => {
+export const updateMachine = async (id: number, active: number, lastTimeUsed?:Date ) => {
   const response = await fetch(`${API_DB_URL}/machines/${id}`,{
     method: "PATCH",
     headers: {"Content-Type": "application/json"},
     credentials:"include",
     body: JSON.stringify({
-      active: active
+      active: active,
+      lastTimeUsed
     })
   });
 
@@ -1072,6 +1084,31 @@ export const createFinancialStatements = async (userId: number, machineId: numbe
       userId,
       machineId,
       budgetCode,
+      timeSpent
+    })
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string; data: financialStatement } =
+    await response.json();
+
+  return { message, data };
+}
+
+export const updateFinancialStatements = async (statementId: number, timeSpent: number ): Promise<{
+  message: string,
+  data: financialStatement
+}> => {
+  const response = await fetch(`${API_DB_URL}/fin-statements/${statementId}`, {
+    method: "PATCH",
+    headers: {"Content-Type": "application/json"},
+    credentials: "include",
+    body: JSON.stringify({
       timeSpent
     })
   });
@@ -1339,6 +1376,54 @@ export const createBudgetType = async (type: string): Promise<{
   }
 
   const { message, data }: { message: string, data: budgetCodeType } = await response.json();
+
+  return { message, data };
+}
+export const getUserStatistics = async (
+  page: number = 1,
+  limit: number = 10,
+  to: Date,
+  from: Date,
+  precision: PrecisionType = "m",
+  budgetCodeFilter?: number[] | null,
+  machineTypeFilter?: number[] | null,
+): Promise<{
+  data: { total: userStats[], budgetCode: userBudgetStats[], machine: userMachinesStats[]},
+  message: string
+}> => {
+  const query = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+    to: to.toUTCString(),
+    from: from.toUTCString(),
+    precision: precision.toString(),
+  });
+
+  let url = `${API_DB_URL}/stats?${query.toString()}`;
+
+  if (machineTypeFilter) {
+    for (const y of machineTypeFilter) {
+      url += `&machineId=${y}`;
+    }  
+  }
+  if (budgetCodeFilter) {
+    for (const y of budgetCodeFilter) {
+      url += `&budgetCode=${y}`;
+    }
+  }
+  
+  const response = await fetch(url, {
+    credentials: "include"}
+  )
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+
+    throw new Error(message);
+  }
+
+
+  const { message, data }: { message: string; data: { total: userStats[], budgetCode: userBudgetStats[], machine: userMachinesStats[]} } = await response.json();
 
   return { message, data };
 }

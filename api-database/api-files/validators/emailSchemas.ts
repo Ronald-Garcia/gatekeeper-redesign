@@ -2,7 +2,8 @@ import { z } from "zod";
 
 
 export const sendEmailSchema = z.object({
-    email: z.string().min(0)
+    email: z.string().min(0),
+    user: z.string()
 })
 
 export const getTimeSchema = z.object({

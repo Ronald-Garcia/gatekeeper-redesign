@@ -9,9 +9,17 @@ export const $router = createRouter({
   budgetCodes: `${BASE_URL}budgets`,
   machines: `${BASE_URL}machines`,
   kiosk: `${BASE_URL}kiosk`,
+  lostConnectionPage: `${BASE_URL}interlock-login/lost-connection`,
   interlockLogin: `${BASE_URL}interlock-login`,
   financial_statements: `${BASE_URL}statements`,
   timer: `${BASE_URL}timer`,
   machineIssues: `${BASE_URL}issues`,
-  reportForm: `${BASE_URL}form/:userID/:machineID`
+  reportForm: `${BASE_URL}form/:userId/:machineId`,
+  errorPage: `${BASE_URL}/404`,
+  userDashboard: `${BASE_URL}user-dashboard`,
+  userDashboardMachinesStatus: `${BASE_URL}user-dashboard/machines-status`,
+  userDashboardUserStats: `${BASE_URL}user-dashboard/user-stats`,
 });
+
+export type kioskRoutes = "users" | "budgetCodes" | "machines" | "statements" | "machineIssues"
+export type userDashboardRoutes = "userDashboardUserStats" | "userDashboardMachinesStatus" | "userDashboard"

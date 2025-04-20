@@ -16,6 +16,10 @@ const HomePage = () => {
         redirectPage($router, "kiosk");   
     }
 
+    const handleUserClick = () => {
+        redirectPage($router, "userDashboard");
+    }
+
   return (
     <div className="justify-center homepage">
         <div className="text-3xl font-semibold text-gray-800 ">Welcome to the Interlock Homepage!</div>
@@ -23,6 +27,7 @@ const HomePage = () => {
         <div className="flex space-x-4">
             <Button data-cy="interlock-button" variant={"ghost"} onClick={handleInterlockClick} className="jhu-blue-button">Interlock</Button>
             <Button data-cy="kiosk-button" variant={"ghost"} onClick={handleKioskClick} className=" jhu-blue-button">Kiosk</Button>
+            <Button data-cy="user-button" variant={"ghost"} onClick={handleUserClick} className=" jhu-blue-button">User Dashboard</Button>
         </div>
     </div>
   );

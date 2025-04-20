@@ -27,6 +27,9 @@ const Searchbar = () => {
             case "machines":
                 loadMachines(undefined, undefined, undefined, localSearch);
                 break;
+            case "userDashboardMachinesStatus":
+                loadMachines(undefined, undefined, undefined, localSearch);
+                break;
             default:
         }
     }
@@ -42,14 +45,20 @@ const Searchbar = () => {
     };
 
     return (
-        <div className="relative w-full">
+        <div className="relative w-64">
             <div className="relative">
                 <Search className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
                 <input
                     data-cy="searchbar"
                     type="text"
                     value={localSearch}
-                    placeholder="Search..."
+                    placeholder={router?.route === "machines"
+                        ? "Search machines..."
+                        : router?.route === "users"
+                        ? "Search users..."
+                        : router?.route === "budgetCodes"
+                        ? "Search budget codes..."
+                        : "Search..."}
                     className="w-full h-12 pl-10 pr-4 text-base transition-all duration-200 bg-white border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500"
                     onKeyDown={handleKeydown}
                     onChange={handleTextChange}
