@@ -255,6 +255,50 @@ describe('Guard Errors', () => {
   });
 });
 
+describe("GET /users filtering", () => {
+  test("filters by graduationYear (admin access)", async () => {
+    const matchYear = 2035;
+    const nonMatchYear = 2040;
+
+    // Insert one matching‐year and one non‐matching‐year user
+    const matchingCard = generateTestCardNumber();
+    await db.insert(users).values({
+      name: "Match User",
+      cardNum: matchingCard.slice(0, -1),
+      lastDigitOfCardNum: Number(matchingCard.slice(-1)),
+      JHED: "matchjhed",
+      isAdmin: 0,
+      graduationYear: matchYear,
+      active: 1,
+    });
+
+    const nonMatchingCard = generateTestCardNumber();
+    await db.insert(users).values({
+      name: "NonMatch User",
+      cardNum: nonMatchingCard.slice(0, -1),
+      lastDigitOfCardNum: Number(nonMatchingCard.slice(-1)),
+      JHED: "nonmatchjhed",
+      isAdmin: 0,
+      graduationYear: nonMatchYear,
+      active: 1,
+    });
+
+    // Fetch with graduationYear filter
+    const response = await app.request(
+      `/users?page=1&limit=10&gradYear=${matchYear}`,
+      { headers: new Headers({ Cookie: adminCookie }) }
+    );
+    expect(response.status).toBe(200);
+
+    const body = await response.json();
+    expect(Array.isArray(body.data)).toBe(true);
+
+    // Every returned user must have graduationYear === matchYear
+    expect(body.data.every((u: any) => u.graduationYear === matchYear)).toBe(true);
+  });
+});
+
+
 // cleanup database
 afterAll(async () => {
   await db
