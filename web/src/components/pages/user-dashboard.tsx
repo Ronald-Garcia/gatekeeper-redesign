@@ -1,6 +1,5 @@
 import { $router } from "@/data/router";
 import { useStore } from "@nanostores/react";
-import BudgetActions from "./budget-actions";
 import { ScrollArea } from "../ui/scroll-area";
 import PaginationBar from "../general/pagination-bar";
 import { SearchQuerySorts } from "@/data/types/sort";
@@ -60,11 +59,11 @@ const UserDashboard = () => {
     <div className="flex">
       <UserSidebar />
       <div className="admin-dashboard">
-        {/* <ScrollArea className={`${activeSearch ? 'scroll-component-search' : 'scroll-component'}`}> */}
+        <ScrollArea className={`${activeSearch ? 'scroll-component-search' : 'scroll-component'}`}>
           <div>
           <UserDashboardStats/>
           </div>
-        {/* </ScrollArea> */}
+        </ScrollArea>
       </div>
     </div>
     )

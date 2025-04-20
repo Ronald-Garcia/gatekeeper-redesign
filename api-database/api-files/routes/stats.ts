@@ -2,7 +2,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { getStatementsOfUser, queryFinStatementParamsSchema } from "../validators/financialStatementSchemas.js";
 import { SQL, desc, asc, eq, and, count, gte, lte, sum, sql, inArray } from "drizzle-orm";
-import { budgetCodes, financialStatementsTable, machines, userBudgetCodeTable, userMachineType, users } from "../db/schema.js";
+import { budgetCodes, financialStatementsTable, machines, machineTypes, userBudgetCodeTable, userMachineType, users } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { adminGuard } from "../middleware/adminGuard.js";
 import { authGuard } from "../middleware/authGuard.js";
@@ -71,13 +71,11 @@ statsRoutes.get("/stats",
     // }).from(financialStatementsTable)
     // .groupBy(castedDateAdded).as("aggregateTimeSQL");
 
-    let totalBudgetTime: {budgetCode: number, data: {id: number, dateAdded: Date, totalTime: string | null}[]}[] = [];
-    let totalMachineTime: {machineId: number, data: {id: number, dateAdded: Date, totalTime: string | null}[]}[] = [];
+    let totalBudgetTime: {budgetCode: string, data: {dateAdded: Date, totalTime: string | null}[]}[] = [];
+    let totalMachineTime: {machineType: string, data: {dateAdded: Date, totalTime: string | null}[]}[] = [];
 
-    
-    const userMachines = machineId ? await db.select().from(machines).where(and(inArray(machines.machineTypeId, machineId))) : undefined;
-    const machinesId = userMachines ? userMachines.map(m => m.id) : undefined;
-    
+    const machineTypeName = machineId ? await db.select({ name: machineTypes.name }).from(machineTypes).where(inArray(machineTypes.id, machineId)) : undefined;
+    const budgetCodeNames = budgetCode ? await db.select({ name: budgetCodes.name }).from(budgetCodes).where(inArray(budgetCodes.id, budgetCode)) : undefined;
     for (let i = 0; budgetCode && i < budgetCode.length; i++) {
 
         
@@ -95,7 +93,6 @@ statsRoutes.get("/stats",
         ,
         
         db.select({
-            id: users.id,
             dateAdded: castedDateAdded,
             totalTime: sum(financialStatementsTable.timeSpent),
         }).from(financialStatementsTable)
@@ -104,17 +101,17 @@ statsRoutes.get("/stats",
         .innerJoin(userBudgetCodeTable, eq(userBudgetCodeTable.budgetCodeId, financialStatementsTable.budgetCode))
         .innerJoin(machines, eq(machines.id, financialStatementsTable.machineId))
         .where(and(...whereClause, eq(userBudgetCodeTable.budgetCodeId, budgetCode[i])))
-        .groupBy(castedDateAdded, users.id, budgetCodes.name, machines.name)
+        .groupBy(castedDateAdded)
         .orderBy(...orderByClause)
         .offset(offset)
             ]
         );
 
-        totalBudgetTime = [...totalBudgetTime, { budgetCode: budgetCode[i], data: aggregateTime }];
+        totalBudgetTime = [...totalBudgetTime, { budgetCode: budgetCodeNames![i].name, data: aggregateTime }];
     }
     
 
-    for (let i = 0; machinesId && i < machinesId.length; i++) {
+    for (let i = 0; machineId && i < machineId.length; i++) {
 
         
     
@@ -131,7 +128,6 @@ statsRoutes.get("/stats",
         ,
         
         db.select({
-            id: users.id,
             dateAdded: castedDateAdded,
             totalTime: sum(financialStatementsTable.timeSpent),
         }).from(financialStatementsTable)
@@ -139,24 +135,52 @@ statsRoutes.get("/stats",
         .innerJoin(budgetCodes, eq(budgetCodes.id, financialStatementsTable.budgetCode))
         .innerJoin(userBudgetCodeTable, eq(userBudgetCodeTable.budgetCodeId, financialStatementsTable.budgetCode))
         .innerJoin(machines, eq(machines.id, financialStatementsTable.machineId))
-        .where(and(...whereClause, eq(machines.id, machinesId[i])))
-        .groupBy(castedDateAdded, users.id, budgetCodes.name, machines.name)
+        .where(and(...whereClause, eq(machines.machineTypeId, machineId[i])))
+        .groupBy(castedDateAdded)
         .orderBy(...orderByClause)
         .offset(offset)
             ]
         );
 
-        totalMachineTime = [...totalMachineTime, { machineId: machinesId[i], data: aggregateTime }];
+        totalMachineTime = [...totalMachineTime, { machineType: machineTypeName![i].name, data: aggregateTime }];
     }
     
+    const [[{ totalCount }], aggregateTime] = await Promise.all([
+        db
+        .select({ totalCount: count() })
+        .from(financialStatementsTable)
+        .innerJoin(users, eq(users.id, financialStatementsTable.userId))
+        .innerJoin(userBudgetCodeTable, eq(userBudgetCodeTable.budgetCodeId, financialStatementsTable.budgetCode))
+        .innerJoin(budgetCodes, eq(budgetCodes.id, financialStatementsTable.budgetCode))
+        .innerJoin(machines, eq(machines.id, financialStatementsTable.machineId))
+        .where(and(...whereClause))
 
-    const aggregateDateTime = [...totalMachineTime, ...totalBudgetTime];
+    ,
     
+    db.select({
+        dateAdded: castedDateAdded,
+        totalTime: sum(financialStatementsTable.timeSpent),
+    }).from(financialStatementsTable)
+    .innerJoin(users, eq(users.id, financialStatementsTable.userId))
+    .innerJoin(budgetCodes, eq(budgetCodes.id, financialStatementsTable.budgetCode))
+    .innerJoin(userBudgetCodeTable, eq(userBudgetCodeTable.budgetCodeId, financialStatementsTable.budgetCode))
+    .innerJoin(machines, eq(machines.id, financialStatementsTable.machineId))
+    .where(and(...whereClause))
+    .groupBy(castedDateAdded)
+    .orderBy(...orderByClause)
+    .offset(offset)
+        ]
+    );
 
+    const aggregateDateTime = aggregateTime.map(t => { return { dateAdded: t.dateAdded, totalTime: Math.floor(Number.parseInt(t.totalTime as string) / 60)}; })
     
     return c.json({
         success:true,
-        data: aggregateDateTime,
+        data: {
+            total: aggregateDateTime,
+            budgetCode: totalBudgetTime,
+            machine: totalMachineTime
+        },
         meta: {
             page,
             limit,
