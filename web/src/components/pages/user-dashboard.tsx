@@ -66,6 +66,7 @@ const UserDashboard = () => {
           <div>
           <UserDashboardStats/>
           </div>
+        </ScrollArea>
       </div>
     </div>
     )

@@ -131,6 +131,15 @@ export const financialStatementsTable = pgTable("financial_statements_table", {
   timeSpent: integer().notNull(),
 });
 
+export const archivedFinancialStatementsTable = pgTable("financial_statements_table", {
+  id: serial().primaryKey(),
+  userId: serial().notNull(),
+  budgetCode: serial().notNull(),
+  machineId: serial().notNull(),
+  dateAdded: timestamp({ precision: 3, withTimezone: true }).notNull(),
+  timeSpent: integer().notNull(),
+});
+
 /**
  * The table that associates a user and a machine with a machine issue report.
  * @primary id         the database ID of the issue report.
