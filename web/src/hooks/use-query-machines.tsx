@@ -1,5 +1,5 @@
 import { fetchCurrentMachine, getAllMachines, getAllTrainingsOfUser, getMachine, getMachineTypes } from "@/data/api"
-import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes, appendMachineTypes, $mix_active, setMetaData, $activeTab , $machineTypeFilter, clearMachineTypeFilter} from "@/data/store";
+import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes, appendMachineTypes, $mix_active, setMetaData, $activeTab , $machineTypeFilter, clearMachineTypeFilter, setMachine} from "@/data/store";
 import { Machine } from "@/data/types/machine";
 import { MachineType } from "@/data/types/machineType";
 
@@ -137,6 +137,23 @@ function useQueryMachines(reload: boolean) {
       });
     }
   };
+
+  //Load a single machine by id
+  const loadMachine = async (id: number) => {
+    try {
+      const {
+        data: fetchedMachine,
+      } = await getMachine(id);
+      setMachine(fetchedMachine);
+    } catch (e) {
+      const errorMessage = (e as Error).message;
+      toast({
+        variant: "destructive",
+        title: "❌ Sorry! There was an error fetching Machines 🙁",
+        description: errorMessage
+      });
+    }
+  };
   
 
   useEffect(() => {
@@ -152,6 +169,7 @@ function useQueryMachines(reload: boolean) {
     loadMachines, 
     loadMachineTypes, 
     getTrainingsOfUser,
+    loadMachine,
     // Only expose machine types pagination for infinite scroll
     currentPage: machineTypesCurrentPage,
     hasMore: machineTypesHasMore,
