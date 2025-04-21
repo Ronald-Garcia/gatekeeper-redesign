@@ -18,7 +18,7 @@ async function adminLogin(app: Hono<Context>): Promise<string> {
   return setCookie.split(";")[0];
 }
 
-// Helper to generate a unique 15-digit card number for tests that always starts with "999"
+// Helper to generate a unique 16-digit card number for tests that always starts with "999"
 function generateTestCardNumber(): string {
   const randomPart = Math.floor(Math.random() * 1e13)
     .toString()
@@ -77,7 +77,7 @@ describe('User Routes (with auth/admin guard enabled)', () => {
         cardNum: testCardNum,
         JHED: "roncam",
         isAdmin: 1,
-        graduationYear: 2024,
+        graduationYear: 2027,
       };
 
       const expectedUser = {
@@ -86,7 +86,7 @@ describe('User Routes (with auth/admin guard enabled)', () => {
         lastDigitOfCardNum: Number.parseInt(testCardNum.charAt(testCardNum.length - 1)),
         JHED: "roncam",
         isAdmin: 1,
-        graduationYear: 2024,
+        graduationYear: 2027,
         active: 1
       };
 
@@ -114,7 +114,7 @@ describe('User Routes (with auth/admin guard enabled)', () => {
         cardNum: duplicateCardNum,
         JHED: "testuser",
         isAdmin: 0,
-        graduationYear: 2024,
+        graduationYear: 2027,
       };
 
       // First creation should succeed.
@@ -144,38 +144,22 @@ describe('User Routes (with auth/admin guard enabled)', () => {
 
   describe('GET /users/:cardNum', () => {
     test('returns a user if one exists (admin access)', async () => {
-      const testCardNum = generateTestCardNumber();
-      const newUser = {
-        name: "John Doe",
-        cardNum: testCardNum,
-        JHED: "johndoe",
-        isAdmin: 0,
-        graduationYear: 2023,
-      };
+      
 
       const expectedUser = {
-        name: "John Doe",
-        cardNum: testCardNum.substring(0, testCardNum.length - 1),
-        lastDigitOfCardNum: Number.parseInt(testCardNum.charAt(testCardNum.length - 1)),
-        JHED: "johndoe",
+        name: "TESTINGCREATE",
+        cardNum: "147852096312378",
+        lastDigitOfCardNum: 9,
+        JHED: "TESTS",
         isAdmin: 0,
-        graduationYear: 2023,
+        graduationYear: 2030,
       };
 
-      // Create the user first.
-      await app.request('/users', {
-        method: 'POST',
-        headers: new Headers({
-          'Content-Type': 'application/json',
-          Cookie: adminCookie,
-        }),
-        body: JSON.stringify(newUser),
+      // Get user by card number.
+      const response = await app.request(`/users/1478520963123789`, {
+        method: 'GET'
       });
 
-      // Get user by card number.
-      const response = await app.request(`/users/${newUser.cardNum}`, {
-        headers: new Headers({ Cookie: adminCookie }),
-      });
       expect(response.status).toBe(200);
       const bodyResponse = await response.json();
       expect(bodyResponse).toHaveProperty('success', true);
@@ -201,7 +185,7 @@ describe('User Routes (with auth/admin guard enabled)', () => {
         cardNum: generateTestCardNumber(),
         JHED: "janedoe",
         isAdmin: 0,
-        graduationYear: 2022,
+        graduationYear: 2027,
       };
 
       // Create the user.
@@ -252,27 +236,13 @@ describe('Guard Errors', () => {
   });
 
   test('returns 403 when a non-admin session is used on admin-protected routes', async () => {
-    // Create a non-admin user and simulate its login.
-    const testCardNum = generateTestCardNumber();
-    const nonAdminUser = {
-      name: "Non Admin",
-      cardNum: testCardNum,
-      JHED: "nonadmin",
-      isAdmin: 0,
-      graduationYear: 2025,
-    };
-
-    // Create the non-admin user.
-    await app.request('/users', {
-      method: 'POST',
-      headers: new Headers({
-        'Content-Type': 'application/json',
-        Cookie: adminCookie,
-      }),
-      body: JSON.stringify(nonAdminUser),
+   
+    const nonAdminLoginResponse = await app.request(`/users/1198347981913945`, {
+      method: 'GET',
     });
-    // Simulate non-admin login.
-    const nonAdminLoginResponse = await app.request(`/users/${nonAdminUser.cardNum}`);
+
+  
+
     const nonAdminCookie = nonAdminLoginResponse.headers.get("set-cookie")?.split(";")[0] || "";
 
     // Attempt to access an admin-protected route using the non-admin cookie.
@@ -284,6 +254,50 @@ describe('Guard Errors', () => {
     expect(bodyResp).toHaveProperty('message', 'Forbidden: Admins only');
   });
 });
+
+describe("GET /users filtering", () => {
+  test("filters by graduationYear (admin access)", async () => {
+    const matchYear = 2035;
+    const nonMatchYear = 2040;
+
+    // Insert one matching‐year and one non‐matching‐year user
+    const matchingCard = generateTestCardNumber();
+    await db.insert(users).values({
+      name: "Match User",
+      cardNum: matchingCard.slice(0, -1),
+      lastDigitOfCardNum: Number(matchingCard.slice(-1)),
+      JHED: "matchjhed",
+      isAdmin: 0,
+      graduationYear: matchYear,
+      active: 1,
+    });
+
+    const nonMatchingCard = generateTestCardNumber();
+    await db.insert(users).values({
+      name: "NonMatch User",
+      cardNum: nonMatchingCard.slice(0, -1),
+      lastDigitOfCardNum: Number(nonMatchingCard.slice(-1)),
+      JHED: "nonmatchjhed",
+      isAdmin: 0,
+      graduationYear: nonMatchYear,
+      active: 1,
+    });
+
+    // Fetch with graduationYear filter
+    const response = await app.request(
+      `/users?page=1&limit=10&gradYear=${matchYear}`,
+      { headers: new Headers({ Cookie: adminCookie }) }
+    );
+    expect(response.status).toBe(200);
+
+    const body = await response.json();
+    expect(Array.isArray(body.data)).toBe(true);
+
+    // Every returned user must have graduationYear === matchYear
+    expect(body.data.every((u: any) => u.graduationYear === matchYear)).toBe(true);
+  });
+});
+
 
 // cleanup database
 afterAll(async () => {

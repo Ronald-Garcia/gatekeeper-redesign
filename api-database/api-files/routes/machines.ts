@@ -1,6 +1,6 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { like, SQL, or, desc, asc, eq, and, count, ilike, exists } from "drizzle-orm";
+import { like, SQL, or, desc, asc, eq, and, count, ilike, exists, inArray } from "drizzle-orm";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
 import { createMachineSchema, enableMachineSchema, getMachineSchema, queryMachinesSchema, updateMachineSchema, validateMachineIdSchema } from "../validators/machineSchema.js";
@@ -46,7 +46,7 @@ machineRoutes.get("/machines",
     }
 
     if (machineTypeId !== undefined) {
-        whereClause.push(eq(machines.machineTypeId, machineTypeId));
+        whereClause.push(or(inArray(machines.machineTypeId, machineTypeId)));
     }
 
     

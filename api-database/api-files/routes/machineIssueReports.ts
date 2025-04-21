@@ -38,7 +38,7 @@ machineIssueRoute.get(
       db
         .select({
           id: machineIssues.id,
-          description: machineIssues.description, // ✅ include description
+          description: machineIssues.description, 
           user: {
             id: machineIssues.userId,
             name: users.name,
@@ -79,7 +79,7 @@ machineIssueRoute.get(
   }
 );
 
-// ✅ POST new machine issue report
+
 machineIssueRoute.post(
     "/machine-issues",
     authGuard,

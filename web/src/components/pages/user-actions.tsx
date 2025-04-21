@@ -5,6 +5,7 @@ import { Dialog } from "../ui/dialog";
 import ErrorPage from "../layout/errorPage";
 import Searchbar from "../general/searchbar";
 import GeneralizedFilter from "../general/filtering";
+import ClearFiltering from "../general/clear-filtering";
 
 /*
 Admin dashboard component
@@ -31,6 +32,11 @@ const UsersActions = () => {
             </div>
             <div className="flex flex-wrap gap-2 shrink-0">
 
+               <ClearFiltering />  
+            
+              <GeneralizedFilter filters={["gradYear", "budgetCodeId", "machineTypeId"]} />
+            
+              <AddUserDialog/>
             </div>
           </div>
         </div>

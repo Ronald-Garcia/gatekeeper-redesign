@@ -9,6 +9,7 @@ import { logger } from "@nanostores/logger"
 import { DateRange } from "react-day-picker";
 import { MetaType } from "./types/meta";
 import { userBudgetStats, userMachinesStats, userStats } from "./types/user-stats";
+import { PrecisionType } from "./types/precision-type";
 
 export const $users = atom<User[]>([]);
 export const $codes = atom<BudgetCode[]>([]);
@@ -29,11 +30,27 @@ export const $userMachineChart = atom<userMachinesStats[]>([]);
 export const $filtered_total_chart = atom<userStats[]>([]);
 export const $filtered_budget_chart = atom<userBudgetStats[]>([]);
 export const $filtered_machine_chart = atom<userMachinesStats[]>([]);
+export const $precision = atom<PrecisionType>("d")
+
+export function setPrecision(p: PrecisionType)  {
+  $precision.set(p);
+}
+
+export function clearPrecision() {
+  $precision.set("d");
+}
+
 
 export function addFunctionToMachineChart(func: userMachinesStats) {
+  if ($filtered_machine_chart.get().some(d => d.machineType === func.machineType)) {
+    return;
+  }
   $filtered_machine_chart.set([...$filtered_machine_chart.get(), func])
 }
 export function addFunctionToBudgetChart(func: userBudgetStats) {
+  if ($filtered_budget_chart.get().some(d => d.budgetCode === func.budgetCode)) {
+    return;
+  }
   $filtered_budget_chart.set([...$filtered_budget_chart.get(), func])
 }
 
@@ -53,6 +70,16 @@ export function clearFilteredMachineChart() {
 }
 export function clearFilteredTotalChart() {
   $filtered_total_chart.set([]);
+}
+
+export function clearBudgetChart() {
+  $userBudgetChart.set([]);
+}
+export function clearMachineChart() {
+  $userMachineChart.set([]);
+}
+export function clearTotalChart() {
+  $userTotalChart.set([]);
 }
 
 export function setActiveTab(tab: number) {
@@ -341,8 +368,6 @@ export function deleteBudgetCodeByNum(codeNum: string) {
   );
 }
 
-
-
 //machine store functions 
 export function appendMachine(machine: Machine) {
   $machines.set(
@@ -358,6 +383,13 @@ export function removeMachine(id: number) {
 
 export function setMachines(machines: Machine[]) {
   $machines.set(machines);
+}
+
+
+export const $machine = atom<Machine>(defaultMachine);
+//This is for when you need to set a single machine for something like a the form page.
+export function setMachine(machine: Machine) {
+  $machine.set(machine);
 }
 
 export function clearMachines() {
@@ -421,10 +453,14 @@ export const $userBudgetFilter = atom<number []| null>(null);
 export const $machineTypeFilter = atom<number []| null>(null);
 export const $userMachineFilter = atom<number []| null>(null);
 export const $budgetTypeFilter = atom<number []| null>(null);
+export const $gradYears = atom<number[]>([]);
 
 export function setYearFilter(year: number[]) {
   $gradYearFilter.set(year);
+}
 
+export function setYears(year: number[]) {
+  $gradYears.set(year);
 }
 
 export function setUserMachineFilter(machine: number[]) {
@@ -592,3 +628,5 @@ export function resetStores() {
   clearCurrentUser();
   setMixActive(false);
 }
+
+logger({ $currentUser, $filtered_budget_chart })

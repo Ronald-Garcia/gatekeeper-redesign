@@ -7,7 +7,16 @@ export const queryMachinesSchema = z.object({
     page: z.coerce.number().int().positive().optional(),
     limit: z.coerce.number().int().positive().optional(),
     active: z.coerce.number().int().min(0).max(1).optional(),
-    machineTypeId: z.coerce.number().int().optional() 
+    machineTypeId: z.union([
+        z.array(z.coerce.number().int().min(0)),
+        z.coerce.number().int().min(0),
+      ])
+      .optional()
+      // wrap single number into an array 
+      .transform((val) => {
+        if (val === undefined) return undefined;
+        return Array.isArray(val) ? val : [val];
+      })
 });
 
 export const getMachineSchema = z.object({

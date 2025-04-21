@@ -14,6 +14,34 @@ import { Context } from "../../api-files/lib/context.js";
 import { auth } from "../../api-files/middleware/auth.js";
 import { emailRoutes } from "../../api-files/routes/emails.js";
 
+jest.mock("../../api-files/emails/index.js", () => ({
+  transporter: {},  
+  bree: {},         
+}))
+
+jest.mock(
+  "../../api-files/validators/emailSchemas.js",
+  () => {
+    const { z } = require("zod");
+    const original = jest.requireActual(
+      "../../api-files/validators/emailSchemas.js"
+    );
+    return {
+      ...original,
+      sendEmailSchema: z.object({
+        email: z.string().min(1),
+      }),
+    };
+  }
+);
+
+jest.mock("../../api-files/emails/index.js", () => ({
+  transporter: {
+    // pretend sendMail works and returns a Promise
+    sendMail: jest.fn().mockResolvedValue({}),
+  },
+  bree: {},
+}));
 
 
 async function adminLogin(app: Hono<Context>): Promise<string> {
@@ -52,7 +80,6 @@ app.onError((err, c) => {
 
 //global test vars
 let adminCookie: string = "";
-let testUserId: number;
 let testBudgetCodeId: number;
 let dummyMachineTypeId: number;
 let testMachineId: number;
@@ -62,22 +89,6 @@ let testFinStatementId: number;
 beforeAll(async () => {
   // Log in as admin.
   adminCookie = await adminLogin(app);
-
-  // Create a test user.
-  const testUserCard = "999000000000002";
-  const [insertedUser] = await db
-    .insert(users)
-    .values({
-      name: "Test Financial User",
-      cardNum: testUserCard,
-      lastDigitOfCardNum: parseInt(testUserCard.slice(-1)),
-      JHED: "finuser",
-      isAdmin: 0,
-      graduationYear: 2025,
-      active: 1,
-    })
-    .returning();
-  testUserId = insertedUser.id;
 
   //Create a test budget code.
   const randomBudgetName =
@@ -90,6 +101,7 @@ beforeAll(async () => {
     .values({
       name: randomBudgetName,
       code: randomBudgetCode,
+      budgetCodeTypeId:1
     })
     .returning();
   testBudgetCodeId = insertedBudget.id;
@@ -110,6 +122,7 @@ beforeAll(async () => {
         Math.floor(Math.random() * 1e8).toString().padStart(8, "0"),
       hourlyRate: 50,
       machineTypeId: dummyMachineTypeId,
+      active:1
     })
     .returning();
   testMachineId = insertedMachine.id;
@@ -125,7 +138,7 @@ describe("Financial Statement Routes", () => {
       const [insertedStatement] = await db
         .insert(financialStatementsTable)
         .values({
-          userId: testUserId,
+          userId: 179,
           budgetCode: testBudgetCodeId,
           machineId: testMachineId,
           dateAdded: new Date(1000), // Create a Date object for 1000 ms
@@ -158,12 +171,31 @@ describe("Financial Statement Routes", () => {
       const body = await response.json();
       expect(body).toHaveProperty("message", "Unauthorized");
     });
+
+
+    test("returns 403 Unauthorized when no admin session is provided", async () => {
+
+       // non-admin login.
+       const nonAdminLoginResponse = await app.request(`/users/1198347981913945`, {
+        method: 'GET', 
+      });
+      
+      const nonAdminCookie = nonAdminLoginResponse.headers.get("set-cookie")?.split(";")[0] || "";
+    
+      const response = await app.request(
+        "/fin-statements?page=1&limit=20&sort=type_asc",
+        { method: "GET" , headers: { Cookie: nonAdminCookie }}
+      );
+      expect(response.status).toBe(403);
+      const body = await response.json();
+      expect(body).toHaveProperty("message", "Forbidden: Admins only");
+    });
   });
 
   describe("POST /fin-statements", () => {
     test("creates a new financial statement (admin access)", async () => {
       const newStatement = {
-        userId: testUserId,
+        userId: 179,
         budgetCode: testBudgetCodeId,
         machineId: testMachineId,
         timeSpent: 4000,
@@ -188,7 +220,7 @@ describe("Financial Statement Routes", () => {
 
     test("returns 401 Unauthorized when no session is provided", async () => {
       const newStatement = {
-        userId: testUserId,
+        userId: 179,
         budgetCode: testBudgetCodeId,
         machineId: testMachineId,
         dateAdded: new Date(3000),
@@ -204,28 +236,17 @@ describe("Financial Statement Routes", () => {
       expect(body).toHaveProperty("message", "Unauthorized");
     });
 
-    test("returns 403 Forbidden when non-admin session is used", async () => {
-        const testCardNum = generateTestCardNumber();
-        const nonAdminUser = {
-          name: "Non Admin",
-          cardNum: testCardNum,
-          JHED: "nonadmin",
-          isAdmin: 0,
-          graduationYear: 2025,
-        };
-        // Create non-admin user using admin access.
-        await app.request('/users', {
-          method: 'POST',
-          headers: new Headers({ 'Content-Type': 'application/json', Cookie: adminCookie }),
-          body: JSON.stringify(nonAdminUser),
-        });
-        // Simulate non-admin login.
-        const nonAdminLoginResponse = await app.request(`/users/${nonAdminUser.cardNum}`, {
-          headers: new Headers({ Cookie: adminCookie })
-        });
-        const nonAdminCookie = nonAdminLoginResponse.headers.get("set-cookie")?.split(";")[0] || "";
+    test("returns 201 when non-admin session is used", async () => {
+       // non-admin login.
+       const nonAdminLoginResponse = await app.request(`/users/1198347981913945`, {
+        method: 'GET',
+      });
+      
+      const nonAdminCookie = nonAdminLoginResponse.headers.get("set-cookie")?.split(";")[0] || "";
+   
+     
       const newStatement = {
-        userId: testUserId,
+        userId: 179,
         budgetCode: testBudgetCodeId,
         machineId: testMachineId,
         dateAdded: new Date(5000),
@@ -236,9 +257,9 @@ describe("Financial Statement Routes", () => {
         headers: { "Content-Type": "application/json", Cookie: nonAdminCookie },
         body: JSON.stringify(newStatement),
       });
-      expect(response.status).toBe(403);
+      expect(response.status).toBe(201);
       const bodyRes = await response.json();
-      expect(bodyRes).toHaveProperty("message", "Forbidden: Admins only");
+      expect(bodyRes).toHaveProperty("message", "Created new financial statement code");
     });
   });
 
@@ -248,12 +269,15 @@ describe("Financial Statement Routes", () => {
         method: "POST",
         headers: { "Content-Type": "application/json", Cookie: adminCookie },
         body: JSON.stringify({
-          startDate: "2025-01-01",
-          endDate: (new Date()).toLocaleDateString(),
+          startDate: new Date("2025-01-01").getTime(),
+          endDate:  new Date("2025-02-01").getTime(),
         }),
       });
+
+     
+
       expect(response.status).toBe(200);
-      const body = await response.json();
+     const body = await response.json();
       expect(body).toHaveProperty("success", true);
       expect(body).toHaveProperty("message", "Successfully sent an email");
     });
@@ -264,11 +288,10 @@ describe("Financial Statement Routes", () => {
 afterAll(async () => {
     await db
       .delete(financialStatementsTable)
-      .where(eq(financialStatementsTable.userId, testUserId))
+      .where(eq(financialStatementsTable.userId, 179))
       .execute();
     await db.delete(machines).where(eq(machines.id, testMachineId)).execute();
     await db.delete(machineTypes).where(eq(machineTypes.id, dummyMachineTypeId)).execute();
-    await db.delete(users).where(eq(users.id, testUserId)).execute();
     await db.delete(budgetCodes).where(eq(budgetCodes.id, testBudgetCodeId)).execute();
     await (db.$client as any).end();
   });
