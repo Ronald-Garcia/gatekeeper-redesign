@@ -75,23 +75,10 @@ beforeAll(async () => {
   // Log in as admin
   adminCookie = await adminLogin(app);
 
-  // Create a non-admin user for GET route testing
-  userCardForGet = generateTestCardNumber();
-  const [insertedNonAdmin] = await db.insert(users)
-    .values({
-      name: "GET-User",
-      cardNum: userCardForGet.substring(0, userCardForGet.length - 1),
-      lastDigitOfCardNum: parseInt(userCardForGet.slice(-1)),
-      JHED: "getuser",
-      isAdmin: 0,
-      graduationYear: 2024,
-      active: 1
-    })
-    .returning();
-  userIdForGet = insertedNonAdmin.id;
+
 
   //Log in as that non-admin user
-  userCookie = await userLogin(app, userCardForGet);
+  userCookie = await userLogin(app, "1198347981913945");
 
   // second user for the budget-codes relation tested by admin routes
   const secondUserCard = generateTestCardNumber();
@@ -112,7 +99,8 @@ beforeAll(async () => {
   const [insertedBudget] = await db.insert(budgetCodes)
     .values({
       name: generateTestBudgetCodeName(),
-      code: generateTestBudgetCode()
+      code: generateTestBudgetCode(),
+      budgetCodeTypeId:1
     })
     .returning();
   testBudgetCodeId = insertedBudget.id;
@@ -121,7 +109,8 @@ beforeAll(async () => {
   const [insertedBudget2] = await db.insert(budgetCodes)
     .values({
       name: generateTestBudgetCodeName(),
-      code: generateTestBudgetCode()
+      code: generateTestBudgetCode(),
+      budgetCodeTypeId:1
     })
     .returning();
   additionalBudgetCodeId = insertedBudget2.id;
@@ -134,10 +123,10 @@ describe("User Budget Code Relation Routes", () => {
     test("returns 200 with a list of budget codes (auth required, non-admin user)", async () => {
       //  create a relation for the GET user
       await db.insert(userBudgetCodeTable)
-        .values({ userId: userIdForGet, budgetCodeId: testBudgetCodeId });
+        .values({ userId: 179, budgetCodeId: testBudgetCodeId });
 
       const response = await app.request(
-        `/user-budgets/${userIdForGet}?page=1&limit=20`,
+        `/user-budgets/${179}?page=1&limit=20`,
         { method: "GET", headers: { Cookie: userCookie } }
       );
       expect(response.status).toBe(200);
@@ -160,7 +149,7 @@ describe("User Budget Code Relation Routes", () => {
     });
 
     test("returns 401 if no session is provided", async () => {
-      const response = await app.request(`/user-budgets/${userIdForGet}?page=1&limit=20`);
+      const response = await app.request(`/user-budgets/${179}?page=1&limit=20`);
       expect(response.status).toBe(401);
       const body = await response.json();
       expect(body).toHaveProperty("message", "Unauthorized");
@@ -337,9 +326,8 @@ describe("User Budget Code Relation Routes", () => {
 
 // delete test data from db
 afterAll(async () => {
-  await db.delete(userBudgetCodeTable).where(eq(userBudgetCodeTable.userId, userIdForGet)).execute();
+  await db.delete(userBudgetCodeTable).where(eq(userBudgetCodeTable.userId, 179)).execute();
   await db.delete(userBudgetCodeTable).where(eq(userBudgetCodeTable.userId, userIdForBudgets)).execute();
-  await db.delete(users).where(eq(users.id, userIdForGet)).execute();
   await db.delete(users).where(eq(users.id, userIdForBudgets)).execute();
   await db.delete(budgetCodes).where(like(budgetCodes.name, "TEST_BUDGET_%")).execute();
   await (db.$client as any).end();
