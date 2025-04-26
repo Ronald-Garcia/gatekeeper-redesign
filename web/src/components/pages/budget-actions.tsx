@@ -19,15 +19,11 @@ const BudgetActions = () => {
               <div className="flex flex-row w-full gap-2">
                 <Searchbar/>
                 <GeneralizedFilter filters={["budgetTypeId"]} />
-              </div>
-              <div className="flex flex-wrap gap-2 shrink-0">
-                  <ClearFiltering />  
-               <GeneralizedFilter filters={["budgetTypeId"]} />
+                <ClearFiltering />  
                 <AddBudgetCodeDialog/>
                 <AddBudgetCodeTypeDialog />
               </div>
               <div className="flex flex-wrap gap-2 shrink-0">
-
               </div>
             </div>
           </div>

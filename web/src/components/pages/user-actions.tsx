@@ -28,14 +28,7 @@ const UsersActions = () => {
             <div className="flex flex-row w-full gap-2">
               <Searchbar/>
               <GeneralizedFilter filters={["gradYear", "budgetCodeId", "machineTypeId"]} />
-              <AddUserDialog/>
-            </div>
-            <div className="flex flex-wrap gap-2 shrink-0">
-
-               <ClearFiltering />  
-            
-              <GeneralizedFilter filters={["gradYear", "budgetCodeId", "machineTypeId"]} />
-            
+              <ClearFiltering />  
               <AddUserDialog/>
             </div>
           </div>
