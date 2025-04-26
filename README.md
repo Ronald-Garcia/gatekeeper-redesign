@@ -219,3 +219,5 @@ Refer to the [Contributing Guidelines](./CONTRIBUTING.md) for information on how
 ## Licensing
 
 Refer to the [Project Repository License](./LICENSE.md) for information on how the project is licensed./
+
+With all the context of the work I've done and what is already here keep formatting nad help with layout and add what you think should be added

@@ -15,6 +15,8 @@ import { financialStatementRoutes } from "../api-files/routes/financialStatement
 import { userBudgetCodeRelationRoute } from "../api-files/routes/userBudgetCodeRelations.js";
 import { machineIssueRoute } from "../api-files/routes/machineIssueReports.js";
 import { emailRoutes } from "../api-files/routes/emails.js";
+import { budgetCodeTypeRoutes } from "../api-files/routes/budgetCodeTypes.js";
+import { statsRoutes } from "../api-files/routes/stats.js";
 
 
 const app = new Hono<Context>();
@@ -53,6 +55,9 @@ app.route("/", userBudgetCodeRelationRoute);
 app.route("/", authRoutes);
 app.route("/", machineIssueRoute);
 app.route("/", emailRoutes);
+app.route("/", budgetCodeTypeRoutes);
+app.route("/", statsRoutes);
+
 
 app.onError((err, c) => {
   console.error(`${err}`);
