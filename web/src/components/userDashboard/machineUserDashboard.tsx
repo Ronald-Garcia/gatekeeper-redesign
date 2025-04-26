@@ -30,10 +30,29 @@ if (machine.active === 0){
     machineStatus = machineStatuses.Available;
 }
 
+let displayTime = timeSinceActive;
+let time = "minute";
+if (timeSinceActive / (3600 * 24) >= 7) {
+  displayTime = Math.floor(timeSinceActive / (3600 * 24 * 7))
+  time = "week"
+} else if (timeSinceActive / 3600 >= 24) {
+  displayTime = Math.floor(timeSinceActive / (3600 * 24))
+  time = "day"
+} else if (timeSinceActive / 60 >= 60) {
+  displayTime = Math.floor(timeSinceActive / 3600)
+  time = "hour"
+} else {
+  displayTime = Math.floor(timeSinceActive / 60)
+}
+
+if (displayTime > 1) {
+  time += "s"
+}
+
 
 const details = [{ label: "Hourly Rate", value: `$${machine.hourlyRate}` },
     { label: "Status", value: machine.active === 1 ? "Active" : "Inactive" },
-    { label: "Last Used: ", value: `${Math.round(timeSinceActive / 3600)} hours ago` }
+    { label: "Last Used", value: `${Math.round(displayTime)} ${time} ago` }
 
 ]
 let actions:JSX.Element;
