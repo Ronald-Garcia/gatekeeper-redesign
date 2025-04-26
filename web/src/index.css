@@ -134,6 +134,14 @@
 
 }
 
+/*Interlock Styling*/
+.reportpage{
+  height: calc(100vh - 120px);
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
 /*Homepage Styling*/
 .homepage {
   display: flex;
@@ -166,7 +174,6 @@
   width: 100%;
   font-size: 1.125rem /* 18px */;
   line-height: 1.75rem /* 28px */;
-  
 }
 
 .tabs {

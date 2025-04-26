@@ -3,6 +3,7 @@ import { Dialog } from "../ui/dialog";
 import AddMachineDialog from "../machines/add-machine-dialog.tsx";
 import AddMachineTypeDialog from "../machine_types/add-machine-type-dialog.tsx";
 import GeneralizedFilter from "../general/filtering.tsx";
+import ClearFiltering from "../general/clear-filtering.tsx";
 
 /*
 Admin dashboard component
@@ -17,7 +18,10 @@ const MachineActions = () => {
             <div className="flex flex-col items-start gap-4 md:flex-row md:items-center">
               <div className="flex flex-row w-full gap-2">
                 <Searchbar/>
-                <GeneralizedFilter filters={["machineTypeId"]} />
+              </div>
+              <div className="flex flex-wrap gap-2 shrink-0">
+                  <ClearFiltering />  
+              <GeneralizedFilter filters={["machineTypeId"]} />
                 <AddMachineDialog/>
                 <AddMachineTypeDialog/>
               </div>

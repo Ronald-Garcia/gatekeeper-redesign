@@ -9,19 +9,16 @@ import { $router } from "@/data/router";
 import { $currentUser } from "@/data/store";
 import ReportFormModal from "@/components/modals/ReportFormModal"; 
 import useMutationMachines from "@/hooks/use-mutation-machines";
-import useMutationMachineIssue from "@/hooks/use-mutation-machineIssue";
 
 const InProgress = () => {
     // Time, in seconds, that a financial statement is updated in.
     const timeResolution = 450; // Update every 7 and a half minutes.
 
     const curUser = useStore($currentUser);
-    const { reportIssue } = useMutationMachineIssue();
 
     const { curBudget, createStatement, updateStatement } = useMutationStatements();
     const {curMachine, modifyMachine} = useMutationMachines();
     
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
 

@@ -1,62 +1,111 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import useMutationMachineIssue from "@/hooks/use-mutation-machineIssue";
+import { Textarea } from "../ui/textarea";
+import useQueryMachines from "@/hooks/use-query-machines";
+import { useStore } from "@nanostores/react";
+import { $machine } from "@/data/store";
+import { redirectPage } from "@nanostores/router";
+import { $router } from "@/data/router";
 
-const FormPage = () => {
-  const [userID, setUserID] = useState<number | null>(null);
-  const [machineID, setMachineID] = useState<number | null>(null);
+type formProps = {
+  userId : string,
+  machineId:string
+}
+
+const FormPage = ({userId, machineId}: formProps) => {
+
   const [description, setDescription] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const { reportIssue  } = useMutationMachineIssue();
+  const { loadMachine } = useQueryMachines(false);
 
-  const { reportIssue } = useMutationMachineIssue();
+  const [ gotMachine, setGotMachine] = useState(false);
 
-  useEffect(() => {
-    const parts = window.location.pathname.split("/");
-    const uID = parseInt(parts[parts.length - 2]);
-    const mID = parseInt(parts[parts.length - 1]);
+  const userIdNum = Number(userId);
+  const machineIdNum = Number(machineId);
+  const machine = useStore($machine);
 
-    if (!isNaN(uID)) setUserID(uID);
-    if (!isNaN(mID)) setMachineID(mID);
-  }, []);
+if (!gotMachine) {
+  setGotMachine(true);
+  loadMachine(machineIdNum);
+}
+
+const [formLengthError, setFormLengthError] = useState(false);
+
+const handleOnChange = (e:React.ChangeEvent<HTMLTextAreaElement>) => {
+  setDescription(e.target.value);
+  setFormLengthError(false);
+}
 
   const handleSubmit = async () => {
-    if (!userID || !machineID || !description.trim()) return;
+    if (!userId || !machineId || !description.trim()) return;
 
-    const issue = await reportIssue(userID, machineID, description.trim());
+    if (description.length < 5) {
+      setFormLengthError(true);
+      return;
+    }
+    setFormLengthError(false);    
+
+    const issue = await reportIssue(userIdNum, machineIdNum, description.trim());
     if (issue) {
       setSubmitted(true);
     }
   };
 
+  const handleGoHome = () => {
+    redirectPage($router, "userDashboard")    
+  }
+  
+  // className={errors.name ? "border-red-500" : ""}
+
   if (submitted) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <h1 className="text-2xl font-bold">Submitted ✅</h1>
-        <p className="text-gray-600">Thank you for reporting the maintenance issue.</p>
+      <div className="flex-col reportpage">
+        <h1 className="text-2xl font-bold ">Submitted ✅</h1>
+        <p className="text-gray-600 pt-[10px] pb-[15px]">Thank you for reporting the maintenance issue.</p>
+        <Button
+            onClick={handleGoHome}
+            className="jhu-blue-button "
+            variant={"ghost"}
+          >
+            Return Home
+          </Button>
       </div>
     );
   }
 
+  let errorMessage :string ;
+
+  if (formLengthError) {
+    errorMessage = "Please make the report longer then 5 characters";
+  } else {
+    errorMessage = "";
+  }
+
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-50">
+    <div className=" reportpage bg-gray-50">
       <Card className="w-[500px]">
         <CardHeader>
-          <CardTitle>Maintenance Report</CardTitle>
+          <CardTitle className="text-xl">Maintenance Report</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          <p className="text-sm text-gray-600">
-            Reporting for user <strong>{userID}</strong> on machine <strong>{machineID}</strong>
+          <p className="text-gray-600 ">
+            Reporting for machine <strong>{machine.name}</strong>
           </p>
-          <Input
+          <p className="text-red-500 ">
+            {errorMessage}
+          </p>
+          <Textarea
+            className={formLengthError ? "border-red-500 resize-none" : "resize-none"}
             placeholder="Describe the issue..."
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={handleOnChange}
           />
           <Button
             onClick={handleSubmit}
-            className="bg-red-500 text-white hover:bg-red-600"
+            className="text-white bg-red-500 hover:bg-red-600"
             disabled={!description.trim()}
           >
             Submit Report

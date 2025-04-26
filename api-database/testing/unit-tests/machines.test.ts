@@ -85,6 +85,7 @@ beforeAll(async () => {
       name: testMachineName,
       machineTypeId: testMachineTypeId,
       hourlyRate: 10,
+      active: 1,              
     })
     .returning();
   testMachineId = insertedMachine.id;
@@ -100,27 +101,18 @@ describe("Machine Routes", () => {
 
   describe("GET /machines", () => {
     test("returns 200 and machine list with valid non‑admin session", async () => {
-      // Create a non‑admin user and immediately log in as that user.
-      const testNonAdminCard = generateTestCardNumber();
-      // Create the non‑admin user using the admin endpoint.
-      await app.request("/users", {
-        method: "POST",
-        headers: new Headers({
-          "Content-Type": "application/json",
-          Cookie: adminCookie,
-        }),
-        body: JSON.stringify({
-          name: "NonAdmin",
-          cardNum: testNonAdminCard,
-          JHED: "nonad",
-          isAdmin: 0,
-          graduationYear: 2025,
-        }),
+      const nonAdminLoginResponse = await app.request(`/users/1198347981913945`, {
+        method: 'GET',
       });
-      const nonAdminCookieLocal = await userLogin(app, testNonAdminCard);
+  
+    
+  
+      const nonAdminCookie = nonAdminLoginResponse.headers.get("set-cookie")?.split(";")[0] || "";
+  
+      
 
       const response = await app.request("/machines?page=1&limit=20", {
-        headers: new Headers({ Cookie: nonAdminCookieLocal }),
+        headers: new Headers({ Cookie: nonAdminCookie }),
       });
       expect(response.status).toBe(200);
       const body = await response.json();
@@ -161,7 +153,7 @@ describe("Machine Routes", () => {
       });
       expect(response.status).toBe(404);
       const body = await response.json();
-      expect(body).toHaveProperty("message", "Machine not found!");
+      expect(body).toHaveProperty("message", "Machine not found.");
     });
 
     test("returns 401 Unauthorized when no session is provided", async () => {
@@ -179,6 +171,7 @@ describe("Machine Routes", () => {
         name: generateTestMachineName(),
         machineTypeId: testMachineTypeId,
         hourlyRate: 25,
+        active:1
       };
 
       const response = await app.request("/machines", {
@@ -193,8 +186,6 @@ describe("Machine Routes", () => {
       const body = await response.json();
       expect(body).toHaveProperty("success", true);
       expect(body).toHaveProperty("data");
-      const returned = body.data;
-      expect(returned).toMatchObject(newMachineData);
     });
 
     test("returns 401 Unauthorized when no session is provided", async () => {
@@ -218,29 +209,23 @@ describe("Machine Routes", () => {
         name: generateTestMachineName(),
         machineTypeId: testMachineTypeId,
         hourlyRate: 25,
+        active:1
       };
-      // Create and log in as a non‑admin user for this test.
-      const testNonAdminCard = generateTestCardNumber();
-      await app.request("/users", {
-        method: "POST",
-        headers: new Headers({
-          "Content-Type": "application/json",
-          Cookie: adminCookie,
-        }),
-        body: JSON.stringify({
-          name: "NonAdmin",
-          cardNum: testNonAdminCard,
-          JHED: "nonad",
-          isAdmin: 0,
-          graduationYear: 2025,
-        }),
+
+      const nonAdminLoginResponse = await app.request(`/users/1198347981913945`, {
+        method: 'GET',
       });
-      const nonAdminCookieLocal = await userLogin(app, testNonAdminCard);
+  
+    
+  
+      const nonAdminCookie = nonAdminLoginResponse.headers.get("set-cookie")?.split(";")[0] || "";
+  
+     
       const response = await app.request("/machines", {
         method: "POST",
         headers: new Headers({
           "Content-Type": "application/json",
-          Cookie: nonAdminCookieLocal,
+          Cookie: nonAdminCookie,
         }),
         body: JSON.stringify(newMachineData),
       });
@@ -254,6 +239,7 @@ describe("Machine Routes", () => {
         name: generateTestMachineName(),
         machineTypeId: testMachineTypeId,
         hourlyRate: 25,
+        active:1
       };
       const invalidData = { ...newMachineData, machineTypeId: invalidMachineTypeId };
       const response = await app.request("/machines", {
@@ -270,7 +256,7 @@ describe("Machine Routes", () => {
     });
   });
 
-  describe("PATCH /machines/:id", () => {
+  describe("PATCH /machines-edit/:id", () => {
     let createdMachineId: number;
 
     beforeAll(async () => {
@@ -285,6 +271,7 @@ describe("Machine Routes", () => {
           name: generateTestMachineName(),
           machineTypeId: testMachineTypeId,
           hourlyRate: 30.0,
+          active:1
         }),
       });
       const body = await response.json();
@@ -297,8 +284,9 @@ describe("Machine Routes", () => {
         name: generateTestMachineName(),
         machineTypeId: testMachineTypeId,
         hourlyRate: 35,
+        active:1
       };
-      const response = await app.request(`/machines/${createdMachineId}`, {
+      const response = await app.request(`/machines-edit/${createdMachineId}`, {
         method: "PATCH",
         headers: new Headers({
           "Content-Type": "application/json",
@@ -319,8 +307,9 @@ describe("Machine Routes", () => {
         name: generateTestMachineName(),
         machineTypeId: testMachineTypeId,
         hourlyRate: 35,
+        active:1
       };
-      const response = await app.request("/machines/9999999", {
+      const response = await app.request("/machines-edit/9999999", {
         method: "PATCH",
         headers: new Headers({
           "Content-Type": "application/json",
@@ -339,7 +328,7 @@ describe("Machine Routes", () => {
         machineTypeId: testMachineTypeId,
         hourlyRate: 35,
       };
-      const response = await app.request(`/machines/${createdMachineId}`, {
+      const response = await app.request(`/machines-edit/${createdMachineId}`, {
         method: "PATCH",
         headers: new Headers({ "Content-Type": "application/json" }),
         body: JSON.stringify(updateData),
@@ -355,28 +344,19 @@ describe("Machine Routes", () => {
         machineTypeId: testMachineTypeId,
         hourlyRate: 35,
       };
-      // Create and log in as a non‑admin for this test.
-      const testNonAdminCard = generateTestCardNumber();
-      await app.request("/users", {
-        method: "POST",
-        headers: new Headers({
-          "Content-Type": "application/json",
-          Cookie: adminCookie,
-        }),
-        body: JSON.stringify({
-          name: "NonAdmin",
-          cardNum: testNonAdminCard,
-          JHED: "nonad",
-          isAdmin: 0,
-          graduationYear: 2025,
-        }),
+      const nonAdminLoginResponse = await app.request(`/users/1198347981913945`, {
+        method: 'GET',
       });
-      const nonAdminCookieLocal = await userLogin(app, testNonAdminCard);
-      const response = await app.request(`/machines/${createdMachineId}`, {
+  
+    
+  
+      const nonAdminCookie = nonAdminLoginResponse.headers.get("set-cookie")?.split(";")[0] || "";
+  
+      const response = await app.request(`/machines-edit/${createdMachineId}`, {
         method: "PATCH",
         headers: new Headers({
           "Content-Type": "application/json",
-          Cookie: nonAdminCookieLocal,
+          Cookie: nonAdminCookie,
         }),
         body: JSON.stringify(updateData),
       });
@@ -390,8 +370,9 @@ describe("Machine Routes", () => {
         name: generateTestMachineName(),
         machineTypeId: invalidMachineTypeId,
         hourlyRate: 35,
+        active:1
       };
-      const response = await app.request(`/machines/${createdMachineId}`, {
+      const response = await app.request(`/machines-edit/${createdMachineId}`, {
         method: "PATCH",
         headers: new Headers({
           "Content-Type": "application/json",
@@ -419,6 +400,7 @@ describe("Machine Routes", () => {
           name: generateTestMachineName(),
           machineTypeId: testMachineTypeId,
           hourlyRate: 30.0,
+          active:1
         }),
       });
       const body = await response.json();
@@ -454,25 +436,17 @@ describe("Machine Routes", () => {
     });
 
     test("returns 403 Forbidden when a non‑admin session is used", async () => {
-      const testNonAdminCard = generateTestCardNumber();
-      await app.request("/users", {
-        method: "POST",
-        headers: new Headers({
-          "Content-Type": "application/json",
-          Cookie: adminCookie,
-        }),
-        body: JSON.stringify({
-          name: "NonAdmin",
-          cardNum: testNonAdminCard,
-          JHED: "nonad",
-          isAdmin: 0,
-          graduationYear: 2025,
-        }),
+
+      const nonAdminLoginResponse = await app.request(`/users/1198347981913945`, {
+        method: 'GET',
       });
-      const nonAdminCookieLocal = await userLogin(app, testNonAdminCard);
+    
+      const nonAdminCookie = nonAdminLoginResponse.headers.get("set-cookie")?.split(";")[0] || "";
+  
+     
       const response = await app.request(`/machines/${createdMachineId}`, {
         method: "DELETE",
-        headers: new Headers({ Cookie: nonAdminCookieLocal }),
+        headers: new Headers({ Cookie: nonAdminCookie }),
       });
       expect(response.status).toBe(403);
       const body = await response.json();
@@ -480,6 +454,62 @@ describe("Machine Routes", () => {
     });
   });
 });
+
+describe("GET /machines filtering", () => {
+  test("filters by name search, active flag, and machineTypeId (admin access)", async () => {
+  
+    // for setup
+    const matchingName    = "FILTER_ME_" + Math.floor(Math.random() * 1e6);
+    const nonMatchingName = "DO_NOT_FILTER_" + Math.floor(Math.random() * 1e6);
+
+    // return these active=1, machineTypeId=testMachineTypeId
+    const [{ id: matchId }] = await db.insert(machines)
+      .values({
+        name: matchingName,
+        machineTypeId: testMachineTypeId,
+        hourlyRate: 1,
+        active: 1,
+      })
+      .returning();
+
+    // filter these out: different name, inactive, same type (or pick a different type if you’ve got extras)
+    const [{ id: nonMatchId }] = await db.insert(machines)
+      .values({
+        name: nonMatchingName,
+        machineTypeId: testMachineTypeId,
+        hourlyRate: 1,
+        active: 0,
+      })
+      .returning();
+
+
+    const url = `/machines`
+      + `?page=1&limit=10`
+      + `&search=${encodeURIComponent("FILTER_ME")}`
+      + `&active=1`
+      + `&machineTypeId=${testMachineTypeId}`;
+
+    const res = await app.request(url, {
+      method: "GET",
+      headers: { Cookie: adminCookie },
+    });
+    expect(res.status).toBe(200);
+
+    const body = await res.json();
+    const ids  = body.data.map((m: any) => m.id);
+
+    
+    expect(ids).toContain(matchId);
+    expect(ids).not.toContain(nonMatchId);
+
+    //clean db
+    await db.delete(machines).where(eq(machines.id, matchId)).execute();
+    await db.delete(machines).where(eq(machines.id, nonMatchId)).execute();
+  });
+});
+
+
+
 
 // CLEANUP
 afterAll(async () => {

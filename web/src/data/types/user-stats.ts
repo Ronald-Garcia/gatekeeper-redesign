@@ -4,10 +4,10 @@ export type userStats = {
     totalTime: number;
 }
 export type userBudgetStats = {
-    budgetCode: number,
+    budgetCode: string,
     data: userStats[]
 }
 export type userMachinesStats = {
-    machineId: number,
+    machineType: string,
     data: userStats[]
 }

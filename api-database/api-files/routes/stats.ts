@@ -174,12 +174,15 @@ statsRoutes.get("/stats",
 
     const aggregateDateTime = aggregateTime.map(t => { return { dateAdded: t.dateAdded, totalTime: Math.floor(Number.parseInt(t.totalTime as string) / 60)}; })
     
+    const aggregateBudgetTime = totalBudgetTime.map(s => { return { ...s, data: s.data.map(d => { return {...d, totalTime: Math.floor(Number.parseInt(d.totalTime as string) / 60)}})}})
+    const aggregateMachineTime = totalMachineTime.map(s => { return {...s, data: s.data.map(d => { return {...d, totalTime: Math.floor(Number.parseInt(d.totalTime as string) / 60)}})}})
+
     return c.json({
         success:true,
         data: {
             total: aggregateDateTime,
-            budgetCode: totalBudgetTime,
-            machine: totalMachineTime
+            budgetCode: aggregateBudgetTime,
+            machine: aggregateMachineTime
         },
         meta: {
             page,

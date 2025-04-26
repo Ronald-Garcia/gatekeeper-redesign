@@ -13,7 +13,7 @@ import useQueryMachines from "@/hooks/use-query-machines";
 import { SearchQuerySorts } from "@/data/types/sort";
 import useQueryUsers from "@/hooks/use-query-users";
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
-import { $activeSearch, setMixActive, validCurrentUser } from "@/data/store";
+import { $activeSearch, clearFilters, setMixActive, validCurrentUser } from "@/data/store";
 import Users from "../Users/users";
 import MachineIssues from "../machineIssues/machineIssues";
 import useQueryMachineIssues from "@/hooks/use-query-machine-issues";
@@ -54,6 +54,12 @@ const AdminDashboard = () => {
       redirectPage($router, "start_page");
     }
   }, [])
+
+  // clear filters changing pages
+  useEffect(() => {
+    clearFilters();
+  }, [router])
+
 
   if (!router) {
     return (
@@ -127,7 +133,7 @@ const AdminDashboard = () => {
         <Sidebar />
         <div className="flex-1">
           <ScrollArea className={`${activeSearch ? 'scroll-component-search-fin' : 'scroll-component-fin'}`}>
-            <FinancialStatements/> 
+            <FinancialStatements /> 
           </ScrollArea>
           <PaginationBar loadFunction={financialStatementLoadFunction}/>
         </div>

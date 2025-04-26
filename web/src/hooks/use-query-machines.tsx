@@ -1,5 +1,5 @@
 import { fetchCurrentMachine, getAllMachines, getAllTrainingsOfUser, getMachine, getMachineTypes } from "@/data/api"
-import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes, appendMachineTypes, $mix_active, setMetaData, $activeTab , $machineTypeFilter} from "@/data/store";
+import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes, appendMachineTypes, $mix_active, setMetaData, $activeTab , $machineTypeFilter, clearMachineTypeFilter} from "@/data/store";
 import { Machine } from "@/data/types/machine";
 import { MachineType } from "@/data/types/machineType";
 
@@ -140,6 +140,7 @@ function useQueryMachines(reload: boolean) {
   
 
   useEffect(() => {
+    clearMachineTypeFilter();
     if (reload) {
       loadMachines();
       loadMachineTypes();

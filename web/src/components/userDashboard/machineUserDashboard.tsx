@@ -49,6 +49,27 @@ if (displayTime > 1) {
   time += "s"
 }
 
+let displayTime = timeSinceActive;
+let time = "minute";
+if (timeSinceActive / (3600 * 24) >= 7) {
+  displayTime = Math.floor(timeSinceActive / (3600 * 24 * 7))
+  time = "week"
+} else if (timeSinceActive / 3600 >= 24) {
+  displayTime = Math.floor(timeSinceActive / (3600 * 24))
+  time = "day"
+} else if (timeSinceActive / 60 >= 60) {
+  displayTime = Math.floor(timeSinceActive / 3600)
+  time = "hour"
+} else {
+  displayTime = Math.floor(timeSinceActive / 60)
+}
+
+if (displayTime > 1) {
+  time += "s"
+}
+
+// If you want to display the minutes since last used, then use this in labels.
+// { label: "Last Used", value: `${Math.round(timeSinceActive / 60)} minutes ago` }
 
 const details = [{ label: "Hourly Rate", value: `$${machine.hourlyRate}` },
     { label: "Status", value: machine.active === 1 ? "Active" : "Inactive" },
@@ -60,37 +81,16 @@ let styling:string;
 let borderstyling:string;
 
 if (machineStatus === machineStatuses.Inactive) {
-    actions = <div className="flex flex-row items-center gap-5">
-      Inactive
-      <Circle
-          size={12}
-          className={"text-red-500"}
-          fill={"currentColor"}
-        />
-    </div>
-    styling = "toggle-component"
-    borderstyling = "toggle-boarder"
+    actions = <div data-cy={`inactive-${machine.id}`}>Inactive</div>
+    styling = "toggle-component-inactive"
+    borderstyling = "toggle-boarder-inactive"
 } else if (machineStatus === machineStatuses.InUse) {
-    actions = <div className="flex flex-row items-center gap-5">
-      In Use
-      <Circle
-          size={12}
-          className={"text-yellow-500"}
-          fill={"currentColor"}
-        />
-    </div>
-    styling = "toggle-component"
-    borderstyling = "toggle-boarder"
+    actions = <div data-cy={`in-use-${machine.id}`}>In Use</div>
+    styling = "toggle-component-inuse"
+    borderstyling = "toggle-boarder-inuse"
 
 } else {
-    actions = <div className="flex flex-row items-center gap-5">
-      Available
-      <Circle
-          size={12}
-          className={"text-green-500"}
-          fill={"currentColor"}
-        />
-      </div>
+    actions = <div data-cy={`available-${machine.id}`}>Available</div>
     styling = "toggle-component"
     borderstyling = "toggle-boarder"
 }

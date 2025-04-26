@@ -18,11 +18,7 @@ async function adminLogin(app: Hono<Context>): Promise<string> {
   return setCookie.split(";")[0];
 }
 
-// create unique id with easy deletion afterwards
-function generateTestCardNumber(): string {
-  const randomPart = Math.floor(Math.random() * 1e13).toString().padStart(13, '0');
-  return "999" + randomPart;
-}
+
 
 // hono app setup
 const app = new Hono<Context>();
@@ -53,7 +49,7 @@ beforeAll(async () => {
     .insert(users)
     .values({
       name: "Test Training User",
-      cardNum: "999000000000001",
+      cardNum: "999000000000002",
       lastDigitOfCardNum: 1,
       JHED: "trainuser",
       isAdmin: 0,
@@ -76,7 +72,8 @@ beforeAll(async () => {
     .values({
       name: 'Test Machine',
       machineTypeId: testMachineTypeId,
-      hourlyRate: 10
+      hourlyRate: 10, 
+      active:1 
     })
     .returning();
   testMachineId = insertedMachine.id;
@@ -120,7 +117,7 @@ describe('Training Routes', () => {
       await db.delete(userMachineType).where(eq(userMachineType.userId, testUserId)).execute();
       const url = `/trainings/${testUserId}/${testMachineId}`;
       const response = await app.request(url, { method: 'GET', headers: new Headers({ Cookie: adminCookie }) });
-      console.log("this", response);
+    
       expect(response.status).toBe(401);
       const text = await response.text();
       expect(text).toContain('User not authorized to use machine');
@@ -207,27 +204,14 @@ describe('Training Routes - Guard Errors', () => {
   });
 
   test('returns 403 when a non-admin session is used on admin-protected training routes', async () => {
-    // Create a non-admin user and simulate its login.
-    const testCardNum = generateTestCardNumber();
-    const nonAdminUser = {
-      name: "Non Admin",
-      cardNum: testCardNum,
-      JHED: "nonadmin",
-      isAdmin: 0,
-      graduationYear: 2025,
-    };
-    // Create non-admin user using admin access.
-    await app.request('/users', {
-      method: 'POST',
-      headers: new Headers({ 'Content-Type': 'application/json', Cookie: adminCookie }),
-      body: JSON.stringify(nonAdminUser),
-    });
-    // Simulate non-admin login.
-    const nonAdminLoginResponse = await app.request(`/users/${nonAdminUser.cardNum}`, {
-      headers: new Headers({ Cookie: adminCookie })
-    });
-    const nonAdminCookie = nonAdminLoginResponse.headers.get("set-cookie")?.split(";")[0] || "";
-    // Attempt to access an admin-protected training route.
+    
+      // non-admin login.
+      const nonAdminLoginResponse = await app.request(`/users/1198347981913945`, {
+        method: 'GET',
+      });
+      
+      const nonAdminCookie = nonAdminLoginResponse.headers.get("set-cookie")?.split(";")[0] || "";
+   
     const response = await app.request('/trainings', {
       method: 'POST',
       headers: new Headers({
