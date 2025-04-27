@@ -4,9 +4,73 @@
 
 ### 1.1 Purpose
 
+The purpose of the **WSE Interlock** system is to provide a **secure, automated access control and billing solution** for machine shops, specifically designed to meet the needs of **The Johns Hopkins University** student shop within the Mechanical Engineering department.
+
+The system ensures that only **authorized and properly trained users** can access specific machines, while also providing administrative staff with tools for:
+- **User and machine management**,
+- **Financial tracking and automated reporting**, and
+- **Maintenance issue reporting and resolution**.
+
+It aims to **replace outdated fingerprint-based systems** with a more reliable solution using **JCard identification** and a **centralized kiosk interface**, integrating both hardware-level machine control (via Raspberry Pi) and cloud-based data management.
+
+---
+
 ### 1.2 Scope
 
+The **WSE Interlock** project covers the **full lifecycle of machine usage**, from user authentication to machine activation, usage tracking, and financial processing. The scope includes:
+
+- **Frontend Web Application**:
+  - Admin Dashboard for user, machine, and budget code management.
+  - Interlock UI for machine usage and issue reporting.
+
+- **Backend API**:
+  - RESTful API to manage users, machines, budget codes, and financial records.
+  - User authentication with session management and role-based access control.
+  - Real-time machine status tracking and data persistence with PostgreSQL.
+
+- **Machine API**:
+  - A lightweight Python server running on **Raspberry Pi** devices.
+  - Controls GPIO pins to enable/disable machines based on API responses.
+  - Communicates with the central system for authorization and usage updates.
+
+- **Testing**:
+  - Automated **frontend testing** using **Cypress** for E2E and component coverage.
+  - Automated **backend testing** using **Jest** for route and database integrity validation.
+
+- **Deployment**:
+  - Hosted web and backend apps on **Vercel** and **Supabase** (PostgreSQL).
+  - Dockerized **Machine API** for simulation or production use.
+
+Excluded from the current scope (but possible for future expansion):
+- Multi-shop or multi-site support beyond JHU.
+- Integration with external JHU systems (beyond JCard ID recognition).
+- Real-time shop floor monitoring beyond machine status.
+
+---
+
 ### 1.3 Audience
+
+This technical documentation is intended for the following stakeholders:
+
+- **Developers**:
+  - To understand the system architecture, technology stack, and how to contribute or maintain code.
+  - To set up the project locally for development or testing purposes.
+
+- **System Administrators**:
+  - To deploy, configure, and manage the application across environments (local, staging, production).
+  - To maintain database integrity and perform manual overrides when necessary.
+
+- **Project Stakeholders (Professors, Advisors, Shop Managers)**:
+  - To understand the system’s capabilities and how it aligns with user and administrative needs.
+  - To provide feedback for future iterations based on functional and non-functional requirements.
+
+- **Quality Assurance/Testers**:
+  - To use the documented processes for running and evaluating automated tests.
+  - To verify system behavior under various scenarios, ensuring reliability and correctness.
+
+- **Future Teams/Contributors**:
+  - To understand the context, setup, and modular structure of the project for ongoing improvements.
+
 
 ## System Overview
 
