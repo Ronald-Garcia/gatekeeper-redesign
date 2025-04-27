@@ -344,7 +344,7 @@ userRoutes.patch("/users/:id",
             throw new HTTPException(404, { message: "User not found" });
         }
 
-        if (timeoutDate) { 
+        if (timeoutDate) {
             if (timeoutDate < new Date()) {
                 throw new HTTPException(400, { message: "Timeout date cannot be in the past" });
             }
