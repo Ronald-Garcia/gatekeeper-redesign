@@ -23,6 +23,9 @@ export default function DatePickerWithRange({
     const date = useStore($date_range);
 
     const setDate = (dateRange: DateRange | undefined) => {
+        if (dateRange === undefined) {
+          return;
+        }
         setDateRange(dateRange);
     }
   

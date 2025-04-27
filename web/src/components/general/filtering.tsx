@@ -119,12 +119,11 @@ const GeneralizedFilter: React.FC<Props> = ({ filters }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="ghost" data-cy="filter-trigger">
+        <Button variant="default" data-cy="filter-trigger">
           Filter
         </Button>
       </DialogTrigger>
-      <DialogContent>
-
+      <DialogContent className="w-full max-w-md max-h-[90vh] p-6 flex flex-col">
       <DialogHeader>
         <DialogTitle>
           Filter your search.

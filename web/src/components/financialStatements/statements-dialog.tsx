@@ -30,7 +30,7 @@ const StatementDialog = () => {
 
                     <TabsList className="w-full">
                         <TabsTrigger value="send" className="w-full"> Send Statements Now! </TabsTrigger>
-                        <TabsTrigger value="automate" className="w-full"> Automate Statements! </TabsTrigger>
+                        <TabsTrigger value="automate" className="w-full" data-cy="automate"> Automate Statements! </TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="send">

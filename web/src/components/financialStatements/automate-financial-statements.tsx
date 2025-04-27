@@ -54,7 +54,7 @@ const AutomateFinancialStatementsDialog = () => {
     return (
         <>
             <DialogHeader>
-                <DialogTitle data-cy="financial-statements-title">
+                <DialogTitle data-cy="auto-financial-statements-title">
                     Automate Financial Statements                
                 </DialogTitle>    
                 <DialogDescription>

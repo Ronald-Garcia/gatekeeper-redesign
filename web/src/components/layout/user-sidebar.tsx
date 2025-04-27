@@ -40,6 +40,7 @@ const UserSidebar = () => {
                         "w-full justify-start transition-colors duration-200 text-lg",
                         (!router?.route || router.route === "userDashboardMachinesStatus") && "bg-blue-50 text-blue-600 hover:bg-blue-100"
                     )}
+                    data-cy="user-machines"
                     onClick={handleClickOnViewMachines}
                 >
                     Machines
@@ -51,6 +52,7 @@ const UserSidebar = () => {
                         "w-full justify-start transition-colors duration-200 text-lg",
                         router?.route === "userDashboardUserStats" && "bg-blue-50 text-blue-600 hover:bg-blue-100"
                     )}
+                    data-cy="user-stats"
                     onClick={handleClickOnViewUserStats}
                 >
                     User Stats

@@ -19,17 +19,17 @@ const UserDashboardChartHeader = () => {
           { (precision === "h" || precision === "m") && <DatePicker></DatePicker>}
           <div className="">
           <Select value={precision} onValueChange={setPrecision}>
-            <SelectTrigger>
+            <SelectTrigger data-cy="select-precision">
               <SelectValue placeholder="Days" />
             </SelectTrigger>
             <SelectContent>
               {/* <SelectItem value="m">
                 Minutes
               </SelectItem> */}
-              <SelectItem value="h">
+              <SelectItem data-cy="select-h" value="h">
                 Hours
               </SelectItem>
-              <SelectItem value="d">
+              <SelectItem data-cy="select-d" value="d">
                 Days
               </SelectItem>
               {/* <SelectItem value="w">

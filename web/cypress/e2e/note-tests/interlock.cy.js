@@ -57,8 +57,7 @@ describe("Interlock Page E2E", () => {
 
       cy.get('[data-cy="submit"]').click()
 
-      cy.url().should("not.include", "/timer")
-      cy.url().should("not.include", "interlock");
+      cy.url().should("include", "/interlock-login")
 
     })
   });

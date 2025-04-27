@@ -59,7 +59,7 @@ const PaginationBar = ({loadFunction}: PagProps) => {
         <Pagination>
         <PaginationContent>
             
-            <PaginationItem data-cy= "pagination-next" onClick={handleClickBack}>
+            <PaginationItem data-cy= "pagination-previous" onClick={handleClickBack}>
             <PaginationPrevious href="#"/>
             </PaginationItem>
     

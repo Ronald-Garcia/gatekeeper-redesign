@@ -47,7 +47,7 @@ const InProgress = () => {
     
     }
     useEffect(() => {
-        if (!madeStatement && time == 1) {
+        if (!madeStatement) {
             handleCreation();
         } else if ((time % timeResolution === 0) && madeStatement){
             updateStatement(time);

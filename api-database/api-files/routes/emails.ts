@@ -126,7 +126,7 @@ async function sendEmail(email: string, scheduled: boolean, user: string, startD
       transporter.sendMail({
           to: email,
           subject: "Financial Statements",
-          html: `<h1>Financial Statements</h1>\n<h2>Financial Statements from ${startDate} to ${endDate} were requested by ${user}` ,
+          html: `<h1>Financial Statements</h1>\n<p>Financial Statements from <b>${startDate.toDateString()} to ${endDate.toDateString()}</b> were requested by <b>${user}</b></p>` ,
           attachments: [{
             filename: "financialStatement.xlsx",
             content: file

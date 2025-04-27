@@ -19,7 +19,7 @@ const UserChart = ({
 }: UserChartProps) => {
 
     return (
-        <Card>
+        <Card data-cy={`stats-${title}`}>
       <CardHeader>
         <CardTitle>
           {title}

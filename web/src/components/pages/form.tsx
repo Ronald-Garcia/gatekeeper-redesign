@@ -98,6 +98,7 @@ const handleOnChange = (e:React.ChangeEvent<HTMLTextAreaElement>) => {
             {errorMessage}
           </p>
           <Textarea
+            data-cy="form-description"
             className={formLengthError ? "border-red-500 resize-none" : "resize-none"}
             placeholder="Describe the issue..."
             value={description}

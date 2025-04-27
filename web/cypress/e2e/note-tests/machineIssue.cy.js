@@ -22,7 +22,7 @@ describe("Machine Issue Reporting (Full Lifecycle)", () => {
       .then((formUrl) => {
         cy.visit(formUrl);
 
-        cy.get('input[placeholder="Describe the issue..."]').type(issueDescription);
+        cy.get('textarea[placeholder="Describe the issue..."]').type(issueDescription);
         cy.contains("Submit Report").click();
         cy.contains("Submitted ✅").should("exist");
 

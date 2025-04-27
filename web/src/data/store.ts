@@ -11,14 +11,19 @@ import { MetaType } from "./types/meta";
 import { userBudgetStats, userMachinesStats, userStats } from "./types/user-stats";
 import { PrecisionType } from "./types/precision-type";
 
+const defaultDateRange: DateRange = {
+  from: new Date( (new Date()).getFullYear() - ((new Date()).getMonth() === 0 ? 1 : 0) , (new Date()).getMonth() - 1, (new Date()).getDate()), 
+  to: new Date()
+}
+
 export const $users = atom<User[]>([]);
 export const $codes = atom<BudgetCode[]>([]);
 export const $machines = atom<Machine[]>([]);
 export const $machine_types = atom<MachineType[]>([]);
 export const $budget_code_queue = atom<number[]>([]);
 export const $training_queue = atom<number[]>([]);
-export const $date_range = atom<DateRange | undefined>(undefined);
-export const $date = atom<Date | undefined>(undefined);
+export const $date_range = atom<DateRange>(defaultDateRange);
+export const $date = atom<Date>(new Date());
 export const $hasMoreUserBudgets = atom<boolean>(false);
 export const $hasMoreUserTrainings = atom<boolean>(false);
 export const $currentPage = atom<number>(1);
@@ -31,6 +36,7 @@ export const $filtered_total_chart = atom<userStats[]>([]);
 export const $filtered_budget_chart = atom<userBudgetStats[]>([]);
 export const $filtered_machine_chart = atom<userMachinesStats[]>([]);
 export const $precision = atom<PrecisionType>("d")
+
 
 export function setPrecision(p: PrecisionType)  {
   $precision.set(p);
@@ -107,20 +113,20 @@ export function setHasMoreUserTrainings(hasMore: boolean) {
 }
 
 
-export function setDate(date: Date | undefined) {
+export function setDate(date: Date) {
   $date.set(date);
 }
 
 export function resetDate() {
-  $date.set(undefined);
+  $date.set(new Date());
 }
 
-export function setDateRange(dateRange: DateRange | undefined) {
+export function setDateRange(dateRange: DateRange) {
   $date_range.set(dateRange);
 }
 
 export function resetDateRange() {
-  $date_range.set(undefined);
+  $date_range.set(defaultDateRange);
 }
 
 export function setBudgetCodeQueue(bcs: number[]) {

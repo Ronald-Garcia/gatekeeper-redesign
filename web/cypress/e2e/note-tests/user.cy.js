@@ -51,7 +51,7 @@ describe('Add user tests', () => {
     cy.get('[data-cy = "searchbar"]').type("THE_TESTING_USER_44\n");
     
     // now assert the new user ID cell is visible
-    cy.get(`[data-cy="${test_user_cardnum.substring(0,15)}"]`)
+    cy.get(`[data-cy="${test_user_cardnum.substring(0,16)}"]`)
       
       .should("be.visible");
   })
@@ -108,7 +108,7 @@ describe('Remove user tests', () => {
       cy.get('[data-cy="searchbar"]').clear({ force: true }).type("THE_TESTING_USER_44\n");
       
       // scroll container to bottom before grabbing the row
-      cy.get(`[data-cy="${test_user_cardnum.substring(0,15)}"]`)
+      cy.get(`[data-cy="${test_user_cardnum.substring(0,16)}"]`)
         .should("be.visible");
       
       // Open the user options to trigger deletion 
@@ -126,7 +126,7 @@ describe('Remove user tests', () => {
     cy.get('[data-cy="searchbar"]').clear({ force: true }).type("THE_TESTING_USER_44\n");
     // scroll container again
 
-    cy.get(`[data-cy="${test_user_cardnum.substring(0,15)}"]`).should("not.exist");
+    cy.get(`[data-cy="${test_user_cardnum.substring(0,16)}"]`).should("not.exist");
 
     cy.wait(1000);
 
@@ -135,7 +135,7 @@ describe('Remove user tests', () => {
     cy.get('[data-cy="searchbar"]').clear({ force: true }).type("THE_TESTING_USER_44\n");
     // scroll container in inactive view
 
-    cy.get(`[data-cy="${test_user_cardnum.substring(0,15)}"]`)
+    cy.get(`[data-cy="${test_user_cardnum.substring(0,16)}"]`)
       
       .should("be.visible");
   })
@@ -160,7 +160,7 @@ describe('Remove user tests', () => {
       
       // Search for component, confirm it is there.
       cy.get('[data-cy="searchbar"]').clear({ force: true }).type("THE_TESTING_USER_44\n");
-      cy.get(`[data-cy="${test_user_cardnum.substring(0,15)}"]`).should("be.visible");
+      cy.get(`[data-cy="${test_user_cardnum.substring(0,16)}"]`).should("be.visible");
       
       // Open the user options to trigger deletion 
       cy.get(`[data-cy="user-trigger-${userIdentifier}"]`).click();
@@ -175,14 +175,14 @@ describe('Remove user tests', () => {
     
     // Look up deleted user on active search and assert its not tehre
     cy.get('[data-cy="searchbar"]').clear({ force: true }).type("THE_TESTING_USER_44\n");
-    cy.get(`[data-cy="${test_user_cardnum.substring(0,15)}"]`).should("not.exist");
+    cy.get(`[data-cy="${test_user_cardnum.substring(0,16)}"]`).should("not.exist");
 
     cy.wait(1000);
 
     //Switch to inactive tab and search here 
     cy.get('[data-cy="inactive-tab"]').click({ force: true });
     cy.get('[data-cy="searchbar"]').clear({ force: true }).type("THE_TESTING_USER_44\n");
-    cy.get(`[data-cy="${test_user_cardnum.substring(0,15)}"]`).should("be.visible");
+    cy.get(`[data-cy="${test_user_cardnum.substring(0,16)}"]`).should("be.visible");
 
 
     
@@ -197,7 +197,7 @@ describe('Remove user tests', () => {
    // assert on the active tab
    cy.get('[data-cy="active-tab"]').click({ force: true });
    cy.get('[data-cy="searchbar"]').clear({ force: true }).type("THE_TESTING_USER_44\n");
-   cy.get(`[data-cy="${test_user_cardnum.substring(0,15)}"]`).should("be.visible");
+   cy.get(`[data-cy="${test_user_cardnum.substring(0,16)}"]`).should("be.visible");
  
   })
 })

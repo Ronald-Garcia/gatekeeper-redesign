@@ -14,7 +14,7 @@ export default function UserComponent({ user }: { user: User }) {
   }
 
   return (
-<div      data-cy={user.cardNum.substring(0, 15)}>
+<div      data-cy={user.cardNum.substring(0, 15) + user.lastDigitOfCardNum}>
     <ToggleableItem
       title={user.name}
       subtitle={`${role} • ${user.graduationYear ? `Class of ${user.graduationYear}` : "Faculty"}`}

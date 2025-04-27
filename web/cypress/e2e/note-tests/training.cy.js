@@ -34,7 +34,7 @@ const login = () => {
   //Search for the fresh user we just made and ensure they are there and unique.
   cy.get('[data-cy = "searchbar"]').type(`${test_user_name}\n`);
   cy.get(`[data-cy = users-component]`).should("have.length", 1);
-  cy.get(`[data-cy = ${test_user_num.substring(0,15)}]`).should("be.visible");
+  cy.get(`[data-cy = ${test_user_num.substring(0,16)}]`).should("be.visible");
 
   // Create a new machine type for the trainings.
   cy.request({

@@ -2,7 +2,7 @@
 const API_DB_URL = "http://localhost:3000";
 const WEB_URL = "http://localhost:5173";
 const admin_num = "1234567890777777";
-const admin_cy_num = "123456789044444";
+const admin_cy_num = "1234567890444444";
 
 const testUserId = 1;
 const testUserName = "ronald";
@@ -30,8 +30,11 @@ describe('filter tests', () => {
 
         //filter for our machine, assert they are there.
         cy.get(`[data-cy = filter-trigger]`).click();
+        cy.wait(1000);
         cy.get(`[data-cy = box-${testCodeType}]`).click();
+        cy.wait(1000);
         cy.get(`[data-cy = apply-filters]`).click();
+        cy.wait(1000);
         cy.get(`[data-cy = budget-code-${testCodeId}]`);
     });
     
@@ -43,8 +46,11 @@ describe('filter tests', () => {
         cy.get('[data-cy="cardnum-input"]').type("\n");
         //filter for our user, assert they are there.
         cy.get(`[data-cy = filter-trigger]`).click();
+        cy.wait(1000);
         cy.get(`[data-cy = box-${userYear}]`).click();
+        cy.wait(1000);
         cy.get(`[data-cy = apply-filters]`).click();
+        cy.wait(1000);
         cy.get(`[data-cy = ${admin_cy_num}]`);
     });
 
@@ -60,8 +66,11 @@ describe('filter tests', () => {
 
         //filter for our machine, assert they are there.
         cy.get(`[data-cy = filter-trigger]`).click();
+        cy.wait(1000);
         cy.get(`[data-cy = box-${testMachineType}]`).click();
+        cy.wait(1000);
         cy.get(`[data-cy = apply-filters]`).click();
+        cy.wait(1000);
         cy.get(`[data-cy = machine-${testMachineId}]`);
     });
 })

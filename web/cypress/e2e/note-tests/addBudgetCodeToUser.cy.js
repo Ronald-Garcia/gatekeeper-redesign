@@ -32,7 +32,7 @@ const login = () => {
     //Search for the fresh user we just made and ensure they are there and unique.
     cy.get('[data-cy = "searchbar"]').type(`${test_user_name}\n`);
     cy.get(`[data-cy = users-component]`).should("have.length", 1);
-    cy.get(`[data-cy = ${test_user_num.substring(0,15)}]`).should("be.visible");
+    cy.get(`[data-cy = ${test_user_num.substring(0,16)}]`).should("be.visible");
 }
 describe('budget code user relation tests', () => {
     beforeEach(() => {
@@ -99,11 +99,12 @@ describe('budget code user relation tests', () => {
         }).then(() => {
         //first, ensure no budget codes on user.
         cy.request(`${API_DB_URL}/user-budgets/${userId}`).then((res) => {
-            console.log("ho", res.body.data, res.body.data.length);
             assert(res.body.data.length === 0);
             //Simple test. Just click actions -> budgetCodes -> first budget code.
             cy.get(`[data-cy = user-trigger-${test_user_num.substring(0,15)} ]`).click();
+            cy.wait(1000);
             cy.get(`[data-cy = user-budget-code-${test_user_num.substring(0,15)} ]`).click();
+            cy.wait(1000);
             cy.get(`[data-cy = toggle-budget-code-${test_code_1} ]`).click({ force: true })
             .should('have.attr', 'data-state', 'on').then(() => {
                 //Check budget code button is on.
@@ -124,7 +125,9 @@ describe('budget code user relation tests', () => {
         cy.request(`${API_DB_URL}/user-budgets/${userId}`).then((res) => {
             //Check budget code button is on.
             cy.get(`[data-cy = user-trigger-${test_user_num.substring(0,15)} ]`).click();
+            cy.wait(1000);
             cy.get(`[data-cy = user-budget-code-${test_user_num.substring(0,15)} ]`).click();
+            cy.wait(1000);
             cy.get(`[data-cy = toggle-budget-code-${test_code_1} ]`).should("have.attr", "data-state", "on");
             // Turn the budget code off.
             cy.get(`[data-cy=toggle-budget-code-${test_code_1}]`).click({ force: true })

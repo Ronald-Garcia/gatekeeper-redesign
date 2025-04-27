@@ -10,7 +10,7 @@ import { $router } from "@/data/router";
 */
 
 
-const KioskStartPage = () => {
+const InterlockStartPage = () => {
     var callPython:number = 1;
 
   const [cardNum, setCardNum] = useState("");
@@ -59,4 +59,4 @@ const KioskStartPage = () => {
   );
 };
 
-export default KioskStartPage;
+export default InterlockStartPage;

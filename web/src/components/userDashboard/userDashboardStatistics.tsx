@@ -29,6 +29,7 @@ export function UserDashboardStats() {
           xDataKey="dateAdded"
           yDataKey="totalTime"
           config={timeChartConfig}
+          key="totalTime"
           >
 
         </UserChart> :
@@ -57,6 +58,7 @@ export function UserDashboardStats() {
           xDataKey="dateAdded"
           yDataKey="totalTime"
           config={timeChartConfig}
+          key={chartData.budgetCode}
           >
 
         </UserChart>
@@ -78,6 +80,7 @@ return (
           xDataKey="dateAdded"
           yDataKey="totalTime"
           config={timeChartConfig}
+          key={chartData.machineType}
           >
 
         </UserChart>
