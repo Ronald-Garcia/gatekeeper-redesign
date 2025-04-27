@@ -336,14 +336,14 @@ userRoutes.patch("/users/:id",
         const [user] = await db.select().from(users).where(eq(users.id, id));
         
 
+        if (!user) {
+            throw new HTTPException(404, { message: "User not found" });
+        }
+
         if (timeoutDate) {
             if (timeoutDate < new Date()) {
                 throw new HTTPException(400, { message: "Timeout date cannot be in the past" });
             }
-        }
-
-        if (!user) {
-            throw new HTTPException(404, { message: "User not found" });
         }
 
         const [updatedUser] = await db.update(users).set({ active, graduationYear: graduationYear === undefined ? null : graduationYear, timeoutDate: (timeoutDate === undefined || active === 1) ? null : timeoutDate }).where(eq(users.id, id)).returning();

@@ -282,6 +282,40 @@ describe("Financial Statement Routes", () => {
       expect(body).toHaveProperty("message", "Successfully sent an email");
     });
   });
+
+  describe("POST /statement-email/schedule/:email", () => {
+    test("returns 200 and a list of financial statements with pagination (admin access)", async () => {
+      const sendDate = new Date("2025-01-01").getTime(); 
+      const response = await app.request("/statement-email/schedule/wseinterlocks@gmail.com", {
+        
+        method: "POST",
+        headers: { "Content-Type": "application/json", Cookie: adminCookie },
+        body: JSON.stringify({
+          date: sendDate,
+        }),
+      });
+     
+
+      expect(response.status).toBe(200);
+      const body = await response.json();
+      expect(body).toHaveProperty("success", true);
+      expect(body).toHaveProperty("message", `Automated email scheduled to run on day Tue Dec 31 2024 19:00:00 GMT-0500 (Eastern Standard Time) of every month at midnight.`);
+    });
+  });
+
+  describe("DELETE /statement-email/schedule/:email", () => {
+    test("returns 200 and correct json", async () => {
+      const response = await app.request("/statement-email/cancel", {
+        method: "DELETE",
+      });
+     
+      expect(response.status).toBe(200);
+      const body = await response.json();
+      expect(body).toHaveProperty("success", true);
+      expect(body).toHaveProperty("message", `Automated email cancelled.`);
+    });
+  });
+
 });
 
 //cleanup db

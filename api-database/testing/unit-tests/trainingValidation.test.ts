@@ -168,6 +168,21 @@ describe('Training Routes', () => {
       const returned = Array.isArray(body.data) ? body.data[0] : body.data;
       expect(returned).toMatchObject(newTraining);
     });
+
+    test('404 when user not found (admin access)', async () => {
+      const newTraining = { userId: 9999999, machineTypeId: testMachineTypeId };
+      const response = await app.request('/trainings', {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          Cookie: adminCookie,
+        }),
+        body: JSON.stringify(newTraining),
+      });
+      expect(response.status).toBe(404);
+      const bodyResponse = await response.json();
+      expect(bodyResponse).toHaveProperty('message', 'User not found');
+    });
   });
 
   describe('DELETE /trainings', () => {
@@ -190,7 +205,47 @@ describe('Training Routes', () => {
       expect(deleteBody).toHaveProperty('success', true);
       expect(deleteBody).toHaveProperty('message');
     });
+
+    test('404 when user not found (admin access)', async () => {
+      // First, create a training record.
+      const fakeTraining = { userId: 9999999, machineTypeId: testMachineTypeId };
+      
+      // Then, delete the training record.
+      const deleteResponse = await app.request('/trainings', {
+        method: 'DELETE',
+        headers: new Headers({ 'Content-Type': 'application/json', Cookie: adminCookie }),
+        body: JSON.stringify(fakeTraining),
+      });
+      expect(deleteResponse.status).toBe(404);
+      const deleteBody = await deleteResponse.json();
+      expect(deleteBody).toHaveProperty('message', "User not found");
+    });
   });
+
+
+  describe('PATCH /trainings', () => {
+    test('updates a training record and returns it (admin access)', async () => {
+      // First, create a training record.
+      const newTraining = { userId: testUserId, machineTypeId: testMachineTypeId };
+      await app.request(`/trainings`, {
+        method: 'POST',
+        headers: new Headers({ 'Content-Type': 'application/json', Cookie: adminCookie }),
+        body: JSON.stringify(newTraining),
+      });
+      // Then, update the training record.
+      const updateResponse = await app.request(`/trainings/${testUserId}`, {
+        method: 'PATCH',
+        headers: new Headers({ 'Content-Type': 'application/json', Cookie: adminCookie }),
+        body: JSON.stringify({"machine_types":[testMachineTypeId]}),
+      });
+      console.log(updateResponse);
+      expect(updateResponse.status).toBe(200);
+      const updateBody = await updateResponse.json();
+      expect(updateBody).toHaveProperty('success', true);
+      expect(updateBody).toHaveProperty('message', "Successfully replaced trainings of user.");
+    });
+  });
+
 });
 
 describe('Training Routes - Guard Errors', () => {

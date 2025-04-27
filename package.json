@@ -1,6 +1,6 @@
 {
 	"scripts": {
-		"test": "jest --detectOpenHandles"
+		"test": "jest --coverage --coverageDirectory='coverage' --detectOpenHandles"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.26.10",

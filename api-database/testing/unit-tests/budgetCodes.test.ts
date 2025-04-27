@@ -181,7 +181,82 @@ describe("Budget Codes Routes", () => {
       const bodyRes = await response.json();
       expect(bodyRes).toHaveProperty("message", "Forbidden: Admins only");
     });
+
+
+    test("403 when given invalid budget code type ", async () => {
+      const newBudget = {
+        name: "TEST_BUDGET_" + Math.floor(Math.random() * 1e8).toString().padStart(8, "0"),
+        code: Math.floor(Math.random() * 1e8).toString().padStart(8, "0"),
+        budgetCodeTypeId: 99999999
+      };
+      const response = await app.request("/budget-codes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Cookie: adminCookie },
+        body: JSON.stringify(newBudget),
+      });
+      expect(response.status).toBe(404);
+    });
+
+    test("409 when budget code already exists", async () => {
+      const newBudget = {
+        name: "TEST_BUDGET_" + Math.floor(Math.random() * 1e8).toString().padStart(8, "0"),
+        code: Math.floor(Math.random() * 1e8).toString().padStart(8, "0"),
+        budgetCodeTypeId: 1
+      };
+      const response = await app.request("/budget-codes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Cookie: adminCookie },
+        body: JSON.stringify(newBudget),
+      });
+      expect(response.status).toBe(201);
+      const body = await response.json();
+      expect(body).toHaveProperty("success", true);
+      expect(body).toHaveProperty("message", "Created new budget code");
+      expect(body).toHaveProperty("data");
+      
+      const response2 = await app.request("/budget-codes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Cookie: adminCookie },
+        body: JSON.stringify(newBudget),
+      });
+      expect(response2.status).toBe(409);
+    });
+
   });
+
+  describe("PATCH /budget-codes/:id", () => {
+    test("update a budget code and return it (admin access)", async () => {
+
+      const budgetUpdate = {
+        active: 0,
+      };
+      const response = await app.request(`/budget-codes/${createdBudgetCodeId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", Cookie: adminCookie },
+        body: JSON.stringify(budgetUpdate),
+      });
+      expect(response.status).toBe(200);
+      const body = await response.json();
+      expect(body).toHaveProperty("success", true);
+      expect(body).toHaveProperty("message", "Updated budget code");
+      expect(body).toHaveProperty("data");
+    });
+
+    test("404 when budget code not found (admin access)", async () => {
+      const budgetUpdate = {
+        active: 0,
+      };
+      const response = await app.request(`/budget-codes/99999999`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", Cookie: adminCookie },
+        body: JSON.stringify(budgetUpdate),
+      });
+      expect(response.status).toBe(404);
+      const body = await response.json();
+      expect(body).toHaveProperty("message", "Budget Code not found!");
+    });
+  });
+
 
   describe("DELETE /budget-codes/:id", () => {
     test("deletes a budget code and returns it (admin access)", async () => {

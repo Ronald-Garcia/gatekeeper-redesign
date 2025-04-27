@@ -2,6 +2,7 @@ name: Jest
 
 on: 
   workflow_call:
+  push:
 
 
 jobs:
@@ -15,7 +16,6 @@ jobs:
           npm install -g pnpm
           npm install
           pnpm install
-
           cd web/
           npm install -g pnpm
           npm install
@@ -25,7 +25,6 @@ jobs:
           npm install -g pnpm
           npm install
           pnpm install
-
       - name: Install jest
         run: npm install
       - name: Run Jest tests
