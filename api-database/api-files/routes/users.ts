@@ -2,7 +2,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { queryUsersParamsSchema, createUserSchema, getUserSchema, getUserByCardNumSchema, enableUserSchema } from "../validators/schemas.js";
 import { SQL, or, desc, asc, eq, and, count, ilike, gt, exists, inArray } from "drizzle-orm";
-import { userBudgetCodeTable, userMachineType, users } from "../db/schema.js";
+import { archivedFinancialStatementsTable, financialStatementsTable, userBudgetCodeTable, userMachineType, users } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
 import { lucia } from "../db/auth.js";
@@ -305,13 +305,17 @@ userRoutes.delete(
             throw new HTTPException(404, { message: "User not found" });
         }
 
+        const statements = await db.delete(financialStatementsTable)
+                .where(eq(financialStatementsTable.userId, id)).returning()
+            
+        const archivedStatements = await db.insert(archivedFinancialStatementsTable)
+                .values(statements).returning();
 
 
         // if (no session) throw another error.
         // For now, no auth, just replace.
-        const deletedUser = await db
-        .update(users)
-        .set({active: 0})
+        const [deletedUser] = await db
+        .delete(users)
         .where(eq(users.id, id))
         .returning()
 
@@ -336,14 +340,14 @@ userRoutes.patch("/users/:id",
         const [user] = await db.select().from(users).where(eq(users.id, id));
         
 
+        if (!user) {
+            throw new HTTPException(404, { message: "User not found" });
+        }
+
         if (timeoutDate) {
             if (timeoutDate < new Date()) {
                 throw new HTTPException(400, { message: "Timeout date cannot be in the past" });
             }
-        }
-
-        if (!user) {
-            throw new HTTPException(404, { message: "User not found" });
         }
 
         const [updatedUser] = await db.update(users).set({ active, graduationYear: graduationYear === undefined ? null : graduationYear, timeoutDate: (timeoutDate === undefined || active === 1) ? null : timeoutDate }).where(eq(users.id, id)).returning();

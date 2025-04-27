@@ -119,7 +119,7 @@ const GeneralizedFilter: React.FC<Props> = ({ filters }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="default" data-cy="filter-trigger">
+        <Button className="h-[40px]" variant="outline" data-cy="filter-trigger">
           Filter
         </Button>
       </DialogTrigger>

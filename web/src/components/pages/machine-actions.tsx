@@ -16,12 +16,10 @@ const MachineActions = () => {
         <div data-cy="admin-dashboard" className="w-full p-4 bg-white border-b">
           <div className="mx-auto max-w-7xl">
             <div className="flex flex-col items-start gap-4 md:flex-row md:items-center">
-              <div className="flex-1 w-full">
+              <div className="flex flex-row w-full gap-2">
                 <Searchbar/>
-              </div>
-              <div className="flex flex-wrap gap-2 shrink-0">
-                  <ClearFiltering />  
-              <GeneralizedFilter filters={["machineTypeId"]} />
+                <ClearFiltering />  
+                <GeneralizedFilter filters={["machineTypeId"]} />
                 <AddMachineDialog/>
                 <AddMachineTypeDialog/>
               </div>
