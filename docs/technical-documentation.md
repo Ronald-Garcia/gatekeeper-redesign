@@ -76,17 +76,173 @@ This technical documentation is intended for the following stakeholders:
 
 ### 2.1 Architecture
 
+The **WSE Interlock** system follows a **modular three-tier architecture**, designed for **scalability**, **security**, and **real-time machine control**. The architecture consists of:
+
+1. **Frontend Web Application** (React + TypeScript):
+   - **Admin Dashboard**:
+     - User, machine, and budget code management.
+     - Financial reports and automated email scheduling.
+     - Issue reporting and resolution interface.
+   - **Interlock UI**:
+     - User login via card number (JCard).
+     - Machine selection and budget code assignment.
+     - Real-time machine usage tracking and issue reporting.
+
+2. **Backend API** (Hono + TypeScript):
+   - RESTful endpoints for:
+     - User authentication and session handling.
+     - Machine, budget code, and issue CRUD operations.
+     - Financial transactions and reporting.
+   - Uses **PostgreSQL** with **Drizzle ORM** for database management.
+   - Middleware for authentication (`auth`) and admin authorization (`adminGuard`).
+
+3. **Machine API** (Python on Raspberry Pi):
+   - Lightweight Python server using **Flask** or simple socket interface.
+   - Controls GPIO pins to turn machines **on/off**.
+   - Communicates with backend API to:
+     - Verify user authorization.
+     - Track machine usage in real-time.
+     - Report machine statuses.
+
+---
+
 ### 2.2 Technologies Used
 
+| Layer            | Technology                   | Purpose                                                   |
+|------------------|------------------------------|-----------------------------------------------------------|
+| Frontend         | **React + TypeScript**       | Web application interface for both Admin and Interlock    |
+|                  | **Vite**                     | Fast development server and build tool                    |
+|                  | **Tailwind CSS**             | Utility-first CSS for responsive design                   |
+|                  | **Cypress**                  | End-to-End and component testing                          |
+| Backend API      | **Hono**                     | Minimalist web framework for high-performance APIs        |
+|                  | **TypeScript**               | Type-safe backend logic and route handling                |
+|                  | **Drizzle ORM**              | Database ORM for PostgreSQL                               |
+|                  | **PostgreSQL**               | Relational database for persistent data storage           |
+|                  | **Arctic (Lucia Auth)**      | Authentication and session management                     |
+| Machine API      | **Python**                   | Machine control script on Raspberry Pi                    |
+|                  | **GPIO library**             | Hardware interface for controlling machine power states   |
+|                  | **Docker**                   | Containerization for Machine API simulation/deployment    |
+| DevOps/Hosting   | **Vercel**                   | Hosting for frontend and backend APIs                     |
+|                  | **Supabase**                 | PostgreSQL hosting and API integration                    |
+|                  | **Docker**                   | Local/Production deployment of Machine API                |
+
+---
+
 ### 2.3 Dependencies
+
+#### Frontend Dependencies:
+- `react`: UI library for building the dashboard and interlock components.
+- `vite`: Fast dev environment and optimized builds.
+- `tailwindcss`: For styling components.
+- `eslint` / `prettier`: Linting and code formatting.
+- `typescript`: Type-safe development.
+- `@react-oauth/google`: Google OAuth integration (optional).
+
+#### Backend Dependencies:
+- `hono`: Web framework for defining API routes.
+- `drizzle-orm`: ORM for structured database access and migrations.
+- `lucia` + `arctic`: User authentication and session handling.
+- `pg`: PostgreSQL client for Node.js.
+- `zod`: Schema validation for request/response objects.
+- `dotenv`: Environment variable management.
+
+#### Machine API Dependencies:
+- `python`: Core scripting language.
+- `flask` or `socketserver`: Lightweight HTTP/socket server for Raspberry Pi.
+- `RPi.GPIO`: Library for GPIO control (on Pi hardware).
+- `dotenv`: For managing machine identity/environment data.
+
+#### Testing Dependencies:
+- **Frontend**:
+  - `cypress`: For E2E and component testing.
+- **Backend**:
+  - `jest`: Unit and integration testing for backend routes.
+  - `ts-jest`: TypeScript support for Jest.
+  - `supertest` or Hono's built-in request simulation for route testing.
+  
 
 ## Installation Guide
 
 ### 3.1 Prerequisites
 
+Before running the WSE Interlock system locally or interacting with the deployed version, ensure you have the following installed:
+
+- **Node.js** (v18+ recommended)
+- **pnpm** (v8+)
+- **Python** (v3.10+) with **Anaconda/Miniconda**
+- **PostgreSQL** database access (cloud-hosted or local)
+- **Git** for cloning the repository
+- **Docker** (optional for running the Machine API via Docker)
+- **Conda** (for managing the Python environment of the Machine API)
+
+---
+
 ### 3.2 System Requirements
 
+- **Operating System:** Windows 10/11, macOS, or Linux
+- **RAM:** 8GB minimum (16GB recommended for concurrent services)
+- **Disk Space:** 2GB+ free space for node_modules, databases, and logs
+- **Network:** Internet access for package installation, API connections, and optional Docker image pulls
+
+---
+
 ### 3.3 Installation Steps
+
+#### 1. Clone the Repository
+
+```bash
+git clone https://github.com/cs421sp25-homework/team-10.git
+cd team-10
+```
+
+
+### 2. Install Frontend (web)
+
+```bash
+cd web
+pnpm install
+```
+
+### 3. Install Backend API (api-database)
+
+```bash
+cd ../api-database
+pnpm install
+```
+
+### 4. Set Up Machine API (api-machine)
+
+```bash
+cd ../api-machine
+conda env create -f machine-api.yml
+conda activate machine_api
+```
+
+## Running the Application Locally
+
+### 1. Start Frontend:
+
+```bash
+cd web
+pnpm dev
+```
+
+### 2. Start Backend API:
+
+```bash
+cd ../api-database
+pnpm dev
+```
+
+### 3. Start Machine API:
+
+```bash
+cd ../api-machine
+conda activate machine_api
+python server.py
+```
+
+Then, visit http://localhost:5173 to access the web app locally.
 
 ## Configuration Guide
 
