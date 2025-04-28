@@ -519,7 +519,6 @@ The WSE Interlock system uses a robust, session-based authentication mechanism p
 - Extended session time configuration for specific user roles (e.g., admin vs. standard user).
 - Enhanced SAML logout support (`singleLogoutService`) for better SSO compliance.
 
-
 ### 5.3 Core Functionality
 
 The WSE Interlock system is designed to manage user access, machine control, and financial tracking in a university machine shop environment. The core functionalities are divided into three key user roles: **Users**, **Administrators**, and **Machine Interfaces**.
@@ -574,10 +573,16 @@ The WSE Interlock system is designed to manage user access, machine control, and
 
 - **Machine Identification:**
   - Machines are associated during first-time setup via the **MachineLogin** page.
+  - Each machine stores its ID locally in a `.env` file, which is written via the Machine API.
 
 - **Start/Stop Control:**
   - Receives **Turn-On/Turn-Off** signals based on user authentication.
-  - Tracks usage time for billing.
+  - Executes GPIO signals to physically control power (or simulates during development).
+  - Tracks usage time for billing, based on session duration.
+
+- **Local Persistence:**
+  - Machine identity is retained across restarts using local `.env` storage.
+  - Machine ID can be reset via the **DELETE /clear** API endpoint.
 
 ---
 
@@ -607,6 +612,7 @@ In addition to the core functionality, the system provides several advanced feat
 
 #### **4. Dynamic Machine Assignment:**
 - Machines without prior assignment can dynamically select their identity from available machines in the system.
+- Machine identity is stored locally in `.env` and retrieved via **GET /whoami**.
 - Simplifies setup for Raspberry Pi machine interfaces.
 
 ---
@@ -616,8 +622,6 @@ In addition to the core functionality, the system provides several advanced feat
   - Temporarily ban users or clubs.
   - Set expiration for budget codes.
   - Deactivate machines as needed.
-
----
 
 ### 5.5 Troubleshooting
 
@@ -670,15 +674,333 @@ For this application, we are using two APIs: the Machine API and the Deployed AP
 
 ### 6.1 Endpoints
 
+The system is built on two main APIs: the **Deployed API** for core data operations, and the **Machine API** for machine-level hardware control.
+
+---
+
+#### **Deployed API (Core Backend)**
+
+| **Endpoint**                      | **Method** | **Description**                                              |
+|-----------------------------------|------------|--------------------------------------------------------------|
+| `/users`                          | GET        | Retrieve all users with optional filters and pagination.     |
+| `/users`                          | POST       | Create a new user.                                           |
+| `/users/:id`                      | PATCH      | Update a user’s status, graduation year, or timeout date.    |
+| `/users/:id`                      | DELETE     | Delete a user.                                               |
+| `/users/:cardNum`                 | GET        | Authenticate a user by JCard number.                         |
+| `/logout`                         | POST       | Logout the current user.                                     |
+
+| `/budget-codes`                   | GET        | Retrieve all budget codes.                                   |
+| `/budget-codes`                   | POST       | Create a new budget code.                                    |
+| `/budget-codes/:id`               | PATCH      | Update budget code status (e.g., activate/deactivate).       |
+| `/budget-codes/:id`               | DELETE     | Delete a budget code.                                        |
+
+| `/user-budgets/:id`               | GET        | Get budget codes assigned to a user.                         |
+| `/user-budgets`                   | POST       | Assign a budget code to a user.                              |
+| `/user-budgets/:userId/:budgetCodeId` | DELETE | Remove a budget code from a user.                            |
+| `/user-budgets/:id`               | PATCH      | Replace all budget codes for a user.                         |
+
+| `/trainings/:userId/:machineId`   | GET        | Validate if a user is trained on a specific machine.         |
+| `/trainings/:id`                  | GET        | Retrieve all trainings for a user.                           |
+| `/trainings`                      | POST       | Assign machine training to a user.                           |
+| `/trainings`                      | DELETE     | Remove a machine training from a user.                       |
+| `/trainings/:id`                  | PATCH      | Replace all trainings for a user.                            |
+
+| `/machines`                       | GET        | Retrieve all machines with filters.                          |
+| `/machines`                       | POST       | Create a new machine.                                        |
+| `/machines/:id`                   | PATCH      | Update machine status or last usage time.                    |
+| `/machines/:id`                   | DELETE     | Delete a machine.                                            |
+| `/machines/:id`                   | GET        | Retrieve a specific machine.                                 |
+
+| `/machine-types`                  | GET        | Retrieve all machine types.                                  |
+| `/machine-types`                  | POST       | Create a new machine type.                                   |
+| `/machine-types`                  | PATCH      | Update a machine type.                                       |
+| `/machine-types/:id`              | DELETE     | Delete a machine type.                                       |
+
+| `/machine-issues`                 | GET        | Retrieve all machine issues with optional filters.           |
+| `/machine-issues`                 | POST       | Report a new machine issue.                                  |
+| `/machine-issues/:id`             | PATCH      | Update machine issue status (resolved/unresolved).           |
+
+| `/fin-statements`                 | GET        | Retrieve financial statements based on date range.           |
+| `/fin-statements`                 | POST       | Create a new financial statement entry.                      |
+| `/fin-statements/:id`             | PATCH      | Update time spent in a financial statement.                  |
+| `/statement-email/:email`         | POST       | Send financial statements via email.                         |
+| `/statement-email/schedule/:email`| POST       | Schedule automated monthly email statements.                 |
+
+| `/budget-code-types`              | GET        | Retrieve all budget code types.                              |
+| `/budget-code-types`              | POST       | Create a new budget code type.                               |
+
+| `/stats`                          | GET        | Retrieve statistical usage data (user, machine, budget).     |
+
+---
+
+#### **Machine API (Hardware Control)**
+
+| **Endpoint**                      | **Method** | **Description**                                              |
+|-----------------------------------|------------|--------------------------------------------------------------|
+| `/turn-on`                        | POST       | Send a signal to turn on the machine (GPIO20 pulse).         |
+| `/turn-off`                       | POST       | Send a signal to turn off the machine.                       |
+| `/whoami`                         | GET        | Retrieve the stored machine ID from local `.env` file.       |
+| `/whoami`                         | POST       | Save machine ID to `.env` file during setup.                 |
+| `/clear`                          | DELETE     | Clear the stored machine ID from the local `.env` file.      |
+
+
 ### 6.2 Request and Response Formats
 
-The format for the request is as follows: 
+The APIs follow **RESTful** conventions and primarily use **JSON** for request bodies and responses. Below are common patterns for interacting with both the **Deployed API** and **Machine API**.
 
+---
+
+#### **1. Standard Request Format**
+
+- **Headers:**
+  - `Content-Type: application/json`
+  - `Authorization: Bearer <token>` *(if applicable)*
+  - `Cookie: session=<session_id>` *(used for session-based auth via Lucia)*
+
+- **Example POST Request Body:**
+```json
+{
+  "name": "John Doe",
+  "cardNum": "1234567890123456",
+  "JHED": "jdoe1",
+  "graduationYear": 2025,
+  "isAdmin": 0
+}
+```
+
+### **2. Standard Response Format**
+
+- **Success Response:**
+```json
+{
+  "success": true,
+  "message": "Operation completed successfully",
+  "data": { /* Resource-specific data */ }
+}
+```
+
+- **Error Response**
+```json
+{
+  "success": false,
+  "message": "Error message explaining what went wrong",
+  "meta": {
+    "issues": [
+      {
+        "code": "invalid_type",
+        "path": ["graduationYear"],
+        "message": "Expected number, received string"
+      }
+    ],
+    "name": "ZodError"
+  }
+}
+```
+
+- **Paginated Responses**
+
+For endpoints that support pagination (e.g., /users, /machines), the response includes a meta object:
+
+```json
+{
+  "success": true,
+  "message": "Fetched user list",
+  "data": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "JHED": "jdoe1",
+      "graduationYear": 2025
+    }
+  ],
+  "meta": {
+    "page": 1,
+    "limit": 10,
+    "total": 50
+  }
+}
+```
+
+#### **4. Machine API Specific Formats**
+
+- **Turn On Machine Request:**
+  - **Endpoint:** `/turn-on`
+  - **Method:** POST
+  - **Request Body:** None required
+  - **Response:**
+
+    {
+      "success": true,
+      "message": "s: Success!"
+    }
+
+---
+
+- **Turn Off Machine Request:**
+  - **Endpoint:** `/turn-off`
+  - **Method:** POST
+  - **Request Body:** None required
+  - **Response:**
+
+    {
+      "success": true,
+      "message": "Machine turned off successfully"
+    }
+
+---
+
+- **WhoAmI GET Response:**
+  - **Endpoint:** `/whoami`
+  - **Method:** GET
+  - **Response:**
+
+    {
+      "success": true,
+      "message": "Successfully read machine_id from file.",
+      "data": 101
+    }
+
+---
+
+- **WhoAmI POST Request:**
+  - **Endpoint:** `/whoami`
+  - **Method:** POST
+  - **Request Body:**
+
+    {
+      "id": 101
+    }
+
+  - **Response:**
+
+    {
+      "success": true,
+      "message": "Successfully saved machine information"
+    }
+
+---
+
+#### **5. Validation Errors (from Zod)**
+
+Validation errors use **Zod** structured responses:
+
+- **Response Example:**
+
+    {
+      "success": false,
+      "message": "name : Required, graduationYear : Expected number, received string",
+      "meta": {
+        "issues": [
+          {
+            "code": "invalid_type",
+            "path": ["graduationYear"],
+            "message": "Expected number, received string",
+            "expected": "number",
+            "received": "string"
+          }
+        ],
+        "name": "ZodError"
+      }
+    }
+
+---
+
+#### **6. Authentication Cookies**
+
+- **Session Cookies (Lucia):**
+  - Upon login, a `Set-Cookie` header is returned.
+  - Example:
+
+    Set-Cookie: session=abc123xyz; Path=/; HttpOnly; Secure; SameSite=Strict
+
+  - These cookies are automatically sent with:
+    `credentials: "include"` in fetch requests.
+
+---
+
+### **Summary**:
+
+- **All requests** use JSON.
+- **Errors** follow a structured `success: false` response.
+- **Pagination** includes `meta` with `page`, `limit`, and `total`.
+- **Machine API** uses simplified JSON for GPIO-based control.
 
 
 ### 6.3 Authentication and Authorization
 
-For authentication and Authorization, we have a users table, which serves not only as a data type displayed and managed on the kiosk, but as the users for the application itself. Users will swipe their Jcard on a scanner, which will automatically send their Jcard number to the backend route. If the Jcard number matches a user in the database, then the user will be authenticated into the Interlock/Machine Gate. However, if a non-admin user swipes their Jcard on the scanner to login into the admin kiosk, the backend will see that their isAdmin flag is 0, which will result in a failure to login. The authentication was implemented using Lucia for general authentication logic and cookie/session management.
+Authentication and authorization in the WSE Interlock System are handled through a combination of **JCard-based login** and **Lucia session management**.
+
+---
+
+#### **User Authentication Flow:**
+
+1. **JCard Swipe:**
+   - Users swipe or enter their **JCard number** at a kiosk or machine terminal.
+   - The **JCard number** is automatically sent to the backend.
+
+2. **Backend Validation:**
+   - The system truncates the last digit of the JCard number for validation.
+   - It checks the **users table** in the database for a matching card number and last digit.
+
+3. **Session Creation:**
+   - If a valid user is found and **active**, a session is created using **Lucia**.
+   - A secure **session cookie** is issued to the client.
+   - Sessions are required for all further authenticated routes (`credentials: "include"`).
+
+---
+
+#### **Authorization Logic:**
+
+- **Standard Users:**
+  - Can access the **Interlock** system and start machines.
+  - Can select budget codes and track usage time.
+  - Cannot access administrative dashboards or settings.
+
+- **Admin Users:**
+  - Must swipe JCard at an **admin kiosk**.
+  - The backend checks if `isAdmin = 1` for the user.
+  - If true, access is granted to the **Admin Dashboard**.
+  - If false, login is denied and access is restricted.
+
+---
+
+#### **Session Management:**
+
+- **Lucia** is used for:
+  - **Session creation and validation**.
+  - **Cookie management** (`Set-Cookie` headers).
+  - Sessions are automatically validated on every API call.
+
+- Example **Set-Cookie** Header:
+
+Set-Cookie: session=abc123xyz; Path=/; HttpOnly; Secure; SameSite=Strict
+
+```yaml
+
+
+---
+
+#### **Failed Authentication:**
+
+- If a JCard number does not match a user:
+- The backend returns a **404 User Not Found** error.
+
+- If an inactive user attempts login:
+- The backend denies access.
+
+- If a non-admin user attempts admin login:
+- The backend denies access due to **isAdmin = 0**.
+
+---
+
+#### **Temporary Bans and Timeout Handling:**
+
+- Admins can **temporarily ban users** via the admin interface.
+- Users with a **timeoutDate** in the past are automatically deactivated.
+- Reactivation requires admin intervention.
+
+---
+```
 
 ## Database Schema 
 
