@@ -22,6 +22,7 @@ export const turnOffMachine = async (): Promise<boolean> => {
     {
     method: "POST",
     credentials: "include",
+    
   });
   const { message }: { message: string } = await response.json();
 
