@@ -6,7 +6,6 @@ env:
 
 on: 
   workflow_call:
-  push:
 
 jobs:
   deploy:

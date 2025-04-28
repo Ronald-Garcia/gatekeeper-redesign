@@ -1,1 +1,10 @@
-{ "routes": [{ "src": "/[^.]+", "dest": "/", "status": 200 }] }
+{
+    "installCommand": "pnpm install",
+    "routes": [
+      {
+        "src": "/[^.]+",
+        "dest": "/",
+        "status": 200
+      }
+    ]
+  }

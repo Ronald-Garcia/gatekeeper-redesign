@@ -21,7 +21,7 @@ export function UserDashboardStats() {
   const { filteredBudgetChartData, filteredTotalChartData, filteredMachineChartData } = useQueryChart();
   return (
 
-    <div className="grid grid-cols-2">
+    <div className="grid grid-cols-2" data-cy="chart-view">
       <div>
         {filteredTotalChartData.length !== 0 ? <UserChart
           title="Total Summary:"

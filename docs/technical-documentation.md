@@ -248,21 +248,421 @@ Then, visit http://localhost:5173 to access the web app locally.
 
 ### 4.1 Configuration Parameters
 
+The application relies on several environment variables for its backend (api-database), frontend (web), and machine API. These parameters control database connections, server ports, email credentials, and integration URLs.
+
+#### Backend API (api-database) Environment Variables:
+
+- `PROD_DB_URL` – PostgreSQL connection string for production.
+  - Example: `postgresql://<db-username>:<password>@<host>:<port>/<database>`
+- `DATABASE_URL` – Active PostgreSQL database URL. This must match `PROD_DB_URL` or point to a local database.
+- `PORT` – Port on which the backend API will run locally (default is `3000`).
+- `EMAIL_USER` – Email address used for sending financial statements (e.g., `"wseinterlocks@gmail.com"`).
+- `EMAIL_PASS` – App password for the above email (Google App Passwords if using Gmail).
+
+#### Frontend (web) Environment Variables:
+
+- `VITE_API_DB_URL` – URL pointing to the backend API.
+  - Example (local): `"http://localhost:3000"`
+  - Example (deployed): `"https://interlock-api-database-v1.vercel.app/"`
+- `VITE_API_MACHINE_URL` – URL pointing to the local Machine API.
+  - Example: `"http://127.0.0.1:5000"`
+- `VITE_BASE_URL` – URL for the frontend app itself.
+  - Example (local): `"http://localhost:5173"`
+
+---
+
 ### 4.2 Environment Setup
+
+#### Backend API (`api-database/.env` Example):
+
+```env
+PROD_DB_URL="postgresql://<db-username>:<password>@<host>:<port>/<database>"
+DATABASE_URL="postgresql://<db-username>:<password>@<host>:<port>/<database>"
+PORT=3000
+EMAIL_USER="<your-email@example.com>"
+EMAIL_PASS="<your-email-app-password>"
+```
+
+### Frontend (web/.env Example):
+
+```env
+VITE_API_DB_URL="http://localhost:3000"
+VITE_API_MACHINE_URL="http://127.0.0.1:5000"
+VITE_BASE_URL="http://localhost:5173"
+```
+
+- Ensure no spaces around `=` signs in `.env` files.
+- Customize `EMAIL_USER` and `EMAIL_PASS` based on your SMTP settings.
+
+---
 
 ### 4.3 External Services Integration
 
+The application integrates with several external services:
+
+- **PostgreSQL Database:**
+  - Hosted on Supabase or any PostgreSQL-compatible service.
+  - Ensure correct credentials are set in `PROD_DB_URL` and `DATABASE_URL`.
+
+- **Email Service:**
+  - Utilizes SMTP credentials to send automated financial statements.
+  - If using Gmail:
+    - Enable 2-Factor Authentication.
+    - Generate an App Password and use it for `EMAIL_PASS`.
+
+- **Deployment Platforms:**
+  - **Vercel**:
+    - Used for deploying the frontend (`web`) and backend API (`api-database`) for production access.
+    - Environment variables should be configured in the Vercel project settings.
+  - **Docker**:
+    - A Dockerized version of the Machine API is available.
+    - Pull the Docker image and run it locally or on a cloud VM.
+    - Useful for environments without direct access to Conda/Python.
+
+- **Anaconda (for Machine API)**:
+  - Required for running the Python-based Machine API.
+  - Use the provided `machine-api.yml` file to create the Conda environment.
+  - Example commands:
+    ```bash
+    conda env create -f machine-api.yml
+    conda activate machine-api
+    python server.py
+    ```
+
+---
+
 ## Usage Guide
 
-### 5.1 User Interface Overview
+## 5.1 User Interface Overview
+
+The WSE Interlock system features a multi-faceted user interface, designed for three primary user groups:
+1. **Users (Students/Staff)**
+2. **Administrators**
+3. **Machine Interlock Users (Machine Operators)**
+
+Each interface is tailored for its specific role, ensuring an intuitive and efficient experience.
+
+---
+
+### **Home Page**
+- Serves as the central landing point.
+- Allows navigation to:
+  - **Interlock Interface**
+  - **Kiosk Admin Dashboard**
+  - **User Dashboard**
+
+#### **Buttons:**
+- **Interlock** – For machine operators to log in and use machines.
+- **Kiosk** – For administrators to manage users, machines, budget codes, and financial data.
+- **User Dashboard** – For users to view their machine usage statistics.
+
+---
+
+### **User Dashboard**
+- **Purpose:** Allows users to view their past machine usage and budget tracking.
+- **Main Pages:**
+  - **Machines Status Page:** 
+    - Displays list of machines used.
+    - Search and pagination for navigating machine usage.
+  - **User Stats Page:**
+    - Displays charts and statistics of personal machine usage.
+
+---
+
+### **Kiosk Admin Dashboard**
+- **Purpose:** Provides full administrative control over users, machines, budget codes, financials, and machine issues.
+- **Sections:**
+  - **Users Management:**
+    - Add, search, filter, activate/deactivate users.
+    - Assign budget codes and training.
+  - **Budget Codes Management:**
+    - Add budget codes and types.
+    - Filter, activate/deactivate codes.
+  - **Machines Management:**
+    - Add machines and machine types.
+    - Filter by type, activate/deactivate machines.
+  - **Machine Issues:**
+    - View unresolved/resolved issues.
+    - Resolve issues with a single click.
+  - **Financial Statements:**
+    - View and export billing statements based on machine usage.
+    - Automated email scheduling for monthly summaries.
+
+- **Features:**
+  - Sidebar for easy navigation.
+  - Pagination and filtering for large datasets.
+  - Real-time updates for machine status and issues.
+
+---
+
+### **Machine Interlock Interface**
+- **Purpose:** Mounted on each machine, allowing users to log in and use the machine.
+- **Workflow:**
+  1. **Swipe Card / Enter JHU Credentials** to authenticate.
+  2. **Select Budget Code** from available options.
+  3. **Start Machine**:
+     - Sends a power-on signal to the Raspberry Pi GPIO.
+     - Timer starts and tracks usage.
+  4. **In Progress Page**:
+     - Displays live timer.
+     - Allows users to:
+       - **Report Issues**.
+       - **End Session** by pressing "Tap when finished" to log the session and billing.
+- **Lost Connection Page:**
+  - Shown if the interface loses contact with the server.
+  - Allows offline interaction or retry connection.
+
+---
+
+### **Maintenance Issue Reporting Page**
+- **Purpose:** Allows users to report issues directly from the machine interface.
+- **Features:**
+  - Select machine automatically.
+  - Text area to describe issue.
+  - Validates input before submission.
+  - Displays confirmation after successful report.
+
+---
+
+### **UI Libraries & Styling**
+- **React** and **TypeScript** for component structure.
+- **Tailwind CSS** for styling and layout.
+- **@nanostores** for state management and routing.
+
+---
+
+### **Key Components Overview**
+- **Buttons, Inputs, Dialogs, Scroll Areas** – Standardized via Tailwind + custom components.
+- **Pagination** – Efficiently loads data per page in admin views.
+- **Sidebar Navigation** – Present in admin views for intuitive section switching.
+- **Toggle Groups** – For selecting budget codes in Interlock UI.
+
+---
 
 ### 5.2 User Authentication
 
+The WSE Interlock system uses a robust, session-based authentication mechanism powered by **Lucia Auth** in conjunction with **Drizzle ORM** for database interactions. Authentication supports both **JCard-based login** and **JHU SAML Single Sign-On (SSO)**, providing flexibility for students and staff.
+
+---
+
+#### **1. Authentication Mechanisms**
+
+- **Card-Based Authentication (JCard):**
+  - Users swipe or input their card number.
+  - Card number is parsed to extract the unique identifier and verified against the database.
+  - Upon successful validation, a session is created and stored using **Lucia**.
+
+- **JHU SAML SSO Authentication:**
+  - Users can optionally log in using JHU Single Sign-On via SAML.
+  - Service Provider (SP) and Identity Provider (IdP) are configured using **samlify**.
+  - Upon successful SSO login, users are validated against the internal database via their JHED ID.
+
+---
+
+#### **2. Session Management (Lucia)**
+
+- **Lucia** is configured with:
+  - **DrizzlePostgreSQLAdapter** for PostgreSQL-based session storage.
+  - **Secure Cookies** (`secure: true`, `sameSite: "none"`).
+  - Session expiration set to **60 minutes** (`sessionExpiresIn: new TimeSpan(60, "m")`).
+- Session cookies are automatically refreshed if marked as fresh.
+
+---
+
+#### **3. API Authentication Flow**
+
+1. **Login via Card:**
+   - `POST /users/:cardNum`
+     - Validates the card number (truncated and last digit check).
+     - If valid, creates a Lucia session.
+     - Sets session cookie in the response.
+
+2. **Logout:**
+   - `POST /logout`
+     - Invalidates the session.
+     - Clears the session cookie.
+
+3. **JHU SSO Login:**
+   - `GET /jhu/login` – Redirects user to the JHU SSO page.
+   - `POST /jhu/login/callback` – Processes the SAML response and creates a session.
+   - `GET /jhu/metadata` – Serves SP metadata for JHU IdP configuration.
+
+---
+
+#### **4. Middleware Guards**
+
+- **auth:**
+  - Reads and validates session from the request cookie.
+  - Sets `user` and `session` in the request context.
+  - Refreshes session cookies as needed.
+
+- **authGuard:**
+  - Ensures that a valid user session exists.
+  - Returns 401 Unauthorized if missing.
+
+- **adminGuard:**
+  - Ensures that the authenticated user has `isAdmin` privileges.
+  - Returns 403 Forbidden for non-admins.
+
+---
+
+#### **5. Security Considerations**
+- All session cookies are:
+  - **Secure** – Ensures transmission over HTTPS only.
+  - **SameSite=none** – Required for cross-site cookie transmission (e.g., different frontend/backend domains).
+- Authentication routes throw appropriate HTTP errors (`401`, `403`, `404`) for unauthorized or invalid requests.
+
+---
+
+#### **6. Future Enhancements**
+- Integration of **password-based admin logins** with reset capabilities.
+- Extended session time configuration for specific user roles (e.g., admin vs. standard user).
+- Enhanced SAML logout support (`singleLogoutService`) for better SSO compliance.
+
+
 ### 5.3 Core Functionality
+
+The WSE Interlock system is designed to manage user access, machine control, and financial tracking in a university machine shop environment. The core functionalities are divided into three key user roles: **Users**, **Administrators**, and **Machine Interfaces**.
+
+---
+
+#### **1. User Role**
+
+- **Card-Based Access:**
+  - Users swipe or enter their JCard number to authenticate.
+  - Authorized users proceed to the **Interlock Page**.
+
+- **Budget Code Selection:**
+  - Users select an assigned **Budget Code** before starting the machine.
+  - The system ensures that only users with valid budget codes can proceed.
+
+- **Machine Operation:**
+  - After budget selection, the **Turn-On** signal is sent to the Machine API.
+  - A **Timer** tracks the usage for billing.
+
+- **Maintenance Issue Reporting:**
+  - Users can report issues at any point (before, during, or after machine use).
+  - Reports are logged and marked for admin resolution.
+
+---
+
+#### **2. Administrator Role**
+
+- **Admin Dashboard Access:**
+  - Admins log in through the kiosk or web app.
+  - Access to **Users**, **Budget Codes**, **Machines**, **Machine Issues**, and **Financial Statements**.
+
+- **User Management:**
+  - Add, edit, delete, and deactivate users.
+  - Assign budget codes and machine access permissions.
+
+- **Machine Management:**
+  - Add or deactivate machines.
+  - Assign machine types and hourly rates.
+
+- **Financial Statements:**
+  - Generate and view detailed statements.
+  - Automate monthly email reporting.
+
+- **Machine Issues:**
+  - View reported issues.
+  - Resolve issues and track their status.
+
+---
+
+#### **3. Machine Interface (Raspberry Pi)**
+
+- **Machine Identification:**
+  - Machines are associated during first-time setup via the **MachineLogin** page.
+
+- **Start/Stop Control:**
+  - Receives **Turn-On/Turn-Off** signals based on user authentication.
+  - Tracks usage time for billing.
+
+---
 
 ### 5.4 Advanced Features
 
+In addition to the core functionality, the system provides several advanced features for enhanced usability and administration.
+
+---
+
+#### **1. JHU SAML Single Sign-On (SSO):**
+- Users and admins can authenticate using JHU credentials.
+- Provides a passwordless login option linked to university identity.
+
+---
+
+#### **2. Automated Financial Reporting:**
+- Admins can schedule monthly reports to be emailed automatically.
+- Reports include detailed machine usage and billing breakdowns.
+
+---
+
+#### **3. Offline Mode:**
+- When the system detects a lost server connection, it prompts users to switch to **Offline Mode**.
+- Basic functionalities are preserved, and data syncs when connection is restored.
+
+---
+
+#### **4. Dynamic Machine Assignment:**
+- Machines without prior assignment can dynamically select their identity from available machines in the system.
+- Simplifies setup for Raspberry Pi machine interfaces.
+
+---
+
+#### **5. Fine-Grained Authorization:**
+- Admins can:
+  - Temporarily ban users or clubs.
+  - Set expiration for budget codes.
+  - Deactivate machines as needed.
+
+---
+
 ### 5.5 Troubleshooting
+
+Below are possible issues and suggested resolutions when using the WSE Interlock system.
+
+---
+
+#### **1. User Login Issues:**
+- **Problem:** Card swipe not recognized.
+  - **Solution:** Ensure the card number is entered correctly, including any prefix/suffix characters.
+
+- **Problem:** Invalid User error.
+  - **Solution:** User might not be registered. Admins can check the user table via the dashboard.
+
+---
+
+#### **2. Machine Not Turning On:**
+- **Problem:** Turn-On signal not received.
+  - **Solution:** Check the Machine API server (ensure `python server.py` is running in the correct Conda environment).
+
+- **Problem:** Machine not associated.
+  - **Solution:** Login via the web app and assign the machine using the **MachineLogin** interface.
+
+---
+
+#### **3. Financial Statement Errors:**
+- **Problem:** Incorrect billing time.
+  - **Solution:** Timer might not have synced correctly. Admins can manually adjust entries in the financial statements.
+
+---
+
+#### **4. Environment Configuration Errors:**
+- **Problem:** "null connection string" or database errors.
+  - **Solution:** Ensure `.env` files are correctly configured with no spaces around `=` signs and all required keys are present.
+
+---
+
+#### **5. Deployment Troubleshooting:**
+- **Problem:** Web app not loading.
+  - **Solution:** Ensure both the web frontend (`pnpm dev`) and backend API (`pnpm dev`) are running locally. Check Vercel deployments for production.
+
+---
+
+For additional help, refer to the logs in the terminal or consult your system administrator.
+
 
 ## API Documentation
 
@@ -493,4 +893,32 @@ As for the Front End, cases were varied depending on the component the End-to-En
 
 ## Glossary
 
-### 10.1 Terms and Definitions****
+### 10.1 Terms and Definitions
+
+| **Term**                   | **Definition**                                                                                      |
+|----------------------------|-----------------------------------------------------------------------------------------------------|
+| **Admin Dashboard**        | The interface used by administrators to manage users, machines, budget codes, and financial data.   |
+| **API (Application Programming Interface)** | A set of routes and protocols enabling communication between the frontend, backend, and machine interface. |
+| **Budget Code**            | A unique identifier assigned to students/clubs for billing machine usage.                          |
+| **Conda**                  | An open-source package and environment management system for Python, used for Machine API setup.   |
+| **Docker**                 | A platform used for developing, shipping, and running applications inside containers.               |
+| **Drizzle ORM**            | An Object-Relational Mapping tool used for interacting with PostgreSQL in a type-safe manner.       |
+| **End-to-End (E2E) Testing** | A testing method that verifies the complete flow of an application from start to finish.            |
+| **Financial Statement**    | A report summarizing the machine usage time and associated billing for a specific user or group.    |
+| **GPIO (General Purpose Input/Output)** | Pins on the Raspberry Pi used to control power to machines.                                |
+| **Interlock Interface**    | The user-facing system on each machine allowing login, budget code selection, and usage tracking.   |
+| **JCard**                  | The official identification card issued to Johns Hopkins University students and staff.             |
+| **JHED**                   | Johns Hopkins Enterprise Directory identifier used in SAML-based SSO authentication.               |
+| **Lucia Auth**             | Authentication and session management library used in the backend API.                             |
+| **Machine API**            | Python-based service running on Raspberry Pi devices to control and monitor machine usage.          |
+| **Machine Issue**          | A reported problem related to a machine's functionality, logged by users and resolved by admins.    |
+| **Middleware**             | Software functions that run before or after API route handlers to manage sessions, authentication, etc. |
+| **PostgreSQL**             | An open-source relational database used for storing users, machines, budgets, and financial data.   |
+| **Raspberry Pi**           | A small, affordable computer used to host the Machine API and control physical machines.            |
+| **SAML (Security Assertion Markup Language)** | A standard for exchanging authentication and authorization data between identity providers and service providers. |
+| **Session**                | A temporary state storing user login information during interaction with the system.                |
+| **Supabase**               | A backend-as-a-service providing managed PostgreSQL databases and API hosting.                      |
+| **Tailwind CSS**           | A utility-first CSS framework for quickly building custom user interfaces.                         |
+| **Vercel**                 | A platform for frontend and backend deployment, used to host the web and API components.            |
+| **Vite**                   | A fast development server and build tool for modern web projects.                                  |
+| **Zod**                    | A TypeScript-first schema validation library used for validating API inputs.                       |

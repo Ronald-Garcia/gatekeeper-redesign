@@ -87,8 +87,8 @@ const PaginationBar = ({loadFunction}: PagProps) => {
             )}
 
 
-            <PaginationItem data-cy = "pagination-next" onClick={handleClickNext}>
-            <PaginationNext href="#"/>
+            <PaginationItem onClick={handleClickNext}>
+            <PaginationNext data-cy = "pagination-next" href="#"/>
             </PaginationItem>
         </PaginationContent>
         </Pagination>

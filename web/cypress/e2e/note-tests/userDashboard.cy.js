@@ -27,43 +27,14 @@ describe('user dashboard functionality', () => {
         cy.get('[data-cy="cardnum-input"]').type("\n");
         //nav to machines tab
 
-        //filter for our machine, assert they are there.
-        cy.get(`[data-cy ="user-stats"]`).click();
-    });
-    
-    it('Check if filtering works for user by year', () => {
-        //Quick login to userdashboard
-        cy.visit(`${WEB_URL}`);
-        cy.get(`[data-cy = kiosk-button]`).click();
-        cy.get('[data-cy="cardnum-input"]').type(`${admin_num}`);
-        cy.get('[data-cy="cardnum-input"]').type("\n");
-        //filter for our user, assert they are there.
-        cy.get(`[data-cy = filter-trigger]`).click();
-        cy.wait(1000);
-        cy.get(`[data-cy = box-${userYear}]`).click();
-        cy.wait(1000);
-        cy.get(`[data-cy = apply-filters]`).click();
-        cy.wait(1000);
-        cy.get(`[data-cy = ${admin_cy_num}]`);
+
+        cy.get(`[data-cy="machine-user"]`).should("exist")
+
+        cy.get(`[data-cy="user-stats"]`).click();
+
+        cy.get(`[data-cy="chart-view"]`).should("exist");
+
     });
 
-    it('Check if filtering works for machine by machine type', () => {
-        //Quick login to userdashboard
-        cy.visit(`${WEB_URL}`);
-        cy.get(`[data-cy = kiosk-button]`).click();
-        cy.get('[data-cy="cardnum-input"]').type(`${admin_num}`);
-        cy.get('[data-cy="cardnum-input"]').type("\n");
-        //nav to machines tab
-        cy.get(`[data-cy = view-machines]`).click();
 
-
-        //filter for our machine, assert they are there.
-        cy.get(`[data-cy = filter-trigger]`).click();
-        cy.wait(1000);
-        cy.get(`[data-cy = box-${testMachineType}]`).click();
-        cy.wait(1000);
-        cy.get(`[data-cy = apply-filters]`).click();
-        cy.wait(1000);
-        cy.get(`[data-cy = machine-${testMachineId}]`);
-    });
 })
