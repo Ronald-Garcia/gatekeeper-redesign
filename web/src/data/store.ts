@@ -113,8 +113,8 @@ export function setHasMoreUserTrainings(hasMore: boolean) {
 }
 
 
-export function setDate(date: Date) {
-  $date.set(date);
+export function setDate(date: Date | undefined) {
+  $date.set(date === undefined ? new Date : date );
 }
 
 export function resetDate() {

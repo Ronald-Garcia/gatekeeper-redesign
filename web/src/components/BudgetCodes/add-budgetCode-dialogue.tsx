@@ -90,7 +90,6 @@ const AddBudgetCodeDialog = () => {
       setOpen(false);
       loadBudgets();
     } catch (error) {
-      console.error("Error adding budget code:", error);
     }
   };
 
