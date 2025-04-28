@@ -199,13 +199,16 @@ describe('User Routes (with auth/admin guard enabled)', () => {
       });
       const postBody = await postResponse.json();
       // created user is returned as an object.
+
+     
       const userId = postBody.data.id;
       if (!userId) {
         throw new Error("No user ID found in POST response");
       }
 
+
       // Delete the user by id.
-      const deleteResponse = await app.request(`/users/${userId}`, {
+      const deleteResponse = await app.request(`/users/${ postBody.data.id}`, {
         method: 'DELETE',
         headers: new Headers({ Cookie: adminCookie }),
       });
@@ -219,6 +222,8 @@ describe('User Routes (with auth/admin guard enabled)', () => {
         method: 'DELETE',
         headers: new Headers({ Cookie: adminCookie }),
       });
+
+      console.log(response)
       expect(response.status).toBe(404);
       const bodyResponse = await response.json();
       expect(bodyResponse).toHaveProperty('message', 'User not found');

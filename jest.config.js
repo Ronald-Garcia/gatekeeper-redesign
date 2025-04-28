@@ -2,6 +2,7 @@
 module.exports = {
   preset: "ts-jest/presets/default-esm", 
   testEnvironment: "node",
+  setupFiles: ["<rootDir>/jest.setup.ts"],
   transform: {
     "^.+\\.tsx?$": [
       "ts-jest",

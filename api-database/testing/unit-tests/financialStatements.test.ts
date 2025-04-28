@@ -299,7 +299,7 @@ describe("Financial Statement Routes", () => {
       expect(response.status).toBe(200);
       const body = await response.json();
       expect(body).toHaveProperty("success", true);
-      expect(body).toHaveProperty("message", `Automated email scheduled to run on day Tue Dec 31 2024 19:00:00 GMT-0500 (Eastern Standard Time) of every month at midnight.`);
+      expect(body).toHaveProperty("message", `Automated email scheduled to run on day Wed Jan 01 2025 00:00:00 GMT+0000 (Coordinated Universal Time) of every month at midnight.`);
     });
   });
 

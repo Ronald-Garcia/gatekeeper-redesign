@@ -10,7 +10,8 @@
       "types": ["jest", "node"]
     },
     "include":  [
-        "api-database/testing/unit-tests/**/*"
+        "api-database/testing/unit-tests/**/*",
+        "jest.setup.ts" 
       ],
   }
   
