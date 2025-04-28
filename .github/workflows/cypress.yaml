@@ -13,32 +13,30 @@ on:
   workflow_call:
       
 jobs:
-  
   cypress-run:
-    runs-on: ubuntu-latest
     container: cypress/included:14.3.2
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Run local host api
+      - name: Install pnpm
         run: |
-          cd api-database/
           npm install -g pnpm
-          npm install 
           pnpm install
-          pnpm dev &
+          cd api-database
+          pnpm install
+          cd ../web
+          pnpm install
+          cd ..
 
-      - name: Run local host web
+      - name: do API & Web & run Cypress
         run: |
-          cd web/
-          npm install -g pnpm
-          pnpm install 
-          pnpm add -D cypress
-          npm install -g wait-on 
-          pnpm dev & wait-on http://localhost:5173/
-     
-      - name: run cypress tests
-        run: |
-          cd web/
+          cd api-database
+          pnpm dev &       
+          cd ../web
+          pnpm dev &       
+          cd ..
+      
+          cd web
           npx cypress run
