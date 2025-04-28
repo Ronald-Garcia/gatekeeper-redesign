@@ -1209,9 +1209,19 @@ As for the Front End, cases were varied depending on the component the End-to-En
 
 ### 9.1 Deployment Process
 
+To deploy this application, both the database api and the web app are deployed automatically using github actions. 
+
+Before attempting to deploy to production, the actions will attempt to deploy a preview of both the web and the database api. If these previews fail, then the app will not be deployed to production. This is done to avoid destroying the live website and database api with a failed deployment. Additionally, for the database api to deploy, all of the jest tests for the application need to pass, as these test the api's expected functionality. 
+
+The web deployment action, while it does run the cypress tests, is not dependent on the cypress tests passing in order to deploy. This is because some of the cypress tests are guranteed not to work due to not having a local instance of a machine api server running. This is further discussed in section 9.3, Known Issues and Limitations.
+
+The lack of deployment for the machine api is intentional, as this api relies on interaction with the hardware on a machine to have any functionality. Because of this, it does not make sense for there to be a deployed version of this, since it would not serve any function.
+
 ### 9.2 Release Notes
+N/A, this is the first release of this application.
 
 ### 9.3 Known Issues and Limitations
+It is known that not all of the cypress tests pass on github actions because the current workflow does not create a new conda environment and then run the python server in the conda environment. This affects any of the end to end testing involving the interlock.
 
 ## Glossary
 
