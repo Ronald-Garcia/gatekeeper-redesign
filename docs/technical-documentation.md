@@ -248,9 +248,89 @@ Then, visit http://localhost:5173 to access the web app locally.
 
 ### 4.1 Configuration Parameters
 
+The application relies on several environment variables for its backend (api-database), frontend (web), and machine API. These parameters control database connections, server ports, email credentials, and integration URLs.
+
+#### Backend API (api-database) Environment Variables:
+
+- `PROD_DB_URL` – PostgreSQL connection string for production.
+  - Example: `postgresql://<db-username>:<password>@<host>:<port>/<database>`
+- `DATABASE_URL` – Active PostgreSQL database URL. This must match `PROD_DB_URL` or point to a local database.
+- `PORT` – Port on which the backend API will run locally (default is `3000`).
+- `EMAIL_USER` – Email address used for sending financial statements (e.g., `"wseinterlocks@gmail.com"`).
+- `EMAIL_PASS` – App password for the above email (Google App Passwords if using Gmail).
+
+#### Frontend (web) Environment Variables:
+
+- `VITE_API_DB_URL` – URL pointing to the backend API.
+  - Example (local): `"http://localhost:3000"`
+  - Example (deployed): `"https://interlock-api-database-v1.vercel.app/"`
+- `VITE_API_MACHINE_URL` – URL pointing to the local Machine API.
+  - Example: `"http://127.0.0.1:5000"`
+- `VITE_BASE_URL` – URL for the frontend app itself.
+  - Example (local): `"http://localhost:5173"`
+
+---
+
 ### 4.2 Environment Setup
 
+#### Backend API (`api-database/.env` Example):
+
+```env
+PROD_DB_URL="postgresql://<db-username>:<password>@<host>:<port>/<database>"
+DATABASE_URL="postgresql://<db-username>:<password>@<host>:<port>/<database>"
+PORT=3000
+EMAIL_USER="<your-email@example.com>"
+EMAIL_PASS="<your-email-app-password>"
+```
+
+### Frontend (web/.env Example):
+
+```env
+VITE_API_DB_URL="http://localhost:3000"
+VITE_API_MACHINE_URL="http://127.0.0.1:5000"
+VITE_BASE_URL="http://localhost:5173"
+```
+
+- Ensure no spaces around `=` signs in `.env` files.
+- Customize `EMAIL_USER` and `EMAIL_PASS` based on your SMTP settings.
+
+---
+
 ### 4.3 External Services Integration
+
+The application integrates with several external services:
+
+- **PostgreSQL Database:**
+  - Hosted on Supabase or any PostgreSQL-compatible service.
+  - Ensure correct credentials are set in `PROD_DB_URL` and `DATABASE_URL`.
+
+- **Email Service:**
+  - Utilizes SMTP credentials to send automated financial statements.
+  - If using Gmail:
+    - Enable 2-Factor Authentication.
+    - Generate an App Password and use it for `EMAIL_PASS`.
+
+- **Deployment Platforms:**
+  - **Vercel**:
+    - Used for deploying the frontend (`web`) and backend API (`api-database`) for production access.
+    - Environment variables should be configured in the Vercel project settings.
+  - **Docker**:
+    - A Dockerized version of the Machine API is available.
+    - Pull the Docker image and run it locally or on a cloud VM.
+    - Useful for environments without direct access to Conda/Python.
+
+- **Anaconda (for Machine API)**:
+  - Required for running the Python-based Machine API.
+  - Use the provided `machine-api.yml` file to create the Conda environment.
+  - Example commands:
+    ```bash
+    conda env create -f machine-api.yml
+    conda activate machine-api
+    python server.py
+    ```
+
+---
+
 
 ## Usage Guide
 
