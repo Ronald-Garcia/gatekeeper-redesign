@@ -29,3 +29,12 @@ jobs:
           vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
           vercel deploy --token=${{ secrets.VERCEL_TOKEN }} --force
           vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} --force         
+
+      - name: install Vercel CLI
+        run: npm install --global vercel@latest
+      - name: Change directory, pull vercel info, then deploy that john
+        run: |
+          cd api-database/
+          vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+          vercel deploy --token=${{ secrets.VERCEL_TOKEN }}
+          vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }}            

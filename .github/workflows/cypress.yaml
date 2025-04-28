@@ -6,7 +6,7 @@ env:
   VITE_API_DB_URL: http://localhost:3000
   VITE_API_MACHINE_URL: http://localhost:5000
   VITE_BASE_URL: http://localhost:5173
-  DATABASE_URL: ${{ secrets.DATABASE_CREDENTIALS }}
+  TEST_DB_URL: ${{ secrets.DATABASE_CREDENTIALS }}
 
 on: 
   workflow_call:
@@ -14,7 +14,7 @@ on:
 jobs:
   
   cypress-run:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,7 +23,6 @@ jobs:
         run: |
           cd api-database/
           npm install -g pnpm
-          npm install
           pnpm install
           pnpm dev &
       - name: Run local host web
@@ -31,9 +30,8 @@ jobs:
           cd web/
           npm install -g pnpm
           npm install --save-dev cypress
-          npm install
           pnpm install
-          npm install -g wait-on 
+
           pnpm dev & wait-on http://localhost:5173/
       - name: Run cypress tests
         run: |
