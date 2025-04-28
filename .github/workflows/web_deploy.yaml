@@ -3,7 +3,6 @@ name: Deploy web to Vercel and test
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_WEB_ID }}
-  TEST_DB_URL: ${{ secrets.TEST_DB_URL }}
   VITE_API_DB_URL: http://localhost:3000
   VITE_API_MACHINE_URL: http://localhost:5000
   VITE_BASE_URL: http://localhost:5173
@@ -49,6 +48,8 @@ jobs:
           cd ..
 
       - name: do API & Web & run Cypress
+        env:
+          TEST_DB_URL: ${{ secrets.TEST_DB_URL }}
         run: |
           cd api-database
           pnpm dev &       
