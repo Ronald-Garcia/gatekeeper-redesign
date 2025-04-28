@@ -1005,7 +1005,7 @@ Set-Cookie: session=abc123xyz; Path=/; HttpOnly; Secure; SameSite=Strict
 ## Database Schema 
 
 ### 7.1 UML Diagram
-![image](https://github.com/user-attachments/assets/22f28c06-9cb6-41cf-9a6f-ee2e4cbb4864)
+![image](https://github.com/user-attachments/assets/c24451da-b23d-4d57-adf5-45679a2f3a2a)
 
 ### 7.2 Table Definitions
 **Table: users_table**
