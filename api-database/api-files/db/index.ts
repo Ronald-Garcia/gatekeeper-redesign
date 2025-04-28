@@ -12,7 +12,7 @@ if (!connectionString) {
 }
 
 export const client = postgres(connectionString, { prepare: false
-});
+}); 
 
 
     
