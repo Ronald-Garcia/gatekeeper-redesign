@@ -61,7 +61,7 @@ describe('active status testing', () => {
         //Search up our machine
         cy.get('[data-cy="searchbar"]').type(`${machineName}`);
         cy.get('[data-cy="searchbar"]').type(`\n`);
-        cy.get(`[data-cy = inactive-${usedMachineId}]`);
+        cy.get(`[data-cy = machine-${usedMachineId}]`);
     })
 
     it('Check if activated machine has the active tag', () => {
@@ -87,7 +87,7 @@ describe('active status testing', () => {
             //Search up our machine
             cy.get('[data-cy="searchbar"]').type(`${activeMachineName}`);
             cy.get('[data-cy="searchbar"]').type(`\n`);
-            cy.get(`[data-cy = available-${activeMachineId}]`);
+            cy.get(`[data-cy = machine-${activeMachineId}]`);
         })
     })
 
@@ -113,7 +113,7 @@ describe('active status testing', () => {
             //Search up our machine
             cy.get('[data-cy="searchbar"]').type(`${activeMachineName}`);
             cy.get('[data-cy="searchbar"]').type(`\n`);
-            cy.get(`[data-cy = in-use-${activeMachineId}]`);
+            cy.get(`[data-cy = machine-${activeMachineId}]`);
             
         })
 

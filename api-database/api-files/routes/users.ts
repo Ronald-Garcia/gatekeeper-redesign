@@ -305,11 +305,13 @@ userRoutes.delete(
             throw new HTTPException(404, { message: "User not found" });
         }
 
-        const statements = await db.delete(financialStatementsTable)
-                .where(eq(financialStatementsTable.userId, id)).returning()
+        // const statements = await db.delete(financialStatementsTable)
+        //         .where(eq(financialStatementsTable.userId, id)).returning()
             
-        const archivedStatements = await db.insert(archivedFinancialStatementsTable)
-                .values(statements).returning();
+        // if (statements.length === 0) {
+        //     const archivedStatements = await db.insert(archivedFinancialStatementsTable)
+        //     .values(statements).returning();
+        // }
 
 
         // if (no session) throw another error.

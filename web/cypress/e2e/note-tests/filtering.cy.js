@@ -31,11 +31,14 @@ describe('filter tests', () => {
         //filter for our machine, assert they are there.
         cy.get(`[data-cy = filter-trigger]`).click();
         cy.wait(1000);
-        cy.get(`[data-cy = box-${testCodeType}]`).click();
-        cy.wait(1000);
-        cy.get(`[data-cy = apply-filters]`).click();
-        cy.wait(1000);
-        cy.get(`[data-cy = budget-code-${testCodeId}]`);
+        cy.get(`[data-cy = box-${testCodeType}]`).check({ force: true}).should("be.checked").then(() => {
+            cy.wait(1000);
+            cy.get(`[data-cy = apply-filters]`).click();
+            cy.wait(1000);
+            cy.get('[data-cy="searchbar"]').clear().type(`${testCodeName}{enter}`);    
+            cy.get(`[data-cy = budget-code-${testCodeId}]`);
+
+        });
     });
     
     it('Check if filtering works for user by year', () => {
@@ -47,11 +50,14 @@ describe('filter tests', () => {
         //filter for our user, assert they are there.
         cy.get(`[data-cy = filter-trigger]`).click();
         cy.wait(1000);
-        cy.get(`[data-cy = box-${userYear}]`).click();
-        cy.wait(1000);
-        cy.get(`[data-cy = apply-filters]`).click();
-        cy.wait(1000);
-        cy.get(`[data-cy = ${admin_cy_num}]`);
+        cy.get(`[data-cy = box-${userYear}]`).click({ force: true }).then(() => {
+            cy.wait(1000);
+            cy.get(`[data-cy = apply-filters]`);
+            cy.get(`[data-cy = apply-filters]`).click();
+            cy.wait(1000);
+            cy.get('[data-cy="searchbar"]').clear().type(`${testUserName}{enter}`);    
+            cy.get(`[data-cy = ${admin_cy_num}]`);    
+        });
     });
 
     it('Check if filtering works for machine by machine type', () => {
@@ -67,10 +73,12 @@ describe('filter tests', () => {
         //filter for our machine, assert they are there.
         cy.get(`[data-cy = filter-trigger]`).click();
         cy.wait(1000);
-        cy.get(`[data-cy = box-${testMachineType}]`).click();
+        cy.get(`[data-cy = box-${testMachineType}]`).click({ force: true });
         cy.wait(1000);
         cy.get(`[data-cy = apply-filters]`).click();
         cy.wait(1000);
+        cy.get('[data-cy="searchbar"]').clear().type(`${testMachineName}{enter}`);    
+        
         cy.get(`[data-cy = machine-${testMachineId}]`);
     });
 })
