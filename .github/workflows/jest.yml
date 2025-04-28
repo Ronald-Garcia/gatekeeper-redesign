@@ -8,7 +8,7 @@ on:
   workflow_call:
 
 jobs:
-  deploy:
+  run_jest:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

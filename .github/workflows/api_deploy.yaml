@@ -3,6 +3,8 @@ name: Deploy api to Vercel
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_API_ID }}
+  TEST_DB_URL: ${{ secrets.TEST_DB_URL }}
+
 on:
   push:
   workflow_dispatch:
@@ -13,11 +15,27 @@ on:
 
       
 jobs:
-  deploy:
-    if: github.repository == 'cs421sp25-homework/team-10'
+
+  run_jest:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install dependencies in web and api database
+        run: |
+          npm install -g pnpm
+          pnpm install
+          cd web/
+          npm install -g pnpm
+          pnpm install
+          cd ..
+          cd api-database
+          npm install -g pnpm
+          pnpm install
+      - name: Install jest
+        run: pnpm install
+      - name: Run Jest tests
+        run: pnpm test
              
       - name: install Vercel CLI
         run: npm install --global vercel@latest
