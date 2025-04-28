@@ -9,7 +9,7 @@ export default function UserMachinesComponent() {
   const machineList = useStore($machines);
 
   return (
-        <div className="max-h-[20vh] p-4">
+        <div className="max-h-[20vh] p-4" data-cy="machine-user">
         {machineList.length === 0 ? (
         <p> No machines found. Please add some!  </p>
       ) : 

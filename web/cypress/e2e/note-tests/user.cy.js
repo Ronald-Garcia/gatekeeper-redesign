@@ -11,7 +11,23 @@ describe('Add user tests', () => {
     //Before each test, go to our locally running app and use the testing cardNum "1234567890777777"
     cy.visit('http://localhost:5173/kiosk')
 
-    cy.request(`${API_DB_URL}/users`)
+    cy.request({
+
+      url: `${API_DB_URL}/users/${test_user_cardnum}`,
+      failOnStatusCode: false,
+      method: "GET"
+
+    }).then((res) => {
+      if (res.status === 200) {
+        cy.request(`${API_DB_URL}/users/${admin_card_num}`)
+
+        cy.request({
+          url: `${API_DB_URL}/users/${res.body.id}`,
+          method: "DELETE",
+        });
+      }
+    })
+
 
     cy.get('[data-cy= "kiosk-button"]').click();
     cy.get('[data-cy="cardnum-input"]').type(`;${admin_card_num};`)
@@ -62,7 +78,7 @@ describe('Remove user tests', () => {
         .should("be.visible");
       
       // Open the user options to trigger deletion 
-      cy.get(`[data-cy="user-trigger-${test_user_cardnum}"]`).click();
+      cy.get(`[data-cy="user-trigger-${test_user_cardnum.substring(0,15)}"]`).click();
 
     // Get delete button and click it
     cy.get('[data-cy = "user-delete"]').click()
@@ -96,6 +112,7 @@ describe('Remove user tests', () => {
     //Switch to inactive tab and search here 
     cy.get('[data-cy="inactive-tab"]').click({ force: true });
     cy.get('[data-cy="searchbar"]').clear({ force: true }).type(`${test_user_name}\n`);
+    cy.wait(1000);
     cy.get(`[data-cy="${test_user_cardnum.substring(0,16)}"]`).should("be.visible");
 
 
@@ -104,6 +121,7 @@ describe('Remove user tests', () => {
 
     cy.wait(1000);
     cy.get(`[data-cy="user-trigger-${test_user_cardnum.substring(0,15)}"]`).click({ force: true });
+    cy.wait(1000);
     cy.get('[data-cy = "user-activate"]').click()
     cy.get('[data-cy = "user-activate-confirm"]').click()
 
