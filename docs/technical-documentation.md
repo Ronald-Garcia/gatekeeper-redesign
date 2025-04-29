@@ -1189,21 +1189,111 @@ As for the relationships, the following tables are related as follows :
 ## Testing
 
 ### 8.1 Test Plan
-Our testing in general was split into two large portions: End-to-End and Unit testing. In End-to-End testing we focused on testing general workflow of the application and data flow from the frontend to the backend and assert the front end responded approapiately. For unit testing, we focused on testing the functions and endponts on each route, ensuring proper responses were returned given various scenarios/inputs to assert proper functionality of the backend routes. 
+For backend testing, we aimed to test every route the api had available. For the end to end testing, we created tests to cover the main user stories. The test cases created are listed in the following section.
 
 ### 8.2 Test Cases
+Backend tests were as follows
+Budget Codes:
+- Testing GET route returns list of budget codes
+- GET returns 401 when not logged in
+- POST route creates a new budget code
+- POST route returns 401 when not logged in
+- POST route returns 403 when not logged in as admin
+- POST returns 403 when given invalid budget code type id
+- POST returns 409 if a budget code already exsists
+- PATCH is able to update an existing budget code
+- PATCH gives 404 if given invalid budget code id
+- DELETE deletes a given budget code by id
+- DELETE returns 404 when trying to delete a non-existent budget code
+- DELETE returns 401 if not logged in
+- DELETE returns 403 if user is not an admin
+- GET route filters by search, active flag, and budgetTypeId when provided 
+Budget Code Types:
+- GET returns list of budget code types
+- POST route creates a new budget code type and returns it
+- POST returns 409 if one with the same name already exists
+- DELETE deletes a budget code type and returns it
+- DELETE returns 404 if the id provided does not exist in the database
+- PATCH is able to update an existing budget code type's name and return it
+- PATCH returns a 404 if the budget code type's id does not exist in the database
+Financial Statements:
+- GET retuns list of financial statements
+- GET returns 401 if user is not logged in
+- GET returns 403 if the user is not an administrator
+- POST is able to create a new financial statement
+- POST returns 401 if the user is not logged in
+- POST statement for emails sends an email and returns 200
+- POST scheduleing email route returns a 200
+- DELETE route for the email scheduling returns a 200
+Machine Issues:
+- POST route for machine issues creates a new machine issue
+- PATCH route is able to update the resolution status of a machine issue
+- GET route returns the list of current machine issues
+Machines:
+- GET route returns a list of machines
+- GET returns 401 when no session is provided
+- GET machines/:machineid returns wheather or not a machine was found with that id in the database
+- GET machines/:machineid returns 401 when not using a session
+- POST creates a new machine when the user is logged in
+- POST returns 404 if the given machine type is not valid
+- PATCH is able to edit an existing machine by id to change its name, hourly rate, and active status
+- PATCH returns 404 on non existent machine
+- DELETE deletes a created machine
+- 404 on invalid machine
+- GET can be filtered by machine type, active flag, and name
+Machine Types:
+- GET returns a list of machine types
+- POST creates new machine type
+- POST returns 409 if the machine type already exists (name should be unique)
+- DELETE deletes a machine type
+- DELETE returns 404 on non existent machine type
+- PATCH can update a machine type name
+- PATCH returns 404 on non-existent machine type
+User Stats:
+- GET returns a correct aggregation of stats
+- GET can be filtered by budget code
+- GET can be filtered by machine type
+- GET can be changed to a monthy precision
+- GET can be changed to a weekly precision
+- GET can be changed to a hourly precision
+- GET can be changed to a minute precision
+- GET can be filtered with custom date ranges
+- GET returns empty array when no data is in range 
+Training Validation:
+- GET with user id and machine id as params returns 200 when the training exists
+- GET returns 404 when user does not exist
+- GET returns 404 when machine does not exist
+- GET returns 401 when user does not exist
+- GET returns 401 when user does not exist
+- GET with user id as param returns list of trainings the user has
+- POST trainings creates a training record
+- DELETE deletes a training record
+- PATCH updates a training record (either the user or the machine)
+Users:
+- GET returns list of users
+- POST creates a user
+- POST returns 409 if user you attempt to create has the same card number
+- GET with cardnum param returns if the user exists or not, and their information
+- DELETE with userid param deletes a user by id
+- DELETE returns 404 if the user does not exist
+- GET functions with searching 
+User Budget Code Relations:
+- GET with user id as param returns the user's list of budget codes
+- GET returns 404 if the user is not found
+- GET returns 401 if session is not found
+- POST creates a new user budget code relation, given you are signed in as an admin
+- POST returns 403 if not admin
+- POST returns 401 if no session
+- DELETE with param of user id and budget code id, deletes a user's budget code relation
+- DELETE returns 403 if not admin
+- DELETE returns 401 if no session
+- DELETE returns 404 if either user or machine does not exist
+- PATCH with param of user id updates a users budget code
+- PATCH returns 404 if the user is not found
+- PATCH returns 403 if not admin
+- PATCH returns 401 if no session
 
-In general, the backend routes had the following test cases: 
-404 Not found errors, 
-401 Unauthorized Errors, 
-403 Not Admin Error, 
-POST 201
-GET 200
-DELETE 200
-PATCH 200.
-
-As for the Front End, cases were varied depending on the component the End-to-End testing was setup for, however, in general the flow was 
-
+End-to-end:
 ### 8.3 Test Results
 
 ## Deployment
