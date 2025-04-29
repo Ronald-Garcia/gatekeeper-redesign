@@ -1313,8 +1313,82 @@ Users:
 - PATCH returns 401 if no session
 Backend unit testing:
 All 109 backend tests pass.
-End-to-end:
-### 8.3 Test Results
+
+#### End to End Testing: 
+
+The testing for the front end primarily focused on ensuring reliability of the workflow the user will undergo to interact with major features of the application. We focused on designing tests particularly for features that were used in the user stories implemented. The following comprehensive list includes all 34 test cases we throghly tested with cypress: 
+
+- **User Tests**
+  - Add a user and have it show up on the dashboard  
+  - Making a user inactive has them not show up on the dashboard in active tab, but yes on inactive tab  
+  - Activating a deactivated user displays them on active tab and removes them from inactive tab  
+  - Test pagination, scrolling to the next page displays appropriate next page  
+
+- **Training User Relation Tests**
+  - Add a training to a user  
+  - Turn off a training from a user  
+
+- **User Dashboard Functionality**
+  - Login to user dashboard and see machines  
+
+- **Machine Issue Reporting**
+  - Submit issue via QR and verify it in the kiosk dashboard  
+
+- **Active Status Testing**
+  - Check if inactivated machine has the inactive tag  
+  - Check if activated machine has the active tag  
+  - Check if activated machine has the “in use” tag after use  
+
+- **Machine Tests**
+  - Add a machine and have it show up on the dashboard  
+
+- **Machine Deletion Tests**
+  - Delete a machine and confirm it is removed from the dashboard  
+  - Activate a deactivated machine and verify it appears in active tab and is removed from inactive tab  
+
+- **Machine Pagination UI Test**
+  - Test pagination, scrolling to the next page displays appropriate next page  
+
+- **Kiosk Entry Tests**
+  - Able to type into input field (for current testing)  
+  - Displays kiosk when logging in as admin  
+  - Displays error when trying to log in as user  
+
+- **Interlock Page E2E**
+  - Allow a user with machine access to select a budget code and start the machine  
+  - Prevent a user without machine access from logging in  
+  - Allow a user with machine access to log into an active machine and begin use  
+  - Prevent a user without machine access from logging in (duplicate scenario)  
+  - Prevent a user with machine access from logging into an inactive machine  
+
+- **Financial Statements Tests**
+  - Log in as admin, navigate to Financial Statements, verify empty state, and click send email  
+  - Log in as admin, navigate to Financial Statements, set automated schedule for financial statements  
+
+- **Filter Tests**
+  - Check if filtering works for budget code by code type  
+  - Check if filtering works for user by year  
+  - Check if filtering works for machine by machine type  
+
+- **Budget Code Addition Tests**
+  - Add a budget code and have it show up on the dashboard  
+
+- **Budget Code Deletion Tests**
+  - Delete a budget code and confirm it is removed from the dashboard  
+  - Activate a deactivated budget code and verify it appears in active tab and is removed from inactive tab  
+
+- **Budget Code Pagination UI Test**
+  - Test pagination, scrolling to the next page displays appropriate next page  
+
+- **Budget Code User Relation Tests**
+  - Add a budget code to a user  
+  - Turn off a budget code from a user  
+
+
+#### Cypress Tests Results 
+
+After running the cypress tests, 28 out of the 34 tests passed. This is most likely due partly due to Cypress unpredictability in terms of consitency, however, 4 of these tests  cases, particularly those involving the machine api will fail as the test will attempt to communicate with the machine API, which is not deployed as it runs locally on a raspberry pi in the physical machine. 
+
 
 ## Deployment
 
