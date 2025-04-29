@@ -1311,7 +1311,8 @@ Users:
 - PATCH returns 404 if the user is not found
 - PATCH returns 403 if not admin
 - PATCH returns 401 if no session
-
+Backend unit testing:
+All 109 backend tests pass.
 End-to-end:
 ### 8.3 Test Results
 
