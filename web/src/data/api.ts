@@ -8,7 +8,7 @@ import { SortBudgetType, SortMachineType, SortType } from "./types/sort";
 import { financialStatement } from "./types/financialStatement";
 import { MetaType } from "./types/meta";
 import { MachineIssue } from "./types/machineIssues";
-import { userBudgetStats, userMachinesStats, userStats } from "./types/user-stats";
+import { userBudgetStats, userMachinesStats } from "./types/user-stats";
 import { PrecisionType } from "./types/precision-type";
 
 /**
@@ -596,14 +596,16 @@ export const deleteUserMachineRelation = async (training_id: number): Promise<{
 }
 
 
-export const updateBudgetCode = async (id:number, active:number) => {
+export const updateBudgetCode = async (id:number, active:number, code?: string, name?: string) => {
 
   const response = await fetch(`${API_DB_URL}/budget-codes/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
     body: JSON.stringify({
-      active
+      active,
+      code,
+      name
     })
   });
 

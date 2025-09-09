@@ -194,7 +194,7 @@ budgetCodesRoutes.patch("/budget-codes/:id",
     zValidator("json", updateBudgetCodeSchema), async (c)=>{
     const { id } = c.req.valid("param");
 
-    const { active } = c.req.valid("json");
+    const { active, code } = c.req.valid("json");
 
     const [budgetCodeCheck] = await db
         .select()
@@ -204,9 +204,26 @@ budgetCodesRoutes.patch("/budget-codes/:id",
         throw new HTTPException(404, { message: "Budget Code not found!"});
     }
 
+
+
+    if (code) {
+        const [budgetCodeCheck] = await db
+            .select({ code: budgetCodes.code})
+            .from(budgetCodes)
+            .where(eq(budgetCodes.code, code));
+        if (budgetCodeCheck) {
+            throw new HTTPException(409, {message:"Budget code already exists"})
+        }
+
+        
+
+    }
+
+
+
     const [bc] = await db
     .update(budgetCodes)
-    .set({active})
+    .set({active, code})
     .where(eq(budgetCodes.id, id))
     .returning();
 

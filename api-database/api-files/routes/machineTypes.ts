@@ -6,8 +6,6 @@ import { db } from "../db/index.js";
 import { HTTPException } from "hono/http-exception"
 import { createMachineTypeSchema, getMachineTypeSchema, queryTypesParamsSchema, updateMachineTypeSchema } from "../validators/machineTypeSchema.js";
 import { Context } from "../lib/context.js";
-import { adminGuard } from "../middleware/adminGuard.js";
-import { authGuard } from "../middleware/authGuard.js";
 
 /**
  * Routes for machine type operations.

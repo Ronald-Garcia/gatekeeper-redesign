@@ -1,10 +1,8 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { getStatementsOfUser, queryFinStatementParamsSchema } from "../validators/financialStatementSchemas.js";
-import { SQL, desc, asc, eq, and, count, gte, lte, sum, sql, inArray } from "drizzle-orm";
+import { SQL, asc, eq, and, count, gte, lte, sum, sql, inArray } from "drizzle-orm";
 import { budgetCodes, financialStatementsTable, machines, userBudgetCodeTable, userMachineType, users } from "../db/schema.js";
 import { db } from "../db/index.js";
-import { adminGuard } from "../middleware/adminGuard.js";
 import { authGuard } from "../middleware/authGuard.js";
 import { queryStatsParamsSchema } from "../validators/statsSchema.js";
 import { Context } from "../lib/context.js";

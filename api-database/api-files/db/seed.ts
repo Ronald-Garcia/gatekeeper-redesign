@@ -55,7 +55,7 @@ async function seed() {
     // const [task] = await db
     //   .insert(tasksTable)
     //   .values({
-    //     title,
+    //     title,t
     //     description,
     //     user_id: sampleUsers[Math.floor(Math.random() * 5)].id,
     //   })

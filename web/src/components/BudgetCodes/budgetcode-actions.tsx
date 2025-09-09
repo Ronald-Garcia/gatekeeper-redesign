@@ -32,6 +32,11 @@ import ActivateBudgetCodeDialog from "./activate-budgetcode";
       setShowDeleteBudgetCode(false);
     };
   
+
+    const handleEdit = () => {
+
+    }
+
     return (
       <div data-cy={`budget-code-actions-${budgetcode.id}`}>
       <DropdownMenu >
@@ -46,6 +51,10 @@ import ActivateBudgetCodeDialog from "./activate-budgetcode";
           </DropdownMenuItem>}
           {budgetcode.active === 0 && <DropdownMenuItem onClick={handleActivate} className="" data-cy={`budget-code-activate-${budgetcode.id}`} >
             Activate
+          </DropdownMenuItem>}
+
+          {budgetcode.active===1 && <DropdownMenuItem onClick={handleEdit} data-cy={`budget-code-edit-${budgetcode.id}`}>
+            Edit
           </DropdownMenuItem>}
         </DropdownMenuContent>
       </DropdownMenu>

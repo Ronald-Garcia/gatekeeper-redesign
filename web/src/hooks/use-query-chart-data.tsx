@@ -1,5 +1,5 @@
 import { getUserStatistics } from "@/data/api";
-import { $userChart, $date_range, setChartData, $filtered_chart, clearFilteredChart, $date, $userBudgetFilter, $machineTypeFilter, $currentUser, setTrainingQueue, addFunctionToChart } from "@/data/store";
+import { $userChart, $date_range, setChartData, $filtered_chart, clearFilteredChart, $date, $userBudgetFilter, $machineTypeFilter, $currentUser, addFunctionToChart } from "@/data/store";
 import { useStore } from "@nanostores/react";
 import { toast } from "./use-toast";
 import { useEffect, useState } from "react";

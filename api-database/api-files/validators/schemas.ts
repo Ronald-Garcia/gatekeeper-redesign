@@ -112,6 +112,7 @@ export const getBudgetCodeSchema = z.object({
 })
 
 export const updateBudgetCodeSchema = z.object({
-  active: z.coerce.number().int().min(0).max(1)
+  active: z.coerce.number().int().min(0).max(1),
+  code: z.string().min(0),
 })
   

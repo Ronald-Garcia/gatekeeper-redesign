@@ -33,7 +33,7 @@ const ActiveSearchDisplay = () => {
                 loadMachines();
                 break;
             case "userDashboardMachinesStatus":
-                loadMachines(undefined, undefined, undefined, undefined, undefined, -1);
+                loadMachines(undefined, undefined, undefined, undefined, undefined);
                 break;
             default:
         }

@@ -4,7 +4,7 @@ import { zValidator } from "@hono/zod-validator";
 import { getDateSchema, getTimeSchema, sendEmailSchema } from "../validators/emailSchemas.js";
 import { db } from "../db/index.js";
 import { budgetCodes, financialStatementsTable, machines, users } from "../db/schema.js";
-import { bree, transporter } from "../emails/index.js";
+import { bree } from "../emails/index.js";
 import writeXlsxFile from "write-excel-file/node";
 import { between, eq } from "drizzle-orm";
 import { adminGuard } from "../middleware/adminGuard.js";
@@ -14,6 +14,7 @@ import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import schedule from "node-schedule";
 
+import nodemailer from "nodemailer";
 
 let j: schedule.Job;
 /**
@@ -47,6 +48,7 @@ function getValidDate(year: number, month: number, day: number): Date {
 
 
 async function sendEmail(email: string, scheduled: boolean, user: string, startDate?:Date, endDate?:Date, date?:Date, ) : Promise<StatementType[]> {
+
 
    if(scheduled) {
 
@@ -117,13 +119,24 @@ async function sendEmail(email: string, scheduled: boolean, user: string, startD
 
       ]
 
+      const transporter = nodemailer.createTransport({
+          host: "smtp.gmail.com",
+          port: 465,
+          secure: true,
+          auth: {
+              user: process.env.EMAIL_USER,
+              pass: process.env.EMAIL_PASS
+          }
+      });
+
       const file = await writeXlsxFile(statements, {
         schema: excelSchema,
         buffer: true
       })
       
       // send the email with the financial statements
-      transporter.sendMail({
+      await new Promise((resolve, reject) => {
+        transporter.sendMail({
           to: email,
           subject: "Financial Statements",
           html: `<h1>Financial Statements</h1>\n<h2>Financial Statements from ${startDate} to ${endDate} were requested by ${user}` ,
@@ -131,7 +144,17 @@ async function sendEmail(email: string, scheduled: boolean, user: string, startD
             filename: "financialStatement.xlsx",
             content: file
           }]
-      })
+      }, (err, info) => {
+        if(err) {
+          console.error(err);
+          reject(err);
+        } else {
+          console.log(info);
+          resolve(info);
+        }
+        }
+      )
+    });
 
       return statements;
 }

@@ -47,9 +47,9 @@ function useMutationBudgetCodes() {
     }
   };
 
-  const modifyBudgetCode = async (codeId: number, active: number) => {
+  const modifyBudgetCode = async (codeId: number, active: number, code: string, name: string) => {
     try {
-      await updateBudgetCode(codeId, active);
+      await updateBudgetCode(codeId, active, code, name);
       toast({
         variant: "default",
         title: "✅ Success 😊!",
