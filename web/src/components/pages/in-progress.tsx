@@ -9,6 +9,7 @@ import { $router } from "@/data/router";
 import { $currentUser } from "@/data/store";
 import ReportFormModal from "@/components/modals/ReportFormModal"; 
 import useMutationMachines from "@/hooks/use-mutation-machines";
+import { turnOffMachine } from "@/data/api";
 
 const InProgress = () => {
     // Time, in seconds, that a financial statement is updated in.
@@ -66,6 +67,7 @@ const InProgress = () => {
             await updateStatement(time);
             const curDate = new Date();
             await modifyMachine(curMachine.name, curMachine.machineType.id, curMachine.hourlyRate, curMachine.id, 1, curDate );
+            await turnOffMachine()
         }
     redirectPage($router, "interlockLogin");
   };
