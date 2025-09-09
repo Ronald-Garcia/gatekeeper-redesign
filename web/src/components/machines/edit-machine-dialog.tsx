@@ -1,19 +1,16 @@
 import React, { useState } from "react";
 import {
-  Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-  DialogTrigger,
-  DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "../ui/input";
 import useMutationMachines from "@/hooks/use-mutation-machines";
 import useQueryMachines from "@/hooks/use-query-machines";
-import { $machine_types, $training_queue, clearTrainingQueue, toggleMachineTypeQueue } from "@/data/store";
+import { $machine_types, $training_queue, toggleMachineTypeQueue } from "@/data/store";
 import { useStore } from "@nanostores/react";
 import { ScrollArea } from "../ui/scroll-area";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";

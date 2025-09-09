@@ -42,7 +42,7 @@ const InProgress = () => {
     const handleCreation = async () => {
         await createStatement(0);
         const curDate = new Date();
-        await modifyMachine(curMachine.id, 1, curDate );
+        await modifyMachine(curMachine.name, curMachine.machineType.id, curMachine.hourlyRate, curMachine.id, 1, curDate );
         setMadeStatement(true);
     
     }
@@ -52,7 +52,7 @@ const InProgress = () => {
         } else if ((time % timeResolution === 0) && madeStatement){
             updateStatement(time);
             const curDate = new Date();
-            modifyMachine(curMachine.id, 1, curDate );
+            modifyMachine(curMachine.name, curMachine.machineType.id, curMachine.hourlyRate, curMachine.id, 1, curDate );
         }
 
     }, [time]);
@@ -63,9 +63,9 @@ const InProgress = () => {
 
   const onSubmit = async () => {
         if (time > 0) {
-        await updateStatement(time);
+            await updateStatement(time);
             const curDate = new Date();
-            await modifyMachine(curMachine.id, 1, curDate );    
+            await modifyMachine(curMachine.name, curMachine.machineType.id, curMachine.hourlyRate, curMachine.id, 1, curDate );
         }
     redirectPage($router, "interlockLogin");
   };
