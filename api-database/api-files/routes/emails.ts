@@ -4,7 +4,7 @@ import { zValidator } from "@hono/zod-validator";
 import { getDateSchema, getTimeSchema, sendEmailSchema } from "../validators/emailSchemas.js";
 import { db } from "../db/index.js";
 import { budgetCodes, financialStatementsTable, machines, users } from "../db/schema.js";
-import { bree, transporter } from "../emails/index.js";
+import nodemailer from "nodemailer"
 import writeXlsxFile from "write-excel-file/node";
 import { between, eq } from "drizzle-orm";
 import { adminGuard } from "../middleware/adminGuard.js";
@@ -121,7 +121,18 @@ async function sendEmail(email: string, scheduled: boolean, user: string, startD
         schema: excelSchema,
         buffer: true
       })
+
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS
+      }
+    });
       
+    await new Promise((resolve, reject) => {
       // send the email with the financial statements
       transporter.sendMail({
           to: email,
@@ -131,7 +142,15 @@ async function sendEmail(email: string, scheduled: boolean, user: string, startD
             filename: "financialStatement.xlsx",
             content: file
           }]
-      })
+      }, (err, info) => {
+        if (err) {
+          console.error(err);
+        } else {
+          console.log(info);
+          resolve(info);
+        }
+      })});
+
 
       return statements;
 }

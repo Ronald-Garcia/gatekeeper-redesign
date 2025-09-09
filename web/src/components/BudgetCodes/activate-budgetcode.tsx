@@ -29,7 +29,8 @@ const ActivateBudgetCodeDialog = ({
   //async function that handles activation logic
   const handleActivateBudgetCode = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    await modifyBudgetCode(budgetcode.id, 1);
+    budgetcode.active = 1
+    await modifyBudgetCode(budgetcode);
     loadBudgets();
     setShowActivateBudgetCode(false); //make the dialog disappear
   };

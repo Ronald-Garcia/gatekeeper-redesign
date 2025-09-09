@@ -131,6 +131,11 @@ export const getBudgetCodeSchema = z.object({
 })
 
 export const updateBudgetCodeSchema = z.object({
-  active: z.coerce.number().int().min(0).max(1)
+  active: z.coerce.number().int().min(0).max(1),
+  code: z.string().min(0),
+  name: z.string()
+    .min(1, "Name is required")
+    .max(100, "Name must be 100 characters or less"),
+  budgetCodeTypeId: z.coerce.number().positive().int()
 })
   

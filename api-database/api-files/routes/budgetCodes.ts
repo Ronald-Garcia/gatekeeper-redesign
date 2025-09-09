@@ -194,7 +194,7 @@ budgetCodesRoutes.patch("/budget-codes/:id",
     zValidator("json", updateBudgetCodeSchema), async (c)=>{
     const { id } = c.req.valid("param");
 
-    const { active } = c.req.valid("json");
+    const { active, budgetCodeTypeId, name, code } = c.req.valid("json");
 
     const [budgetCodeCheck] = await db
         .select()
@@ -206,7 +206,7 @@ budgetCodesRoutes.patch("/budget-codes/:id",
 
     const [bc] = await db
     .update(budgetCodes)
-    .set({active})
+    .set({active, name, code, budgetCodeTypeId})
     .where(eq(budgetCodes.id, id))
     .returning();
 

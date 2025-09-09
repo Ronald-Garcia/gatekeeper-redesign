@@ -601,14 +601,17 @@ export const deleteUserMachineRelation = async (training_id: number): Promise<{
 }
 
 
-export const updateBudgetCode = async (id:number, active:number) => {
+export const updateBudgetCode = async (budgetcode: BudgetCode) => {
 
-  const response = await fetch(`${API_DB_URL}/budget-codes/${id}`, {
+  const response = await fetch(`${API_DB_URL}/budget-codes/${budgetcode.id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
     body: JSON.stringify({
-      active
+      active: budgetcode.active,
+      name: budgetcode.name,
+      code: budgetcode.code,
+      budgetCodeTypeId: budgetcode.type.id,
     })
   });
 

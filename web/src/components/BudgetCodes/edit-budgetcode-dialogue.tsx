@@ -13,45 +13,30 @@ import { Input } from "../ui/input";
 import { useState, useEffect } from "react";
 import { BudgetCode } from "@/data/types/budgetCode";
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
-import { DialogClose } from "@radix-ui/react-dialog";
 import { $budgetCodeTypes, $budget_code_queue, toggleBudgetCodeQueue, clearBudgetCodeQueue } from "@/data/store";
 import { useStore } from "@nanostores/react";
 import { ScrollArea } from "../ui/scroll-area";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 
 // function that handles state of the dialogue, error handling from api
-const AddBudgetCodeDialog = () => {
-  const { addNewBudgetCode } = useMutationBudgetCodes();
-  const { loadBudgets, loadBudgetCodeType } = useQueryBudgets(false);
-  const [budgetCode, setbudgetCode] = useState("");
-  const [name, setName] = useState("");
+const EditBudgetCodeDialog = ({ budgetcode, setOpen }: { budgetcode: BudgetCode, setOpen: React.Dispatch<React.SetStateAction<boolean>> }) => {
+  const { modifyBudgetCode } = useMutationBudgetCodes();
+  const { loadBudgets } = useQueryBudgets(false);
+  const [budgetCode, setbudgetCode] = useState(budgetcode.code);
+  const [name, setName] = useState(budgetcode.name);
   const typeList = useStore($budgetCodeTypes);
   const budgetCodeQueue = useStore($budget_code_queue);
 
   // Load budget code types when component mounts
   useEffect(() => {
-    loadBudgetCodeType();
   }, []);
 
   // This is dialog component state management
-  const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState({
     name: false,
     code: false,
     budgetCodeTypeId: false
   });
-
-  const handleOpenClose = () => {
-    setOpen(!open);
-    // Reset errors when dialog closes
-    setErrors({
-      name: false,
-      code: false, 
-      budgetCodeTypeId: false
-    });
-    // Clear the budget code queue when dialog closes
-    clearBudgetCodeQueue();
-  }
 
   const validateFields = () => {
     const newErrors = {
@@ -65,7 +50,7 @@ const AddBudgetCodeDialog = () => {
   };
 
   //async function with editing logic, including error handling
-  const handleAddBudgetCode = async () => {
+  const handleModifyBudgetCode = async () => {
     if (!validateFields()) {
       return;
     }
@@ -80,13 +65,13 @@ const AddBudgetCodeDialog = () => {
       
       const newCode: BudgetCode = {
         code: budgetCode,
-        id: -1,
+        id: budgetcode.id,
         name: name,
         type: selectedType,
-        active: 0
+        active: 1
       }
       
-      await addNewBudgetCode(newCode);
+      await modifyBudgetCode(newCode);
       setOpen(false);
       loadBudgets();
     } catch (error) {
@@ -110,16 +95,11 @@ const AddBudgetCodeDialog = () => {
   }
 
   return (
-    <div data-cy="budget-code-add-dialog">
-      <Dialog open={open} onOpenChange={handleOpenClose}>
-        <DialogTrigger asChild>
-          <Button className="jhu-blue-button add-button h-[40px]" variant={"ghost"} size="default">
-            Add Budget Code
-          </Button>
-        </DialogTrigger>
+    <div data-cy="budget-code-edit-dialog">
+        
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add New BudgetCode</DialogTitle>
+            <DialogTitle>Modify the budget "{budgetcode.name}"</DialogTitle>
           </DialogHeader>
           <Label htmlFor="content" className="text-sm">
             Please fill out with the new budget code information:
@@ -128,6 +108,7 @@ const AddBudgetCodeDialog = () => {
             <Input
               onChange={handleOnChangeName}
               placeholder="Enter Name"
+              defaultValue={budgetcode.name}
               data-cy="enter-budget-name"
               className={errors.name ? "border-red-500" : ""}
             >
@@ -168,21 +149,19 @@ const AddBudgetCodeDialog = () => {
             <Input
               onChange={handleOnChangeCode}
               placeholder="Enter Budget Code"
+              defaultValue={budgetcode.code}
               data-cy="enter-budget-code"
               className={errors.code ? "border-red-500" : ""}
             >
             </Input>
           </div>
           <DialogFooter>
-            <DialogClose asChild>
-              <Button className="jhu-white-button" variant={"ghost"} data-cy="budget-code-add-cancel">Cancel</Button>
-            </DialogClose>
-            <Button className="jhu-blue-button" variant={"ghost"} data-cy="budget-code-add-confirm" onClick={handleAddBudgetCode}>Save Changes</Button>
+            <Button className="jhu-white-button" variant={"ghost"} data-cy="budget-code-edit-cancel" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button className="jhu-blue-button" variant={"ghost"} data-cy="budget-code-edit-confirm" onClick={handleModifyBudgetCode}>Save Changes</Button>
           </DialogFooter>
         </DialogContent>
-      </Dialog>
     </div>
   );
 };
 
-export default AddBudgetCodeDialog;
+export default EditBudgetCodeDialog;
