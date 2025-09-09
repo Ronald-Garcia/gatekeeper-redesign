@@ -79,9 +79,9 @@ function useMutationMachines() {
     }
 
 
-  const modifyMachine = async (machine_id: number, active: number, lastTimeUsed?: Date) => {
+  const modifyMachine = async (machineName: string, type:number, rate:number, machine_id: number, active: number, lastTimeUsed?: Date) => {
     try {
-      await updateMachine(machine_id, active, lastTimeUsed);
+      await updateMachine(machineName, type, rate, machine_id, active, lastTimeUsed);
       toast({
         variant: "default",
         title: `✅ Success 😊!`, 

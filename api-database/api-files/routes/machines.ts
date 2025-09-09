@@ -308,14 +308,20 @@ machineRoutes.patch("/machines/:id",
     zValidator("json", updateMachineSchema), 
     async (c) => {
         const { id } = c.req.valid("param");
-        const { active,lastTimeUsed } = c.req.valid("json");
+        const { name, machineTypeId, active,lastTimeUsed, hourlyRate } = c.req.valid("json");
         const [machine] = await db.select().from(machines).where(eq(machines.id, id));
+
+        const [typeCheck] = await db.select().from(machineTypes).where(eq(machineTypes.id, machineTypeId));
+
+        if (!typeCheck) {
+            throw new HTTPException(404, { message: "Machine type not found."})
+        }
         
         if (!machine) {
             throw new HTTPException(404, { message: "Machine not found" });
         }
 
-        const [updatedMachine] = await db.update(machines).set({ active, lastTimeUsed }).where(eq(machines.id, id)).returning();
+        const [updatedMachine] = await db.update(machines).set({ active, lastTimeUsed, hourlyRate, name, machineTypeId }).where(eq(machines.id, id)).returning();
 
         return c.json({
             success: true,

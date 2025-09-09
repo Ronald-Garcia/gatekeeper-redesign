@@ -9,6 +9,9 @@ import { useState } from "react";
 import DeleteMachineDialog from "./delete-machine-dialogue";
 import { Machine } from "@/data/types/machine";
 import ActivateMachineDialog from "./activate-machine";
+import { Dialog } from "../ui/dialog";
+import { clearTrainingQueue, toggleMachineTypeQueue } from "@/data/store";
+import EditMachineDialog from "./edit-machine-dialog";
 
 
 type MachineActionsProps = {
@@ -16,6 +19,7 @@ type MachineActionsProps = {
 };
 
 export default function MachineActions({ machine }: MachineActionsProps) {
+   const [open, setOpen] = useState(false);
    const [ShowDeleteMachine, setShowDeleteMachine] = useState(false);
    const [ShowActiveStatus, setShowActiveMachine] = useState(false);
   // const [ShowMaintenanceMachine, setShowMaintenanceMachine] = useState(false);
@@ -46,7 +50,8 @@ export default function MachineActions({ machine }: MachineActionsProps) {
   return (
     <div data-cy={`machine-actions-${machine.id}`}>
 
-      
+      <Dialog open={open}>
+
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -63,13 +68,16 @@ export default function MachineActions({ machine }: MachineActionsProps) {
         <DropdownMenuItem onClick={handleMaintenance} data-cy={`machine-maintenance-${machine.id}`} className="delete-text-red">
           Maintenance
         </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => {setOpen(true); clearTrainingQueue(); toggleMachineTypeQueue(machine.machineType.id)}}>
+            Edit
+        </DropdownMenuItem>
         
       </DropdownMenuContent>
     </DropdownMenu>
 
 {ShowDeleteMachine && (
   <DeleteMachineDialog
-    machineId={machine.id}
+    machine={machine}
     setShowDeleteMachine={handleCloseDelete}
   />
 )}
@@ -82,6 +90,8 @@ export default function MachineActions({ machine }: MachineActionsProps) {
   </ActivateMachineDialog>
 )}
 
+      <EditMachineDialog machine={machine} setOpen={setOpen}></EditMachineDialog>
+      </Dialog>
      
     </div>
   );

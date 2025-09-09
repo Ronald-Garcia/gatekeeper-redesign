@@ -204,6 +204,16 @@ budgetCodesRoutes.patch("/budget-codes/:id",
         throw new HTTPException(404, { message: "Budget Code not found!"});
     }
 
+    const [typeCheck] = await db
+    .select()
+    .from(budgetCodeType)
+    .where(eq(budgetCodeType.id, budgetCodeTypeId));
+
+    if (!typeCheck) {
+        throw new HTTPException(404, { message: "Budget code type not found!"});
+    }
+
+
     const [bc] = await db
     .update(budgetCodes)
     .set({active, name, code, budgetCodeTypeId})

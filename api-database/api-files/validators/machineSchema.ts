@@ -36,7 +36,7 @@ export const createMachineSchema = z.object({
     lastTimeUsed: z.coerce.date().optional(),
 });
 
-export const updateMachineSchema = createMachineSchema.partial();
+export const updateMachineSchema = createMachineSchema;
 
 
 export const validateMachineIdSchema = z.object({
