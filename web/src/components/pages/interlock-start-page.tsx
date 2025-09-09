@@ -60,7 +60,7 @@ const InterlockStartPage = () => {
     <div className="items-center sign-in-container ">
       <div className="p-6 space-y-6 rounded-lg shadow-xl kiosk-card ">
         <h1 className="text-4xl font-bold text-center jhu-blue">
-          Swipe into Kiosk
+          Swipe into Machine
         </h1>
         <h2 className="text-lg text-center text-black">Please swipe your card number to sign in.</h2>
 
