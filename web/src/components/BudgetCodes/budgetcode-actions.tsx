@@ -9,7 +9,7 @@ import {
   import DeleteBudgetCodeDialog from "./delete-budgetCode-dialogue";
 import { BudgetCode } from "@/data/types/budgetCode";
 import ActivateBudgetCodeDialog from "./activate-budgetcode";
-import { Dialog, DialogTrigger } from "../ui/dialog";
+import { Dialog } from "../ui/dialog";
 import EditBudgetCodeDialog from "./edit-budgetcode-dialogue";
 import { clearBudgetCodeQueue, toggleBudgetCodeQueue } from "@/data/store";
 
