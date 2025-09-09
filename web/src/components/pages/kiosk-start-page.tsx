@@ -72,6 +72,7 @@ const KioskStartPage = () => {
             onKeyDown={handleSubmitOnEnter}
             className="border-2"
             data-cy="cardnum-input"
+            autoFocus={true}
           />
           
           <Button
