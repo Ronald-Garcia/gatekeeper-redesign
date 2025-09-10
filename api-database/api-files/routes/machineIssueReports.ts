@@ -82,7 +82,6 @@ machineIssueRoute.get(
 
 machineIssueRoute.post(
     "/machine-issues",
-    authGuard,
     inactivateGraduatedUsers,
     zValidator("json", createMachineIssueSchema),
     async (c) => {

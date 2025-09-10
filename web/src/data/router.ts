@@ -15,7 +15,7 @@ export const $router = createRouter({
   timer: `${BASE_URL}timer`,
   machineIssues: `${BASE_URL}issues`,
   reportForm: `${BASE_URL}form/:userId/:machineId`,
-  errorPage: `${BASE_URL}/404`,
+  errorPage: `${BASE_URL}404`,
   userDashboard: `${BASE_URL}user-dashboard`,
   userDashboardMachinesStatus: `${BASE_URL}user-dashboard/machines-status`,
   userDashboardUserStats: `${BASE_URL}user-dashboard/user-stats`,

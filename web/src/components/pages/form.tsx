@@ -3,9 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import useMutationMachineIssue from "@/hooks/use-mutation-machineIssue";
 import { Textarea } from "../ui/textarea";
-import useQueryMachines from "@/hooks/use-query-machines";
-import { useStore } from "@nanostores/react";
-import { $machine } from "@/data/store";
 import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
 
@@ -19,18 +16,10 @@ const FormPage = ({userId, machineId}: formProps) => {
   const [description, setDescription] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const { reportIssue  } = useMutationMachineIssue();
-  const { loadMachine } = useQueryMachines(false);
 
-  const [ gotMachine, setGotMachine] = useState(false);
 
   const userIdNum = Number(userId);
   const machineIdNum = Number(machineId);
-  const machine = useStore($machine);
-
-if (!gotMachine) {
-  setGotMachine(true);
-  loadMachine(machineIdNum);
-}
 
 const [formLengthError, setFormLengthError] = useState(false);
 
@@ -92,7 +81,7 @@ const handleOnChange = (e:React.ChangeEvent<HTMLTextAreaElement>) => {
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <p className="text-gray-600 ">
-            Reporting for machine <strong>{machine.name}</strong>
+            Reporting machine issue
           </p>
           <p className="text-red-500 ">
             {errorMessage}
