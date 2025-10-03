@@ -27,6 +27,7 @@ export const $date = atom<Date>(new Date());
 export const $hasMoreUserBudgets = atom<boolean>(false);
 export const $hasMoreUserTrainings = atom<boolean>(false);
 export const $currentPage = atom<number>(1);
+export const $currentPageMenu = atom<number>(1);
 export const $activeTab = atom<number>(1);
 export const $machine_issues = atom<MachineIssue[]>([]);
 export const $userTotalChart = atom<userStats[]>([]);
@@ -95,13 +96,16 @@ export function setActiveTab(tab: number) {
 export function setPage(p: number) {
   $currentPage.set(p);
 }
-
-export function incrementPage() {
-  $currentPage.set($currentPage.get() + 1);
+export function setMenuPage(p: number) {
+  $currentPageMenu.set(p);
 }
 
-export function decrementPage() {
-  $currentPage.set($currentPage.get() - 1);
+export function incrementPageMenu() {
+  $currentPage.set($currentPageMenu.get() + 1);
+}
+
+export function decrementPageMenu() {
+  $currentPage.set($currentPageMenu.get() - 1);
 }
 
 export function setHasMoreUserBudgets(hasMore: boolean) {

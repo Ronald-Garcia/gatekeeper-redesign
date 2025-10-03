@@ -1,4 +1,4 @@
-import { getAllUsers, getUser, validateTraining } from "@/data/api";
+import { getAllUsers, getUserCard, getUserJhed, validateTraining } from "@/data/api";
 import { $activeTab, $gradYearFilter, $machineTypeFilter, $userBudgetFilter, $users, 
   clearCurrentUser, 
   setCurrentUser, 
@@ -51,11 +51,84 @@ function useQueryUsers(reload: boolean) {
       }
     };
 
-  const validateUser = async (cardNum: number, callPython:number): Promise<"machine_login" | "users" | "start_page" | "interlock" | "kiosk" | "userDashboard" | "userDashboardMachinesStatus">  => {
+  const validateUserCard = async (cardNum: number, callPython:number): Promise<"machine_login" | "users" | "start_page" | "interlock" | "kiosk" | "userDashboard" | "userDashboardMachinesStatus">  => {
     try {
       const {
         data
-      }: { message: string, data: User } = await getUser(cardNum);
+      }: { message: string, data: User } = await getUserCard(cardNum);
+      if (!data) {
+        throw new Error("Could not find user! Please contact an admin to get registered.");
+      }
+
+      setCurrentUser(data);
+
+      let curMachine: Machine | "kiosk" | undefined | 0 
+      // Call python refers to calling the machine api backend. If we are not
+      // on a machine, aka we are online, don't call the machine-api, since it 
+      // does not exist. Just default to kiosk
+      if (callPython){
+        curMachine = await getSavedMachine();
+      } else {
+        // If we are in the user dashboard sign in, redirect that way. Otherwise, kiosk.
+        if(router?.route === "kiosk") {
+          curMachine = "kiosk";
+        } else if (router?.route === "userDashboard") {
+          return "userDashboardMachinesStatus"; 
+        }
+      }
+
+      // if curMachine === 0, then machine is inactive or not found
+      if (curMachine === 0) {
+        return (router!.route as "start_page" | "kiosk");
+      }
+
+      //If there is no env file and they are admin, let them choose a machine.
+      if (!curMachine) {
+        if (data.isAdmin) {
+          return "machine_login"
+        }
+
+        //Otherwise, throw an error.
+        throw new Error("This interlock is not set-up! Please contact an admin to set-up this interlock.");
+      }
+
+      //If the machine is a kiosk and user is admin, let them access.
+      if (curMachine === "kiosk" && data.isAdmin) {
+        return "users";
+      } else if (curMachine === "kiosk") {
+        throw new Error("This machine is only accessible for admins!");
+      }
+
+      //Otherwise, we have a machine, and need to validate them.
+      const { data: ableToUse } = await validateTraining(data.id, curMachine.id);
+
+      if (!ableToUse) {
+        throw new Error("User does not have access to this machine!");
+      }
+
+
+      // If here, we have a non kiosk machine and are able to use it. Redirect to interlock
+      const ret = "interlock";
+      return ret;
+
+    } catch (e) { //If there was an error anywhere, redirect to the start page.
+      clearCurrentUser();
+      const errorMessage = (e as Error).message;
+      toast({
+        variant: "destructive",
+        title: "❌ Sorry! There was an error; please see an admin for help 🙁",
+        description: errorMessage
+      });
+      return (router!.route as "start_page" | "kiosk");
+    }
+  }
+
+
+  const validateUserJHED = async (jhed: string, callPython:number): Promise<"machine_login" | "users" | "start_page" | "interlock" | "kiosk" | "userDashboard" | "userDashboardMachinesStatus">  => {
+    try {
+      const {
+        data
+      }: { message: string, data: User } = await getUserJhed(jhed);
       if (!data) {
         throw new Error("Could not find user! Please contact an admin to get registered.");
       }
@@ -130,7 +203,7 @@ function useQueryUsers(reload: boolean) {
     }
   }, []);
 
-  return { users, loadUsers, validateUser };
+  return { users, loadUsers, validateUserCard, validateUserJHED };
 }
 
 export default useQueryUsers;

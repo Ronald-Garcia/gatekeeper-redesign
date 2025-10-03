@@ -1,6 +1,6 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { queryUsersParamsSchema, createUserSchema, getUserSchema, getUserByCardNumSchema, enableUserSchema } from "../validators/schemas.js";
+import { queryUsersParamsSchema, createUserSchema, getUserSchema, getUserByCardNumSchema, enableUserSchema, getUserByJHED } from "../validators/schemas.js";
 import { SQL, or, desc, asc, eq, and, count, ilike, gt, exists, inArray } from "drizzle-orm";
 import { archivedFinancialStatementsTable, financialStatementsTable, userBudgetCodeTable, userMachineType, users } from "../db/schema.js";
 import { db } from "../db/index.js";
@@ -338,7 +338,7 @@ userRoutes.patch("/users/:id",
     zValidator("json", enableUserSchema),
     async (c) => {
         const { id } = c.req.valid("param");
-        const { active, graduationYear, timeoutDate } = c.req.valid("json");
+        const { active, graduationYear, timeoutDate, admin } = c.req.valid("json");
         const [user] = await db.select().from(users).where(eq(users.id, id));
         
 
@@ -352,7 +352,7 @@ userRoutes.patch("/users/:id",
             }
         }
 
-        const [updatedUser] = await db.update(users).set({ active, graduationYear: graduationYear === undefined ? null : graduationYear, timeoutDate: (timeoutDate === undefined || active === 1) ? null : timeoutDate }).where(eq(users.id, id)).returning();
+        const [updatedUser] = await db.update(users).set({ active, graduationYear: graduationYear === undefined ? null : graduationYear, timeoutDate: (timeoutDate === undefined || active === 1) ? null : timeoutDate, isAdmin: admin }).where(eq(users.id, id)).returning();
 
         return c.json({
             success: true,
@@ -361,3 +361,35 @@ userRoutes.patch("/users/:id",
         });
     }
 )
+
+//Sign in a user by id.
+userRoutes.get("/users-jhed/:jhed", 
+    zValidator("param",getUserByJHED), 
+    inactivateGraduatedUsers,
+    timeoutUserHandle,
+    async(c) => {
+   //Given you have a well formed card number, check if that card num exists in user table.
+   const { jhed } = c.req.valid("param");
+  
+  
+   let [user] = await db
+       .select()
+       .from(users)
+       .where(and(eq(users.JHED, jhed), eq(users.active, 1)));
+  
+    // Create a session using Lucia.
+     const session = await lucia.createSession(user.id, {});
+     // Create a session cookie.
+     const sessionCookie = lucia.createSessionCookie(session.id);
+     // Set the cookie in the response headers.
+     c.header("Set-Cookie", sessionCookie.serialize(), { append: true });
+     
+     appendLastNum(user);
+     
+     return c.json({
+       success: true,
+       message: "User has been validated in",
+       data:user
+     });
+  })
+  

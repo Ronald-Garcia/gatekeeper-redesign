@@ -6,7 +6,7 @@ import { db } from "../db/index.js";
 import { budgetCodes, financialStatementsTable, machines, users } from "../db/schema.js";
 import nodemailer from "nodemailer"
 import writeXlsxFile from "write-excel-file/node";
-import { between, eq } from "drizzle-orm";
+import { and, between, eq } from "drizzle-orm";
 import { adminGuard } from "../middleware/adminGuard.js";
 import { HTTPException } from "hono/http-exception";
 import Bree from "bree"; 
@@ -66,9 +66,42 @@ async function sendEmail(email: string, scheduled: boolean, user: string, startD
    if (!startDate || ! endDate) {
     throw new HTTPException(500, { message: "Dates undefined" });
    }
-  
-      // query the financial statements table for the specified date range with the user, budget code, and machine information
-      const statements = await db.select({
+
+
+   const allMachines = await db.select().from(machines);
+
+//   const data = await new Promise(async (resolve, reject) => {
+//     const results = await allMachines.map(async (mach) => {
+//       // query the financial statements table for the specified date range with the user, budget code, and machine information
+//       const statements = await db.select({
+//         user: {
+//           JHED: users.JHED
+//         },
+//         budgetCode: {
+//           name: budgetCodes.name,
+//           code: budgetCodes.code
+//         },
+//         machine: {
+//           name: machines.name,
+//           hourlyRate: machines.hourlyRate
+//         },
+//         dateAdded: financialStatementsTable.dateAdded,
+//         timeSpent: financialStatementsTable.timeSpent
+//       }).from(financialStatementsTable)
+//                                       .innerJoin(users, eq(users.id, financialStatementsTable.userId))
+//                                       .innerJoin(budgetCodes, eq(budgetCodes.id, financialStatementsTable.budgetCode))
+//                                       .innerJoin(machines, eq(machines.id, financialStatementsTable.machineId))
+//                                       .where(eq(financialStatementsTable.machineId, mach.id))
+//       return statements;
+//   })
+
+//   resolve(results);
+
+// });
+
+
+
+    const statements = await db.select({
         user: {
           JHED: users.JHED
         },
@@ -86,13 +119,18 @@ async function sendEmail(email: string, scheduled: boolean, user: string, startD
                                       .innerJoin(users, eq(users.id, financialStatementsTable.userId))
                                       .innerJoin(budgetCodes, eq(budgetCodes.id, financialStatementsTable.budgetCode))
                                       .innerJoin(machines, eq(machines.id, financialStatementsTable.machineId))
-                                      .where(between(financialStatementsTable.dateAdded, startDate, endDate));
+  // const sheets = allMachines.map(m => m.name)
 
       const excelSchema = [
         {
+          column: "Machine",
+          type: String,
+          value: (s: StatementType) => s.machine.name
+        },
+        {
           column: "Charge",
           type: Number,
-          value: (s: StatementType) => Math.round(s.timeSpent/60 / 15) * s.machine.hourlyRate
+          value: (s: StatementType) => Math.round(s.timeSpent/60 / 15) * s.machine.hourlyRate/4
         },
         {
           column: "Receiver Type",
@@ -117,12 +155,18 @@ async function sendEmail(email: string, scheduled: boolean, user: string, startD
 
       ]
 
+      // const test = await data.map(async d => await d);
+
+      
+      // console.log(test);
       const file = await writeXlsxFile(statements, {
         schema: excelSchema,
         buffer: true
       })
 
-    const transporter = nodemailer.createTransport({
+    
+      
+  const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 465,
       secure: true,
@@ -131,8 +175,8 @@ async function sendEmail(email: string, scheduled: boolean, user: string, startD
           pass: process.env.EMAIL_PASS
       }
     });
-      
-    await new Promise((resolve, reject) => {
+
+await new Promise((resolve, reject) => {
       // send the email with the financial statements
       transporter.sendMail({
           to: email,
@@ -153,10 +197,9 @@ async function sendEmail(email: string, scheduled: boolean, user: string, startD
 
 
       return statements;
-}
 
 
-
+    }
 
 
 

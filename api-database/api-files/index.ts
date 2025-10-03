@@ -19,6 +19,7 @@ import { budgetCodeType } from "./db/schema.js";
 import { budgetCodeTypeRoutes } from "./routes/budgetCodeTypes.js";
 import { statsRoutes } from "./routes/stats.js";
 import { HTTPValidationException } from "./validators/httpvalidationexception.js";
+import { adminPassKeyRoutes } from "./routes/adminPasskeyRoutes.js";
 
 
 const app = new Hono<Context>();
@@ -59,6 +60,7 @@ app.route("/", emailRoutes);
 app.route("/", machineIssueRoute);
 app.route("/", budgetCodeTypeRoutes);
 app.route("/", statsRoutes);
+app.route("/", adminPassKeyRoutes);
 
 app.onError((err, c) => {
   console.error(`${err}`);

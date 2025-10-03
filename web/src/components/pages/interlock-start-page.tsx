@@ -15,7 +15,7 @@ const InterlockStartPage = () => {
 
   const [cardNum, setCardNum] = useState("");
 
-  const { validateUser } = useQueryUsers(false);
+  const { validateUserCard } = useQueryUsers(false);
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCardNum(e.target.value);
@@ -29,7 +29,7 @@ const InterlockStartPage = () => {
       const newCardNum = cardNum.substring(1, cardNum.length - 1);
       
       e.currentTarget.value = "";
-      validateUser(Number.parseInt(newCardNum), callPython).then(s => {        
+      validateUserCard(Number.parseInt(newCardNum), callPython).then(s => {        
         redirectPage($router, s);
       });
     } else if (e.key === "Enter" && cardNum && cardNum.length == 16){
@@ -38,7 +38,7 @@ const InterlockStartPage = () => {
         const newCardNum = cardNum;
         
         e.currentTarget.value = "";
-        validateUser(Number.parseInt(newCardNum), callPython).then(s => {        
+        validateUserCard(Number.parseInt(newCardNum), callPython).then(s => {        
           redirectPage($router, s);
         });
     }
@@ -48,7 +48,7 @@ const InterlockStartPage = () => {
     const newCardNum = cardNum;
     const input = inputRef.current! ;
     input.value = "";
-      validateUser(Number.parseInt(newCardNum), callPython).then(s => {        
+      validateUserCard(Number.parseInt(newCardNum), callPython).then(s => {        
         redirectPage($router, s);
       });
     

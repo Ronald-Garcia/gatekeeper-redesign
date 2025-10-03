@@ -17,6 +17,7 @@ import { machineIssueRoute } from "../api-files/routes/machineIssueReports.js";
 import { emailRoutes } from "../api-files/routes/emails.js";
 import { budgetCodeTypeRoutes } from "../api-files/routes/budgetCodeTypes.js";
 import { statsRoutes } from "../api-files/routes/stats.js";
+import { adminPassKeyRoutes } from "../api-files/routes/adminPasskeyRoutes.js";
 
 
 const app = new Hono<Context>();
@@ -57,7 +58,7 @@ app.route("/", machineIssueRoute);
 app.route("/", emailRoutes);
 app.route("/", budgetCodeTypeRoutes);
 app.route("/", statsRoutes);
-
+app.route("/", adminPassKeyRoutes);
 
 app.onError((err, c) => {
   console.error(`${err}`);

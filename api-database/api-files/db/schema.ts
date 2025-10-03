@@ -32,6 +32,12 @@ export const users = pgTable("users_table", {
   timeoutDate: timestamp({ precision: 3, withTimezone: true }).defaultNow()
 });
 
+export const userAdminPass = pgTable("admin_passkeys", {
+  id: serial().primaryKey(),
+  userId: serial().notNull().references(() => users.id, {onDelete: "cascade"}),
+  pass: text().notNull()
+})
+
 /**
  * The table that stores the machines registered with the app.
  * @primary id            the database ID of the machine.
@@ -62,7 +68,7 @@ export const budgetCodeType = pgTable("budgetCodeType", {
  */
 export const budgetCodes = pgTable("budgetCodes" , {
   id: serial().primaryKey(),
-  code: text().notNull().unique(),
+  code: text().notNull(),
   name: text().notNull(),
   budgetCodeTypeId: serial().notNull().references(() => budgetCodeType.id, {onDelete:"cascade"}),
   active: integer().notNull().default(1)

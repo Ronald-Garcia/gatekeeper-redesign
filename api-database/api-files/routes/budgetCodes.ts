@@ -128,16 +128,6 @@ budgetCodesRoutes.post("/budget-codes",
         if (!budgetCodeCheck1) {
             throw new HTTPException(404, { message: "Invalid machine type" });
         }
-
-    //Check if there is a duplicate.
-    const [budgetCodeCheck] = await db
-    .select()
-    .from(budgetCodes)
-    .where(eq(budgetCodes.code, code))
-    if (budgetCodeCheck) {
-        throw new HTTPException(409, {message:"Budget code already exists"})
-    }
-
     //Insertion of new Budget Code
     const [newBudgetCode] = await db
         .insert(budgetCodes)

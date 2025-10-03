@@ -5,16 +5,69 @@ import { User } from "@/data/types/user";
 import { createUser, 
     createUserMachineRelation, 
     removeUser, 
-    getUser,
+    getUserCard,
     createUserBudgetCode,
     replaceBudgetsOfUser,
     replaceTrainingsOfUser,
-    updateUserStatus} from "@/data/api";
+    updateUserStatus,
+    setAdminPasskey,
+    validateAdminPass,
+    verifyAdminPass} from "@/data/api";
 import { useToast } from "./use-toast";
 
 //primarily has functions handling state of decks after app is loaded, pretty much what's on posts UI
 function useMutationUsers() {
   const { toast } = useToast();
+
+
+  const checkAdminPass = async (userId: number) => {
+    try {
+      const res = await validateAdminPass(userId);
+
+      return res;
+    } catch (e) {
+
+      const errorMessage = (e as Error).message;
+      toast({
+        variant: "destructive",
+        title: "❌ Sorry! There was an error checking 🙁",
+        description: errorMessage
+      })
+    }
+  }
+
+  const verifyAdminPasskey = async (userId: number, pass: string) => {
+    try {
+      const res = await verifyAdminPass(userId, pass);
+
+      return res;
+    } catch (e) {
+
+      const errorMessage = (e as Error).message;
+      toast({
+        variant: "destructive",
+        title: "❌ Sorry! There was an error checking 🙁",
+        description: errorMessage
+      })
+    }
+  }
+  const createAdminPasskey = async (userId: number, passkey: string) => {
+    try {
+      console.log(userId);
+      console.log(passkey);
+      await setAdminPasskey(userId, passkey);
+
+
+    } catch (e) {
+      const errorMessage = (e as Error).message;
+      toast({
+        variant: "destructive",
+        title: "❌ Sorry! There was an error logging in 🙁",
+        description: errorMessage
+      })
+    }
+  }
+
   const deleteUser = async (id: number) => {
     try {
       await removeUser(id); 
@@ -152,7 +205,7 @@ function useMutationUsers() {
 
   const fetchUser = async (card: number) => {
     try {
-      await getUser(card);
+      await getUserCard(card);
       toast({
         variant: "default",
         title: `✅ Success 😊!`,
@@ -168,19 +221,19 @@ function useMutationUsers() {
     }
   };
 
-  const modifyUser = async (user_id: number, active: number, graduationYear?: number, timeoutDate?: Date) => {
+  const modifyUser = async (user_id: number, active: number, graduationYear?: number, timeoutDate?: Date, admin: number = 0) => {
     try {
-      await updateUserStatus(user_id, active, graduationYear, timeoutDate);
+      await updateUserStatus(user_id, active, admin, graduationYear, timeoutDate);
       toast({
         variant: "default",
         title: `✅ Success 😊!`,
-        description: "User activated successfully!"
+        description: "User updated successfully!"
       })
     } catch (e) {
       const errorMessage = (e as Error).message;
       toast({
         variant: "destructive",
-        title: "❌ Sorry! There was an error activating a user 🙁",
+        title: "❌ Sorry! There was an error updating a user 🙁",
         description: errorMessage
       })
     }
@@ -195,7 +248,10 @@ function useMutationUsers() {
     fetchUser,
     setUserBudgetCodes,
     setUserTrainings,
-    modifyUser
+    modifyUser,
+    checkAdminPass,
+    createAdminPasskey,
+    verifyAdminPasskey
   };
 }
 

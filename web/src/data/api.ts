@@ -204,7 +204,7 @@ export const removeUser = async (id: number): Promise<{
  * @returns {Promise<{message: string; data: User}>} A promise that resolves with a message and the user data.
  * @throws {Error} If the response is not ok, throws an error with the response message.
  */
-export const getUser = async (cardNum: number): Promise<{
+export const getUserCard = async (cardNum: number): Promise<{
   message: string;
   data: User
 }> => {
@@ -215,6 +215,32 @@ export const getUser = async (cardNum: number): Promise<{
   }
 
   const response = await fetch(`${API_DB_URL}/users/${cardNums}`, {
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string, data: User } = await response.json();
+  
+  return { message, data };
+}
+
+
+/**
+ * Signs in a user based on the card number.
+ * @param {string} jhed - The card number of the user.
+ * @returns {Promise<{message: string; data: User}>} A promise that resolves with a message and the user data.
+ * @throws {Error} If the response is not ok, throws an error with the response message.
+ */
+export const getUserJhed = async (jhed: string): Promise<{
+  message: string;
+  data: User
+}> => {
+
+  const response = await fetch(`${API_DB_URL}/users-jhed/${jhed}`, {
     credentials: "include",
   });
 
@@ -1274,13 +1300,14 @@ export const updateMachineIssue = async (
 };
 
 
-export const updateUserStatus = async (id: number, active: number, graduationYear?: number, timeoutDate?: Date): Promise<{
+export const updateUserStatus = async (id: number, active: number, admin: number, graduationYear?: number, timeoutDate?: Date): Promise<{
   message: string,
   data: User
 }> => {
 
-  let body: {active: number, graduationYear?: number, timeoutDate?: Date} = {
+  let body: {active: number, admin: number, graduationYear?: number, timeoutDate?: Date} = {
     active,
+    admin,
     graduationYear: graduationYear,
     timeoutDate: timeoutDate
   }
@@ -1433,4 +1460,70 @@ export const getUserStatistics = async (
   const { message, data }: { message: string; data: { total: userStats[], budgetCode: userBudgetStats[], machine: userMachinesStats[]} } = await response.json();
 
   return { message, data };
+}
+
+export const setAdminPasskey = async (
+  userId: number,
+  passkey: string
+): Promise<boolean> => {
+
+  const response = await fetch(`${API_DB_URL}/admin/passkey`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      userId: userId,
+      passkey: passkey
+    })
+  });
+
+  
+  if (!response.ok) {
+    const {message} : {message:string} = await response.json();
+    throw new Error(message);
+  }
+
+  return true;
+
+}
+
+export const validateAdminPass = async (
+  userId: number,
+): Promise<boolean> => {
+
+  const response = await fetch(`${API_DB_URL}/admin/passkey/${userId}`);
+
+  if (!response.ok) {
+    const {message} : {message:string} = await response.json();
+    throw new Error(message);
+  }
+
+  const { data }: {data: boolean} = await response.json();
+
+  return data;
+
+}
+
+export const verifyAdminPass = async (
+  userId: number,
+  passkey: string
+): Promise<boolean> => {
+
+  const response = await fetch(`${API_DB_URL}/admin/passkey-verify`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      userId,
+      passkey,
+    })
+  });
+
+  if (!response.ok) {
+    const {message} : {message:string} = await response.json();
+    throw new Error(message);
+  }
+
+  const { data }: { data: boolean } = await response.json();
+
+  return data;
+
 }

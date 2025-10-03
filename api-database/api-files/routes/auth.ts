@@ -3,7 +3,7 @@ import { lucia } from "../db/auth.js";
 import { HTTPException } from "hono/http-exception";
 import { Context } from "../lib/context.js";
 import { zValidator } from "@hono/zod-validator";
-import { getUserByCardNumSchema } from "../validators/schemas.js";
+import { getUserByCardNumSchema, getUserByJHED } from "../validators/schemas.js";
 import { db } from "../db/index.js";
 import { users } from "../db/schema.js";
 import { and, eq } from "drizzle-orm";
@@ -11,6 +11,7 @@ import { appendLastNum } from "./users.js";
 import { ServiceProvider, IdentityProvider } from "samlify"; 
 import dotenv from 'dotenv';
 import { timeoutUserHandle } from "../middleware/timeoutHandle.js";
+import { inactivateGraduatedUsers } from "../middleware/gradYearRemoval.js";
 dotenv.config();
 
 
@@ -27,6 +28,39 @@ authRoutes.post("/logout", async (c) => {
   c.header("Set-Cookie", blankSessionCookie.serialize());
   return c.json({ success: true, message: "Signed out successfully" });
 });
+
+
+//Sign in a user by id.
+authRoutes.post("/users-jhed/:jhed", 
+    zValidator("param",getUserByJHED), 
+    inactivateGraduatedUsers,    
+    timeoutUserHandle,
+    async(c) => {
+   //Given you have a well formed card number, check if that card num exists in user table.
+   const { jhed } = c.req.valid("param");
+  
+  
+   let [user] = await db
+       .select()
+       .from(users)
+       .where(and(eq(users.JHED, jhed), eq(users.active, 1)));
+  
+    // Create a session using Lucia.
+     const session = await lucia.createSession(user.id, {});
+     // Create a session cookie.
+     const sessionCookie = lucia.createSessionCookie(session.id);
+     // Set the cookie in the response headers.
+     c.header("Set-Cookie", sessionCookie.serialize(), { append: true });
+     
+     appendLastNum(user);
+     
+     return c.json({
+       success: true,
+       message: "User has been validated in",
+       data:user
+     });
+  })
+  
 
 /**
  * Get user by card number.
@@ -56,7 +90,7 @@ authRoutes.post("/users/:cardNum",
  }
 
  // Check for a more recent jcard num. In this case, we will update the last digit with the new digit
- if (user.lastDigitOfCardNum > lastDigitOfCardNum) {
+ if (user.lastDigitOfCardNum < lastDigitOfCardNum) {
      [user] = await db
          .update(users)
          .set({lastDigitOfCardNum})
