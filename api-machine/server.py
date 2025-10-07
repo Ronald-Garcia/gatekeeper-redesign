@@ -32,7 +32,6 @@ def turn_on():
         sleep(0.1)
     
     print("Pulse received! Turning on GPIO20")
-    sleep(10)
     return {
         "success": True,
         "message": "s: Success!"
