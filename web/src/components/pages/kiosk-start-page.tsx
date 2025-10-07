@@ -53,6 +53,7 @@ const KioskStartPage = () => {
     const input = inputCardRef.current! ;
     input.value = "";
       validateUserCard(Number.parseInt(newCardNum), callPython).then(s => {        
+        return s;
       });
     
   }
@@ -62,7 +63,8 @@ const KioskStartPage = () => {
     const newJhed = jhed;
     const input = inputJhedRef.current! ;
     input.value = "";
-      validateUserJHED(newJhed, callPython).then(s => {        
+      validateUserJHED(newJhed, callPython).then(s => {       
+         return s;
       });
     
   }

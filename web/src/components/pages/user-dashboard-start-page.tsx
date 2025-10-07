@@ -16,7 +16,7 @@ const UserStartPage = () => {
 
   const [cardNum, setCardNum] = useState("");
 
-  const { validateUser } = useQueryUsers(false);
+  const { validateUserCard } = useQueryUsers(false);
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCardNum(e.target.value);
@@ -30,7 +30,7 @@ const UserStartPage = () => {
       const newCardNum = cardNum;
       
       e.currentTarget.value = "";
-      validateUser(Number.parseInt(newCardNum), callPython).then(s => {
+      validateUserCard(Number.parseInt(newCardNum), callPython).then(s => {
         if (s === "users") {
             setActiveTab(-1);
             redirectPage($router, "userDashboardMachinesStatus");   
@@ -46,7 +46,7 @@ const UserStartPage = () => {
       const newCardNum = cardNum;
       const input = inputRef.current! ;
       input.value = "";
-        validateUser(Number.parseInt(newCardNum), callPython).then(s => {        
+        validateUserCard(Number.parseInt(newCardNum), callPython).then(s => {        
           redirectPage($router, s);
         });
       

@@ -2,6 +2,7 @@ from flask import Flask, request
 import gpiozero
 from flask_cors import CORS, cross_origin
 import os
+from time import sleep
 
 app = Flask(__name__)
 
@@ -26,6 +27,9 @@ def turn_on():
         }
 
     led.on()
+
+    while not led.is_lit:
+        sleep(0.1)
     
     print("Pulse received! Turning on GPIO20")
 
@@ -41,6 +45,9 @@ def turn_off():
             "message": "Machine is currently already off!"
         }
     led.off()
+    while led.is_lit:
+        sleep(0.1)
+
     print("Pulse received! Turning off GPIO20")
     return {
         "success": True,

@@ -53,8 +53,7 @@ function useMutationUsers() {
   }
   const createAdminPasskey = async (userId: number, passkey: string) => {
     try {
-      console.log(userId);
-      console.log(passkey);
+
       await setAdminPasskey(userId, passkey);
 
 

@@ -24,7 +24,6 @@ adminPassKeyRoutes.post("/admin/passkey", zValidator("json", createAdminPasskeyR
 
     const {userId, passkey} = c.req.valid("json");
 
-    console.log({userId, passkey});
     const [check] = await db.select().from(users).where(eq(users.id, userId));
     
     if (!check || !check.isAdmin) {

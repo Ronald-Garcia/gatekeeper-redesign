@@ -31,9 +31,8 @@ authRoutes.post("/logout", async (c) => {
 
 
 //Sign in a user by id.
-authRoutes.post("/users-jhed/:jhed", 
+authRoutes.get("/users-jhed/:jhed", 
     zValidator("param",getUserByJHED), 
-    inactivateGraduatedUsers,    
     timeoutUserHandle,
     async(c) => {
    //Given you have a well formed card number, check if that card num exists in user table.

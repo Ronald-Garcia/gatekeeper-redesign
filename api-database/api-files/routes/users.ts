@@ -362,34 +362,3 @@ userRoutes.patch("/users/:id",
     }
 )
 
-//Sign in a user by id.
-userRoutes.get("/users-jhed/:jhed", 
-    zValidator("param",getUserByJHED), 
-    inactivateGraduatedUsers,
-    timeoutUserHandle,
-    async(c) => {
-   //Given you have a well formed card number, check if that card num exists in user table.
-   const { jhed } = c.req.valid("param");
-  
-  
-   let [user] = await db
-       .select()
-       .from(users)
-       .where(and(eq(users.JHED, jhed), eq(users.active, 1)));
-  
-    // Create a session using Lucia.
-     const session = await lucia.createSession(user.id, {});
-     // Create a session cookie.
-     const sessionCookie = lucia.createSessionCookie(session.id);
-     // Set the cookie in the response headers.
-     c.header("Set-Cookie", sessionCookie.serialize(), { append: true });
-     
-     appendLastNum(user);
-     
-     return c.json({
-       success: true,
-       message: "User has been validated in",
-       data:user
-     });
-  })
-  
