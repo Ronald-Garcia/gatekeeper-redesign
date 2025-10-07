@@ -67,8 +67,8 @@ const InProgress = () => {
             await updateStatement(time);
             const curDate = new Date();
             await modifyMachine(curMachine.name, curMachine.machineType.id, curMachine.hourlyRate, curMachine.id, 1, curDate );
-            await turnOffMachine()
-        }
+          }
+        await turnOffMachine()
     redirectPage($router, "interlockLogin");
   };
 ;
