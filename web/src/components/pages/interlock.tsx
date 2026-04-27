@@ -17,7 +17,7 @@ import {
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
 import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
-import { turnOffMachine, turnOnMachine } from "@/data/api";
+import { turnOnMachine } from "@/data/api";
 import ReportFormModal from "@/components/modals/ReportFormModal"; 
 
 /*
@@ -35,7 +35,6 @@ const Interlock = () => {
 
   const handleCancel = () => {
     clearCurrentUser();
-    turnOffMachine();
     redirectPage($router, "interlockLogin");
   };
 

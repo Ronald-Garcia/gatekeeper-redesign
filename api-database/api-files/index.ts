@@ -18,6 +18,8 @@ import { machineIssueRoute } from "./routes/machineIssueReports.js";
 import { budgetCodeType } from "./db/schema.js";
 import { budgetCodeTypeRoutes } from "./routes/budgetCodeTypes.js";
 import { statsRoutes } from "./routes/stats.js";
+import { HTTPValidationException } from "./validators/httpvalidationexception.js";
+import { adminPassKeyRoutes } from "./routes/adminPasskeyRoutes.js";
 
 
 const app = new Hono<Context>();
@@ -58,9 +60,42 @@ app.route("/", emailRoutes);
 app.route("/", machineIssueRoute);
 app.route("/", budgetCodeTypeRoutes);
 app.route("/", statsRoutes);
+app.route("/", adminPassKeyRoutes);
 
 app.onError((err, c) => {
   console.error(`${err}`);
+
+  if (err instanceof HTTPValidationException) {
+    const zodError = err.meta;
+    const response = {
+      success: false,
+      //detailed message that will be relayed to the user.
+      message: zodError.issues
+        .map((issue) => `${issue.path.join(".")} : ${issue.message}`)
+        .join(", "),
+      meta: {
+        issues: zodError.issues.map((issue) => {
+          const formattedResponse: any = {
+            code: issue.code,
+            path: issue.path,
+            message: issue.message,
+          };
+          //not all error messages have expected and received, but if they do include them properly in response
+
+          if ("expected" in issue) {
+            formattedResponse.expected = (issue as any).expected;
+          }
+          if ("received" in issue) {
+            formattedResponse.received = (issue as any).received;
+          }
+          return formattedResponse;
+        }),
+        name: zodError.name,
+      },
+    };
+
+    return c.json(response, err.status);
+  }
 
   if (err instanceof HTTPException) {
     return c.json({ message: err.message }, err.status);
@@ -77,5 +112,5 @@ export const PATCH = appHandler;
 export const DELETE = appHandler;
 export const OPTIONS = appHandler;
 
-
+ 
 export default app;

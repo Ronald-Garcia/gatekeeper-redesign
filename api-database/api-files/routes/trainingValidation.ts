@@ -268,6 +268,13 @@ trainingRoutes.patch("/trainings/:id",
 
             await db.delete(userMachineType).where(eq(userMachineType.userId, id));
 
+            if (validTypes.length === 0) {
+                return c.json({
+                    success: true,
+                    message: "Successfully replaced trainings of user.",
+                    data: []
+                })
+            }
 
             const bcs = await db.insert(userMachineType).values(machine_types.map(bc => {
                 return {

@@ -1,7 +1,7 @@
 import { getFinancialStatements } from "@/data/api";
 import {
   $date_range,
-  $statements,  
+  $statements, 
   setFinancialStatements,
   setMetaData,
  } from "@/data/store";
@@ -36,7 +36,6 @@ function useQueryStatements(reload: boolean) {
       });
     }
   };
-
   useEffect(() => {
     if (reload) {
       loadFinancialStatements();

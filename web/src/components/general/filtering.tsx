@@ -19,23 +19,18 @@ import useQueryUsers from "@/hooks/use-query-users";
 import useQueryMachines from "@/hooks/use-query-machines";
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
 import { filterConfigMap, FilterQueries } from "@/data/types/filter";
-
 type Props = {
   filters: FilterQueries[];
 };
-
 const GeneralizedFilter: React.FC<Props> = ({ filters }) => {
   const router = useStore($router);
-
   const { loadUsers } = useQueryUsers(false);
   const { loadMachines, loadMachineTypes } = useQueryMachines(false);
   const { loadBudgets, loadBudgetCodeType } = useQueryBudgets(false);
-
   const gradYear    = useStore($gradYearFilter);
   const userBudget  = useStore($userBudgetFilter);
   const machineType = useStore($machineTypeFilter);
   const budgetType  = useStore($budgetTypeFilter);
-
   //load options from other stores by querying db
   useEffect(() => {
     if (filters.includes("machineTypeId")) {
@@ -48,10 +43,9 @@ const GeneralizedFilter: React.FC<Props> = ({ filters }) => {
       loadBudgetCodeType();
     }
   }, []);
-
   //whenever any filter store changes, reset to page 1 and reload
   useEffect(() => {
-    if (!router) return;       
+    if (!router) return;
     setPagePag(1);
     switch (router.route) {
       case "users":
@@ -65,12 +59,10 @@ const GeneralizedFilter: React.FC<Props> = ({ filters }) => {
         break;
     }
   }, [gradYear, userBudget, machineType, budgetType]);
-
   //local state for the checkboxes inside the dialog
   const [localFilters, setLocalFilters] = useState<Record<string, Set<number>>>(
     {}
   );
-
   //sync localFilters from the stores whenever prop changes
   useEffect(() => {
     const initial: Record<string, Set<number>> = {};
@@ -86,7 +78,6 @@ const GeneralizedFilter: React.FC<Props> = ({ filters }) => {
     }
     setLocalFilters(initial);
   }, [filters]);
-
   const toggleCheckbox = (key: string, val: number) => {
     setLocalFilters((prev) => {
       const next = new Set(prev[key]);
@@ -95,7 +86,6 @@ const GeneralizedFilter: React.FC<Props> = ({ filters }) => {
       return { ...prev, [key]: next };
     });
   };
-
   // set nanostores
   const applyFilters = () => {
     for (const key of filters) {
@@ -112,7 +102,6 @@ const GeneralizedFilter: React.FC<Props> = ({ filters }) => {
       }
     }
   };
-
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -120,13 +109,12 @@ const GeneralizedFilter: React.FC<Props> = ({ filters }) => {
           Filter
         </Button>
       </DialogTrigger>
-      <DialogContent>
-        <div className="space-y-4">
+      <DialogContent className="w-full max-w-md max-h-[90vh] p-6 flex flex-col">
+      <div className="space-y-4 overflow-y-auto">
           {filters.map((key) => {
             const { label, getOptions } = filterConfigMap[key];
             const options = getOptions();
             const selected = localFilters[key] || new Set<number>();
-
             return (
               <div key={key}>
                 <p className="font-bold text-sm">{label}</p>
@@ -141,6 +129,7 @@ const GeneralizedFilter: React.FC<Props> = ({ filters }) => {
                       >
                         <input
                           type="checkbox"
+                          data-cy={`box-${opt.label}`}
                           checked={selected.has(val)}
                           onChange={() => toggleCheckbox(key, val)}
                         />
@@ -153,7 +142,7 @@ const GeneralizedFilter: React.FC<Props> = ({ filters }) => {
             );
           })}
         </div>
-        <div className="pt-4 flex justify-end">
+        <div className="mt-auto pt-4 flex justify-end border-t">
           <DialogClose asChild>
             <Button onClick={applyFilters} data-cy="apply-filters">
               Apply Filters
@@ -164,5 +153,4 @@ const GeneralizedFilter: React.FC<Props> = ({ filters }) => {
     </Dialog>
   );
 };
-
 export default GeneralizedFilter;

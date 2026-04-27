@@ -29,7 +29,8 @@ const ActivateMachineDialog = ({
   //async function that handles activation logic
   const handleActivateMachine = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    await modifyMachine(machine.id, 1);
+
+    await modifyMachine(machine.name, machine.machineType.id, machine.hourlyRate, machine.id, 1);
     loadMachines();
     setShowActivateMachine(false); //make the dialog disappear
   };

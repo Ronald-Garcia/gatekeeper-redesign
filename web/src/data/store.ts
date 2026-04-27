@@ -8,7 +8,13 @@ import { MachineIssue } from "./types/machineIssues"
 import { logger } from "@nanostores/logger"
 import { DateRange } from "react-day-picker";
 import { MetaType } from "./types/meta";
-import { userBudgetStats, userMachinesStats } from "./types/user-stats";
+import { userBudgetStats, userMachinesStats, userStats } from "./types/user-stats";
+import { PrecisionType } from "./types/precision-type";
+
+const defaultDateRange: DateRange = {
+  from: new Date( (new Date()).getFullYear() - ((new Date()).getMonth() === 0 ? 1 : 0) , (new Date()).getMonth() - 1, (new Date()).getDate()), 
+  to: new Date()
+}
 
 export const $users = atom<User[]>([]);
 export const $codes = atom<BudgetCode[]>([]);
@@ -16,27 +22,43 @@ export const $machines = atom<Machine[]>([]);
 export const $machine_types = atom<MachineType[]>([]);
 export const $budget_code_queue = atom<number[]>([]);
 export const $training_queue = atom<number[]>([]);
-export const $date_range = atom<DateRange | undefined>(undefined);
-export const $date = atom<Date | undefined>(undefined);
+export const $date_range = atom<DateRange>(defaultDateRange);
+export const $date = atom<Date>(new Date());
 export const $hasMoreUserBudgets = atom<boolean>(false);
 export const $hasMoreUserTrainings = atom<boolean>(false);
 export const $currentPage = atom<number>(1);
+export const $currentPageMenu = atom<number>(1);
 export const $activeTab = atom<number>(1);
 export const $machine_issues = atom<MachineIssue[]>([]);
-export const $userChart = atom<(userBudgetStats | userMachinesStats)[]>([]);
-export const $filtered_chart = atom<(userBudgetStats | userMachinesStats)[]>([]);
-export const $hour = atom<number>(-1);
+export const $userTotalChart = atom<userStats[]>([]);
+export const $userBudgetChart = atom<userBudgetStats[]>([]);
+export const $userMachineChart = atom<userMachinesStats[]>([]);
+export const $filtered_total_chart = atom<userStats[]>([]);
+export const $filtered_budget_chart = atom<userBudgetStats[]>([]);
+export const $filtered_machine_chart = atom<userMachinesStats[]>([]);
+export const $precision = atom<PrecisionType>("d")
 
-export function addFunctionToChart(func: userBudgetStats | userMachinesStats) {
-  $filtered_chart.set([...$filtered_chart.get(), func])
+
+export function setPrecision(p: PrecisionType)  {
+  $precision.set(p);
 }
 
-export function setHour(hour: number) {
-  $hour.set(hour % 24);
+export function clearPrecision() {
+  $precision.set("d");
 }
 
-export function resetHours() {
-  $hour.set(-1);
+
+export function addFunctionToMachineChart(func: userMachinesStats) {
+  if ($filtered_machine_chart.get().some(d => d.machineType === func.machineType)) {
+    return;
+  }
+  $filtered_machine_chart.set([...$filtered_machine_chart.get(), func])
+}
+export function addFunctionToBudgetChart(func: userBudgetStats) {
+  if ($filtered_budget_chart.get().some(d => d.budgetCode === func.budgetCode)) {
+    return;
+  }
+  $filtered_budget_chart.set([...$filtered_budget_chart.get(), func])
 }
 
 export function setMachineIssues(issues: MachineIssue[]) {
@@ -47,12 +69,24 @@ export function resetMachineIssues() {
 }
 export const $budgetCodeTypes = atom<budgetCodeType[]>([]);
 
-export function setFilteredChart(chart: (userBudgetStats | userMachinesStats)[]) {
-  $filtered_chart.set(chart);
+export function clearFilteredBudgetChart() {
+  $filtered_budget_chart.set([]);
+}
+export function clearFilteredMachineChart() {
+  $filtered_machine_chart.set([]);
+}
+export function clearFilteredTotalChart() {
+  $filtered_total_chart.set([]);
 }
 
-export function clearFilteredChart() {
-  $filtered_chart.set([]);
+export function clearBudgetChart() {
+  $userBudgetChart.set([]);
+}
+export function clearMachineChart() {
+  $userMachineChart.set([]);
+}
+export function clearTotalChart() {
+  $userTotalChart.set([]);
 }
 
 export function setActiveTab(tab: number) {
@@ -62,13 +96,16 @@ export function setActiveTab(tab: number) {
 export function setPage(p: number) {
   $currentPage.set(p);
 }
-
-export function incrementPage() {
-  $currentPage.set($currentPage.get() + 1);
+export function setMenuPage(p: number) {
+  $currentPageMenu.set(p);
 }
 
-export function decrementPage() {
-  $currentPage.set($currentPage.get() - 1);
+export function incrementPageMenu() {
+  $currentPage.set($currentPageMenu.get() + 1);
+}
+
+export function decrementPageMenu() {
+  $currentPage.set($currentPageMenu.get() - 1);
 }
 
 export function setHasMoreUserBudgets(hasMore: boolean) {
@@ -81,19 +118,19 @@ export function setHasMoreUserTrainings(hasMore: boolean) {
 
 
 export function setDate(date: Date | undefined) {
-  $date.set(date);
+  $date.set(date === undefined ? new Date : date );
 }
 
 export function resetDate() {
-  $date.set(undefined);
+  $date.set(new Date());
 }
 
-export function setDateRange(dateRange: DateRange | undefined) {
+export function setDateRange(dateRange: DateRange) {
   $date_range.set(dateRange);
 }
 
 export function resetDateRange() {
-  $date_range.set(undefined);
+  $date_range.set(defaultDateRange);
 }
 
 export function setBudgetCodeQueue(bcs: number[]) {
@@ -553,12 +590,33 @@ export function setTotal(total: number) {
   $total.set(total);
 }
 
-export function setChartData(data: (userBudgetStats | userMachinesStats)[]) {
-  $userChart.set(data);
+export function setTotalChartData(data: userStats[]) {
+  $userTotalChart.set(data);
+}
+export function setBudgetChartData(data: userBudgetStats[]) {
+  $userBudgetChart.set(data);
+}
+export function setMachineChartData(data: userMachinesStats[]) {
+  $userMachineChart.set(data);
+}
+export function setFilteredTotalChartData(data: userStats[]) {
+  $filtered_total_chart.set(data);
+}
+export function setFilteredBudgetChartData(data: userBudgetStats[]) {
+  $filtered_budget_chart.set(data);
+}
+export function setFilteredMachineChartData(data: userMachinesStats[]) {
+  $filtered_machine_chart.set(data);
 }
 
-export function resetChartData() {
-  $userChart.set([]);
+export function resetTotalChartData() {
+  $userTotalChart.set([]);
+}
+export function resetBudgetChartData() {
+  $userBudgetChart.set([]);
+}
+export function resetMachineChartData() {
+  $userMachineChart.set([]);
 }
 
 export const $max_page = atom<number>(1);
@@ -580,3 +638,5 @@ export function resetStores() {
   clearCurrentUser();
   setMixActive(false);
 }
+
+logger({ $currentUser, $filtered_budget_chart })

@@ -119,12 +119,12 @@ const SendFinancialStatementsDialog = () => {
                 <DialogFooter>
                     <DialogClose asChild>
                         <Button data-cy = "view-financial-statements" variant={"secondary"} onClick={handleGoToStatementsPage}>
-                            ...Or see them here!
+                            View statements
                         </Button>
                     </DialogClose>
                     <DialogClose asChild>
                         <Button data-cy= "close-financial-statements" variant={"secondary"}>
-                            Close
+                            Cancel
                         </Button>
                     </DialogClose>
                     <DialogClose asChild>

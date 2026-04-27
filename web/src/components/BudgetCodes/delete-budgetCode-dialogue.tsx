@@ -10,17 +10,18 @@ import {
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
 import useQueryBudgets from "@/hooks/use-query-budgetCodes";
+import { BudgetCode } from "@/data/types/budgetCode";
 
 
 //prop for handling state of the dialog
 type DeleteBudgetCodeDialogProp = {
-  budgetcodeId: number;
+  budgetcode: BudgetCode;
   setShowDeleteBudgetCode:  React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 //function that handles state of the dialog
 const DeleteBudgetCodeDialog = ({
-  budgetcodeId,
+  budgetcode,
   setShowDeleteBudgetCode,
 }: DeleteBudgetCodeDialogProp) => {
   const { modifyBudgetCode } = useMutationBudgetCodes();
@@ -31,7 +32,8 @@ const DeleteBudgetCodeDialog = ({
   //async function that handles deletion logic
   const handleDeleteBudgetCode = async (e: React.MouseEvent) => {
     e.stopPropagation();
-     await modifyBudgetCode(budgetcodeId, 0);
+    budgetcode.active = 0;
+     await modifyBudgetCode(budgetcode);
     setShowDeleteBudgetCode(false); //make the dialog disappear
     loadBudgets();
   };

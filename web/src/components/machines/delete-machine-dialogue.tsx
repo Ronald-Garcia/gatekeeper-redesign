@@ -8,19 +8,20 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
+import { Machine } from "@/data/types/machine";
 import useMutationMachines from "@/hooks/use-mutation-machines";
 import useQueryMachines from "@/hooks/use-query-machines";
 
 
 //prop for handling state of the dialog
 type DeleteMachineDialogProp = {
-  machineId: number;
+  machine: Machine;
   setShowDeleteMachine:  React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 //function that handles state of the dialog
 const DeleteMachineDialog = ({
-  machineId,
+  machine,
   setShowDeleteMachine,
 }: DeleteMachineDialogProp) => {
   const { modifyMachine } = useMutationMachines();
@@ -30,7 +31,9 @@ const DeleteMachineDialog = ({
   //async function that handles deletion logic
   const handleDeleteUser = async (e: React.MouseEvent) => {
     e.stopPropagation();
-     await modifyMachine(machineId, 0);
+    
+    machine.active = 0;
+    await modifyMachine(machine.name, machine.machineType.id, machine.hourlyRate, machine.id, machine.active);
     setShowDeleteMachine(false); //make the dialog disappear
     loadMachines();
   };

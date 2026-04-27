@@ -1,7 +1,7 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { queryBudgetCodesParamsSchema, createBudgetCode, deleteBudgetCodeSchema, updateBudgetCodeSchema, getBudgetCodeSchema } from "../validators/schemas.js";
-import { SQL, desc, asc, eq, and, count, ilike } from "drizzle-orm";
+import { SQL, desc, asc, eq, and, count, ilike, or, inArray } from "drizzle-orm";
 import { budgetCodes, budgetCodeType } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
@@ -42,7 +42,7 @@ budgetCodesRoutes.get("/budget-codes",
     }
 
     if (budgetTypeId !== undefined) {
-        whereClause.push(eq(budgetCodes.budgetCodeTypeId, budgetTypeId));
+        whereClause.push((or(inArray(budgetCodes.budgetCodeTypeId, budgetTypeId))));
     }
 
 
@@ -128,16 +128,6 @@ budgetCodesRoutes.post("/budget-codes",
         if (!budgetCodeCheck1) {
             throw new HTTPException(404, { message: "Invalid machine type" });
         }
-
-    //Check if there is a duplicate.
-    const [budgetCodeCheck] = await db
-    .select()
-    .from(budgetCodes)
-    .where(eq(budgetCodes.code, code))
-    if (budgetCodeCheck) {
-        throw new HTTPException(409, {message:"Budget code already exists"})
-    }
-
     //Insertion of new Budget Code
     const [newBudgetCode] = await db
         .insert(budgetCodes)
@@ -194,7 +184,7 @@ budgetCodesRoutes.patch("/budget-codes/:id",
     zValidator("json", updateBudgetCodeSchema), async (c)=>{
     const { id } = c.req.valid("param");
 
-    const { active, code } = c.req.valid("json");
+    const { active, budgetCodeTypeId, name, code } = c.req.valid("json");
 
     const [budgetCodeCheck] = await db
         .select()
@@ -204,26 +194,19 @@ budgetCodesRoutes.patch("/budget-codes/:id",
         throw new HTTPException(404, { message: "Budget Code not found!"});
     }
 
+    const [typeCheck] = await db
+    .select()
+    .from(budgetCodeType)
+    .where(eq(budgetCodeType.id, budgetCodeTypeId));
 
-
-    if (code) {
-        const [budgetCodeCheck] = await db
-            .select({ code: budgetCodes.code})
-            .from(budgetCodes)
-            .where(eq(budgetCodes.code, code));
-        if (budgetCodeCheck) {
-            throw new HTTPException(409, {message:"Budget code already exists"})
-        }
-
-        
-
+    if (!typeCheck) {
+        throw new HTTPException(404, { message: "Budget code type not found!"});
     }
-
 
 
     const [bc] = await db
     .update(budgetCodes)
-    .set({active, code})
+    .set({active, name, code, budgetCodeTypeId})
     .where(eq(budgetCodes.id, id))
     .returning();
 

@@ -1,5 +1,5 @@
 import { WritableAtom } from "nanostores";
-import { $budgetCodeTypes, $budgetTypeFilter, $codes, $curbudgets, $curtrainings, $gradYearFilter, $machine_types, $machineTypeFilter, $userBudgetFilter,  $gradYears } from "../store";
+import { $budgetCodeTypes, $budgetTypeFilter, $codes, $curbudgets, $curtrainings, $gradYearFilter, $machine_types, $machineTypeFilter, $userBudgetFilter,  $gradYears, $userMachineFilter } from "../store";
 
 import { budgetCodeType } from "./budgetCode";
 
@@ -61,7 +61,7 @@ export const filterConfigMap: Record<FilterQueries, FilterRenderConfig> = {
   },
   userMachineType: {
     label: "User Trainings",
-    store: $machineTypeFilter,
+    store: $userMachineFilter,
     
     getOptions: () => $curtrainings.get().map((id) => ({
       label: `${id.name}`,

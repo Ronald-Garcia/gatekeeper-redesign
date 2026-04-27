@@ -3,6 +3,7 @@ import AddBudgetCodeDialog from "../BudgetCodes/add-budgetCode-dialogue";
 import { Dialog } from "../ui/dialog";
 import AddBudgetCodeTypeDialog from "../BudgetCodeTypes/add-budget-type";
 import GeneralizedFilter from "../general/filtering";
+import ClearFiltering from "../general/clear-filtering";
 
 /*
 Admin dashboard component
@@ -13,15 +14,16 @@ const BudgetActions = () => {
     <div>
       <Dialog>
         <div data-cy="admin-dashboard" className="w-full p-4 bg-white border-b">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
-              <div className="flex-1 w-full">
+          <div className="mx-auto max-w-7xl">
+            <div className="flex flex-col items-start gap-4 md:flex-row md:items-center">
+              <div className="flex flex-row w-full gap-2">
                 <Searchbar/>
-              </div>
-              <div className="flex flex-wrap gap-2 shrink-0">
-               <GeneralizedFilter filters={["budgetTypeId"]} />
+                <GeneralizedFilter filters={["budgetTypeId"]} />
+                <ClearFiltering />  
                 <AddBudgetCodeDialog/>
                 <AddBudgetCodeTypeDialog />
+              </div>
+              <div className="flex flex-wrap gap-2 shrink-0">
               </div>
             </div>
           </div>

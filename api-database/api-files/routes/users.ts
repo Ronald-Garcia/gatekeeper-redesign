@@ -1,8 +1,8 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { queryUsersParamsSchema, createUserSchema, getUserSchema, getUserByCardNumSchema, enableUserSchema } from "../validators/schemas.js";
+import { queryUsersParamsSchema, createUserSchema, getUserSchema, getUserByCardNumSchema, enableUserSchema, getUserByJHED } from "../validators/schemas.js";
 import { SQL, or, desc, asc, eq, and, count, ilike, gt, exists, inArray } from "drizzle-orm";
-import { userBudgetCodeTable, users } from "../db/schema.js";
+import { archivedFinancialStatementsTable, financialStatementsTable, userBudgetCodeTable, userMachineType, users } from "../db/schema.js";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
 import { lucia } from "../db/auth.js";
@@ -41,7 +41,7 @@ userRoutes.get("/users",
      inactivateGraduatedUsers,
      timeoutUserHandle,
      zValidator("query", queryUsersParamsSchema), async (c) => {
-    const { page = 1, limit = 20, sort, search, active, gradYear, budgetCodeId } = c.req.valid("query");
+    const { page = 1, limit = 20, sort, search, active, gradYear, budgetCodeId, machineTypeId} = c.req.valid("query");
 
     const whereClause: (SQL | undefined)[] = [];
 
@@ -52,10 +52,24 @@ userRoutes.get("/users",
         );
     }
 
-    // filtering for gradYear 
-    if (gradYear !== undefined) {
+    // filtering for machinetypes 
+    if (machineTypeId !== undefined) {
+        whereClause.push(
+            exists(db.select().from(userMachineType).where(and(
+            eq(userMachineType.userId, users.id),
+            inArray(userMachineType.machineTypeId, machineTypeId))
+            )
+        
+          )
+        
+        );
+
+      }
+
+      if (gradYear !== undefined) {
         whereClause.push(or(inArray(users.graduationYear, gradYear)));
       }
+
 
 
     // filtering for users associated for budgetCodes
@@ -291,13 +305,19 @@ userRoutes.delete(
             throw new HTTPException(404, { message: "User not found" });
         }
 
+        // const statements = await db.delete(financialStatementsTable)
+        //         .where(eq(financialStatementsTable.userId, id)).returning()
+            
+        // if (statements.length === 0) {
+        //     const archivedStatements = await db.insert(archivedFinancialStatementsTable)
+        //     .values(statements).returning();
+        // }
 
 
         // if (no session) throw another error.
         // For now, no auth, just replace.
-        const deletedUser = await db
-        .update(users)
-        .set({active: 0})
+        const [deletedUser] = await db
+        .delete(users)
         .where(eq(users.id, id))
         .returning()
 
@@ -318,9 +338,13 @@ userRoutes.patch("/users/:id",
     zValidator("json", enableUserSchema),
     async (c) => {
         const { id } = c.req.valid("param");
-        const { active, graduationYear, timeoutDate } = c.req.valid("json");
+        const { active, graduationYear, timeoutDate, admin } = c.req.valid("json");
         const [user] = await db.select().from(users).where(eq(users.id, id));
         
+
+        if (!user) {
+            throw new HTTPException(404, { message: "User not found" });
+        }
 
         if (timeoutDate) {
             if (timeoutDate < new Date()) {
@@ -328,11 +352,7 @@ userRoutes.patch("/users/:id",
             }
         }
 
-        if (!user) {
-            throw new HTTPException(404, { message: "User not found" });
-        }
-
-        const [updatedUser] = await db.update(users).set({ active, graduationYear: graduationYear === undefined ? null : graduationYear, timeoutDate: (timeoutDate === undefined || active === 1) ? null : timeoutDate }).where(eq(users.id, id)).returning();
+        const [updatedUser] = await db.update(users).set({ active, graduationYear: graduationYear === undefined ? null : graduationYear, timeoutDate: (timeoutDate === undefined || active === 1) ? null : timeoutDate, isAdmin: admin }).where(eq(users.id, id)).returning();
 
         return c.json({
             success: true,
@@ -341,3 +361,4 @@ userRoutes.patch("/users/:id",
         });
     }
 )
+

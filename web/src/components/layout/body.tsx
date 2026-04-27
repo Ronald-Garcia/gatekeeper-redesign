@@ -1,6 +1,5 @@
 import AdminDashboard from "../pages/admin-dashboard";
 import MachineLogin from "../pages/machine-login";
-import StartPage from "../pages/start-page";
 import { $router } from "@/data/router";
 import { useStore } from "@nanostores/react";
 import { adminCurrentUser, validCurrentMachine, validCurrentUser } from "@/data/store";
@@ -16,6 +15,7 @@ import FormPage from "@/components/pages/form";
 import UserStartPage from "../pages/user-dashboard-start-page";
 import UserDashboard from "../pages/user-dashboard";
 import LostConnectionPage from "../pages/lost-connection-page";
+import InterlockStartPage from "../pages/interlock-start-page";
 
 /*
 Body component of the application
@@ -68,7 +68,7 @@ const Body = () => {
 
       {router.route === "timer" && <InProgress></InProgress>}
 
-      {router.route === "interlockLogin" && <StartPage></StartPage>}
+      {router.route === "interlockLogin" && <InterlockStartPage></InterlockStartPage>}
 
       {router.route === "reportForm" && <FormPage userId={router.params.userId} machineId={router.params.machineId} />}
 

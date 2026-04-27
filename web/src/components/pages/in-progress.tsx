@@ -9,18 +9,17 @@ import { $router } from "@/data/router";
 import { $currentUser } from "@/data/store";
 import ReportFormModal from "@/components/modals/ReportFormModal"; 
 import useMutationMachines from "@/hooks/use-mutation-machines";
+import { turnOffMachine } from "@/data/api";
 
 const InProgress = () => {
     // Time, in seconds, that a financial statement is updated in.
     const timeResolution = 450; // Update every 7 and a half minutes.
 
     const curUser = useStore($currentUser);
-    // const { reportIssue } = useMutationMachineIssue();
 
     const { curBudget, createStatement, updateStatement } = useMutationStatements();
     const {curMachine, modifyMachine} = useMutationMachines();
     
-    // const [isModalOpen, setIsModalOpen] = useState(false);
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
 
 
@@ -44,17 +43,17 @@ const InProgress = () => {
     const handleCreation = async () => {
         await createStatement(0);
         const curDate = new Date();
-        await modifyMachine(curMachine.id, 1, curDate );
+        await modifyMachine(curMachine.name, curMachine.machineType.id, curMachine.hourlyRate, curMachine.id, 1, curDate );
         setMadeStatement(true);
     
     }
     useEffect(() => {
-        if (!madeStatement && time == 1) {
+        if (!madeStatement) {
             handleCreation();
         } else if ((time % timeResolution === 0) && madeStatement){
             updateStatement(time);
             const curDate = new Date();
-            modifyMachine(curMachine.id, 1, curDate );
+            modifyMachine(curMachine.name, curMachine.machineType.id, curMachine.hourlyRate, curMachine.id, 1, curDate );
         }
 
     }, [time]);
@@ -65,10 +64,11 @@ const InProgress = () => {
 
   const onSubmit = async () => {
         if (time > 0) {
-        await updateStatement(time);
+            await updateStatement(time);
             const curDate = new Date();
-            await modifyMachine(curMachine.id, 1, curDate );    
-        }
+            await modifyMachine(curMachine.name, curMachine.machineType.id, curMachine.hourlyRate, curMachine.id, 1, curDate );
+          }
+        await turnOffMachine()
     redirectPage($router, "interlockLogin");
   };
 ;

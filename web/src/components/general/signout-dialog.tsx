@@ -4,9 +4,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogTrigger,
+  DialogDescription,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { DialogClose, DialogTrigger } from "@radix-ui/react-dialog";
 import { signOut } from "@/data/api";
 import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
@@ -44,6 +46,8 @@ const SignOutDialog = () => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Are you sure you want to sign out?</DialogTitle>
+            <DialogDescription>
+            </DialogDescription>
           </DialogHeader>
           
           <DialogFooter>

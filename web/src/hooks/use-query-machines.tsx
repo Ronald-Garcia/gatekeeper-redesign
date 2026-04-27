@@ -1,8 +1,8 @@
 import { fetchCurrentMachine, getAllMachines, getAllTrainingsOfUser, getMachine, getMachineTypes } from "@/data/api"
-import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes, appendMachineTypes,  $mix_active, $activeTab, setMetaData, setMachine, $machineTypeFilter } from "@/data/store";
-
+import { setCurrentMachine, setCurTrainings, setKiosk, setMachines, setMachinesTypes, appendMachineTypes, $mix_active, setMetaData, $activeTab , $machineTypeFilter, clearMachineTypeFilter, setMachine} from "@/data/store";
 import { Machine } from "@/data/types/machine";
 import { MachineType } from "@/data/types/machineType";
+
 import { useEffect, useState } from "react";
 import { SortMachineType, SortType } from "@/data/types/sort";
 import { useStore } from "@nanostores/react";
@@ -137,7 +137,7 @@ function useQueryMachines(reload: boolean) {
       });
     }
   };
-  
+
   //Load a single machine by id
   const loadMachine = async (id: number) => {
     try {
@@ -154,8 +154,10 @@ function useQueryMachines(reload: boolean) {
       });
     }
   };
+  
 
   useEffect(() => {
+    clearMachineTypeFilter();
     if (reload) {
       loadMachines();
       loadMachineTypes();

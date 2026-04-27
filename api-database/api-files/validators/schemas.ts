@@ -30,13 +30,24 @@ export const queryUsersParamsSchema = z.object({
     .transform((val) => {
       if (val === undefined) return undefined;
       return Array.isArray(val) ? val : [val];
+    }),
+    machineTypeId:z.union([
+      z.array(z.coerce.number().int().min(0)),
+      z.coerce.number().int().min(0),
+    ])
+    .optional()
+    // wrap single number into an array 
+    .transform((val) => {
+      if (val === undefined) return undefined;
+      return Array.isArray(val) ? val : [val];
     })
 });
 
 export const enableUserSchema = z.object({
   active: z.coerce.number().int().min(0).max(1),
   graduationYear: z.coerce.number().int().min(1850).max(3000).optional(),
-  timeoutDate: z.coerce.date().optional()
+  timeoutDate: z.coerce.date().optional(),
+  admin: z.coerce.number().int().min(0)
 })
 
 export const createUserSchema = z.object({
@@ -74,6 +85,15 @@ export const getUserByCardNumSchema = z.object({
   .max(16, "Needs a 16 Digit J-Card Number"),
 })
 
+//This guy just checks if you have a well formed card number and a machine id.
+export const getUserByJHED = z.object({
+  jhed: z
+  .string()
+    .min(1, "JHED required")
+    .max(8, "JHED less then 8 characters"),
+})
+
+
 //Just checks if the id number is int and positive.
 export const getUserSchema = z.object({
     id: z.coerce.number().int().positive()
@@ -87,7 +107,16 @@ export const queryBudgetCodesParamsSchema = z.object({
     budgetCode: z.coerce.number().int().positive().optional(),
     name: z.string().optional(),
     active: z.coerce.number().int().min(0).max(1).optional().default(1),
-    budgetTypeId: z.coerce.number().int().optional() 
+    budgetTypeId: z.union([
+      z.array(z.coerce.number().int().min(0)),
+      z.coerce.number().int().min(0),
+    ])
+    .optional()
+    // wrap single number into an array 
+    .transform((val) => {
+      if (val === undefined) return undefined;
+      return Array.isArray(val) ? val : [val];
+    })
 });
 
 export const createBudgetCode = z.object({
@@ -114,5 +143,9 @@ export const getBudgetCodeSchema = z.object({
 export const updateBudgetCodeSchema = z.object({
   active: z.coerce.number().int().min(0).max(1),
   code: z.string().min(0),
+  name: z.string()
+    .min(1, "Name is required")
+    .max(100, "Name must be 100 characters or less"),
+  budgetCodeTypeId: z.coerce.number().positive().int()
 })
   

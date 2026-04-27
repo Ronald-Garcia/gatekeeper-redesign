@@ -1,6 +1,6 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { like, SQL, or, desc, asc, eq, and, count, ilike, exists } from "drizzle-orm";
+import { like, SQL, or, desc, asc, eq, and, count, ilike, exists, inArray } from "drizzle-orm";
 import { db } from "../db/index.js";
 import { HTTPException} from "hono/http-exception";
 import { createMachineSchema, enableMachineSchema, getMachineSchema, queryMachinesSchema, updateMachineSchema, validateMachineIdSchema } from "../validators/machineSchema.js";
@@ -46,7 +46,7 @@ machineRoutes.get("/machines",
     }
 
     if (machineTypeId !== undefined) {
-        whereClause.push(eq(machines.machineTypeId, machineTypeId));
+        whereClause.push(or(inArray(machines.machineTypeId, machineTypeId)));
     }
 
     
@@ -308,14 +308,20 @@ machineRoutes.patch("/machines/:id",
     zValidator("json", updateMachineSchema), 
     async (c) => {
         const { id } = c.req.valid("param");
-        const { active,lastTimeUsed } = c.req.valid("json");
+        const { name, machineTypeId, active,lastTimeUsed, hourlyRate } = c.req.valid("json");
         const [machine] = await db.select().from(machines).where(eq(machines.id, id));
+
+        const [typeCheck] = await db.select().from(machineTypes).where(eq(machineTypes.id, machineTypeId));
+
+        if (!typeCheck) {
+            throw new HTTPException(404, { message: "Machine type not found."})
+        }
         
         if (!machine) {
             throw new HTTPException(404, { message: "Machine not found" });
         }
 
-        const [updatedMachine] = await db.update(machines).set({ active, lastTimeUsed }).where(eq(machines.id, id)).returning();
+        const [updatedMachine] = await db.update(machines).set({ active, lastTimeUsed, hourlyRate, name, machineTypeId }).where(eq(machines.id, id)).returning();
 
         return c.json({
             success: true,

@@ -52,14 +52,14 @@ const Searchbar = () => {
                     data-cy="searchbar"
                     type="text"
                     value={localSearch}
-                    placeholder={router?.route === "machines"
+                    placeholder={router?.route === "machines" || router?.route === "userDashboardMachinesStatus"
                         ? "Search machines..."
                         : router?.route === "users"
                         ? "Search users..."
                         : router?.route === "budgetCodes"
                         ? "Search budget codes..."
                         : "Search..."}
-                    className="w-full h-12 pl-10 pr-4 text-base transition-all duration-200 bg-white border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500"
+                    className="w-full h-[40px] pl-10 pr-4 text-base transition-all duration-200 bg-white border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500"
                     onKeyDown={handleKeydown}
                     onChange={handleTextChange}
                 />

@@ -37,6 +37,8 @@ dist-ssr
 sqlite.db
 drizzle
 .vercel
+*.sql
+
 
 .yarn/
 !.yarn/releases
@@ -48,3 +50,6 @@ drizzle
 .idea/shelf
 pnpm-lock.yaml
 package-lock.json
+
+# supabase
+supabase/*

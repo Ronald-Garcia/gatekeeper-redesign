@@ -1,18 +1,17 @@
+import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import React, { useState } from "react";
+import React, {  useState } from "react";
 import useQueryUsers from "@/hooks/use-query-users";
 import { redirectPage } from "@nanostores/router";
 import { $router } from "@/data/router";
-import { setActiveTab } from "@/data/store";
-import { Button } from "../ui/button";
 
 /*
     This is the actual format of the start page, just takes toggles if you do route or not based on parent.
 */
 
 
-const UserStartPage = () => {
-    var callPython:number = 0;
+const InterlockStartPage = () => {
+    var callPython:number = 1;
 
   const [cardNum, setCardNum] = useState("");
 
@@ -24,49 +23,52 @@ const UserStartPage = () => {
 
   const handleSubmitOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
 
-    if (e.key === "Enter" && cardNum) {
+    if (e.key === "Enter" && cardNum && cardNum.length == 18) {
       e.preventDefault();
 
-      const newCardNum = cardNum;
+      const newCardNum = cardNum.substring(1, cardNum.length - 1);
       
       e.currentTarget.value = "";
-      validateUserCard(Number.parseInt(newCardNum), callPython).then(s => {
-        if (s === "users") {
-            setActiveTab(-1);
-            redirectPage($router, "userDashboardMachinesStatus");   
-        }
-        else {
-            redirectPage($router, s);
-        }
+      validateUserCard(Number.parseInt(newCardNum), callPython).then(s => {        
+        redirectPage($router, s);
       });
-    }
-  }
+    } else if (e.key === "Enter" && cardNum && cardNum.length == 16){
+        e.preventDefault();
 
-  const handleOnClick = () => {
-      const newCardNum = cardNum;
-      const input = inputRef.current! ;
-      input.value = "";
+        const newCardNum = cardNum;
+        
+        e.currentTarget.value = "";
         validateUserCard(Number.parseInt(newCardNum), callPython).then(s => {        
           redirectPage($router, s);
         });
-      
     }
-  const inputRef = React.useRef<HTMLInputElement>(null);
-    
+  }
 
+  const handleSignIn = () => {
+    const newCardNum = cardNum;
+    const input = inputRef.current! ;
+    input.value = "";
+      validateUserCard(Number.parseInt(newCardNum), callPython).then(s => {        
+        redirectPage($router, s);
+      });
+    
+  }
+
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  
   return (
     <div className="items-center sign-in-container ">
-      <div className="p-6 space-y-6 rounded-lg shadow-xl ">
+      <div className="p-6 space-y-6 rounded-lg shadow-xl kiosk-card ">
         <h1 className="text-4xl font-bold text-center jhu-blue">
-          Sign into User Dashboard
+          Swipe into Machine
         </h1>
-        <h2 className="text-lg text-center text-black">Please enter your card number below to sign in.</h2>
+        <h2 className="text-lg text-center text-black">Please swipe your card number to sign in.</h2>
 
         <div className="flex flex-col space-y-4">
           <Input
             ref = {inputRef}
             onChange={handleOnChange}
-            placeholder="Enter your card number"
+            placeholder="Swipe your card"
             onKeyDown={handleSubmitOnEnter}
             className="border-2"
             data-cy="cardnum-input"
@@ -74,7 +76,7 @@ const UserStartPage = () => {
           />
           
           <Button
-            onClick={handleOnClick}
+            onClick={handleSignIn}
             className="text-lg jhu-blue-button"
             variant={"ghost"}
           >
@@ -86,4 +88,5 @@ const UserStartPage = () => {
   );
 };
 
-export default UserStartPage;
+
+export default InterlockStartPage;

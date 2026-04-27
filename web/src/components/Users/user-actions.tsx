@@ -12,6 +12,8 @@ import TrainingDialog from "./training-dialog";
 import BudgetCodeDialog from "./budget-code-dialog";
 import { User } from "@/data/types/user";
 import ActivateUserDialog from "./activate-user";
+import { ArrowBigDownDash, ArrowBigUpDash, UserRoundCog } from "lucide-react";
+import ToggleAdminUserDialog from "./toggle-admin-user";
 
 type UserActionsProps = {
   user: User;
@@ -23,6 +25,7 @@ export default function UserActions({ user }: UserActionsProps) {
   const [showDeleteUser, setShowDeleteUser] = useState(false);
   const [showTimeoutUser, setShowTimeoutUser] = useState(false);
   const [showActivateUser, setShowActivateUser] = useState(false);
+  const [showToggleAdmin, setShowToggleAdmin] = useState(false);
   
   const handleTraining = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -51,6 +54,7 @@ export default function UserActions({ user }: UserActionsProps) {
 
 
   const handleCloseDelete = () => {
+    
     setShowDeleteUser(false);
   };
 
@@ -70,13 +74,20 @@ export default function UserActions({ user }: UserActionsProps) {
     setShowActivateUser(false);
   };
 
+  const handleToggleAdmin = () => {
+    setShowToggleAdmin(true);
+  }
+
 
   return (
-    <div data-cy = "user-actions" >
+    <div data-cy = "user-actions" className="flex flex-row">
+      <Button variant="ghost" onClick={handleToggleAdmin}>
+        {user.isAdmin === 0 ? (<ArrowBigUpDash/>) : (<ArrowBigDownDash></ArrowBigDownDash>)}
+      </Button>
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost"  data-cy={`user-trigger-${user.cardNum}`} className="absolute top-2 right-2 deck-actions">
-          ...
+        <Button variant="ghost"  data-cy={`user-trigger-${user.cardNum}`} className="top-2 right-2 deck-actions">
+          <UserRoundCog size={1}></UserRoundCog>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
@@ -95,6 +106,7 @@ export default function UserActions({ user }: UserActionsProps) {
         {user.active === 1 &&<DropdownMenuItem onClick={handleTimeout} className="delete-text-red" data-cy="user-timeout">
           Timeout
         </DropdownMenuItem>}
+
       </DropdownMenuContent>
     </DropdownMenu>
 
@@ -117,6 +129,12 @@ export default function UserActions({ user }: UserActionsProps) {
 
 {showActivateUser && (
   <ActivateUserDialog user={user} setShowActivateUser={handleCloseActivate} />
+)}
+
+{showToggleAdmin && (
+  <ToggleAdminUserDialog user={user} setShowToggleAdmin={setShowToggleAdmin}>
+
+  </ToggleAdminUserDialog>
 )}
 
 </div>

@@ -8,7 +8,7 @@ import { SortBudgetType, SortMachineType, SortType } from "./types/sort";
 import { financialStatement } from "./types/financialStatement";
 import { MetaType } from "./types/meta";
 import { MachineIssue } from "./types/machineIssues";
-import { userBudgetStats, userMachinesStats } from "./types/user-stats";
+import { userBudgetStats, userMachinesStats, userStats } from "./types/user-stats";
 import { PrecisionType } from "./types/precision-type";
 
 /**
@@ -22,6 +22,7 @@ export const turnOffMachine = async (): Promise<boolean> => {
     {
     method: "POST",
     credentials: "include",
+    
   });
   const { message }: { message: string } = await response.json();
 
@@ -101,7 +102,7 @@ export const getAllUsers = async (
 
   if (training !== undefined) {
     for (const t of training){
-    url += `&machinTypeId=${t}`;
+    url += `&machineTypeId=${t}`;
     }
   }
   
@@ -203,7 +204,7 @@ export const removeUser = async (id: number): Promise<{
  * @returns {Promise<{message: string; data: User}>} A promise that resolves with a message and the user data.
  * @throws {Error} If the response is not ok, throws an error with the response message.
  */
-export const getUser = async (cardNum: number): Promise<{
+export const getUserCard = async (cardNum: number): Promise<{
   message: string;
   data: User
 }> => {
@@ -214,6 +215,32 @@ export const getUser = async (cardNum: number): Promise<{
   }
 
   const response = await fetch(`${API_DB_URL}/users/${cardNums}`, {
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const { message }: { message: string } = await response.json();
+    throw new Error(message);
+  }
+
+  const { message, data }: { message: string, data: User } = await response.json();
+  
+  return { message, data };
+}
+
+
+/**
+ * Signs in a user based on the card number.
+ * @param {string} jhed - The card number of the user.
+ * @returns {Promise<{message: string; data: User}>} A promise that resolves with a message and the user data.
+ * @throws {Error} If the response is not ok, throws an error with the response message.
+ */
+export const getUserJhed = async (jhed: string): Promise<{
+  message: string;
+  data: User
+}> => {
+
+  const response = await fetch(`${API_DB_URL}/users-jhed/${jhed}`, {
     credentials: "include",
   });
 
@@ -391,7 +418,11 @@ export const getAllBudgets = async (
   };
 }> => {
   let url = `${API_DB_URL}/budget-codes?search=${search}&limit=${limit}&page=${page}&sort=${sort}&active=${active}`
-  if (budgCodeType !== undefined) url += `&budgetCodeTypeId=${budgCodeType}`
+  if (budgCodeType !== undefined) {
+    for (const b of budgCodeType){
+    url += `&budgetTypeId=${b}`;
+    }
+  }
   const response = await fetch(url, {
     credentials: "include",
   });
@@ -596,16 +627,17 @@ export const deleteUserMachineRelation = async (training_id: number): Promise<{
 }
 
 
-export const updateBudgetCode = async (id:number, active:number, code?: string, name?: string) => {
+export const updateBudgetCode = async (budgetcode: BudgetCode) => {
 
-  const response = await fetch(`${API_DB_URL}/budget-codes/${id}`, {
+  const response = await fetch(`${API_DB_URL}/budget-codes/${budgetcode.id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
     body: JSON.stringify({
-      active,
-      code,
-      name
+      active: budgetcode.active,
+      name: budgetcode.name,
+      code: budgetcode.code,
+      budgetCodeTypeId: budgetcode.type.id,
     })
   });
 
@@ -742,7 +774,13 @@ export const getAllMachines = async (
     activeQuery = ""
   }
   let url =`${API_DB_URL}/machines?search=${search}&limit=${limit}&page=${page}&sort=${sort}&type=${type}${activeQuery}`
-  if (machineTypeFilter  !== undefined) url += `&machineTypeId=${machineTypeFilter}`
+  if (machineTypeFilter  !== undefined) {
+     for (const m of machineTypeFilter) {
+     url += `&machineTypeId=${m}`;
+     }
+  }
+    
+   
   const response = await fetch(url, {
     credentials: "include",
   });
@@ -985,12 +1023,15 @@ export const deleteMachine = async (id: number) => {
  * @returns {Promise<{message: string, data: Machine}>} A promise that resolves with a message and the updated machine.
  * @throws {Error} If the response is not ok, throws an error with the response message.
  */
-export const updateMachine = async (id: number, active: number, lastTimeUsed?:Date ) => {
+export const updateMachine = async (name:string, type:number, rate: number, id: number, active: number, lastTimeUsed?:Date ) => {
   const response = await fetch(`${API_DB_URL}/machines/${id}`,{
     method: "PATCH",
     headers: {"Content-Type": "application/json"},
     credentials:"include",
     body: JSON.stringify({
+      name,
+      machineTypeId: type,
+      hourlyRate: rate,
       active: active,
       lastTimeUsed
     })
@@ -1259,13 +1300,14 @@ export const updateMachineIssue = async (
 };
 
 
-export const updateUserStatus = async (id: number, active: number, graduationYear?: number, timeoutDate?: Date): Promise<{
+export const updateUserStatus = async (id: number, active: number, admin: number, graduationYear?: number, timeoutDate?: Date): Promise<{
   message: string,
   data: User
 }> => {
 
-  let body: {active: number, graduationYear?: number, timeoutDate?: Date} = {
+  let body: {active: number, admin: number, graduationYear?: number, timeoutDate?: Date} = {
     active,
+    admin,
     graduationYear: graduationYear,
     timeoutDate: timeoutDate
   }
@@ -1380,7 +1422,7 @@ export const getUserStatistics = async (
   budgetCodeFilter?: number[] | null,
   machineTypeFilter?: number[] | null,
 ): Promise<{
-  data: (userBudgetStats | userMachinesStats)[],
+  data: { total: userStats[], budgetCode: userBudgetStats[], machine: userMachinesStats[]},
   message: string
 }> => {
   const query = new URLSearchParams({
@@ -1393,13 +1435,15 @@ export const getUserStatistics = async (
 
   let url = `${API_DB_URL}/stats?${query.toString()}`;
 
-
-  for (const y in machineTypeFilter) {
-    url += `&machineId=${y}`;
+  if (machineTypeFilter) {
+    for (const y of machineTypeFilter) {
+      url += `&machineId=${y}`;
+    }  
   }
-
-  for (const y in budgetCodeFilter) {
-    url += `&budgetCode=${y}`;
+  if (budgetCodeFilter) {
+    for (const y of budgetCodeFilter) {
+      url += `&budgetCode=${y}`;
+    }
   }
   
   const response = await fetch(url, {
@@ -1413,7 +1457,73 @@ export const getUserStatistics = async (
   }
 
 
-  const { message, data }: { message: string; data: (userBudgetStats | userMachinesStats)[] } = await response.json();
+  const { message, data }: { message: string; data: { total: userStats[], budgetCode: userBudgetStats[], machine: userMachinesStats[]} } = await response.json();
 
   return { message, data };
+}
+
+export const setAdminPasskey = async (
+  userId: number,
+  passkey: string
+): Promise<boolean> => {
+
+  const response = await fetch(`${API_DB_URL}/admin/passkey`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      userId: userId,
+      passkey: passkey
+    })
+  });
+
+  
+  if (!response.ok) {
+    const {message} : {message:string} = await response.json();
+    throw new Error(message);
+  }
+
+  return true;
+
+}
+
+export const validateAdminPass = async (
+  userId: number,
+): Promise<boolean> => {
+
+  const response = await fetch(`${API_DB_URL}/admin/passkey/${userId}`);
+
+  if (!response.ok) {
+    const {message} : {message:string} = await response.json();
+    throw new Error(message);
+  }
+
+  const { data }: {data: boolean} = await response.json();
+
+  return data;
+
+}
+
+export const verifyAdminPass = async (
+  userId: number,
+  passkey: string
+): Promise<boolean> => {
+
+  const response = await fetch(`${API_DB_URL}/admin/passkey-verify`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      userId,
+      passkey,
+    })
+  });
+
+  if (!response.ok) {
+    const {message} : {message:string} = await response.json();
+    throw new Error(message);
+  }
+
+  const { data }: { data: boolean } = await response.json();
+
+  return data;
+
 }

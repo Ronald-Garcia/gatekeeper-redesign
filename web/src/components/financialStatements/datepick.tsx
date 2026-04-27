@@ -22,6 +22,7 @@ export function DatePicker() {
     <Popover modal={true}>
       <PopoverTrigger asChild>
         <Button
+          data-cy="financial-single-date-trigger"
           variant={"outline"}
           className={cn(
             "w-[280px] justify-start text-left font-normal",
@@ -32,7 +33,7 @@ export function DatePicker() {
           {date ? format(date, "PPP") : <span>Pick a date</span>}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0">
+      <PopoverContent  data-cy="single-date-popover" className="w-auto p-0">
         <Calendar
           mode="single"
           selected={date}

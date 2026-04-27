@@ -29,5 +29,5 @@ export const validateFinancialStatementIdSchema = z.object({
 })
 
 export const validateTimeSchema = z.object({
-  timeSpent: z.coerce.number().int().nonnegative()
+  timeSpent: z.coerce.number().int().min(0)
 })
