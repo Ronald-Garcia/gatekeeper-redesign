@@ -121,6 +121,17 @@ async function sendEmail(email: string, scheduled: boolean, user: string, startD
                                       .innerJoin(machines, eq(machines.id, financialStatementsTable.machineId))
   // const sheets = allMachines.map(m => m.name)
 
+      const formatter = new Intl.DateTimeFormat('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        timeZoneName: 'short',
+        timeZone: 'America/New_York'
+      })
+
       const excelSchema = [
         {
           column: "Machine",
@@ -150,7 +161,7 @@ async function sendEmail(email: string, scheduled: boolean, user: string, startD
         {
           column: "Date",
           type: String,
-          value: (s: StatementType) => s.dateAdded.toLocaleString()
+          value: (s: StatementType) => formatter.format(s.dateAdded)
         }
 
       ]
